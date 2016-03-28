@@ -2,4 +2,193 @@
     <string name="app_name">BackpackerBuddy</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_travel_selection">TravelSelection</string>
+    <string-array name="countries">
+        <item>Afghanistan</item>
+        <item>Albania</item>
+        <item>Algeria</item>
+        <item>American Samoa</item>
+        <item>Andorra</item>
+        <item>Angola</item>
+        <item>Anguilla</item>
+        <item>Antigua and Barbuda</item>
+        <item>Argentina</item>
+        <item>Armenia</item>
+        <item>Aruba</item>
+        <item>Australia</item>
+        <item>Austria</item>
+        <item>Azerbaijan</item>
+        <item>Bahrain</item>
+        <item>Barbados</item>
+        <item>Botswana</item>
+        <item>Bermuda</item>
+        <item>Belgium</item>
+        <item>Bahamas</item>
+        <item>Bangladesh</item>
+        <item>Belize</item>
+        <item>Bosnia and Herzegovina</item>
+        <item>Bolivia</item>
+        <item>Benin</item>
+        <item>Belarus</item>
+        <item>Brazil</item>
+        <item>British Virgin Islands</item>
+        <item>Bhutan</item>
+        <item>Bulgaria</item>
+        <item>Brunei</item>
+        <item>Burundi</item>
+        <item>Canada</item>
+        <item>Cambodia</item>
+        <item>Chad</item>
+        <item>Sri Lanka</item>
+        <item>Congo</item>
+        <item>China</item>
+        <item>Chile</item>
+        <item>Cayman Islands</item>
+        <item>Cameroon</item>
+        <item>Comoros</item>
+        <item>Colombia</item>
+        <item>Costa Rica</item>
+        <item>Cuba</item>
+        <item>Cape Verde</item>
+        <item>Cook Islands</item>
+        <item>Cyprus</item>
+        <item>Denmark</item>
+        <item>Djibouti</item>
+        <item>Dominica</item>
+        <item>Dominican Republic</item>
+        <item>Ecuador</item>
+        <item>Egypt</item>
+        <item>Ireland</item>
+        <item>Estonia</item>
+        <item>El Salvador</item>
+        <item>Ethiopia</item>
+        <item>Czech Republic</item>
+        <item>French Guiana</item>
+        <item>Finland</item>
+        <item>Fiji</item>
+        <item>Micronesia</item>
+        <item>French Polynesia</item>
+        <item>France</item>
+        <item>Gambia</item>
+        <item>Gabon</item>
+        <item>Georgia</item>
+        <item>Ghana</item>
+        <item>Gibraltar</item>
+        <item>Grenada</item>
+        <item>Greenland</item>
+        <item>Germany</item>
+        <item>Guadeloupe</item>
+        <item>Guam</item>
+        <item>Greece</item>
+        <item>Guatemala</item>
+        <item>Guinea</item>
+        <item>Guyana</item>
+        <item>Haiti</item>
+        <item>Hong Kong</item>
+        <item>Honduras</item>
+        <item>Croatia</item>
+        <item>Hungary</item>
+        <item>Iceland</item>
+        <item>Indonesia</item>
+        <item>India</item>
+        <item>Iran</item>
+        <item>Israel</item>
+        <item>Italy</item>
+        <item>Ivory Coast</item>
+        <item>Iraq</item>
+        <item>Japan</item>
+        <item>Jamaica</item>
+        <item>Jordan</item>
+        <item>Kenya</item>
+        <item>Kyrgyzstan</item>
+        <item>North Korea</item>
+        <item>South Korea</item>
+        <item>Kuwait</item>
+        <item>Kosovo</item>
+        <item>Kazakhstan</item>
+        <item>Laos</item>
+        <item>Lebanon</item>
+        <item>Latvia</item>
+        <item>Lithuania</item>
+        <item>Liberia</item>
+        <item>Slovakia</item>
+        <item>Luxembourg</item>
+        <item>Madagascar</item>
+        <item>Martinique</item>
+        <item>Macau</item>
+        <item>Moldova</item>
+        <item>Mongolia</item>
+        <item>Montenegro</item>
+        <item>Mali</item>
+        <item>Malta</item>
+        <item>Monaco</item>
+        <item>Morocco</item>
+        <item>Mauritius</item>
+        <item>Mauritania</item>
+        <item>Myanmar</item>
+        <item>Oman</item>
+        <item>Maldives</item>
+        <item>Mexico</item>
+        <item>Malaysia</item>
+        <item>Mozambique</item>
+        <item>Niger</item>
+        <item>Vanuatu</item>
+        <item>Nigeria</item>
+        <item>Netherlands</item>
+        <item>Norway</item>
+        <item>Nepal</item>
+        <item>Nicaragua</item>
+        <item>New Zealand</item>
+        <item>Paraguay</item>
+        <item>Peru</item>
+        <item>Pakistan</item>
+        <item>Poland</item>
+        <item>Panama</item>
+        <item>Portugal</item>
+        <item>Papua New Guinea</item>
+        <item>Qatar</item>
+        <item>Serbia</item>
+        <item>Romania</item>
+        <item>Philippines</item>
+        <item>Puerto Rico</item>
+        <item>Russia</item>
+        <item>Saudi Arabia</item>
+        <item>South Africa</item>
+        <item>Slovenia</item>
+        <item>Sierra Leone</item>
+        <item>Singapore</item>
+        <item>Somalia</item>
+        <item>Spain</item>
+        <item>Saint Lucia</item>
+        <item>Sudan</item>
+        <item>Svalbard</item>
+        <item>Sweden</item>
+        <item>Syria</item>
+        <item>Switzerland</item>
+        <item>Trinidad and Tobago</item>
+        <item>Thailand</item>
+        <item>Tajikistan</item>
+        <item>Turks and Caicos</item>
+        <item>Tonga</item>
+        <item>Tunisia</item>
+        <item>Turkey</item>
+        <item>Tuvalu</item>
+        <item>Taiwan</item>
+        <item>Tanzania</item>
+        <item>Uganda</item>
+        <item>United Arab Emirates</item>
+        <item>United Kingdom</item>
+        <item>Ukraine</item>
+        <item>United States</item>
+        <item>Uruguay</item>
+        <item>Uzbekistan</item>
+        <item>Venezuela</item>
+        <item>Vietnam</item>
+        <item>U.S. Virgin Islands</item>
+        <item>Namibia</item>
+        <item>Samoa</item>
+        <item>Serbia and Montenegro</item>
+        <item>Yemen</item>
+        <item>Zambia</item>
+        <item>Zimbabwe</item>
+    </string-array>
 </resources>
