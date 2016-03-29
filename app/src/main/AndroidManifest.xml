@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ravtrix.backpackerbuddy">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +23,15 @@
         <activity
             android:name=".TravelSelection"
             android:label="@string/title_activity_travel_selection"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".SignUpPart1Activity"
+            android:label="Sign Up Activity1"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".SignUpPart2Activity"
+            android:label="Sign Up Activity2"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
