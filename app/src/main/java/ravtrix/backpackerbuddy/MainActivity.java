@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tvBackpacker, tvBuddy;
-    private ImageButton imgbSignUp;
+    private ImageButton imgbSignUp, imgbLogIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvBackpacker = (TextView) findViewById(R.id.tvBackpacker);
         tvBuddy = (TextView) findViewById(R.id.tvBuddy);
         imgbSignUp = (ImageButton) findViewById(R.id.imgbSignUp);
+        imgbLogIn = (ImageButton) findViewById(R.id.imgbLogIn);
 
         Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvBuddy.setTypeface(monuFont);
         tvBuddy.setTextSize(80);
         imgbSignUp.setOnClickListener(this);
+        imgbLogIn.setOnClickListener(this);
     }
 
     @Override
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.imgbSignUp:
                 startActivity(new Intent(this, SignUpPart1Activity.class));
+                break;
+            case R.id.imgbLogIn:
+                startActivity(new Intent(this, LogInActivity.class));
                 break;
         }
     }

@@ -59,10 +59,18 @@
             <ImageButton
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:id="@+id/imgbLogIn"
+                android:background="@drawable/login"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="50dp"
                 android:id="@+id/imgbSignUp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/signup"
-                android:layout_marginTop="30sp" />
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
 

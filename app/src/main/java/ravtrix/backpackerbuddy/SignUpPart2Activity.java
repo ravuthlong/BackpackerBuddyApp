@@ -53,7 +53,7 @@ public class SignUpPart2Activity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.signup2, menu);
+        menuInflater.inflate(R.menu.toolbar_signup2, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -67,7 +67,7 @@ public class SignUpPart2Activity extends AppCompatActivity {
                 String lastName = etLastname.getText().toString();
                 serverRequests.storeExtraUserInfoDataInBackground(userLocalStore.getLoggedInUser().getUserID(),
                         firstName, lastName);
-                startActivity(new Intent(this, TravelSelection.class));
+                startActivity(new Intent(this, UserMainPage.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

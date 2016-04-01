@@ -15,24 +15,23 @@ import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
 import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
 
 /**
- * Created by Ravinder on 3/28/16.
+ * Created by Ravinder on 3/29/16.
  */
-public class SignUpPart1Activity extends AppCompatActivity implements  View.OnClickListener {
+public class LogInActivity extends AppCompatActivity {
 
-    private EditText etEmail, etUsername, etPassword;
+    private EditText etLoggedInUsername, etLoggedInPassword;
     private ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup1);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarSignUp);
+        setContentView(R.layout.activity_login);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
         setSupportActionBar(toolbar);
 
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        etLoggedInUsername = (EditText) findViewById(R.id.etLoggedInUsername);
+        etLoggedInPassword = (EditText) findViewById(R.id.etLoggedInPassword);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -52,43 +51,32 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
         userLocalStore = new UserLocalStore(this);
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.toolbar_signup1, menu);
+        menuInflater.inflate(R.menu.toolbar_login, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.submitSignup1:
+            case R.id.logInContinute:
 
-                String username = etUsername.getText().toString();
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
-
-                User signedUpUser = new User(email, username, password);
-
-                serverRequests.storeUserDataInBackground(signedUpUser, new GetUserCallBack() {
+                String username = etLoggedInUsername.getText().toString();
+                String password = etLoggedInPassword.getText().toString();
+                final User loggedInUser = new User(username, password);
+                serverRequests.logUserInDataInBackground(loggedInUser, new GetUserCallBack() {
                     @Override
                     public void done(User returnedUser) {
-                        // Username has been taken and user info will not be stored
                         if (returnedUser == null) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpPart1Activity.this);
-                            dialogBuilder.setMessage("User has been taken");
-                            dialogBuilder.setPositiveButton("Ok", null);
-                            dialogBuilder.show();
+                            showNoUserErrorMessage();
                         } else {
                             userLocalStore.storeUserData(returnedUser);
-                            UserLocalStore.isUserLoggedIn = true;
-                            startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
+                            startActivity(new Intent(LogInActivity.this, UserMainPage.class));
                         }
                     }
                 });
@@ -96,5 +84,13 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Error if the user info is incorrect
+    private void showNoUserErrorMessage(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Incorrect user details");
+        dialogBuilder.setPositiveButton("Ok", null);
+        dialogBuilder.show();
     }
 }

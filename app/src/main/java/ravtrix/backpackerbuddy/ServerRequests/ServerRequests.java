@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
+import ravtrix.backpackerbuddy.TravelSpot;
 import ravtrix.backpackerbuddy.User;
 
 /**
@@ -35,6 +36,47 @@ public class ServerRequests {
     public void storeExtraUserInfoDataInBackground(int userID, String firstname, String lastname) {
         progressDialog.show();
         new StoreExtraUserInfoDataAsyncTask(userID, firstname, lastname).execute();
+    }
+    public void logUserInDataInBackground(User user, GetUserCallBack userCallBack) {
+        progressDialog.show();
+        new FetchUserDataAsyncTask(user, userCallBack).execute();
+    }
+    public void insertTravelSpotInBackground(TravelSpot travelSpot) {
+        new InsertTravelSpotAsyncTask(travelSpot).execute();
+    }
+
+    // Signed up will be stored in the database. User type will be returned for UserLocalStore shared preference purpose.
+    public class InsertTravelSpotAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private TravelSpot travSpot;
+
+        public InsertTravelSpotAsyncTask(TravelSpot travSpot) {
+            this.travSpot = travSpot;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            HashMap<String, Object> userInfo = new HashMap<>();
+            userInfo.put("userID", travSpot.getUserID());
+            userInfo.put("country", travSpot.getCountry());
+            userInfo.put("from", travSpot.getFromDate());
+            userInfo.put("to", travSpot.getToDate());
+
+            try {
+                HttpRequest req = new HttpRequest("http://backpackerbuddy.net23.net/insertTravelSpot.php");
+                req.preparePost().withData(userInfo).send();
+            }catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 
     // Signed up will be stored in the database. User type will be returned for UserLocalStore shared preference purpose.
@@ -126,6 +168,60 @@ public class ServerRequests {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
+        }
+    }
+
+    // When user logs in, get their information back. User type will be returned for UserLocalStore shared preference purpose.
+    public class FetchUserDataAsyncTask extends AsyncTask<Void, Void, User> {
+
+        private User user;
+        private GetUserCallBack userCallBack;
+
+        public FetchUserDataAsyncTask(User user, GetUserCallBack userCallBack) {
+            this.user = user;
+            this.userCallBack = userCallBack;
+        }
+
+        @Override
+        protected User doInBackground(Void... params) {
+
+
+            User returnedUser = null;
+
+            HashMap<String, Object> userInfo = new HashMap<>();
+            userInfo.put("username", user.getUsername());
+            userInfo.put("password", user.getPassword());
+
+            JSONObject jObject = new JSONObject();
+
+            try{
+
+                HttpRequest req = new HttpRequest("http://backpackerbuddy.net23.net/login.php");
+                jObject = req.preparePost().withData(userInfo).sendAndReadJSON();
+
+                if(jObject.getString("username").equals("")){
+                    // No user returned
+                    returnedUser = null;
+
+                }else{
+                    //UserLocalStore.isUserLoggedIn = true;
+                    // Get the user details
+                    int userID = jObject.getInt("userID");
+                    String email = jObject.getString("email");
+                    String username = jObject.getString("username");
+                    returnedUser = new User(userID, email, username);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return returnedUser;
+        }
+        @Override
+        protected void onPostExecute(User returnedUser){
+            super.onPostExecute(returnedUser);
+            progressDialog.dismiss();
+            userCallBack.done(returnedUser);
         }
     }
 
