@@ -4,16 +4,8 @@
     <string name="title_activity_travel_selection">TravelSelection</string>
     <string name="submitSignup1">submitSignUp1</string>
     <string name="submitSignup2">submitSignup2</string>
-    <string-array name="Afghanistan">
-        <item>Kabul</item>
-        <item>Kandahar</item>
-        <item>Herat</item>
-        <item>Mazar-i-Sharif</item>
-        <item>Kunduz</item>
-        <item>Taloqan</item>
-        <item>Jalalabad</item>
-        <item>Puli Khumri</item>
-    </string-array>
+    <string name="drawerOpened">Opened</string>
+    <string name="drawerClosed">Closed</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Albania</item>

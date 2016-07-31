@@ -1,11 +1,13 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,9 +18,15 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
+import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.TravelSpot;
+import ravtrix.backpackerbuddy.UserLocalStore;
+import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyDestination;
 
-public class TravelSelection extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+/**
+ * Created by Ravinder on 7/29/16.
+ */
+public class Destination extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private Spinner spinnerCountries;
     private ArrayAdapter<CharSequence> countryArrayAdapter;
@@ -31,30 +39,15 @@ public class TravelSelection extends AppCompatActivity implements AdapterView.On
     private static String dateFrom;
     private static String dateTo;
     private Button btSubmitCountry;
-    private ServerRequests serverRequests;
+    private VolleyDestination volleyDestination;
+    //private ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_travelselection);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.frag_travelselection, container, false);
 
-        Toolbar toolbarTrav = (Toolbar) findViewById(R.id.toolbarTrav);
-        setSupportActionBar(toolbarTrav);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbarTrav != null) {
-            toolbarTrav.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
 
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
@@ -63,43 +56,34 @@ public class TravelSelection extends AppCompatActivity implements AdapterView.On
         thisDay = c.get(Calendar.DAY_OF_MONTH);
 
 
-        tvDateArrival = (TextView) findViewById(R.id.tvDateArrival);
-        tvDateLeave = (TextView) findViewById(R.id.tvDateLeave);
-        spinnerCountries = (Spinner) findViewById(R.id.spinnerCountries);
-        btSubmitCountry = (Button) findViewById(R.id.btSubmitCountry);
+        tvDateArrival = (TextView) v.findViewById(R.id.tvDateArrival);
+        tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
+        spinnerCountries = (Spinner) v.findViewById(R.id.spinnerCountries);
+        btSubmitCountry = (Button) v.findViewById(R.id.btSubmitCountry);
 
         // Each item
-        countryArrayAdapter = ArrayAdapter.createFromResource(this, R.array.countries, android.R.layout.simple_spinner_item);
+        countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries, android.R.layout.simple_spinner_item);
         // Drop down
         countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountries.setAdapter(countryArrayAdapter);
+
+
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
         btSubmitCountry.setOnClickListener(this);
-        serverRequests = new ServerRequests(this);
-        userLocalStore = new UserLocalStore(this);
+        //serverRequests = new ServerRequests(this);
+        volleyDestination = new VolleyDestination(getActivity());
+        userLocalStore = new UserLocalStore(getActivity());
 
         tvDateArrival.setText((thisMonth + 1) + "-" + thisDay + "-" + thisYear);
         tvDateLeave.setText((thisMonth + 1) + "-" + (thisDay + 1) + "-" + thisYear);
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tvDateArrival:
-                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
-                dateFragArrival.show(getSupportFragmentManager(), "datePicker");
-                break;
-            case R.id.tvDateLeave:
-                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
-                dateFragLeave.show(getSupportFragmentManager(), "datePicker");
-                break;
-            case R.id.btSubmitCountry:
-                TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
-                serverRequests.insertTravelSpotInBackground(travelSpot);
-                break;
-        }
+
+        dateFrom = thisYear + "-" + (thisMonth + 1) + "-" + thisDay;
+        dateTo = thisYear + "-" + (thisMonth + 1) + "-" + (thisDay + 1);
+
+        return v;
     }
 
     @Override
@@ -108,20 +92,41 @@ public class TravelSelection extends AppCompatActivity implements AdapterView.On
             case R.id.spinnerCountries:
                 selectedCountry = parent.getItemAtPosition(position).toString();
 
-                Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + " selected..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getBaseContext(), parent.getItemAtPosition(position) + " selected..", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tvDateArrival:
+                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
+                dateFragArrival.show(getActivity().getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.tvDateLeave:
+                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
+                dateFragLeave.show(getActivity().getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.btSubmitCountry:
+
+                TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
+                //serverRequests.insertTravelSpotInBackground(travelSpot);
+                volleyDestination.createDestinationVolley(travelSpot);
+                break;
+        }
+    }
+
 
     public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
         }
 
@@ -142,7 +147,6 @@ public class TravelSelection extends AppCompatActivity implements AdapterView.On
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
         }
 
@@ -157,5 +161,4 @@ public class TravelSelection extends AppCompatActivity implements AdapterView.On
             dateTo = yearString + "-" + monthString + "-" + dayString;
         }
     }
-
 }

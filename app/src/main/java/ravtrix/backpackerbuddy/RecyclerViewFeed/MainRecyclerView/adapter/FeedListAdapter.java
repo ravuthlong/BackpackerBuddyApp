@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.BackgroundImage;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
 import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
 import ravtrix.backpackerbuddy.UserLocalStore;
@@ -26,6 +28,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     //ImageLoader imageLoader = AppController.getInstance().getImageLoader();;
     ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
+    private BackgroundImage backgroundImage;
 
     public FeedListAdapter(Context context, List<FeedItem> feedItems) {
         inflater = LayoutInflater.from(context);
@@ -40,6 +43,8 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         // Hold a structure of a view. See class viewholder, which holds the structure
         ViewHolder holder = new ViewHolder(view);
         userLocalStore = new UserLocalStore(mContext);
+        backgroundImage = new BackgroundImage();
+
         return holder;
     }
 
@@ -55,6 +60,9 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.tvCountry.setText(currentPos.getCountry());
         holder.tvFromDate.setText(currentPos.getFromDate());
         holder.tvToDate.setText(currentPos.getToDate());
+
+        // Set image background based on country name. Hash will return the correct background id
+        holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
     }
 
     @Override
@@ -65,13 +73,15 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     // Holder knows and references where the fields are
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvCountry, tvFromDate, tvToDate;
+        private TextView tvCountry, tvFromDate, tvToDate;
+        private  LinearLayout backgroundLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvCountry = (TextView) itemView.findViewById(R.id.tvCountry);
             tvFromDate = (TextView) itemView.findViewById(R.id.tvFromDate);
             tvToDate = (TextView) itemView.findViewById(R.id.tvToDate);
+            backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
         }
     }
 

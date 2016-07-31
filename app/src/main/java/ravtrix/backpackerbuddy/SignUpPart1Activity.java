@@ -1,8 +1,8 @@
 package ravtrix.backpackerbuddy;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
-import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
+import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
 
 /**
  * Created by Ravinder on 3/28/16.
@@ -20,7 +20,8 @@ import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
 public class SignUpPart1Activity extends AppCompatActivity implements  View.OnClickListener {
 
     private EditText etEmail, etUsername, etPassword;
-    private ServerRequests serverRequests;
+    //private ServerRequests serverRequests;
+    private VolleyUserInfo volleyUserInfo;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -48,7 +49,8 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
             });
         }
 
-        serverRequests = new ServerRequests(this);
+        //serverRequests = new ServerRequests(this);
+        volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -76,7 +78,7 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
 
                 User signedUpUser = new User(email, username, password);
 
-                serverRequests.storeUserDataInBackground(signedUpUser, new GetUserCallBack() {
+                volleyUserInfo.storeUserInfo(signedUpUser, new GetUserCallBack() {
                     @Override
                     public void done(User returnedUser) {
                         // Username has been taken and user info will not be stored
@@ -92,6 +94,23 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                         }
                     }
                 });
+                /*
+                serverRequests.storeUserDataInBackground(signedUpUser, new GetUserCallBack() {
+                    @Override
+                    public void done(User returnedUser) {
+                        // Username has been taken and user info will not be stored
+                        if (returnedUser == null) {
+                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpPart1Activity.this);
+                            dialogBuilder.setMessage("User has been taken");
+                            dialogBuilder.setPositiveButton("Ok", null);
+                            dialogBuilder.show();
+                        } else {
+                            userLocalStore.storeUserData(returnedUser);
+                            UserLocalStore.isUserLoggedIn = true;
+                            startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
+                        }
+                    }
+                });*/
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

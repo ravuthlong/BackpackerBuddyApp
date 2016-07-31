@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
-import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
+import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -20,7 +20,8 @@ import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
 public class LogInActivity extends AppCompatActivity {
 
     private EditText etLoggedInUsername, etLoggedInPassword;
-    private ServerRequests serverRequests;
+    private VolleyUserInfo volleyUserInfo;
+    //private ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -47,7 +48,8 @@ public class LogInActivity extends AppCompatActivity {
             });
         }
 
-        serverRequests = new ServerRequests(this);
+        //serverRequests = new ServerRequests(this);
+        volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -69,7 +71,10 @@ public class LogInActivity extends AppCompatActivity {
                 String username = etLoggedInUsername.getText().toString();
                 String password = etLoggedInPassword.getText().toString();
                 final User loggedInUser = new User(username, password);
-                serverRequests.logUserInDataInBackground(loggedInUser, new GetUserCallBack() {
+
+
+
+                volleyUserInfo.logUserInDataInBackground(loggedInUser, new GetUserCallBack() {
                     @Override
                     public void done(User returnedUser) {
                         if (returnedUser == null) {
@@ -80,6 +85,19 @@ public class LogInActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                /*
+                serverRequests.logUserInDataInBackground(loggedInUser, new GetUserCallBack() {
+                    @Override
+                    public void done(User returnedUser) {
+                        if (returnedUser == null) {
+                            showNoUserErrorMessage();
+                        } else {
+                            userLocalStore.storeUserData(returnedUser);
+                            startActivity(new Intent(LogInActivity.this, UserMainPage.class));
+                        }
+                    }
+                });*/
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

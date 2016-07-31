@@ -34,7 +34,7 @@ public class UserInboxFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.userMainAdd:
-                startActivity(new Intent(getActivity(), TravelSelection.class));
+                startActivity(new Intent(getActivity(), TravelSelectionActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
+import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
 
 /**
  * Created by Ravinder on 3/28/16.
@@ -18,7 +18,8 @@ import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
 public class SignUpPart2Activity extends AppCompatActivity {
 
     private EditText etFirstname, etLastname;
-    private ServerRequests serverRequests;
+    //private ServerRequests serverRequests;
+    private VolleyUserInfo volleyUserInfo;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -45,7 +46,8 @@ public class SignUpPart2Activity extends AppCompatActivity {
             });
         }
 
-        serverRequests = new ServerRequests(this);
+        //serverRequests = new ServerRequests(this);
+        volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
 
     }
@@ -65,8 +67,11 @@ public class SignUpPart2Activity extends AppCompatActivity {
 
                 String firstName = etFirstname.getText().toString();
                 String lastName = etLastname.getText().toString();
+
+                volleyUserInfo.storeExtraUserInfo(userLocalStore.getLoggedInUser().getUserID(), firstName, lastName);
+                /*
                 serverRequests.storeExtraUserInfoDataInBackground(userLocalStore.getLoggedInUser().getUserID(),
-                        firstName, lastName);
+                        firstName, lastName);*/
                 startActivity(new Intent(this, UserMainPage.class));
                 return true;
             default:

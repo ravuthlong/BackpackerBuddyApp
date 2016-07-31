@@ -65,6 +65,7 @@ public class UserCountriesFragment extends Fragment implements SwipeRefreshLayou
 
         //getJsonLive();
 
+        //parseJsonFeed();
         return v;
     }
 
@@ -79,7 +80,7 @@ public class UserCountriesFragment extends Fragment implements SwipeRefreshLayou
 
         switch (item.getItemId()) {
             case R.id.userMainAdd:
-                startActivity(new Intent(getActivity(), TravelSelection.class));
+                startActivity(new Intent(getActivity(), TravelSelectionActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
