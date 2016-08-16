@@ -1,23 +1,10 @@
 package ravtrix.backpackerbuddy;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TabHost;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ravtrix.backpackerbuddy.TabAdapter.ViewPagerAdapter;
-
 /**
  * Created by Ravinder on 3/29/16.
  */
+
+/*
 public class TabFragment extends Fragment implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener  {
     private ViewPager viewPager;
     private TabHost tabHost;
@@ -111,3 +98,4 @@ public class TabFragment extends Fragment implements ViewPager.OnPageChangeListe
         }
     }
 }
+*/

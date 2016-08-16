@@ -17,6 +17,7 @@ public class BackgroundImage {
 
     private void setBackgroundHashMap() {
         backGroundHashMap.put("Afghanistan", R.drawable.afghanistan);
+        backGroundHashMap.put("Cambodia", R.drawable.cambodia);
     }
 
     public int getBackgroundFromHash(String countryName) {

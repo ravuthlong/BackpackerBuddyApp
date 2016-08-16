@@ -12,11 +12,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView tvBackpacker, tvBuddy;
     private ImageButton imgbSignUp, imgbLogIn;
+    private UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
+
+        // Check to see if the user is already logged in. If so, go straight to main user page
+        userLocalStore = new UserLocalStore(this);
+        if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {
+            startActivity(new Intent(this, UserMainPage.class));
+        }
 
         tvBackpacker = (TextView) findViewById(R.id.tvBackpacker);
         tvBuddy = (TextView) findViewById(R.id.tvBuddy);

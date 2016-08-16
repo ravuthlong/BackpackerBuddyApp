@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navActivity"
+            android:title="Activity">
+        </item>
+        <item
+            android:id="@+id/navDestination"
+            android:title="My Destination" />
+        <item
+            android:id="@+id/navInbox"
+            android:title="Inbox" />
+        <item
+            android:id="@+id/navSettings"
+            android:title="Settings" />
+    </group>
+</menu>

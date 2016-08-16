@@ -53,16 +53,24 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         serverRequests = new ServerRequests(mContext);
 
         // Initialize fonts
-        Typeface killFillFont = Typeface.createFromAsset(mContext.getAssets(), "Menufont.ttf");
-        holder.tvCountry.setTypeface(killFillFont);
+        Typeface countryFont = Typeface.createFromAsset(mContext.getAssets(), "Trench.otf");
+        Typeface dateFont = Typeface.createFromAsset(mContext.getAssets(), "Monu.otf");
+
+        holder.tvCountry.setTypeface(countryFont);
+        holder.tvFromDate.setTypeface(dateFont);
+        holder.tvToDate.setTypeface(dateFont);
 
         final FeedItem currentPos = feedItems.get(position);
         holder.tvCountry.setText(currentPos.getCountry());
         holder.tvFromDate.setText(currentPos.getFromDate());
         holder.tvToDate.setText(currentPos.getToDate());
 
+
         // Set image background based on country name. Hash will return the correct background id
-        holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
+
+        if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
+            holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
+        }
     }
 
     @Override

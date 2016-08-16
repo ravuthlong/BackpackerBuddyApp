@@ -5,18 +5,26 @@ package ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data;
  */
 
 public class FeedItem {
-    private int id;
-    private String country, fromDate, toDate;
+    private int id, userID;
+    private String country, fromDate, toDate, name, username;
 
     public FeedItem() {
     }
 
-    public FeedItem(int id, String country, String fromDate, String toDate) {
+    public FeedItem(int userID, int id, String name, String username, String country, String fromDate, String toDate) {
         this.id = id;
         this.country = country;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.userID = userID;
+        this.username = username;
+        this.name = name;
+
     }
+
+    public void setUsername(String username) { this.username = username; }
+    public void setName(String name) { this.name = name; }
+    public void setUserID(int userID) {this.userID = userID; }
     public void setId(int id) {
         this.id = id;
     }
@@ -41,4 +49,7 @@ public class FeedItem {
     public String getFromDate() {
         return fromDate;
     }
+    public int getUserID() { return userID; }
+    public String getName() { return name; }
+    public String getUsername() { return username; }
 }

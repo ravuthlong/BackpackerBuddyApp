@@ -2,8 +2,10 @@ package ravtrix.backpackerbuddy;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +29,8 @@ import ravtrix.backpackerbuddy.SlidingDrawer.SlidingMenuAdapter;
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class UserMainPage extends AppCompatActivity {
+public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     public static RelativeLayout rLayoutMain;
     private Toolbar toolbarMain;
     private DrawerLayout drawerLayout;
@@ -39,30 +42,70 @@ public class UserMainPage extends AppCompatActivity {
     private int currentPos;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Toolbar toolbar;
+    private NavigationView navigationView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_slidingdrawer);
+        //setContentView(R.layout.activity_slidingdrawer);
+        setContentView(R.layout.activity_main);
 
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        fragmentManager = getSupportFragmentManager();
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayoutMain);
-        rLayoutMain = (RelativeLayout) findViewById(R.id.rLayoutMain);
-        listView = (ListView) findViewById(R.id.listViewMain);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        //fragmentManager = getSupportFragmentManager();
+        //rLayoutMain = (RelativeLayout) findViewById(R.id.rLayoutMain);
+        //listView = (ListView) findViewById(R.id.listViewMain);
 
 
-        setUpDrawerList();
+        //setUpDrawerList();
         setUpFragments();
         screenStartUpState();
-        drawerListViewListener();
+        //drawerListViewListener();
         toggleListener();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch(id) {
+            case R.id.navActivity:
+                currentPos = 0;
+                break;
+            case R.id.navDestination:
+                currentPos = 1;
+                break;
+            case R.id.navInbox:
+                currentPos = 2;
+                break;
+            case R.id.navSettings:
+                currentPos = 3;
+                break;
+            default:
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                fragmentList.get(currentPos)).commit();
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
     // Add items to the drawer list for navigation drawer
@@ -82,6 +125,8 @@ public class UserMainPage extends AppCompatActivity {
         fragmentList.add(new Activity());
         fragmentList.add(new Destination());
         fragmentList.add(new Messages());
+        fragmentList.add(new Messages());
+
     }
 
     // Start up state
@@ -89,9 +134,9 @@ public class UserMainPage extends AppCompatActivity {
     private void screenStartUpState() {
         setTitle("");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.rLayoutMain, fragmentList.get(0)).addToBackStack(null).commit();
-        listView.setItemChecked(0, true);
-        drawerLayout.closeDrawer(listView);
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
+        //listView.setItemChecked(0, true);
+        //drawerLayout.closeDrawer(listView);
     }
 
     // Fragments to be displayed based on user selection from navigation drawer
