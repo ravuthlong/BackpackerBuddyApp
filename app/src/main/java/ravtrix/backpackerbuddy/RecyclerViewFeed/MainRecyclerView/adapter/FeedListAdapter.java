@@ -15,7 +15,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.BackgroundImage;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
 import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
-import ravtrix.backpackerbuddy.UserLocalStore;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
 
 /**
  * Created by Ravinder on 2/25/16.

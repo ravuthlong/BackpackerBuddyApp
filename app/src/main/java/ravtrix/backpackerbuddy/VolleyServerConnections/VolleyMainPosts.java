@@ -18,7 +18,7 @@ import java.util.List;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.app.AppController;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
-import ravtrix.backpackerbuddy.UserLocalStore;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
 
 /**
  * Created by Ravinder on 7/31/16.

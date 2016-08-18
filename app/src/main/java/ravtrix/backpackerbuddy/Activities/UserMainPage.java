@@ -1,7 +1,7 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,65 +13,60 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.Fragments.Activity;
 import ravtrix.backpackerbuddy.Fragments.Destination;
 import ravtrix.backpackerbuddy.Fragments.Messages;
-import ravtrix.backpackerbuddy.SlidingDrawer.ItemSlideMenu;
-import ravtrix.backpackerbuddy.SlidingDrawer.SlidingMenuAdapter;
+import ravtrix.backpackerbuddy.Fragments.UserProfile;
+import ravtrix.backpackerbuddy.R;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    public static RelativeLayout rLayoutMain;
-    private Toolbar toolbarMain;
-    private DrawerLayout drawerLayout;
     private FragmentManager fragmentManager;
     public static ListView listView;
-    private List<ItemSlideMenu> itemList;
     private List<Fragment> fragmentList;
-    private SlidingMenuAdapter adapter;
     private int currentPos;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+    @BindView(R.id.drawer_layout) protected DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.nav_view) protected NavigationView navigationView;
+    private ImageButton settingsButton;
+    private CircleImageView profilePic;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_slidingdrawer);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
+        View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+        profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+        profilePic.setOnClickListener(this);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
 
         navigationView.setNavigationItemSelectedListener(this);
-
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        settingsButton.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
-        //fragmentManager = getSupportFragmentManager();
-        //rLayoutMain = (RelativeLayout) findViewById(R.id.rLayoutMain);
-        //listView = (ListView) findViewById(R.id.listViewMain);
 
-
-        //setUpDrawerList();
         setUpFragments();
         screenStartUpState();
         //drawerListViewListener();
@@ -86,38 +81,52 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.navActivity:
                 currentPos = 0;
+                setTitle("Activity");
                 break;
             case R.id.navDestination:
                 currentPos = 1;
+                setTitle("Destination");
                 break;
             case R.id.navInbox:
                 currentPos = 2;
+                setTitle("Inbox");
                 break;
             case R.id.navSettings:
                 currentPos = 3;
+                setTitle("Settings Activity");
                 break;
             default:
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                fragmentList.get(currentPos)).commit();
-
-        drawerLayout.closeDrawer(GravityCompat.START);
+        changeFragment(this.currentPos);
 
         return true;
     }
 
-    // Add items to the drawer list for navigation drawer
-    private void setUpDrawerList() {
-        itemList = new ArrayList<>();
-        itemList.add(new ItemSlideMenu("Activity"));
-        itemList.add(new ItemSlideMenu("My Destination"));
-        itemList.add(new ItemSlideMenu("Inbox"));
+    @Override
+    public void onClick(View v) {
 
-        adapter = new SlidingMenuAdapter(this, itemList);
-        listView.setAdapter(adapter);
+        switch (v.getId()) {
+            case R.id.settingsButton:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.profile_image:
+                currentPos = 4;
+                setTitle("User Profile");
+                changeFragment(this.currentPos);
+
+                // Removed all checked items from navigation because profile is not on it
+                int size = navigationView.getMenu().size();
+                for (int i = 0; i < size; i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
+                break;
+            default:
+
+        }
     }
+
+
 
     // Set up the fragments
     private void setUpFragments() {
@@ -126,48 +135,25 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new Destination());
         fragmentList.add(new Messages());
         fragmentList.add(new Messages());
-
+        fragmentList.add(new UserProfile());
     }
 
     // Start up state
     //Title Idex, with closed navigation drawer and default fragment 1
     private void screenStartUpState() {
-        setTitle("");
+        setTitle("Activity");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
-        //listView.setItemChecked(0, true);
-        //drawerLayout.closeDrawer(listView);
     }
 
-    // Fragments to be displayed based on user selection from navigation drawer
-    private void drawerListViewListener() {
-        // Handle click
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                currentPos = position;
+    private void changeFragment(int currentPos) {
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                fragmentList.get(currentPos)).commit();
 
-                if (position == 0) {
-                    setTitle("");
-                } else {
-                    //setTitle(itemList.get(position).getTitle());
-                }
-                drawerLayout.closeDrawer(listView);
-                // Set item to selected
-                listView.setItemChecked(position, true);
-
-                // Delay to avoid lag between navigation drawer items
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.rLayoutMain,
-                                fragmentList.get(currentPos)).commit();
-                    }
-                }, 270);
-            }
-        });
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
+
 
     // Listens to when drawer navigation is opened or closed.
     // Disabled menu items on action bar

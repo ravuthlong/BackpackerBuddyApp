@@ -12,8 +12,8 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
-import ravtrix.backpackerbuddy.TravelSpot;
-import ravtrix.backpackerbuddy.User;
+import ravtrix.backpackerbuddy.Models.TravelSpot;
+import ravtrix.backpackerbuddy.Models.User;
 
 /**
  * Created by Ravinder on 3/28/16.

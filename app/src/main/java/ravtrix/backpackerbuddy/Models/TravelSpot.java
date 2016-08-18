@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Models;
 
 /**
  * Created by Ravinder on 4/1/16.

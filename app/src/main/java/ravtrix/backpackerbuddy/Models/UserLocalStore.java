@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,14 +17,15 @@ public class UserLocalStore {
     public UserLocalStore(Context context) {
         userLocalDataStore = context.getSharedPreferences(SP_NAME, 0);
     }
-    public void storeUserData(User user) {
+    public void storeUserData(LoggedInUser loggedInUser) {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
-        spEditor.putInt("userID", user.getUserID());
-        spEditor.putString("email", user.getEmail());
-        spEditor.putString("username", user.getUsername());
-        spEditor.commit();
+        spEditor.putInt("userID", loggedInUser.getUserID());
+        spEditor.putString("email", loggedInUser.getEmail());
+        spEditor.putString("username", loggedInUser.getUsername());
+        spEditor.apply();
     }
 
+    // Return current logged in user if exist
     public User getLoggedInUser() {
         int userID = userLocalDataStore.getInt("userID", 0);
         String email = userLocalDataStore.getString("email", "");
@@ -37,11 +38,11 @@ public class UserLocalStore {
     public void setUserLoggedIn(boolean loggedIn) {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
         spEditor.putBoolean("loggedIn", loggedIn);
-        spEditor.commit();
+        spEditor.apply();
     }
     public void clearUserData() {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
         spEditor.clear();
-        spEditor.commit();
+        spEditor.apply();
     }
 }

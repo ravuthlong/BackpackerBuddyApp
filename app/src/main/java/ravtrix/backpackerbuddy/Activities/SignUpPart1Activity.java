@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.Models.LoggedInUser;
+import ravtrix.backpackerbuddy.Models.User;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
 import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
 
@@ -19,8 +25,9 @@ import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
  */
 public class SignUpPart1Activity extends AppCompatActivity implements  View.OnClickListener {
 
-    private EditText etEmail, etUsername, etPassword;
-    //private ServerRequests serverRequests;
+    @BindView(R.id.etEmail) protected EditText etEmail;
+    @BindView(R.id.etUsername) protected EditText etUsername;
+    @BindView(R.id.etPassword) protected EditText etPassword;
     private VolleyUserInfo volleyUserInfo;
     private UserLocalStore userLocalStore;
 
@@ -28,12 +35,10 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup1);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarSignUp);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,7 +54,6 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
             });
         }
 
-        //serverRequests = new ServerRequests(this);
         volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
     }
@@ -88,29 +92,17 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                             dialogBuilder.setPositiveButton("Ok", null);
                             dialogBuilder.show();
                         } else {
-                            userLocalStore.storeUserData(returnedUser);
+                            LoggedInUser user = new LoggedInUser();
+                            user.setUsername(returnedUser.getUsername());
+                            user.setEmail(returnedUser.getEmail());
+                            user.setUserID(returnedUser.getUserID());
+
+                            userLocalStore.storeUserData(user);
                             UserLocalStore.isUserLoggedIn = true;
                             startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
                         }
                     }
                 });
-                /*
-                serverRequests.storeUserDataInBackground(signedUpUser, new GetUserCallBack() {
-                    @Override
-                    public void done(User returnedUser) {
-                        // Username has been taken and user info will not be stored
-                        if (returnedUser == null) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpPart1Activity.this);
-                            dialogBuilder.setMessage("User has been taken");
-                            dialogBuilder.setPositiveButton("Ok", null);
-                            dialogBuilder.show();
-                        } else {
-                            userLocalStore.storeUserData(returnedUser);
-                            UserLocalStore.isUserLoggedIn = true;
-                            startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
-                        }
-                    }
-                });*/
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

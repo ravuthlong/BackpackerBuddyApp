@@ -4,18 +4,19 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".RecyclerViewFeed.MainRecyclerView.app.AppController"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".MainActivity"
-            android:noHistory="true"
+            android:name=".Activities.WelcomeActivity"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,32 +27,35 @@
         </activity>
         <activity
             android:name=".TravelSelectionActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_travel_selection"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".SignUpPart1Activity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.SignUpPart1Activity"
             android:label="Sign Up Activity1"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".SignUpPart2Activity"
             android:noHistory="true"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.SignUpPart2Activity"
             android:label="Sign Up Activity2"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".UserMainPage"
-            android:screenOrientation="portrait"
-            android:label="User Main"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".LogInActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.UserMainPage"
+            android:label="User Main"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.LogInActivity"
             android:label="Log In Activity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:noHistory="true" />
     </application>
 
 </manifest>

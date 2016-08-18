@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -6,12 +6,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.R;
 
-    private TextView tvBackpacker, tvBuddy;
-    private ImageButton imgbSignUp, imgbLogIn;
+public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
+
+    @BindView(R.id.tvBackpacker) protected TextView tvBackpacker;
+    @BindView(R.id.tvBuddy) protected TextView tvBuddy;
+    @BindView(R.id.imgbSignUp) protected ImageButton imgbSignUp;
+    @BindView(R.id.imgbLogIn) protected ImageView imgbLogIn;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -19,16 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
 
+        ButterKnife.bind(this);
+
         // Check to see if the user is already logged in. If so, go straight to main user page
         userLocalStore = new UserLocalStore(this);
         if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {
             startActivity(new Intent(this, UserMainPage.class));
         }
-
-        tvBackpacker = (TextView) findViewById(R.id.tvBackpacker);
-        tvBuddy = (TextView) findViewById(R.id.tvBuddy);
-        imgbSignUp = (ImageButton) findViewById(R.id.imgbSignUp);
-        imgbLogIn = (ImageButton) findViewById(R.id.imgbLogIn);
 
         Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
 
@@ -50,5 +55,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, LogInActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

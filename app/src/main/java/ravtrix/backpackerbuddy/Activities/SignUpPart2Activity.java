@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
 
 /**
@@ -17,8 +21,8 @@ import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
  */
 public class SignUpPart2Activity extends AppCompatActivity {
 
-    private EditText etFirstname, etLastname;
-    //private ServerRequests serverRequests;
+    @BindView(R.id.etFirstname) protected EditText etFirstname;
+    @BindView(R.id.etLastname) protected EditText etLastname;
     private VolleyUserInfo volleyUserInfo;
     private UserLocalStore userLocalStore;
 
@@ -26,11 +30,10 @@ public class SignUpPart2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarSignUp2);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
-        etFirstname = (EditText) findViewById(R.id.etFirstname);
-        etLastname = (EditText) findViewById(R.id.etLastname);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,7 +49,6 @@ public class SignUpPart2Activity extends AppCompatActivity {
             });
         }
 
-        //serverRequests = new ServerRequests(this);
         volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
 
@@ -69,9 +71,7 @@ public class SignUpPart2Activity extends AppCompatActivity {
                 String lastName = etLastname.getText().toString();
 
                 volleyUserInfo.storeExtraUserInfo(userLocalStore.getLoggedInUser().getUserID(), firstName, lastName);
-                /*
-                serverRequests.storeExtraUserInfoDataInBackground(userLocalStore.getLoggedInUser().getUserID(),
-                        firstName, lastName);*/
+
                 startActivity(new Intent(this, UserMainPage.class));
                 return true;
             default:

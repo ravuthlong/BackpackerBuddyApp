@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#93b49b">
+
+
+    <Button
+        android:id="@+id/btn2"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp"
+
+        android:text="Email Address"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#b4d8c3"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:layout_gravity="start"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/btn1"
+        android:text="Password"
+        android:textAllCaps="false"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="#b4d8c3"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:layout_below="@+id/btn2"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:textAllCaps="false"
+        android:background="#b4d8c3"
+        android:text="Notification"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:layout_below="@+id/btn1"
+        android:layout_marginTop="52dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Send feedback"
+        android:id="@+id/button"
+        android:textAllCaps="false"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:layout_below="@+id/button2"
+        android:background="#b4d8c3"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:id="@+id/bSignOut"
+        android:textAllCaps="false"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:background="#b4d8c3"
+        android:layout_marginBottom="55dp"
+        android:layout_above="@+id/button3"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="About"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:textAllCaps="false"
+        android:id="@+id/button3"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#b4d8c3"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp" />
+
+
+</RelativeLayout>

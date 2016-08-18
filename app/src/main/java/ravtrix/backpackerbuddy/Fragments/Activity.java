@@ -23,7 +23,7 @@ import java.util.List;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
-import ravtrix.backpackerbuddy.UserLocalStore;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
 import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyMainPosts;
 
 /**

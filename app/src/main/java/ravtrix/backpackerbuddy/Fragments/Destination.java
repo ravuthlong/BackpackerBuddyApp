@@ -19,8 +19,8 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.TravelSpot;
-import ravtrix.backpackerbuddy.UserLocalStore;
+import ravtrix.backpackerbuddy.Models.TravelSpot;
+import ravtrix.backpackerbuddy.Models.UserLocalStore;
 import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyDestination;
 
 /**
