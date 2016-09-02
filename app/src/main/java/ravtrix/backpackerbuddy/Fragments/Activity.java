@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Fragments;
+package ravtrix.backpackerbuddy.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -12,19 +12,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.android.volley.Cache;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.adapter.FeedListAdapter;
-import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
-import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyMainPosts;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 7/29/16.
@@ -41,10 +42,8 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private ProgressBar spinner;
     private Cache.Entry entry;
     private UserLocalStore userLocalStore;
-    private String URL_LoggedInUser;
-    private Button bMainLog, bMainRoll, bMainInfo;
     private FragmentManager fragmentManager;
-    private VolleyMainPosts volleyMainPosts;
+    private RetrofitUserCountries retrofitUserCountries;
 
     @Nullable
     @Override
@@ -55,37 +54,53 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
        // spinner = (ProgressBar) v.findViewById(R.id.progress_bar);
         recyclerView = (RecyclerView) v.findViewById(R.id.postRecyclerView1);
 
-        // Set up array list of country feeds
-        feedItems = new ArrayList<>();
-
-        feedListAdapter = new FeedListAdapter(getActivity(), feedItems);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(feedListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         refreshLayout.setOnRefreshListener(this);
         userLocalStore = new UserLocalStore(getActivity());
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setCancelable(false);
-        progressDialog.setTitle("Processing");
-        progressDialog.setMessage("Please Wait...");
+        retrofitUserCountries = new RetrofitUserCountries();
 
-        volleyMainPosts = new VolleyMainPosts(getContext());
+        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts().countryPosts();
 
+        returnedFeed.enqueue(new Callback<List<FeedItem>>() {
+            @Override
+            public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
 
-        volleyMainPosts.getUserPostsNotLoggedIn(feedListAdapter, feedItems);
+                // Set up array list of country feeds
+                feedItems =  response.body();
+                feedListAdapter = new FeedListAdapter(getActivity(), feedItems);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(feedListAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
 
-
-
+            @Override
+            public void onFailure(Call<List<FeedItem>> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
         return v;
     }
 
     @Override
     public void onRefresh() {
-        //volleyMainPosts.getUserPostsNotLoggedIn(feedListAdapter, feedItems);
+
+        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts().countryPosts();
+
+        returnedFeed.enqueue(new Callback<List<FeedItem>>() {
+            @Override
+            public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
+                feedItems = response.body();
+                feedListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<FeedItem>> call, Throwable t) {
+                System.out.println(t.getMessage());
+
+            }
+        });
+
         refreshLayout.setRefreshing(false);
-        feedListAdapter.notifyDataSetChanged();
         /*
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(Activity.this).attach(Activity.this).commit();

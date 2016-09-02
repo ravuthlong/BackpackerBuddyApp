@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Models;
+package ravtrix.backpackerbuddy.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

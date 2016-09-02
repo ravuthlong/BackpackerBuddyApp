@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Activities;
+package ravtrix.backpackerbuddy.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,10 +18,10 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.Models.LoggedInUser;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.RetrofitRequests.RetrofitUserInfo;
+import ravtrix.backpackerbuddy.models.LoggedInUser;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +34,7 @@ public class LogInActivity extends AppCompatActivity {
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     private UserLocalStore userLocalStore;
-    private RetrofitUserInfo retrofitUserInfo;
+    private RetrofitUserInfo retrofitUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class LogInActivity extends AppCompatActivity {
         }
 
         userLocalStore = new UserLocalStore(this);
-        retrofitUserInfo = new RetrofitUserInfo();
+        retrofitUser = new RetrofitUserInfo();
     }
 
 
@@ -78,70 +78,64 @@ public class LogInActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logInContinute:
 
-                String username = etLoggedInUsername.getText().toString();
-                String password = etLoggedInPassword.getText().toString();
-
-                if (username.isEmpty() && password.isEmpty()) {
-                    // Animation bounce if username AND password fields entered are empty
-                    YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
-                    YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
-
-                } else if (username.isEmpty()) {
-                    // Animation bounce if username field entered is empty
-                    YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
-                } else if (password.isEmpty()) {
-                    // Animation bounce if password field entered is empty
-                    YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
-                } else {
-
-                    // Form filled in success. Attempt to log user in
-                    //final User loggedInUser = new User(username, password);
-
-                    /*
-                    volleyUserInfo.logUserInDataInBackground(loggedInUser, new GetUserCallBack() {
-                        @Override
-                        public void done(User returnedUser) {
-                            if (returnedUser == null) {
-                                showNoUserErrorMessage();
-                            } else {
-                                userLocalStore.storeUserData(returnedUser);
-                                startActivity(new Intent(LogInActivity.this, UserMainPage.class));
-                            }
-                        }
-                    });*/
-
-                    HashMap<String, String> arguments = new HashMap<>();
-                    arguments.put("username", username);
-                    arguments.put("password", password);
-
-                    Call<LoggedInUser> responseUser = retrofitUserInfo.loggedInUser().userInfo(arguments);
-                    responseUser.enqueue(new Callback<LoggedInUser>() {
-                        @Override
-                        public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
-                            LoggedInUser user = response.body();
-
-                            if (user.getStatus() == 0) {
-                                // User not found. 0 returned from PHP
-                                showNoUserErrorMessage();
-                            } else {
-                                // User authenticated. Log user in
-                                userLocalStore.storeUserData(user);
-                                startActivity(new Intent(LogInActivity.this, UserMainPage.class));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LoggedInUser> call, Throwable t) {
-                            System.out.println(t.getMessage());
-
-                        }
-                    });
-                }
+                logUserIn();
 
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*
+     * Log user in if right credentials given by the user
+     * Animate bouncing effect if the field is empty
+     */
+
+    private void logUserIn() {
+        String username = etLoggedInUsername.getText().toString();
+        String password = etLoggedInPassword.getText().toString();
+
+        if (username.isEmpty() && password.isEmpty()) {
+            // Animation bounce if username AND password fields entered are empty
+            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
+            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
+
+        } else if (username.isEmpty()) {
+            // Animation bounce if username field entered is empty
+            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
+        } else if (password.isEmpty()) {
+            // Animation bounce if password field entered is empty
+            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
+        } else {
+
+            // Prepare HashMap of username and password to send to retrofit call
+            HashMap<String, String> arguments = new HashMap<>();
+            arguments.put("username", username);
+            arguments.put("password", password);
+
+            Call<LoggedInUser> responseUser = retrofitUser.loggedInUser().userInfo(arguments);
+            responseUser.enqueue(new Callback<LoggedInUser>() {
+                @Override
+                public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
+                    LoggedInUser user = response.body();
+
+                    if (user.getStatus() == 0) {
+                        // User not found. 0 returned from PHP
+                        showNoUserErrorMessage();
+                    } else {
+                        // User authenticated. Log user in
+                        userLocalStore.storeUserData(user);
+                        startActivity(new Intent(LogInActivity.this, UserMainPage.class));
+                    }
+                }
+                @Override
+                public void onFailure(Call<LoggedInUser> call, Throwable t) {
+                    System.out.println(t.getMessage());
+
+                }
+            });
+        }
+
     }
 
     // Error if the user info is incorrect

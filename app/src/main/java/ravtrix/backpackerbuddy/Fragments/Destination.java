@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Fragments;
+package ravtrix.backpackerbuddy.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -16,12 +16,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
 import java.util.Calendar;
+import java.util.HashMap;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.Models.TravelSpot;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
-import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyDestination;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 7/29/16.
@@ -39,7 +44,7 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
     private static String dateFrom;
     private static String dateTo;
     private Button btSubmitCountry;
-    private VolleyDestination volleyDestination;
+    private RetrofitUserCountries retrofitUserCountries;
     //private ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
 
@@ -72,8 +77,7 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
         btSubmitCountry.setOnClickListener(this);
-        //serverRequests = new ServerRequests(this);
-        volleyDestination = new VolleyDestination(getActivity());
+        retrofitUserCountries = new RetrofitUserCountries();
         userLocalStore = new UserLocalStore(getActivity());
 
         tvDateArrival.setText((thisMonth + 1) + "-" + thisDay + "-" + thisYear);
@@ -115,9 +119,33 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
                 break;
             case R.id.btSubmitCountry:
 
-                TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
-                //serverRequests.insertTravelSpotInBackground(travelSpot);
-                volleyDestination.createDestinationVolley(travelSpot);
+               // TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
+
+                HashMap<String, String> travelSpot = new HashMap<>();
+                travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                travelSpot.put("country", selectedCountry);
+                travelSpot.put("from", dateFrom);
+                travelSpot.put("until", dateTo);
+
+                Call<JsonObject> insertSpot = retrofitUserCountries.insertTravelSpot().travelSpot(travelSpot);
+
+                insertSpot.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonObject status = response.body();
+                        if (status.get("status").getAsInt() == 1) {
+                            // Success
+
+                        } else {
+                            // failed
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        System.out.println(t.getMessage());
+                    }
+                });
                 break;
         }
     }

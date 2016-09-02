@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.volley;
+package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.volley;
 
 /**
  * Created by Linh on 2/19/2016.

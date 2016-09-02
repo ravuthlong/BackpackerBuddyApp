@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.TabAdapter;
+package ravtrix.backpackerbuddy.tabadapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

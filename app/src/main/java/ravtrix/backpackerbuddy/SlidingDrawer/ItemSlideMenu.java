@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.SlidingDrawer;
+package ravtrix.backpackerbuddy.slidingdrawer;
 
 /**
  * Created by Ravinder on 7/29/16.

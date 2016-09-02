@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Activities;
+package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,10 +24,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.Fragments.Activity;
-import ravtrix.backpackerbuddy.Fragments.Destination;
-import ravtrix.backpackerbuddy.Fragments.Messages;
-import ravtrix.backpackerbuddy.Fragments.UserProfile;
+import ravtrix.backpackerbuddy.fragments.Activity;
+import ravtrix.backpackerbuddy.fragments.Destination;
+import ravtrix.backpackerbuddy.fragments.Messages;
+import ravtrix.backpackerbuddy.fragments.UserProfile;
 import ravtrix.backpackerbuddy.R;
 
 /**

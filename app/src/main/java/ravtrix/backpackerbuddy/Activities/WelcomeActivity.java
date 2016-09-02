@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Activities;
+package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {

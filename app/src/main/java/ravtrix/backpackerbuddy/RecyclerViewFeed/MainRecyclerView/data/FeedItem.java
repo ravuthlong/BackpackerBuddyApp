@@ -1,29 +1,71 @@
-package ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data;
+package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Linh on 2/19/2016.
  */
 
 public class FeedItem {
-    private int id, userID;
-    private String country, fromDate, toDate, name, username;
+    @SerializedName("travelID")
+    @Expose
+    private int id;
+    @SerializedName("userID")
+    @Expose
+    private int userID;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("from")
+    @Expose
+    private String fromDate;
+    @SerializedName("until")
+    @Expose
+    private String toDate;
+    @SerializedName("firstname")
+    @Expose
+    private String firstname;
+    @SerializedName("lastname")
+    @Expose
+    private String lastname;
+    @SerializedName("username")
+    @Expose
+    private String username;
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
     public FeedItem() {
     }
 
-    public FeedItem(int userID, int id, String name, String username, String country, String fromDate, String toDate) {
+    public FeedItem(int userID, int id, String firstname, String lastname,
+                    String username, String country, String fromDate, String toDate) {
         this.id = id;
         this.country = country;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.userID = userID;
         this.username = username;
-        this.name = name;
+        this.firstname = firstname;
+        this.lastname = lastname;
 
     }
 
     public void setUsername(String username) { this.username = username; }
-    public void setName(String name) { this.name = name; }
     public void setUserID(int userID) {this.userID = userID; }
     public void setId(int id) {
         this.id = id;
@@ -50,6 +92,5 @@ public class FeedItem {
         return fromDate;
     }
     public int getUserID() { return userID; }
-    public String getName() { return name; }
     public String getUsername() { return username; }
 }

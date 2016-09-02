@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.adapter;
+package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,10 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.BackgroundImage;
-import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.data.FeedItem;
-import ravtrix.backpackerbuddy.ServerRequests.ServerRequests;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 
 /**
  * Created by Ravinder on 2/25/16.
@@ -25,9 +23,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     private Context mContext;
     private LayoutInflater inflater;
     private List<FeedItem> feedItems;
-    //ImageLoader imageLoader = AppController.getInstance().getImageLoader();;
-    ServerRequests serverRequests;
-    private UserLocalStore userLocalStore;
     private BackgroundImage backgroundImage;
 
     public FeedListAdapter(Context context, List<FeedItem> feedItems) {
@@ -42,7 +37,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         View view = inflater.inflate(R.layout.item_countryfeed, parent, false);
         // Hold a structure of a view. See class viewholder, which holds the structure
         ViewHolder holder = new ViewHolder(view);
-        userLocalStore = new UserLocalStore(mContext);
         backgroundImage = new BackgroundImage();
 
         return holder;
@@ -50,8 +44,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        serverRequests = new ServerRequests(mContext);
-
         // Initialize fonts
         Typeface countryFont = Typeface.createFromAsset(mContext.getAssets(), "Trench.otf");
         Typeface dateFont = Typeface.createFromAsset(mContext.getAssets(), "Monu.otf");
@@ -65,9 +57,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.tvFromDate.setText(currentPos.getFromDate());
         holder.tvToDate.setText(currentPos.getToDate());
 
-
         // Set image background based on country name. Hash will return the correct background id
-
         if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
             holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
         }

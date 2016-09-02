@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.app;
+package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.app;
 
 /**
  * Created by Linh on 2/19/2016.
@@ -12,7 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import ravtrix.backpackerbuddy.RecyclerViewFeed.MainRecyclerView.volley.LruBitmapCache;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.volley.LruBitmapCache;
 
 public class AppController extends Application {
 

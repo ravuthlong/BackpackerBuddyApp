@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.SlidingDrawer;
+package ravtrix.backpackerbuddy.slidingdrawer;
 
 import android.content.Context;
 import android.view.View;

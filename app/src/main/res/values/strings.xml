@@ -6,6 +6,11 @@
     <string name="submitSignup2">submitSignup2</string>
     <string name="drawerOpened">Opened</string>
     <string name="drawerClosed">Closed</string>
+    <string name="email">Email Address</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Albania</item>

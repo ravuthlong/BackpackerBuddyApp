@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Activities;
+package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {

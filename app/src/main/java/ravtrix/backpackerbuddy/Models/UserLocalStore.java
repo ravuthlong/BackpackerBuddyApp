@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.Models;
+package ravtrix.backpackerbuddy.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;

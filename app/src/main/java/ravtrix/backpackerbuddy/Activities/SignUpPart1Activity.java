@@ -1,8 +1,7 @@
-package ravtrix.backpackerbuddy.Activities;
+package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,14 +10,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.gson.JsonObject;
+
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.Models.LoggedInUser;
-import ravtrix.backpackerbuddy.Models.User;
-import ravtrix.backpackerbuddy.Models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.ServerRequests.Callbacks.GetUserCallBack;
-import ravtrix.backpackerbuddy.VolleyServerConnections.VolleyUserInfo;
+import ravtrix.backpackerbuddy.helper.Helper;
+import ravtrix.backpackerbuddy.helper.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.models.LoggedInUser;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 3/28/16.
@@ -28,7 +33,6 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
     @BindView(R.id.etEmail) protected EditText etEmail;
     @BindView(R.id.etUsername) protected EditText etUsername;
     @BindView(R.id.etPassword) protected EditText etPassword;
-    private VolleyUserInfo volleyUserInfo;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -54,7 +58,6 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
             });
         }
 
-        volleyUserInfo = new VolleyUserInfo(this);
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -80,29 +83,44 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                User signedUpUser = new User(email, username, password);
+                //User signedUpUser = new User(email, username, password);
 
-                volleyUserInfo.storeUserInfo(signedUpUser, new GetUserCallBack() {
+                // Prepare HashMap to send over to the database
+                HashMap<String, String> signedUpUser = new HashMap<>();
+                signedUpUser.put("email", email);
+                signedUpUser.put("username", username);
+                signedUpUser.put("password", password);
+
+                // Make Retrofit call to communicate with the server
+                Call<JsonObject> returnedStatus = RetrofitUserInfoSingleton.getRetrofitUserInfo().signUserUpPart1().signedUpStatus(signedUpUser);
+                returnedStatus.enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void done(User returnedUser) {
-                        // Username has been taken and user info will not be stored
-                        if (returnedUser == null) {
-                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpPart1Activity.this);
-                            dialogBuilder.setMessage("User has been taken");
-                            dialogBuilder.setPositiveButton("Ok", null);
-                            dialogBuilder.show();
-                        } else {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonObject status = response.body();
+
+                        int userStatus = status.get("status").getAsInt();
+
+                        // Sign up success
+                        if (userStatus == 1) {
                             LoggedInUser user = new LoggedInUser();
-                            user.setUsername(returnedUser.getUsername());
-                            user.setEmail(returnedUser.getEmail());
-                            user.setUserID(returnedUser.getUserID());
+                            user.setUsername(status.get("username").getAsString());
+                            user.setEmail(status.get("email").getAsString());
+                            user.setUserID(status.get("userID").getAsInt());
 
                             userLocalStore.storeUserData(user);
-                            UserLocalStore.isUserLoggedIn = true;
                             startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
+                        } else {
+                            // User has been taken
+                            Helper.showAlertDialog(SignUpPart1Activity.this, "User Taken");
                         }
                     }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        System.out.println(t.getMessage());
+                    }
                 });
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
