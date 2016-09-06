@@ -10,6 +10,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
+    <string name="saveToolbar">Save</string>
 
     <string-array name="countries">
         <item>Afghanistan</item>

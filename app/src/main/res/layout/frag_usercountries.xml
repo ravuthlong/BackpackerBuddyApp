@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="MergeRootFrame">
-
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="fill_parent"
@@ -20,8 +19,27 @@
             android:id="@+id/postRecyclerView1"
             android:layout_gravity='start'
             />
+
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_mylocation"
+        app:fabSize="normal"
+        app:backgroundTint="@color/green"
+        android:id="@+id/bFloatingActionButton" />
 
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        style="?android:attr/progressBarStyle"
+        android:id="@+id/spinner"
+        android:layout_gravity="center"
+        android:visibility="visible" />
 </android.support.design.widget.CoordinatorLayout>

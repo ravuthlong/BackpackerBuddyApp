@@ -25,4 +25,9 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.SignUserUpPart2 signUserUpPart2() {
         return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpPart2.class);
     }
+
+
+    public RetrofitUserInfoInterfaces.UpdateUserDetail updateUserDetail() {
+        return this.retrofit.create(RetrofitUserInfoInterfaces.UpdateUserDetail.class);
+    }
 }

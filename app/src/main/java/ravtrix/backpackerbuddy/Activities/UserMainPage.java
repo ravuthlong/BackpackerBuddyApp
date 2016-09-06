@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,16 +23,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.Activity;
 import ravtrix.backpackerbuddy.fragments.Destination;
 import ravtrix.backpackerbuddy.fragments.Messages;
 import ravtrix.backpackerbuddy.fragments.UserProfile;
-import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helper.Helper;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener, ActivityFragmentInterface {
 
     private FragmentManager fragmentManager;
     public static ListView listView;
@@ -126,8 +128,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
@@ -177,26 +177,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync it based on if navigation drawer is selected or not.
@@ -205,7 +185,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        finish();
+        Helper.showAlertDialogWithTwoOptions(UserMainPage.this, this, "Are you sure you want to exit?", "Yes", "No");
     }
 
+    @Override
+    public void setDrawerSelected(int position) {
+        navigationView.getMenu().getItem(position).setChecked(true);
+
+    }
 }

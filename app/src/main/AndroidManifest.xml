@@ -28,17 +28,17 @@
         <activity
             android:name=".activities.SignUpPart1Activity"
             android:label="Sign Up Activity1"
-            android:windowSoftInputMode="stateVisible"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.SignUpPart2Activity"
             android:label="Sign Up Activity2"
-            android:windowSoftInputMode="stateVisible"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.UserMainPage"
             android:label="User Main"
@@ -47,12 +47,16 @@
         <activity
             android:name=".activities.LogInActivity"
             android:label="Log In Activity"
-            android:windowSoftInputMode="stateVisible"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.SettingsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activities.EditInfoActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:noHistory="true" />
     </application>
 

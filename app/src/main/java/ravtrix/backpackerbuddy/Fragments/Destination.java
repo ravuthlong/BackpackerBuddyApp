@@ -2,6 +2,7 @@ package ravtrix.backpackerbuddy.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,10 @@ import com.google.gson.JsonObject;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helper.Helper;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
 import retrofit2.Call;
@@ -33,19 +37,20 @@ import retrofit2.Response;
  */
 public class Destination extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    private Spinner spinnerCountries;
+    @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
+    @BindView(R.id.btSubmitCountry) protected Button btSubmitCountry;
+    protected static TextView tvDateArrival;
+    protected static TextView tvDateLeave;
+
+    protected String selectedCountry;
     private ArrayAdapter<CharSequence> countryArrayAdapter;
-    private String selectedCountry;
-    private static TextView tvDateArrival, tvDateLeave;
     private static final int DIALOG_ID = 0;
     private static int thisYear;
     private static int thisDay;
     private static int thisMonth;
     private static String dateFrom;
     private static String dateTo;
-    private Button btSubmitCountry;
     private RetrofitUserCountries retrofitUserCountries;
-    //private ServerRequests serverRequests;
     private UserLocalStore userLocalStore;
 
     @Nullable
@@ -53,6 +58,8 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_travelselection, container, false);
 
+
+        ButterKnife.bind(this, v);
 
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
@@ -63,8 +70,6 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
 
         tvDateArrival = (TextView) v.findViewById(R.id.tvDateArrival);
         tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
-        spinnerCountries = (Spinner) v.findViewById(R.id.spinnerCountries);
-        btSubmitCountry = (Button) v.findViewById(R.id.btSubmitCountry);
 
         // Each item
         countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries, android.R.layout.simple_spinner_item);
@@ -121,6 +126,8 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
 
                // TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
 
+                final ProgressDialog progressDialog = Helper.showProgressDialog(getActivity(), "Logging In...");
+
                 HashMap<String, String> travelSpot = new HashMap<>();
                 travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                 travelSpot.put("country", selectedCountry);
@@ -139,6 +146,8 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
                         } else {
                             // failed
                         }
+
+                        Helper.hideProgressDialog(progressDialog);
                     }
 
                     @Override

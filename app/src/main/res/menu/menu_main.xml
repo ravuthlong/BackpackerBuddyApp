@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.WelcomeActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/saveButton"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />

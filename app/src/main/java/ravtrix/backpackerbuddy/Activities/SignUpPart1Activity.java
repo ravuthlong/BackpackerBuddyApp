@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -79,11 +80,13 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
         switch (item.getItemId()) {
             case R.id.submitSignup1:
 
-                String username = etUsername.getText().toString();
-                String email = etEmail.getText().toString();
+                final String username = etUsername.getText().toString();
+                final String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
                 //User signedUpUser = new User(email, username, password);
+
+                final ProgressDialog progressDialog = Helper.showProgressDialog(this, "");
 
                 // Prepare HashMap to send over to the database
                 HashMap<String, String> signedUpUser = new HashMap<>();
@@ -103,9 +106,9 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                         // Sign up success
                         if (userStatus == 1) {
                             LoggedInUser user = new LoggedInUser();
-                            user.setUsername(status.get("username").getAsString());
-                            user.setEmail(status.get("email").getAsString());
-                            user.setUserID(status.get("userID").getAsInt());
+                            user.setUsername(username);
+                            user.setEmail(email);
+                            user.setUserID(status.get("id").getAsInt());
 
                             userLocalStore.storeUserData(user);
                             startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
@@ -113,6 +116,8 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                             // User has been taken
                             Helper.showAlertDialog(SignUpPart1Activity.this, "User Taken");
                         }
+
+                        Helper.hideProgressDialog(progressDialog);
                     }
 
                     @Override

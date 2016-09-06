@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -78,6 +79,8 @@ public class SignUpPart2Activity extends AppCompatActivity {
                 userInfo.put("firstname", etFirstname.getText().toString());
                 userInfo.put("lastname", etLastname.getText().toString());
 
+                final ProgressDialog progressDialog = Helper.showProgressDialog(this, "");
+
                 final Call<JsonObject> signUpPart2 =
                         RetrofitUserInfoSingleton
                                 .getRetrofitUserInfo()
@@ -95,6 +98,7 @@ public class SignUpPart2Activity extends AppCompatActivity {
                             // Error inserting user information
                             Helper.showAlertDialog(SignUpPart2Activity.this, "Error");
                         }
+                        Helper.hideProgressDialog(progressDialog);
                     }
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {

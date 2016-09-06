@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helper.Helper;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
@@ -108,6 +110,7 @@ public class LogInActivity extends AppCompatActivity {
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
 
+            final ProgressDialog progressDialog = Helper.showProgressDialog(this, "Logging In...");
             // Prepare HashMap of username and password to send to retrofit call
             HashMap<String, String> arguments = new HashMap<>();
             arguments.put("username", username);
@@ -127,6 +130,7 @@ public class LogInActivity extends AppCompatActivity {
                         userLocalStore.storeUserData(user);
                         startActivity(new Intent(LogInActivity.this, UserMainPage.class));
                     }
+                    Helper.hideProgressDialog(progressDialog);
                 }
                 @Override
                 public void onFailure(Call<LoggedInUser> call, Throwable t) {
