@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.google.gson.JsonObject;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashMap;
 
@@ -38,6 +39,7 @@ public class SignUpPart2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup2);
+        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

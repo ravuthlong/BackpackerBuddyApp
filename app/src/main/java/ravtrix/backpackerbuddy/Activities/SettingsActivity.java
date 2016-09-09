@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -20,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        LeakCanary.install(getApplication());
 
         ButterKnife.bind(this);
         bSignOut.setOnClickListener(this);

@@ -27,6 +27,10 @@ public class RetrofitUserInfo {
     }
 
 
+    public RetrofitUserInfoInterfaces.GetUserDetails getUserDetails() {
+        return retrofit.create(RetrofitUserInfoInterfaces.GetUserDetails.class);
+    }
+
     public RetrofitUserInfoInterfaces.UpdateUserDetail updateUserDetail() {
         return this.retrofit.create(RetrofitUserInfoInterfaces.UpdateUserDetail.class);
     }

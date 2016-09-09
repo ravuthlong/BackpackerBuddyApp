@@ -20,11 +20,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +55,9 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_usercountries, container, false);
         ButterKnife.bind(this, v);
+
+        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
+        //refWatcher.watch(this);
 
 
         userLocalStore = new UserLocalStore(getActivity());
@@ -143,9 +147,7 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                 // Set up array list of country feeds
                 feedItems =  response.body();
                 feedListAdapter = new FeedListAdapter(getActivity(), feedItems);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(feedListAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                setRecyclerView(feedListAdapter);
             }
 
             @Override
@@ -155,4 +157,13 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         });
     }
 
+    private void setRecyclerView(FeedListAdapter feedListAdapter) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(feedListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity());
+        recyclerView.addItemDecoration(dividerDecorator);
+    }
 }
+

@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,11 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,13 +27,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.Activity;
 import ravtrix.backpackerbuddy.fragments.Destination;
 import ravtrix.backpackerbuddy.fragments.Messages;
 import ravtrix.backpackerbuddy.fragments.UserProfile;
 import ravtrix.backpackerbuddy.helper.Helper;
+import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -47,15 +51,44 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     private ImageButton settingsButton;
     private CircleImageView profilePic;
+    public static ProgressBar progressBar;
+    private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
+        switch (getResources().getDisplayMetrics().densityDpi) {
+            case DisplayMetrics.DENSITY_LOW:
+                System.out.println("LOWWWW");
+                break;
+            case DisplayMetrics.DENSITY_MEDIUM:
+                System.out.println("MEDUIUM");
+                break;
+            case DisplayMetrics.DENSITY_HIGH:
+                System.out.println("HIGHHHH");
+                break;
+            case DisplayMetrics.DENSITY_XHIGH:
+                System.out.println("XHIGHHHH");
+                break;
+            case DisplayMetrics.DENSITY_XXHIGH:
+                System.out.println("XXHIGHHHH");
+                break;
+            case DisplayMetrics.DENSITY_XXXHIGH:
+                System.out.println("XXXHIGHHHH");
+                break;
+            default:
+                System.out.println("HELPPPPPPP");
+
+        }
+
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        progressBar = (ProgressBar) findViewById(R.id.spinner_main);
+
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
         profilePic.setOnClickListener(this);
@@ -191,6 +224,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @Override
     public void setDrawerSelected(int position) {
         navigationView.getMenu().getItem(position).setChecked(true);
+    }
 
+    public static RefWatcher getRefWatcher(Context context) {
+        UserMainPage userMainPage = (UserMainPage) context.getApplicationContext();
+        return userMainPage.refWatcher; // Can access private data. Fragments share the same context
     }
 }

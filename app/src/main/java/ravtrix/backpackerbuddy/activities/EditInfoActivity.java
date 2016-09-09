@@ -14,13 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.UserProfile;
 import ravtrix.backpackerbuddy.helper.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
@@ -38,6 +38,9 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LeakCanary.install(getApplication());
+
+
         setContentView(R.layout.activity_edit_info);
 
         ButterKnife.bind(this);
@@ -66,7 +69,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = getIntent();
         editTitle.setText(intent.getStringExtra("title"));
-        editText.setHint(intent.getStringExtra("hint"));
+        editText.setText(intent.getStringExtra("hint"));
         detailType = intent.getStringExtra("detailType");
 
         userLocalStore = new UserLocalStore(this);
@@ -110,7 +113,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
                             // Success update. Return user to user profile activity
                             if (returnedJSON.get("status").getAsInt() == 1) {
-                                startActivity(new Intent(EditInfoActivity.this, UserProfile.class));
+                                startActivity(new Intent(EditInfoActivity.this, UserMainPage.class));
                             }
                         }
 

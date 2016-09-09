@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
-
+        //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
         // Check to see if the user is already logged in. If so, go straight to main user page

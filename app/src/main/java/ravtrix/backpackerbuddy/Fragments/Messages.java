@@ -18,6 +18,9 @@ public class Messages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_userinbox, container, false);
+        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
+        //refWatcher.watch(this);
+
 
         return v;
     }

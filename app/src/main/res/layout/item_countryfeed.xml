@@ -1,50 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:orientation="vertical" >
+    android:layout_height="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:background="#859f97"
         android:id="@+id/backgroundLayout">
 
-            <LinearLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+
+            <View
+                android:id="@+id/verticleLine"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#ffffff"
+                android:layout_gravity="center"
+                android:layout_alignTop="@+id/imageButton5"
+                android:layout_toLeftOf="@+id/tvFromDate"
+                android:layout_toStartOf="@+id/tvFromDate" />
+
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="59dp"
+                android:id="@+id/imageButton5"
+                android:background="@drawable/button_green"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+                <com.sackcentury.shinebuttonlib.ShineButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_star_border_white_36dp"
+                    android:id="@+id/shine_button"
+                    app:btn_color="@android:color/white"
+                    app:btn_fill_color="@android:color/holo_blue_dark"
+                    app:allow_random_color="false"
+                    app:siShape="@drawable/ic_star_border_white_36dp"/>
+            </RelativeLayout>
+
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="59dp"
+                android:id="@+id/imageButton6"
+                android:background="@drawable/button_green"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_mail_outline_white_36dp" />
+
+            <TextView
+                android:id="@+id/tvCountry"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="45sp"
+                android:textColor="#3ba86b"
+                android:shadowColor = "#000000"
+                android:shadowDx="4"
+                android:shadowDy="4"
+                android:shadowRadius="2"
+                android:layout_toRightOf="@+id/imageButton6"
+                android:layout_toEndOf="@+id/imageButton6" />
 
-                <TextView
-                    android:id="@+id/tvCountry"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textSize="45sp"
-                    android:textColor="#ffffff"
-                    android:layout_marginTop="15dp" />
+            <TextView
+                android:id="@+id/tvFromDate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:textColor="#50ba6d"
+                android:shadowColor = "#000000"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="2"
+                android:layout_alignTop="@+id/imageButton5"
+                android:layout_toRightOf="@+id/imageButton5"
+                android:layout_toEndOf="@+id/imageButton5" />
 
-                <TextView
-                    android:id="@+id/tvFromDate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="30sp"
-                    android:textColor="#ffffff"
-                    android:layout_marginTop="20sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/tvToDate"
-                    android:gravity="center"
-                    android:textSize="30sp"
-                    android:textColor="#ffffff" />
-            </LinearLayout>
-        </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tvToDate"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:textColor="#FF50BA6D"
+                android:shadowColor = "#000000"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="2"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/imageButton5"
+                android:layout_toEndOf="@+id/imageButton5" />
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

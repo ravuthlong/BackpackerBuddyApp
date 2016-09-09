@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,8 +58,8 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_travelselection, container, false);
-
-
+        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
+        //refWatcher.watch(this);
         ButterKnife.bind(this, v);
 
         // Use the current date as the default date in the picker
@@ -148,6 +149,7 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
                         }
 
                         Helper.hideProgressDialog(progressDialog);
+                        startActivity(new Intent(getActivity(), Activity.class));
                     }
 
                     @Override

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sackcentury.shinebuttonlib.ShineButton;
+
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
@@ -36,7 +38,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         // Custom root of recycle view
         View view = inflater.inflate(R.layout.item_countryfeed, parent, false);
         // Hold a structure of a view. See class viewholder, which holds the structure
-        ViewHolder holder = new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view, mContext);
         backgroundImage = new BackgroundImage();
 
         return holder;
@@ -73,13 +75,17 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
         private TextView tvCountry, tvFromDate, tvToDate;
         private  LinearLayout backgroundLayout;
+        private ShineButton shineButton;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, Context context) {
             super(itemView);
             tvCountry = (TextView) itemView.findViewById(R.id.tvCountry);
             tvFromDate = (TextView) itemView.findViewById(R.id.tvFromDate);
             tvToDate = (TextView) itemView.findViewById(R.id.tvToDate);
             backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
+            shineButton = (ShineButton) itemView.findViewById(R.id.shine_button);
+
+            shineButton.init((android.app.Activity) context);
         }
     }
 
