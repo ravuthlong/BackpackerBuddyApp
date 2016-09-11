@@ -3,10 +3,7 @@ package ravtrix.backpackerbuddy.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,9 +15,10 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseActivity;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helper.Helper;
-import ravtrix.backpackerbuddy.helper.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +27,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 3/28/16.
  */
-public class SignUpPart2Activity extends AppCompatActivity {
+public class SignUpPart2Activity extends OptionMenuBaseActivity {
 
     @BindView(R.id.etFirstname) protected EditText etFirstname;
     @BindView(R.id.etLastname) protected EditText etLastname;
@@ -63,25 +61,19 @@ public class SignUpPart2Activity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.toolbar_signup2, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.submitSignup2:
+            case R.id.submitSend:
 
                 HashMap<String, String> userInfo = new HashMap<>();
                 userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                 userInfo.put("firstname", etFirstname.getText().toString());
                 userInfo.put("lastname", etLastname.getText().toString());
 
-                final ProgressDialog progressDialog = Helper.showProgressDialog(this, "");
+                final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "");
 
                 final Call<JsonObject> signUpPart2 =
                         RetrofitUserInfoSingleton
@@ -98,13 +90,13 @@ public class SignUpPart2Activity extends AppCompatActivity {
 
                         } else {
                             // Error inserting user information
-                            Helper.showAlertDialog(SignUpPart2Activity.this, "Error");
+                            Helpers.showAlertDialog(SignUpPart2Activity.this, "Error");
                         }
-                        Helper.hideProgressDialog(progressDialog);
+                        Helpers.hideProgressDialog(progressDialog);
                     }
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                        Helpers.displayToast(SignUpPart2Activity.this, "Error signing up. Try again.");
                     }
                 });
 

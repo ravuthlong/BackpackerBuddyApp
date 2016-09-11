@@ -33,6 +33,16 @@ public class FeedItem {
     @Expose
     private String username;
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    private boolean isFavorite;
+
     public String getFirstname() {
         return firstname;
     }

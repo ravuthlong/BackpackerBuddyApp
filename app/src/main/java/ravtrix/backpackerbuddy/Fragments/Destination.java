@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,10 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseFragment;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helper.Helper;
+import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
 import retrofit2.Call;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Destination extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class Destination extends OptionMenuBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
     @BindView(R.id.btSubmitCountry) protected Button btSubmitCountry;
@@ -68,7 +69,6 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
         thisMonth = c.get(Calendar.MONTH);
         thisDay = c.get(Calendar.DAY_OF_MONTH);
 
-
         tvDateArrival = (TextView) v.findViewById(R.id.tvDateArrival);
         tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
 
@@ -77,7 +77,6 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
         // Drop down
         countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountries.setAdapter(countryArrayAdapter);
-
 
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
@@ -127,7 +126,7 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
 
                // TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
 
-                final ProgressDialog progressDialog = Helper.showProgressDialog(getActivity(), "Logging In...");
+                final ProgressDialog progressDialog = Helpers.showProgressDialog(getActivity(), "Posting...");
 
                 HashMap<String, String> travelSpot = new HashMap<>();
                 travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
@@ -148,8 +147,8 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
                             // failed
                         }
 
-                        Helper.hideProgressDialog(progressDialog);
-                        startActivity(new Intent(getActivity(), Activity.class));
+                        Helpers.hideProgressDialog(progressDialog);
+                        startActivity(new Intent(getActivity(), UserMainPage.class));
                     }
 
                     @Override
@@ -200,4 +199,6 @@ public class Destination extends Fragment implements AdapterView.OnItemSelectedL
             dateTo = yearString + "-" + monthString + "-" + dayString;
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.helper;
+package ravtrix.backpackerbuddy.helpers;
 
 
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
@@ -8,7 +8,7 @@ import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequest
  */
 public class RetrofitUserInfoSingleton {
 
-    static RetrofitUserInfo retrofitUserInfo = new RetrofitUserInfo();
+    private static RetrofitUserInfo retrofitUserInfo = new RetrofitUserInfo();
 
     public static RetrofitUserInfo getRetrofitUserInfo() {
         return retrofitUserInfo;

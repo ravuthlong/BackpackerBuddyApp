@@ -4,24 +4,22 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/refreshLayout1"
+
+    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="MergeRootFrame">
+        android:id="@+id/main_swipe">
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="fill_parent"
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#88a990"
             android:choiceMode="singleChoice"
             android:id="@+id/postRecyclerView1"
             android:layout_gravity='start'
             />
+    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.slidingdrawer;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,7 +45,10 @@ public class SlidingMenuAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = View.inflate(context, R.layout.item_sliding_menu, null);
+        Typeface itemFont = Typeface.createFromAsset(context.getAssets(), "Date.ttf");
+
         TextView text = (TextView) v.findViewById(R.id.title);
+        text.setTypeface(itemFont);
 
         ItemSlideMenu item = listItem.get(position);
         text.setText(item.getTitle());

@@ -27,4 +27,16 @@ public class RetrofitUserCountriesInterfaces {
         @POST("/insertTravelSpot.php")
         Call<JsonObject> travelSpot(@FieldMap HashMap<String, String> travelSpotInfo);
     }
+
+    public interface InsertFavorite {
+        @FormUrlEncoded
+        @POST("/insertFavorite.php")
+        Call<JsonObject> insertFavorite(@FieldMap HashMap<String, String> favoriteInfo);
+    }
+
+    public interface RemoveFavorite {
+        @FormUrlEncoded
+        @POST("/removeFromFavorite.php")
+        Call<JsonObject> removeFavorite(@FieldMap HashMap<String, String> favoriteInfo);
+    }
 }

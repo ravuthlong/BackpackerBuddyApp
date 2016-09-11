@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -31,7 +31,16 @@
             android:layout_height="120dp"
             android:src="@android:drawable/sym_def_app_icon"
             android:layout_gravity="center_horizontal"
+            app:border_color="#323944"
+            app:border_width="5dp"
             android:layout_marginTop="20dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgbEditPhoto"
+            android:layout_gravity="center"
+            android:background="@android:drawable/ic_menu_camera" />
 
     </FrameLayout>
 
@@ -62,8 +71,8 @@
         android:layout_marginTop="70dp"
         android:background="@color/greenLighter"
         android:layout_marginBottom="30dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        style="@style/PaddingPage"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -210,6 +219,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
+
 </RelativeLayout>
+
 
 </ScrollView>

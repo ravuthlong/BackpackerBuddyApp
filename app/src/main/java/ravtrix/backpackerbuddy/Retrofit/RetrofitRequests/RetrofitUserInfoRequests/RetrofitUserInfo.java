@@ -1,5 +1,5 @@
 package ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests;
-import ravtrix.backpackerbuddy.helper.Helper;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.userinfointerfaces.RetrofitUserInfoInterfaces;
 import retrofit2.Retrofit;
 
@@ -11,7 +11,7 @@ public class RetrofitUserInfo {
     private Retrofit retrofit;
 
     public RetrofitUserInfo() {
-        retrofit = Helper.retrofitBuilder(this.retrofit, Helper.ServerURL.SERVER_URL);
+        retrofit = Helpers.retrofitBuilder(this.retrofit, Helpers.ServerURL.SERVER_URL);
     }
 
     public RetrofitUserInfoInterfaces.LogUserIn loggedInUser() {

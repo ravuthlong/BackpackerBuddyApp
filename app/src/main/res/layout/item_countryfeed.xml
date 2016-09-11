@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="#859f97"
-        android:id="@+id/backgroundLayout">
+        android:id="@+id/backgroundLayout"
+        android:clickable="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,93 +19,119 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-
             <View
                 android:id="@+id/verticleLine"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#ffffff"
                 android:layout_gravity="center"
-                android:layout_alignTop="@+id/imageButton5"
+                android:layout_alignTop="@+id/imageButtonStar"
                 android:layout_toLeftOf="@+id/tvFromDate"
                 android:layout_toStartOf="@+id/tvFromDate" />
-
-
-            <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="59dp"
-                android:id="@+id/imageButton5"
-                android:background="@drawable/button_green"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
-                <com.sackcentury.shinebuttonlib.ShineButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_star_border_white_36dp"
-                    android:id="@+id/shine_button"
-                    app:btn_color="@android:color/white"
-                    app:btn_fill_color="@android:color/holo_blue_dark"
-                    app:allow_random_color="false"
-                    app:siShape="@drawable/ic_star_border_white_36dp"/>
-            </RelativeLayout>
 
             <ImageButton
                 android:layout_width="60dp"
                 android:layout_height="59dp"
-                android:id="@+id/imageButton6"
+                android:id="@+id/imageButtonStar"
                 android:background="@drawable/button_green"
+
+                android:src="@drawable/ic_star_border_white_36dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="59dp"
+                android:id="@+id/imageButtonMail"
+                android:background="@drawable/button_green"
+                android:src="@drawable/ic_mail_outline_white_36dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_mail_outline_white_36dp" />
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/tvCountry"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textSize="45sp"
-                android:textColor="#3ba86b"
+                android:textColor="#3990A1"
                 android:shadowColor = "#000000"
                 android:shadowDx="4"
                 android:shadowDy="4"
-                android:shadowRadius="2"
-                android:layout_toRightOf="@+id/imageButton6"
-                android:layout_toEndOf="@+id/imageButton6" />
+                android:shadowRadius="4"
+                android:layout_below="@+id/tvFromDate"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/verticleLine"
+                android:layout_toEndOf="@+id/verticleLine"
+                android:layout_marginTop="-5dp"
+                android:background="#59FFFFFF" />
 
             <TextView
                 android:id="@+id/tvFromDate"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="25sp"
-                android:textColor="#50ba6d"
-                android:shadowColor = "#000000"
-                android:shadowDx="5"
-                android:shadowDy="5"
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:shadowColor = "#FFFFFF"
+                android:shadowDx="3"
+                android:shadowDy="3"
                 android:shadowRadius="2"
-                android:layout_alignTop="@+id/imageButton5"
-                android:layout_toRightOf="@+id/imageButton5"
-                android:layout_toEndOf="@+id/imageButton5" />
+                android:paddingRight="2dp"
+                android:paddingLeft="2dp"
+                android:text="kkkkk"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/imageButtonMail"
+                android:layout_toEndOf="@+id/imageButtonMail"
+                android:layout_marginTop="4dp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/tvToDate"
                 android:gravity="center"
-                android:textSize="25sp"
-                android:textColor="#FF50BA6D"
-                android:shadowColor = "#000000"
-                android:shadowDx="5"
-                android:shadowDy="5"
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:shadowColor = "#FFFFFF"
+                android:shadowDx="3"
+                android:shadowDy="3"
                 android:shadowRadius="2"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/imageButton5"
-                android:layout_toEndOf="@+id/imageButton5" />
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:text="hhhh"
+                android:layout_alignTop="@+id/tvFromDate"
+                android:layout_toRightOf="@+id/tvArrow"
+                android:layout_toEndOf="@+id/tvArrow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:id="@+id/tvArrow"
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:shadowColor = "#FFFFFF"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="2"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tvFromDate"
+                android:layout_toEndOf="@+id/tvFromDate" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton7"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/abc_spinner_mtrl_am_alpha" />
         </RelativeLayout>
     </LinearLayout>
 

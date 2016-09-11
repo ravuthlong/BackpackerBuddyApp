@@ -59,4 +59,7 @@ dependencies {
     // Shine button
     compile 'com.sackcentury:shinebutton:0.1.6'
 
+    //Swipe refresh
+    compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
+
 }

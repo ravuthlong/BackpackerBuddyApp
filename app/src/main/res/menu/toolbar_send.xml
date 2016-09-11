@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".activities.LogInActivity">
-    <item android:id="@+id/logInContinute"
-        android:title="Log In"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".activities.SignUpPart1Activity">
+    <item android:id="@+id/submitSend"
+        android:title="@string/submitSignup1"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_send"
         app:showAsAction="always" />

@@ -1,9 +1,10 @@
-package ravtrix.backpackerbuddy.helper;
+package ravtrix.backpackerbuddy.helpers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -11,9 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Ravinder on 8/17/16.
  */
-public class Helper {
+public class Helpers {
 
-    private Helper() {}
+    private Helpers() {}
 
     public static final class ServerURL {
         public static final String SERVER_URL = "http://backpackerbuddy.net23.net";
@@ -59,5 +60,9 @@ public class Helper {
         });
         dialogBuilder.setNegativeButton(negative, null);
         dialogBuilder.show();
+    }
+
+    public static void displayToast(Context context, String string) {
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 }

@@ -56,8 +56,10 @@
             android:noHistory="true" />
         <activity
             android:name=".activities.EditInfoActivity"
-            android:windowSoftInputMode="adjustNothing"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".activities.OtherUserProfile" />
+        <activity android:name=".activities.EditPhotoActivity"></activity>
     </application>
 
 </manifest>

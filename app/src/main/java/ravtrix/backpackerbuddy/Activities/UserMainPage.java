@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.squareup.leakcanary.RefWatcher;
@@ -32,17 +31,19 @@ import ravtrix.backpackerbuddy.fragments.Activity;
 import ravtrix.backpackerbuddy.fragments.Destination;
 import ravtrix.backpackerbuddy.fragments.Messages;
 import ravtrix.backpackerbuddy.fragments.UserProfile;
-import ravtrix.backpackerbuddy.helper.Helper;
-import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.interfaces.FragActivityProgressBarInterface;
+import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
+import ravtrix.backpackerbuddy.interfaces.FragActivitySetDrawerInterface;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
 public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener, ActivityFragmentInterface {
+        View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
+        FragActivityResetDrawer {
 
     private FragmentManager fragmentManager;
-    public static ListView listView;
     private List<Fragment> fragmentList;
     private int currentPos;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -51,7 +52,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     private ImageButton settingsButton;
     private CircleImageView profilePic;
-    public static ProgressBar progressBar;
+    private ProgressBar progressBar;
     private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
 
 
@@ -61,30 +62,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
-
-        switch (getResources().getDisplayMetrics().densityDpi) {
-            case DisplayMetrics.DENSITY_LOW:
-                System.out.println("LOWWWW");
-                break;
-            case DisplayMetrics.DENSITY_MEDIUM:
-                System.out.println("MEDUIUM");
-                break;
-            case DisplayMetrics.DENSITY_HIGH:
-                System.out.println("HIGHHHH");
-                break;
-            case DisplayMetrics.DENSITY_XHIGH:
-                System.out.println("XHIGHHHH");
-                break;
-            case DisplayMetrics.DENSITY_XXHIGH:
-                System.out.println("XXHIGHHHH");
-                break;
-            case DisplayMetrics.DENSITY_XXXHIGH:
-                System.out.println("XXXHIGHHHH");
-                break;
-            default:
-                System.out.println("HELPPPPPPP");
-
-        }
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
         progressBar = (ProgressBar) findViewById(R.id.spinner_main);
@@ -99,11 +76,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(0).setChecked(true);
 
         settingsButton.setOnClickListener(this);
-
         setSupportActionBar(toolbar);
-
         setUpFragments();
         screenStartUpState();
+        setNavigationDrawerIcons();
         //drawerListViewListener();
         toggleListener();
     }
@@ -115,20 +91,21 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         switch(id) {
             case R.id.navActivity:
+                navigationView.getMenu().getItem(0).setChecked(true);
                 currentPos = 0;
                 setTitle("Activity");
                 break;
-            case R.id.navDestination:
+            case R.id.navFindBuddy:
                 currentPos = 1;
-                setTitle("Destination");
+                setTitle("Find Buddy");
+                break;
+            case R.id.navDestination:
+                currentPos = 2;
+                setTitle("Manage Destination");
                 break;
             case R.id.navInbox:
-                currentPos = 2;
-                setTitle("Inbox");
-                break;
-            case R.id.navSettings:
                 currentPos = 3;
-                setTitle("Settings Activity");
+                setTitle("Inbox");
                 break;
             default:
         }
@@ -151,10 +128,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 changeFragment(this.currentPos);
 
                 // Removed all checked items from navigation because profile is not on it
-                int size = navigationView.getMenu().size();
-                for (int i = 0; i < size; i++) {
-                    navigationView.getMenu().getItem(i).setChecked(false);
-                }
+                resetNavigationDrawer();
                 break;
             default:
 
@@ -165,8 +139,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
         fragmentList.add(new Activity());
-        fragmentList.add(new Destination());
         fragmentList.add(new Messages());
+        fragmentList.add(new Destination());
         fragmentList.add(new Messages());
         fragmentList.add(new UserProfile());
     }
@@ -179,12 +153,18 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
     }
 
-    private void changeFragment(int currentPos) {
-        fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                fragmentList.get(currentPos)).commit();
+    private void changeFragment(final int currentPos) {
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        // Delay to avoid lag when changing between option in navigation drawer
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                        fragmentList.get(currentPos)).commit();
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        }, 150);
     }
 
 
@@ -216,18 +196,54 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
     }
 
-    @Override
-    public void onBackPressed() {
-        Helper.showAlertDialogWithTwoOptions(UserMainPage.this, this, "Are you sure you want to exit?", "Yes", "No");
-    }
-
-    @Override
-    public void setDrawerSelected(int position) {
-        navigationView.getMenu().getItem(position).setChecked(true);
-    }
-
     public static RefWatcher getRefWatcher(Context context) {
         UserMainPage userMainPage = (UserMainPage) context.getApplicationContext();
         return userMainPage.refWatcher; // Can access private data. Fragments share the same context
     }
+
+    private void setNavigationDrawerIcons() {
+        navigationView.getMenu().getItem(0).setIcon(R.drawable.ic_record_voice_over_black_24dp);
+        navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
+        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_assignment_black_24dp);
+        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_chat_bubble_black_24dp);
+    }
+
+    private void resetNavigationDrawer() {
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
+    }
+    public List<Fragment> getFragList() {
+        return this.fragmentList;
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return this.drawerLayout;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Helpers.showAlertDialogWithTwoOptions(UserMainPage.this, this, "Are you sure you want to exit?", "Yes", "No");
+    }
+
+    // Below override methods are called from fragment child to access activity
+    @Override
+    public void setDrawerSelected(int position) {
+        navigationView.getMenu().getItem(position).setChecked(true);
+    }
+    @Override
+    public void onResetDrawer() {
+        resetNavigationDrawer();
+        setTitle("User Profile");
+    }
+    @Override
+    public void setProgressBarVisible() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    @Override
+    public void setProgressBarInvisible() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
 }

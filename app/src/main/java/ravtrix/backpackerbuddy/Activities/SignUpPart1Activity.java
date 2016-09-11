@@ -3,10 +3,7 @@ package ravtrix.backpackerbuddy.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,9 +15,10 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseActivity;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helper.Helper;
-import ravtrix.backpackerbuddy.helper.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
@@ -30,7 +28,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 3/28/16.
  */
-public class SignUpPart1Activity extends AppCompatActivity implements  View.OnClickListener {
+public class SignUpPart1Activity extends OptionMenuBaseActivity implements  View.OnClickListener {
 
     @BindView(R.id.etEmail) protected EditText etEmail;
     @BindView(R.id.etUsername) protected EditText etUsername;
@@ -70,17 +68,10 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.toolbar_signup1, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.submitSignup1:
+            case R.id.submitSend:
 
                 final String username = etUsername.getText().toString();
                 final String email = etEmail.getText().toString();
@@ -88,7 +79,7 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
 
                 //User signedUpUser = new User(email, username, password);
 
-                final ProgressDialog progressDialog = Helper.showProgressDialog(this, "");
+                final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "");
 
                 // Prepare HashMap to send over to the database
                 HashMap<String, String> signedUpUser = new HashMap<>();
@@ -116,15 +107,15 @@ public class SignUpPart1Activity extends AppCompatActivity implements  View.OnCl
                             startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
                         } else {
                             // User has been taken
-                            Helper.showAlertDialog(SignUpPart1Activity.this, "User Taken");
+                            Helpers.showAlertDialog(SignUpPart1Activity.this, "User Taken");
                         }
 
-                        Helper.hideProgressDialog(progressDialog);
+                        Helpers.hideProgressDialog(progressDialog);
                     }
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-                        System.out.println(t.getMessage());
+                        Helpers.displayToast(SignUpPart1Activity.this, "Error signing up. Try again.");
                     }
                 });
 

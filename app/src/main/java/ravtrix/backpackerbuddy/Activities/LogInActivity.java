@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -21,7 +18,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helper.Helper;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseActivity;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
@@ -32,7 +30,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends OptionMenuBaseActivity {
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
@@ -68,20 +66,11 @@ public class LogInActivity extends AppCompatActivity {
         retrofitUser = new RetrofitUserInfo();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.toolbar_login, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.logInContinute:
+            case R.id.submitSend:
 
                 logUserIn();
 
@@ -113,7 +102,7 @@ public class LogInActivity extends AppCompatActivity {
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
 
-            final ProgressDialog progressDialog = Helper.showProgressDialog(this, "Logging In...");
+            final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Logging In...");
             // Prepare HashMap of username and password to send to retrofit call
             HashMap<String, String> arguments = new HashMap<>();
             arguments.put("username", username);
@@ -133,11 +122,11 @@ public class LogInActivity extends AppCompatActivity {
                         userLocalStore.storeUserData(user);
                         startActivity(new Intent(LogInActivity.this, UserMainPage.class));
                     }
-                    Helper.hideProgressDialog(progressDialog);
+                    Helpers.hideProgressDialog(progressDialog);
                 }
                 @Override
                 public void onFailure(Call<LoggedInUser> call, Throwable t) {
-                    System.out.println(t.getMessage());
+                    Helpers.displayToast(LogInActivity.this, "Error");
 
                 }
             });

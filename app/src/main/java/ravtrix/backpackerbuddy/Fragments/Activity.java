@@ -2,12 +2,12 @@ package ravtrix.backpackerbuddy.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,8 +20,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.interfaces.ActivityFragmentInterface;
+import ravtrix.backpackerbuddy.interfaces.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
@@ -34,10 +35,10 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class Activity extends Fragment implements  View.OnClickListener {
 
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
-    @BindView(R.id.refreshLayout1)protected SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.main_swipe)protected WaveSwipeRefreshLayout waveSwipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
     @BindView(R.id.spinner) protected ProgressBar spinner;
 
@@ -48,7 +49,7 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private FloatingActionButton postWidget;
     private UserLocalStore userLocalStore;
     private RetrofitUserCountries retrofitUserCountries;
-    private ActivityFragmentInterface activityFragmentInterface;
+    private FragActivitySetDrawerInterface fragActivitySetDrawerInterface;
 
     @Nullable
     @Override
@@ -59,11 +60,21 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
 
+        waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
+
+        waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                waveSwipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        waveSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 1200);
+            }
+        });
 
         userLocalStore = new UserLocalStore(getActivity());
         retrofitUserCountries = new RetrofitUserCountries();
-
-        refreshLayout.setOnRefreshListener(this);
         floatingActionButton.setOnClickListener(this);
 
         retrieveUserCountryPostsRetrofit();
@@ -75,7 +86,7 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.activityFragmentInterface = (ActivityFragmentInterface) context;
+        this.fragActivitySetDrawerInterface = (FragActivitySetDrawerInterface) context;
     }
 
     @Override
@@ -85,12 +96,13 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
                         new Destination()).commit();
-                activityFragmentInterface.setDrawerSelected(1);
+                fragActivitySetDrawerInterface.setDrawerSelected(1);
                 break;
             default:
         }
     }
 
+    /*
     @Override
     public void onRefresh() {
 
@@ -111,7 +123,7 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         });
 
         refreshLayout.setRefreshing(false);
-    }
+    }*/
 
     // Hide floating action button on scroll down and show on scroll up
     private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {
@@ -146,7 +158,7 @@ public class Activity extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
                 // Set up array list of country feeds
                 feedItems =  response.body();
-                feedListAdapter = new FeedListAdapter(getActivity(), feedItems);
+                feedListAdapter = new FeedListAdapter(Activity.this, feedItems, userLocalStore.getLoggedInUser().getUserID());
                 setRecyclerView(feedListAdapter);
             }
 

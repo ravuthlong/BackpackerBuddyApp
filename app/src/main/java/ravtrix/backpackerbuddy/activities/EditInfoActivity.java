@@ -21,7 +21,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helper.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,7 +120,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
-                            System.out.println(t.getMessage());
+                            Helpers.displayToast(EditInfoActivity.this, "Error");
                         }
                     });
                 }
