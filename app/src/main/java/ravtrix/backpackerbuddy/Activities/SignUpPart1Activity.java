@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseActivity;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
@@ -28,7 +28,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 3/28/16.
  */
-public class SignUpPart1Activity extends OptionMenuBaseActivity implements  View.OnClickListener {
+public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  View.OnClickListener {
 
     @BindView(R.id.etEmail) protected EditText etEmail;
     @BindView(R.id.etUsername) protected EditText etUsername;

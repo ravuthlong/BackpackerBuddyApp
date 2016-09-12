@@ -4,8 +4,19 @@ package ravtrix.backpackerbuddy.models;
  * Created by Ravinder on 3/28/16.
  */
 public class User {
-    private String email, username, password;
+    private String email;
+    private String username;
+    private String password;
+    private String userImageURL;
     private int userID;
+
+    public String getUserImageURL() {
+        return userImageURL;
+    }
+
+    public void setUserImageURL(String userImageURL) {
+        this.userImageURL = userImageURL;
+    }
 
     // User for signing up 1
     public User(String email, String username, String password) {
@@ -14,10 +25,11 @@ public class User {
         this.password = password;
     }
     // User for current user storage
-    public User(int userID, String email, String username) {
+    public User(int userID, String email, String username, String userImageURL) {
         this.userID = userID;
         this.email = email;
         this.username = username;
+        this.userImageURL = userImageURL;
     }
     // User for logging in
     public User(String username, String password) {

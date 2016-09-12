@@ -9,7 +9,7 @@ import ravtrix.backpackerbuddy.R;
 /**
  * Created by Ravinder on 9/9/16.
  */
-public class OptionMenuBaseActivity extends AppCompatActivity {
+public class OptionMenuSendBaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

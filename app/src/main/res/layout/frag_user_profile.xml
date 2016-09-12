@@ -84,7 +84,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Write a summary about yourself."
             android:id="@+id/hint1" />
 
         <LinearLayout
@@ -121,7 +120,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="List down six backpacking items you must have while backpacking."
             android:id="@+id/hint2" />
 
         <LinearLayout
@@ -157,7 +155,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tell your potential backpacking buddy about your personality."
             android:id="@+id/hint3" />
 
         <LinearLayout
@@ -193,7 +190,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tell us how you would imagine your backpacking day to go."
             android:id="@+id/hint4" />
 
         <LinearLayout

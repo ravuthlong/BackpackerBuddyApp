@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/greenBackground">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#88a990">
+        android:background="@color/greenLighter"
+        android:layout_margin="30dp"
+        android:paddingLeft="20dp">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -25,10 +33,11 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Country"
                 android:id="@+id/tvCountry"
-                android:textSize="22dp" />
+                android:textSize="22dp"
+                android:typeface="sans" />
 
             <Spinner
-                android:layout_width="200dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinnerCountries"
                 android:spinnerMode="dialog"
@@ -36,55 +45,89 @@
 
         </LinearLayout>
 
+        <TableLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From"
+                    android:id="@+id/tvArrival"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Select Date of Arrival"
+                    android:id="@+id/tvDateArrival"
+                    android:background="#ffffff"
+                    android:layout_marginTop="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_column="4"
+                    android:layout_marginLeft="10dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Until"
+                    android:id="@+id/textView"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Select Date of Leave"
+                    android:id="@+id/tvDateLeave"
+                    android:background="#ffffff"
+                    android:layout_column="4"
+                    android:layout_marginLeft="20dp" />
+            </TableRow>
+
+        </TableLayout>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="From"
-                android:id="@+id/tvArrival"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20dp" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="40dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Select Date of Arrival"
-                android:id="@+id/tvDateArrival"
-                android:layout_gravity="center_horizontal"
-                android:background="#ffffff" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="To"
-                android:id="@+id/textView"
-                android:textSize="20dp"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Select Date of Leave"
-                android:id="@+id/tvDateLeave"
-                android:layout_gravity="center_horizontal"
-                android:background="#ffffff" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Submit Visit Point"
-                android:id="@+id/btSubmitCountry"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText"
+                    android:inputType="textMultiLine"
+                    android:hint="Additional information"
+                    android:background="@drawable/edit_text_border"
+                    android:layout_gravity="left|top"
+                    android:maxLength="250"
+                    android:padding="10dp" />
+            </FrameLayout>
         </LinearLayout>
 
     </LinearLayout>
 
 
 </LinearLayout>
+</ScrollView>

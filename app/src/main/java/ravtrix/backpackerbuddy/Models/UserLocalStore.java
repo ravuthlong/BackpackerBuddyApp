@@ -22,6 +22,7 @@ public class UserLocalStore {
         spEditor.putInt("userID", loggedInUser.getUserID());
         spEditor.putString("email", loggedInUser.getEmail());
         spEditor.putString("username", loggedInUser.getUsername());
+        spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
         spEditor.apply();
     }
 
@@ -30,8 +31,9 @@ public class UserLocalStore {
         int userID = userLocalDataStore.getInt("userID", 0);
         String email = userLocalDataStore.getString("email", "");
         String username = userLocalDataStore.getString("username", "");
+        String userImageURL = userLocalDataStore.getString("userImageURL", "");
 
-        storedUser = new User(userID, email, username);
+        storedUser = new User(userID, email, username, userImageURL);
         return storedUser;
     }
 

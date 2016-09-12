@@ -30,4 +30,8 @@ public class RetrofitUserCountries {
     public RetrofitUserCountriesInterfaces.RemoveFavorite removeFavoritePost() {
         return retrofit.create(RetrofitUserCountriesInterfaces.RemoveFavorite.class);
     }
+
+    public RetrofitUserCountriesInterfaces.RemovePost removePost() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.RemovePost.class);
+    }
 }

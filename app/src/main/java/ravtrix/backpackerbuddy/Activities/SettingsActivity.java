@@ -41,4 +41,5 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
     }
+
 }

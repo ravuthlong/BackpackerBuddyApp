@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.interfaces.FragActivitySetDrawerInterface;
+import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
@@ -49,11 +49,12 @@ public class Activity extends Fragment implements  View.OnClickListener {
     private FloatingActionButton postWidget;
     private UserLocalStore userLocalStore;
     private RetrofitUserCountries retrofitUserCountries;
-    private FragActivitySetDrawerInterface fragActivitySetDrawerInterface;
+    private FragActivityResetDrawer fragActivityResetDrawer;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_usercountries, container, false);
         ButterKnife.bind(this, v);
 
@@ -86,7 +87,7 @@ public class Activity extends Fragment implements  View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.fragActivitySetDrawerInterface = (FragActivitySetDrawerInterface) context;
+        this.fragActivityResetDrawer = (FragActivityResetDrawer) context;
     }
 
     @Override
@@ -96,7 +97,7 @@ public class Activity extends Fragment implements  View.OnClickListener {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
                         new Destination()).commit();
-                fragActivitySetDrawerInterface.setDrawerSelected(1);
+                fragActivityResetDrawer.onResetDrawer();
                 break;
             default:
         }
@@ -150,7 +151,8 @@ public class Activity extends Fragment implements  View.OnClickListener {
     private void retrieveUserCountryPostsRetrofit() {
 
         spinner.setVisibility(View.VISIBLE);
-        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts().countryPosts();
+        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts()
+                                    .countryPosts(userLocalStore.getLoggedInUser().getUserID());
         returnedFeed.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
@@ -158,7 +160,8 @@ public class Activity extends Fragment implements  View.OnClickListener {
 
                 // Set up array list of country feeds
                 feedItems =  response.body();
-                feedListAdapter = new FeedListAdapter(Activity.this, feedItems, userLocalStore.getLoggedInUser().getUserID());
+                feedListAdapter = new FeedListAdapter(Activity.this, feedItems,
+                        userLocalStore.getLoggedInUser().getUserID());
                 setRecyclerView(feedListAdapter);
             }
 

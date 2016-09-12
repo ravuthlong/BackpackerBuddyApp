@@ -9,7 +9,7 @@ import ravtrix.backpackerbuddy.R;
 /**
  * Created by Ravinder on 9/9/16.
  */
-public class OptionMenuBaseFragment extends Fragment {
+public class OptionMenuSendBaseFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

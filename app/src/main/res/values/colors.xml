@@ -6,4 +6,5 @@
     <color name="green">#4AA472</color>
     <color name="greenBackground">#88a990</color>
     <color name="greenLighter">#9ab5a0</color>
+    <color name="grayHint">#717070</color>
 </resources>

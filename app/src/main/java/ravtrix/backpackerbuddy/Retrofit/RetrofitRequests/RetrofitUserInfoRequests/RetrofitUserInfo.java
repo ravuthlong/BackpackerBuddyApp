@@ -34,4 +34,8 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.UpdateUserDetail updateUserDetail() {
         return this.retrofit.create(RetrofitUserInfoInterfaces.UpdateUserDetail.class);
     }
+
+    public RetrofitUserInfoInterfaces.UpdateProfilePic updateProfilePic() {
+        return retrofit.create(RetrofitUserInfoInterfaces.UpdateProfilePic.class);
+    }
 }

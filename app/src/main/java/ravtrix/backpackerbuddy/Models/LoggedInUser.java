@@ -30,6 +30,17 @@ public class LoggedInUser {
     @SerializedName("status")
     @Expose
     private int status;
+    @SerializedName("userpic")
+    @Expose
+    private String userpic;
+
+    public String getUserImageURL() {
+        return userpic;
+    }
+
+    public void setUserImageURL(String userpic) {
+        this.userpic = userpic;
+    }
 
 
     public int getUserID() {

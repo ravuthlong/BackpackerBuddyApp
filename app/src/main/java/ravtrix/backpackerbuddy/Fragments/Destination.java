@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,9 +24,9 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuBaseFragment;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
@@ -37,10 +37,9 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Destination extends OptionMenuBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class Destination extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
-    @BindView(R.id.btSubmitCountry) protected Button btSubmitCountry;
     protected static TextView tvDateArrival;
     protected static TextView tvDateLeave;
 
@@ -61,8 +60,9 @@ public class Destination extends OptionMenuBaseFragment implements AdapterView.O
         View v = inflater.inflate(R.layout.frag_travelselection, container, false);
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
+        setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
-
+        getActivity().setTitle("Destination");
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         thisYear = c.get(Calendar.YEAR);
@@ -81,7 +81,6 @@ public class Destination extends OptionMenuBaseFragment implements AdapterView.O
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
-        btSubmitCountry.setOnClickListener(this);
         retrofitUserCountries = new RetrofitUserCountries();
         userLocalStore = new UserLocalStore(getActivity());
 
@@ -96,36 +95,10 @@ public class Destination extends OptionMenuBaseFragment implements AdapterView.O
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.spinnerCountries:
-                selectedCountry = parent.getItemAtPosition(position).toString();
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-                Toast.makeText(getActivity().getBaseContext(), parent.getItemAtPosition(position) + " selected..", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tvDateArrival:
-                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
-                dateFragArrival.show(getActivity().getSupportFragmentManager(), "datePicker");
-                break;
-            case R.id.tvDateLeave:
-                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
-                dateFragLeave.show(getActivity().getSupportFragmentManager(), "datePicker");
-                break;
-            case R.id.btSubmitCountry:
-
-               // TravelSpot travelSpot = new TravelSpot(userLocalStore.getLoggedInUser().getUserID(), selectedCountry, dateFrom, dateTo);
-
+        switch (item.getItemId()) {
+            case R.id.submitSend:
                 final ProgressDialog progressDialog = Helpers.showProgressDialog(getActivity(), "Posting...");
 
                 HashMap<String, String> travelSpot = new HashMap<>();
@@ -156,10 +129,43 @@ public class Destination extends OptionMenuBaseFragment implements AdapterView.O
                         System.out.println(t.getMessage());
                     }
                 });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.spinnerCountries:
+                selectedCountry = parent.getItemAtPosition(position).toString();
+
+                Toast.makeText(getActivity().getBaseContext(), parent.getItemAtPosition(position) +
+                        " selected..", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tvDateArrival:
+                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
+                dateFragArrival.show(getActivity().getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.tvDateLeave:
+                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
+                dateFragLeave.show(getActivity().getSupportFragmentManager(), "datePicker");
+                break;
+        }
+    }
 
     public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment implements DatePickerDialog.OnDateSetListener {
 

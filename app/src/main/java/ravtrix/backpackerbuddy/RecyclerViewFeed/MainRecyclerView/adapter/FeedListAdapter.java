@@ -2,14 +2,21 @@ package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.OtherUserProfile;
 import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.Activity;
@@ -46,6 +54,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
     private UserLocalStore userLocalStore;
+    private Button bEditPost, bDeletePost, bReportPost;
 
     public FeedListAdapter(Activity activity, List<FeedItem> feedItems, int loggedInUser) {
         inflater = LayoutInflater.from(activity.getContext());
@@ -89,8 +98,9 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
         }
 
-        if (currentPos.isFavorite()) {
+        if (currentPos.getClicked() == 1) {
             holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+            currentPos.isFavorite();
         } else {
             holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
         }
@@ -99,19 +109,25 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                if (currentPos.isFavorite()) {
+                if (currentPos.getClicked() == 1) {
                     // Cancel from favorite list - database/local model
                     retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext());
-
-                    currentPos.setFavorite(false);
+                    currentPos.setClicked(0);
                     holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
                 } else {
                     // Insert to favorite list - database/ local model
                     retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext());
-
-                    currentPos.setFavorite(true);
+                    currentPos.setClicked(1);
                     holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
                 }
+            }
+        });
+
+        holder.imgbEditPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp();
+                setPopUpDialogItemListener(currentPos.getId(), currentPos);
             }
         });
     }
@@ -126,7 +142,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
-        private ImageButton imageButtonStar, imageButtonMail;
+        private ImageButton imageButtonStar, imageButtonMail, imgbEditPost;
         private static final int NAVIGATION_ITEM = 4;
 
         public ViewHolder(View itemView, final Context context) {
@@ -138,6 +154,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
             imageButtonStar = (ImageButton) itemView.findViewById(R.id.imageButtonStar);
             imageButtonMail = (ImageButton) itemView.findViewById(R.id.imageButtonMail);
+            imgbEditPost = (ImageButton) itemView.findViewById(R.id.imgbEditPost);
 
             backgroundLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -175,6 +192,87 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         }, 150);
     }
 
+    // Prepare a HashMap with userID and postID the logged in user want to do database operation to
+    private HashMap<String, String> getHashMapWithInfo(int postID) {
+        HashMap<String, String> favoriteInfoHashMap = new HashMap<>();
+        favoriteInfoHashMap.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+        favoriteInfoHashMap.put("postID", Integer.toString(postID));
+        return favoriteInfoHashMap;
+    }
+
+    // Displaying the pop up to manage posts
+    private void showPopUp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity.getContext());
+        LayoutInflater inflater = activity.getActivity().getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.pop_up,
+                null);
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.setView(dialogLayout, 0, 0, 0, 0);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity= Gravity.BOTTOM;
+        window.setAttributes(lp);
+
+        bEditPost = (Button) dialogLayout.findViewById(R.id.bEditPost);
+        bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
+        bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
+
+        builder.setView(dialogLayout);
+        dialog.show();
+    }
+
+
+    // Pop up dialog to manage posts
+    private void setPopUpDialogItemListener(final int postID, final FeedItem currentItem) {
+
+        bEditPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity.getContext(), EditPostActivity.class);
+                intent.putExtra("country", currentItem.getCountry());
+                intent.putExtra("from", currentItem.getFromDate());
+                intent.putExtra("until", currentItem.getToDate());
+                activity.getActivity().startActivity(intent);
+            }
+        });
+        bDeletePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry().removePost().removePost(postID);
+                jsonObjectCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        activity.getActivity().startActivity(new Intent(activity.getContext(), UserMainPage.class));
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        bReportPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLICKED ON REPORT BUTTON");
+            }
+        });
+    }
+
+
+    // Retrofit
+
+    // Insert into favorite list in database
     private void retrofitInsertToFavoriteList(int postID, final Context context) {
         HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID);
 
@@ -197,6 +295,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         });
     }
 
+    // Remove from favorite list in database
     private void retrofitRemoveFromFavoriteList(int postID, final Context context) {
         HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID);
 
@@ -218,13 +317,5 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
             }
         });
-    }
-
-    // Prepare a HashMap with userID and postID the logged in user want to do database operation to
-    private HashMap<String, String> getHashMapWithInfo(int postID) {
-        HashMap<String, String> favoriteInfoHashMap = new HashMap<>();
-        favoriteInfoHashMap.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-        favoriteInfoHashMap.put("postID", Integer.toString(postID));
-        return favoriteInfoHashMap;
     }
 }

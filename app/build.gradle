@@ -36,7 +36,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     // Picasso image loading
-    compile 'com.squareup.picasso:picasso:2.3.3'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // Animations
     compile 'com.nineoldandroids:library:2.4.0'

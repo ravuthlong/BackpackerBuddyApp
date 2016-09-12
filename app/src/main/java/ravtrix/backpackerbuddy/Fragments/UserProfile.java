@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -24,6 +27,7 @@ import ravtrix.backpackerbuddy.activities.EditInfoActivity;
 import ravtrix.backpackerbuddy.activities.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfaces.FragActivityProgressBarInterface;
+import ravtrix.backpackerbuddy.interfaces.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +57,12 @@ public class UserProfile extends Fragment implements View.OnClickListener {
     private View v;
     private ProgressBar progressBar;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
+    private FragActivityUpdateProfilePic fragActivityUpdateProfilePic;
+    private boolean isDetailOneAHint = true;
+    private boolean isDetailTwoAHint = true;
+    private boolean isDetailThreeAHint = true;
+    private boolean isDetailFourAHint = true;
+    private boolean refreshProfilePic = true;
 
     @Nullable
     @Override
@@ -69,9 +79,8 @@ public class UserProfile extends Fragment implements View.OnClickListener {
         editLayout3.setOnClickListener(this);
         editLayout4.setOnClickListener(this);
         imgbEditPhoto.setOnClickListener(this);
-
-        Picasso.with(getActivity()).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
         userLocalStore = new UserLocalStore(getActivity());
+
         retrofitFetchProfileInfo();
 
         return v;
@@ -81,6 +90,7 @@ public class UserProfile extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
+        this.fragActivityUpdateProfilePic = (FragActivityUpdateProfilePic) context;
     }
 
     @Override
@@ -99,18 +109,38 @@ public class UserProfile extends Fragment implements View.OnClickListener {
                 setIntentEditInto(title4.getText().toString(), detailFour.getText().toString(), "4");
                 break;
             case R.id.imgbEditPhoto:
-                startActivity(new Intent(getActivity(), EditPhotoActivity.class));
+                startActivityForResult(new Intent(getActivity(), EditPhotoActivity.class), 1);
                 break;
             default:
         }
     }
 
     // Pass title and hint to edit info activity based on edit selection type
-    private void setIntentEditInto(String title, String hint, String detailType) {
+    private void setIntentEditInto(String title, String detail, String detailType) {
         Intent intent = new Intent(getActivity(), EditInfoActivity.class);
         intent.putExtra("title", title);
-        intent.putExtra("hint", hint);
+        intent.putExtra("detail", detail);
         intent.putExtra("detailType", detailType); // Type of detail to know which column in the database to insert
+        boolean isAHint = true;
+
+        // Pass isHint extra because default description should be displayed as hint in the EditInfoActivity
+        // Non-default (user edited before) should be displayed in EditText as text not hint
+        switch (detailType) {
+            case "1":
+                isAHint = isDetailOneAHint;
+                break;
+            case "2":
+                isAHint = isDetailTwoAHint;
+                break;
+            case "3":
+                isAHint = isDetailThreeAHint;
+                break;
+            case "4":
+                isAHint = isDetailFourAHint;
+                break;
+            default:
+        }
+        intent.putExtra("isHint", isAHint);
         startActivity(intent);
     }
 
@@ -125,24 +155,49 @@ public class UserProfile extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject responseJSON = response.body();
-
                 // If success
                 if (responseJSON.get("success").getAsInt() == 1) {
+
                     responseJSON.get("firstname").getAsString();
                     responseJSON.get("lastname").getAsString();
                     username.setText(responseJSON.get("username").getAsString());
+
                     if (!responseJSON.get("detailOne").getAsString().isEmpty()) {
                         detailOne.setText(responseJSON.get("detailOne").getAsString());
+                        isDetailOneAHint = false;
+                    } else {
+                        detailOne.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+                        detailOne.setHint("Write a summary about yourself.");
                     }
                     if (!responseJSON.get("detailTwo").getAsString().isEmpty()) {
                         detailTwo.setText(responseJSON.get("detailTwo").getAsString());
+                        isDetailTwoAHint = false;
+                    } else {
+                        detailTwo.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+                        detailTwo.setHint("List down six backpacking items you must have while backpacking.");
                     }
                     if (!responseJSON.get("detailThree").getAsString().isEmpty()) {
                         detailThree.setText(responseJSON.get("detailThree").getAsString());
+                        isDetailThreeAHint = false;
+                    } else {
+                        detailThree.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+                        detailThree.setText("Tell your potential backpacking buddy about your personality.");
                     }
                     if (!responseJSON.get("detailFour").getAsString().isEmpty()) {
                         detailFour.setText(responseJSON.get("detailFour").getAsString());
+                        isDetailFourAHint = false;
+                    } else {
+                        detailFour.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+                        detailFour.setText("Tell us how you would imagine your backpacking day to go.");
                     }
+                }
+
+                if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
+                        (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+                    Picasso.with(getContext()).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
+                } else {
+                    Picasso.with(getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                            userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
                 }
                 // call
                 fragActivityProgressBarInterface.setProgressBarInvisible();
@@ -153,5 +208,22 @@ public class UserProfile extends Fragment implements View.OnClickListener {
                 System.out.println(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            Picasso.with(getContext())
+                    .load("http://backpackerbuddy.net23.net/profile_pic/" +
+                            userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .into(profilePic);
+            v.setVisibility(View.VISIBLE);
+
+            // Also notify navigation drawer to change its profile picture by invoking the main activity
+            fragActivityUpdateProfilePic.onUpdateProfilePic();
+        }
     }
 }

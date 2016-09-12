@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.squareup.leakcanary.RefWatcher;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,13 +37,15 @@ import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfaces.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfaces.FragActivitySetDrawerInterface;
+import ravtrix.backpackerbuddy.interfaces.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
 public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
-        FragActivityResetDrawer {
+        FragActivityResetDrawer, FragActivityUpdateProfilePic {
 
     private FragmentManager fragmentManager;
     private List<Fragment> fragmentList;
@@ -54,7 +58,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private CircleImageView profilePic;
     private ProgressBar progressBar;
     private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
-
+    private UserLocalStore userLocalStore;
+    private boolean refreshProfilePic = true;
+    private boolean userHitHome = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +75,19 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
         profilePic.setOnClickListener(this);
+        userLocalStore = new UserLocalStore(this);
 
-        Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
 
+        System.out.println("USER URL: " + userLocalStore.getLoggedInUser().getUserImageURL());
+        System.out.println("USER ID IS: " + userLocalStore.getLoggedInUser().getUserID());
+
+        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
+                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
+        } else {
+            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
+        }
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
@@ -120,7 +136,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         switch (v.getId()) {
             case R.id.settingsButton:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), 2);
                 break;
             case R.id.profile_image:
                 currentPos = 4;
@@ -135,14 +151,25 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        System.out.println("REQUEST CODE: " + requestCode);
+        if (requestCode == 2) {
+            refreshProfilePic = false;
+        }
+    }
+
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
         fragmentList.add(new Activity());
         fragmentList.add(new Messages());
-        fragmentList.add(new Destination());
+        fragmentList.add(new Messages());
         fragmentList.add(new Messages());
         fragmentList.add(new UserProfile());
+        fragmentList.add(new Destination());
     }
 
     // Start up state
@@ -227,6 +254,38 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         Helpers.showAlertDialogWithTwoOptions(UserMainPage.this, this, "Are you sure you want to exit?", "Yes", "No");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // If user hit or hold home button, do not refresh profile picture
+        this.userHitHome = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshProfilePic = !userHitHome;
+
+        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
+                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
+        } else {
+            if (refreshProfilePic) {
+                Picasso.with(this)
+                        .load("http://backpackerbuddy.net23.net/profile_pic/" +
+                                userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .into(profilePic);
+            } else {
+                Picasso.with(this)
+                        .load("http://backpackerbuddy.net23.net/profile_pic/" +
+                                userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                        .into(profilePic);
+            }
+        }
+    }
+
     // Below override methods are called from fragment child to access activity
     @Override
     public void setDrawerSelected(int position) {
@@ -246,4 +305,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onUpdateProfilePic() {
+        // User hitting back button from changing profile picture in EditPhotoActivity.
+        // Invoked to set new profile picture
+        this.userHitHome = false;
+    }
 }

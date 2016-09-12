@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/submitSave"
-        android:title="@string/saveImage"
+        android:title="@string/saveToolbar"
         android:orderInCategory="100"
         app:showAsAction="always" />
 </menu>

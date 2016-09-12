@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -40,11 +41,9 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LeakCanary.install(getApplication());
-
-
         setContentView(R.layout.activity_edit_info);
-
         ButterKnife.bind(this);
+        setEditText();
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -70,11 +69,13 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = getIntent();
         editTitle.setText(intent.getStringExtra("title"));
-        editText.setText(intent.getStringExtra("hint"));
+        if (intent.getBooleanExtra("isHint", true)) {
+            editText.setHint(intent.getStringExtra("detail"));
+        } else {
+            editText.setText(intent.getStringExtra("detail"));
+        }
         detailType = intent.getStringExtra("detailType");
-
         userLocalStore = new UserLocalStore(this);
-
     }
 
     @Override
@@ -136,8 +137,17 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setEditText() {
+        editText.setFocusable(false);
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                editText.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
     }
 }

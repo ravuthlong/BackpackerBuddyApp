@@ -32,6 +32,19 @@ public class FeedItem {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("clicked")
+    @Expose
+    private int clicked;
+    private boolean isFavorite;
+
+
+    public int getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(int clicked) {
+        this.clicked = clicked;
+    }
 
     public boolean isFavorite() {
         return isFavorite;
@@ -40,8 +53,6 @@ public class FeedItem {
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
-
-    private boolean isFavorite;
 
     public String getFirstname() {
         return firstname;
