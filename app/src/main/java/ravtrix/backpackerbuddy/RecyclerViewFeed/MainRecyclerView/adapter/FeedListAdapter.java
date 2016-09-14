@@ -30,7 +30,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.OtherUserProfile;
 import ravtrix.backpackerbuddy.activities.UserMainPage;
-import ravtrix.backpackerbuddy.fragments.Activity;
+import ravtrix.backpackerbuddy.fragments.ActivityFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
@@ -46,7 +46,7 @@ import retrofit2.Response;
  */
 public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHolder> {
 
-    private Activity activity;
+    private ActivityFragment activity;
     private LayoutInflater inflater;
     private List<FeedItem> feedItems;
     private BackgroundImage backgroundImage;
@@ -56,7 +56,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     private UserLocalStore userLocalStore;
     private Button bEditPost, bDeletePost, bReportPost;
 
-    public FeedListAdapter(Activity activity, List<FeedItem> feedItems, int loggedInUser) {
+    public FeedListAdapter(ActivityFragment activity, List<FeedItem> feedItems, int loggedInUser) {
         inflater = LayoutInflater.from(activity.getContext());
         this.activity = activity;
         this.feedItems = feedItems;
@@ -126,7 +126,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.imgbEditPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopUp();
+                showPopUp(currentPos.getUserID());
                 setPopUpDialogItemListener(currentPos.getId(), currentPos);
             }
         });
@@ -175,7 +175,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         }
     }
 
-    private void performFragTransaction(final Activity activity, final int navigationItem) {
+    private void performFragTransaction(final ActivityFragment activity, final int navigationItem) {
         // Delay to avoid lag when changing between option in navigation drawer
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -201,10 +201,10 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     }
 
     // Displaying the pop up to manage posts
-    private void showPopUp() {
+    private void showPopUp(int postUserID) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity.getContext());
         LayoutInflater inflater = activity.getActivity().getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.pop_up,
+        View dialogLayout = inflater.inflate(R.layout.pop_up_managepost,
                 null);
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -224,6 +224,11 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         bEditPost = (Button) dialogLayout.findViewById(R.id.bEditPost);
         bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
         bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
+
+        if (userLocalStore.getLoggedInUser().getUserID() == postUserID) {
+            bDeletePost.setVisibility(View.VISIBLE);
+            bEditPost.setVisibility(View.VISIBLE);
+        }
 
         builder.setView(dialogLayout);
         dialog.show();

@@ -12,7 +12,7 @@ import ravtrix.backpackerbuddy.R;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Messages extends Fragment {
+public class MessagesFragment extends Fragment {
 
     @Nullable
     @Override

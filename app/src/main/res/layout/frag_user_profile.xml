@@ -9,7 +9,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ravtrix.backpackerbuddy.fragments.UserProfile"
+    tools:context=".fragments.UserProfileFragment"
     android:background="@color/greenBackground">
 
     <FrameLayout
@@ -45,12 +45,15 @@
     </FrameLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_below="@+id/frameLayout"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="54dp"
+        android:layout_marginStart="54dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,6 +62,18 @@
             android:text="cocomoco"
             android:id="@+id/username_profile"
             android:layout_gravity="center_horizontal" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:background="@drawable/ic_location_on_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:id="@+id/user_profile_tvLocation" />
     </LinearLayout>
 
     <LinearLayout

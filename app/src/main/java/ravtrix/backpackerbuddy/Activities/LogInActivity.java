@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.location.UserLocation;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
@@ -36,6 +37,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     private UserLocalStore userLocalStore;
     private RetrofitUserInfo retrofitUser;
+    private UserLocation userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,35 +103,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
             // Animation bounce if password field entered is empty
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
-
-            final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Logging In...");
-            // Prepare HashMap of username and password to send to retrofit call
-            HashMap<String, String> arguments = new HashMap<>();
-            arguments.put("username", username);
-            arguments.put("password", password);
-
-            Call<LoggedInUser> responseUser = retrofitUser.loggedInUser().userInfo(arguments);
-            responseUser.enqueue(new Callback<LoggedInUser>() {
-                @Override
-                public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
-                    LoggedInUser user = response.body();
-
-                    if (user.getStatus() == 0) {
-                        // User not found. 0 returned from PHP
-                        showNoUserErrorMessage();
-                    } else {
-                        // User authenticated. Log user in
-                        userLocalStore.storeUserData(user);
-                        startActivity(new Intent(LogInActivity.this, UserMainPage.class));
-                    }
-                    Helpers.hideProgressDialog(progressDialog);
-                }
-                @Override
-                public void onFailure(Call<LoggedInUser> call, Throwable t) {
-                    Helpers.displayToast(LogInActivity.this, "Error");
-
-                }
-            });
+            retrofitLogUserIn(username, password);
         }
 
     }
@@ -141,4 +115,41 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
         dialogBuilder.setPositiveButton("Ok", null);
         dialogBuilder.show();
     }
+
+
+
+    private void retrofitLogUserIn(String username, String password) {
+        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Logging In...");
+        // Prepare HashMap of username and password to send to retrofit call
+        HashMap<String, String> arguments = new HashMap<>();
+        arguments.put("username", username);
+        arguments.put("password", password);
+
+        Call<LoggedInUser> responseUser = retrofitUser.loggedInUser().userInfo(arguments);
+        responseUser.enqueue(new Callback<LoggedInUser>() {
+            @Override
+            public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
+                LoggedInUser user = response.body();
+
+                if (user.getStatus() == 0) {
+                    // User not found. 0 returned from PHP
+                    showNoUserErrorMessage();
+                } else {
+                    // User authenticated. Log user in
+                    userLocalStore.storeUserData(user);
+
+
+                    startActivity(new Intent(LogInActivity.this, UserMainPage.class));
+                }
+                Helpers.hideProgressDialog(progressDialog);
+            }
+            @Override
+            public void onFailure(Call<LoggedInUser> call, Throwable t) {
+                Helpers.displayToast(LogInActivity.this, "Error");
+
+            }
+        });
+    }
+
+
 }

@@ -35,14 +35,14 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Activity extends Fragment implements  View.OnClickListener {
+public class ActivityFragment extends Fragment implements  View.OnClickListener {
 
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
     @BindView(R.id.main_swipe)protected WaveSwipeRefreshLayout waveSwipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
     @BindView(R.id.spinner) protected ProgressBar spinner;
 
-    private static final String TAG = Activity.class.getSimpleName();
+    private static final String TAG = ActivityFragment.class.getSimpleName();
     private ProgressDialog progressDialog;
     private List<FeedItem> feedItems;
     private FeedListAdapter feedListAdapter;
@@ -96,7 +96,7 @@ public class Activity extends Fragment implements  View.OnClickListener {
             case R.id.bFloatingActionButton:
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        new Destination()).commit();
+                        new DestinationFragment()).commit();
                 fragActivityResetDrawer.onResetDrawer();
                 break;
             default:
@@ -160,7 +160,7 @@ public class Activity extends Fragment implements  View.OnClickListener {
 
                 // Set up array list of country feeds
                 feedItems =  response.body();
-                feedListAdapter = new FeedListAdapter(Activity.this, feedItems,
+                feedListAdapter = new FeedListAdapter(ActivityFragment.this, feedItems,
                         userLocalStore.getLoggedInUser().getUserID());
                 setRecyclerView(feedListAdapter);
             }

@@ -37,7 +37,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class Destination extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class DestinationFragment extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
     protected static TextView tvDateArrival;
@@ -62,7 +62,7 @@ public class Destination extends OptionMenuSendBaseFragment implements AdapterVi
         //refWatcher.watch(this);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
-        getActivity().setTitle("Destination");
+        getActivity().setTitle("DestinationFragment");
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         thisYear = c.get(Calendar.YEAR);

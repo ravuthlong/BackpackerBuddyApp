@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 public class UserLocalStore {
     public static final String SP_NAME = "userDetails";
     private SharedPreferences userLocalDataStore;
-    private static User storedUser;
+    private static LoggedInUser storedUser;
     public static boolean isUserLoggedIn = false;
     public static int visitCounter = 0;
     public static boolean allowRefresh = false;
@@ -23,17 +23,22 @@ public class UserLocalStore {
         spEditor.putString("email", loggedInUser.getEmail());
         spEditor.putString("username", loggedInUser.getUsername());
         spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
+        spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
+        spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
+
         spEditor.apply();
     }
 
     // Return current logged in user if exist
-    public User getLoggedInUser() {
+    public LoggedInUser getLoggedInUser() {
         int userID = userLocalDataStore.getInt("userID", 0);
         String email = userLocalDataStore.getString("email", "");
         String username = userLocalDataStore.getString("username", "");
         String userImageURL = userLocalDataStore.getString("userImageURL", "");
+        double latitude = Double.longBitsToDouble(userLocalDataStore.getLong("latitude", 0));
+        double longitude = Double.longBitsToDouble(userLocalDataStore.getLong("longitude", 0));
 
-        storedUser = new User(userID, email, username, userImageURL);
+        storedUser = new LoggedInUser(userID, email, username, userImageURL, latitude, longitude);
         return storedUser;
     }
 

@@ -115,7 +115,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
                             // Success update. Return user to user profile activity
                             if (returnedJSON.get("status").getAsInt() == 1) {
-                                startActivity(new Intent(EditInfoActivity.this, UserMainPage.class));
+                                finish();
                             }
                         }
 

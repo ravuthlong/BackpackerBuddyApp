@@ -2,9 +2,12 @@ package ravtrix.backpackerbuddy.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,10 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +43,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 8/18/16.
  */
-public class UserProfile extends Fragment implements View.OnClickListener {
+public class UserProfileFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.profile_image_profile) protected CircleImageView profilePic;
     @BindView(R.id.ll_edit) protected LinearLayout editLayout;
@@ -53,6 +60,7 @@ public class UserProfile extends Fragment implements View.OnClickListener {
     @BindView(R.id.hint4) protected TextView detailFour;
     @BindView(R.id.username_profile) protected TextView username;
     @BindView(R.id.imgbEditPhoto) protected ImageButton imgbEditPhoto;
+    @BindView(R.id.user_profile_tvLocation) protected TextView tvLocation;
     private UserLocalStore userLocalStore;
     private View v;
     private ProgressBar progressBar;
@@ -81,9 +89,42 @@ public class UserProfile extends Fragment implements View.OnClickListener {
         imgbEditPhoto.setOnClickListener(this);
         userLocalStore = new UserLocalStore(getActivity());
 
+        // Set user location
+        setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
+                userLocalStore.getLoggedInUser().getLongitude());
+
+        System.out.println("LATITUDE: " + userLocalStore.getLoggedInUser().getLatitude());
+
         retrofitFetchProfileInfo();
 
         return v;
+    }
+
+    private void setUserLocation(double latitude, double longitude) {
+
+        System.out.println("SET LATITUDE: " + latitude);
+        System.out.println("SET LONGITUDE: " + longitude);
+
+
+        // Extract the address of the user
+        Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+            for (Address address : addresses) {
+                if (address != null) {
+
+                    String city = address.getLocality();
+                    if (city != null && !city.equals("")) {
+
+                        tvLocation.setText(city);
+                    } else {
+                        //
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -141,7 +182,7 @@ public class UserProfile extends Fragment implements View.OnClickListener {
             default:
         }
         intent.putExtra("isHint", isAHint);
-        startActivity(intent);
+        startActivityForResult(intent, 3);
     }
 
     private void retrofitFetchProfileInfo() {
@@ -224,6 +265,10 @@ public class UserProfile extends Fragment implements View.OnClickListener {
 
             // Also notify navigation drawer to change its profile picture by invoking the main activity
             fragActivityUpdateProfilePic.onUpdateProfilePic();
+        } else if (requestCode == 3) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    new UserProfileFragment()).commit();
         }
     }
 }

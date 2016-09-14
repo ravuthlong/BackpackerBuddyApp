@@ -18,6 +18,47 @@ public class LoggedInUser {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("status")
+    @Expose
+    private int status;
+    @SerializedName("userpic")
+    @Expose
+    private String userpic;
+    @SerializedName("longitude")
+    @Expose
+    private Double longitude;
+    @SerializedName("latitude")
+    @Expose
+    private Double latitude;
+
+    public LoggedInUser() {}
+
+    public LoggedInUser(int userID, String email, String username, String userImageURL,
+                        double latitude, double longitude) {
+        this.userID = userID;
+        this.email = email;
+        this.username = username;
+        this.userpic = userImageURL;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
 
     public int getStatus() {
         return status;
@@ -27,12 +68,6 @@ public class LoggedInUser {
         this.status = status;
     }
 
-    @SerializedName("status")
-    @Expose
-    private int status;
-    @SerializedName("userpic")
-    @Expose
-    private String userpic;
 
     public String getUserImageURL() {
         return userpic;
@@ -41,7 +76,6 @@ public class LoggedInUser {
     public void setUserImageURL(String userpic) {
         this.userpic = userpic;
     }
-
 
     public int getUserID() {
         return userID;

@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,21 +28,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.Activity;
-import ravtrix.backpackerbuddy.fragments.Destination;
-import ravtrix.backpackerbuddy.fragments.Messages;
-import ravtrix.backpackerbuddy.fragments.UserProfile;
+import ravtrix.backpackerbuddy.fragments.ActivityFragment;
+import ravtrix.backpackerbuddy.fragments.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.FindBuddyFragment;
+import ravtrix.backpackerbuddy.fragments.MessagesFragment;
+import ravtrix.backpackerbuddy.fragments.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfaces.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfaces.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfaces.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.location.UserLocation;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class UserMainPage extends UserLocation implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
         FragActivityResetDrawer, FragActivityUpdateProfilePic {
 
@@ -61,6 +62,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
+    private UserLocation userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +79,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         profilePic.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
 
-
-        System.out.println("USER URL: " + userLocalStore.getLoggedInUser().getUserImageURL());
-        System.out.println("USER ID IS: " + userLocalStore.getLoggedInUser().getUserID());
-
         if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
                 (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
             Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
@@ -96,8 +94,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         setUpFragments();
         screenStartUpState();
         setNavigationDrawerIcons();
-        //drawerListViewListener();
         toggleListener();
+
+        userLocation = new UserLocation(this, userLocalStore);
+        userLocation.startLocationService();
     }
 
     @Override
@@ -164,18 +164,18 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(new Activity());
-        fragmentList.add(new Messages());
-        fragmentList.add(new Messages());
-        fragmentList.add(new Messages());
-        fragmentList.add(new UserProfile());
-        fragmentList.add(new Destination());
+        fragmentList.add(new ActivityFragment());
+        fragmentList.add(new FindBuddyFragment());
+        fragmentList.add(new MessagesFragment());
+        fragmentList.add(new MessagesFragment());
+        fragmentList.add(new UserProfileFragment());
+        fragmentList.add(new DestinationFragment());
     }
 
     // Start up state
     //Title Idex, with closed navigation drawer and default fragment 1
     private void screenStartUpState() {
-        setTitle("Activity");
+        setTitle("ActivityFragment");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
     }
@@ -259,6 +259,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         super.onPause();
         // If user hit or hold home button, do not refresh profile picture
         this.userHitHome = true;
+        userLocation.stopListener();
+
     }
 
     @Override

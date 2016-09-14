@@ -23,7 +23,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:text="Edit Post"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/bDeletePost"
@@ -32,7 +33,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:text="Delete Post"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="gone" />
 
 
     </LinearLayout>

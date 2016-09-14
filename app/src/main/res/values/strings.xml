@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BackpackerBuddy</string>
+    <string name="app_name">Backpacker Buddy</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_travel_selection">TravelSelection</string>
     <string name="submitSignup1">submitSignUp1</string>
@@ -11,6 +11,8 @@
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="saveToolbar">Save</string>
+    <string name="random"> Random</string>
+    <string name="nearby"> Nearby </string>
 
     <string-array name="countries">
         <item>Afghanistan</item>
@@ -206,4 +208,5 @@
         <item>Zambia</item>
         <item>Zimbabwe</item>
     </string-array>
+
 </resources>
