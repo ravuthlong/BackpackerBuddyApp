@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments;
+package ravtrix.backpackerbuddy.fragments.destination;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

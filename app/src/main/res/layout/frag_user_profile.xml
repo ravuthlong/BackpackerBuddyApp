@@ -9,7 +9,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.UserProfileFragment"
+    tools:context=".fragments.userprofile.UserProfileFragment"
     android:background="@color/greenBackground">
 
     <FrameLayout
@@ -50,10 +50,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
         android:layout_below="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="54dp"
-        android:layout_marginStart="54dp">
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,144 +86,176 @@
         style="@style/PaddingPage"
         android:id="@+id/linearLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Details"
-            android:id="@+id/title1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/hint1" />
-
         <LinearLayout
-            android:id="@+id/ll_edit"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/frag_user_profile_etLayout1"
             android:clickable="true">
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageButton"
-                android:background="@android:drawable/ic_menu_edit" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Edit"
-                android:id="@+id/textView11"
-                android:layout_gravity="bottom" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Details"
+                android:id="@+id/title1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hint1" />
+
+            <LinearLayout
+                android:id="@+id/ll_edit"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true">
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageButton"
+                    android:background="@android:drawable/ic_menu_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Edit"
+                    android:id="@+id/textView11"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="The six must haves in your backpack"
-            android:id="@+id/title2"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/hint2" />
-
         <LinearLayout
-            android:id="@+id/ll_edit2"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/frag_user_profile_etLayout2"
             android:clickable="true">
 
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageButton2"
-                android:background="@android:drawable/ic_menu_edit" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="The six must haves in your backpack"
+                android:id="@+id/title2"
+                android:layout_marginTop="15dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Edit"
-                android:id="@+id/textView12"
-                android:layout_gravity="bottom" />
+                android:id="@+id/hint2" />
+
+            <LinearLayout
+                android:id="@+id/ll_edit2"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true">
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageButton2"
+                    android:background="@android:drawable/ic_menu_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Edit"
+                    android:id="@+id/textView12"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Describe your personality"
-            android:id="@+id/title3"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/hint3" />
-
         <LinearLayout
-            android:id="@+id/ll_edit3"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/frag_user_profile_etLayout3"
             android:clickable="true">
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageButton3"
-                android:background="@android:drawable/ic_menu_edit" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Edit"
-                android:id="@+id/textView13"
-                android:layout_gravity="bottom" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Describe your personality"
+                android:id="@+id/title3"
+                android:layout_marginTop="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hint3" />
+
+            <LinearLayout
+                android:id="@+id/ll_edit3"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true">
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageButton3"
+                    android:background="@android:drawable/ic_menu_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Edit"
+                    android:id="@+id/textView13"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Your ideal backpacking day"
-            android:id="@+id/title4"
-            android:layout_marginTop="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/hint4" />
-
         <LinearLayout
-            android:id="@+id/ll_edit4"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/frag_user_profile_etLayout4"
             android:clickable="true">
-
-            <ImageButton
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageButton4"
-                android:background="@android:drawable/ic_menu_edit" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Edit"
-                android:id="@+id/textView14"
-                android:layout_gravity="bottom" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Your ideal backpacking day"
+                android:id="@+id/title4"
+                android:layout_marginTop="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hint4" />
+
+            <LinearLayout
+                android:id="@+id/ll_edit4"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true">
+
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageButton4"
+                    android:background="@android:drawable/ic_menu_edit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Edit"
+                    android:id="@+id/textView14"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

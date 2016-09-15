@@ -27,13 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.EditPostActivity;
-import ravtrix.backpackerbuddy.activities.OtherUserProfile;
+import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.activities.UserMainPage;
-import ravtrix.backpackerbuddy.fragments.ActivityFragment;
+import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
-import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;

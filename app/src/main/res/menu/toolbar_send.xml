@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".activities.SignUpPart1Activity">
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".activities.signup1.SignUpPart1Activity">
     <item android:id="@+id/submitSend"
         android:title="@string/submitSignup1"
         android:orderInCategory="100"

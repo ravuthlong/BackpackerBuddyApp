@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments;
+package ravtrix.backpackerbuddy.fragments.mainfrag;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,7 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.interfaces.FragActivityResetDrawer;
+import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;

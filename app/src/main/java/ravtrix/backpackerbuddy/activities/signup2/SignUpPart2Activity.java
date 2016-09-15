@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.signup2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,11 +15,11 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
-import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,17 +28,16 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 3/28/16.
  */
-public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  View.OnClickListener {
+public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
 
-    @BindView(R.id.etEmail) protected EditText etEmail;
-    @BindView(R.id.etUsername) protected EditText etUsername;
-    @BindView(R.id.etPassword) protected EditText etPassword;
+    @BindView(R.id.etFirstname) protected EditText etFirstname;
+    @BindView(R.id.etLastname) protected EditText etLastname;
     private UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup1);
+        setContentView(R.layout.activity_signup2);
         LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
@@ -60,12 +59,9 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  
         }
 
         userLocalStore = new UserLocalStore(this);
-    }
-
-    @Override
-    public void onClick(View v) {
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -73,49 +69,35 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  
         switch (item.getItemId()) {
             case R.id.submitSend:
 
-                final String username = etUsername.getText().toString();
-                final String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
-
-                //User signedUpUser = new User(email, username, password);
+                HashMap<String, String> userInfo = new HashMap<>();
+                userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                userInfo.put("firstname", etFirstname.getText().toString());
+                userInfo.put("lastname", etLastname.getText().toString());
 
                 final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "");
 
-                // Prepare HashMap to send over to the database
-                HashMap<String, String> signedUpUser = new HashMap<>();
-                signedUpUser.put("email", email);
-                signedUpUser.put("username", username);
-                signedUpUser.put("password", password);
-
-                // Make Retrofit call to communicate with the server
-                Call<JsonObject> returnedStatus = RetrofitUserInfoSingleton.getRetrofitUserInfo().signUserUpPart1().signedUpStatus(signedUpUser);
-                returnedStatus.enqueue(new Callback<JsonObject>() {
+                final Call<JsonObject> signUpPart2 =
+                        RetrofitUserInfoSingleton
+                                .getRetrofitUserInfo()
+                                .signUserUpPart2()
+                                .signUserUpPart2(userInfo);
+                signUpPart2.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        JsonObject status = response.body();
+                        JsonObject result = response.body();
+                        if (result.get("status").getAsInt() == 1) {
+                            // Insert user information into the database successfully
+                            startActivity(new Intent(SignUpPart2Activity.this, UserMainPage.class));
 
-                        int userStatus = status.get("status").getAsInt();
-
-                        // Sign up success
-                        if (userStatus == 1) {
-                            LoggedInUser user = new LoggedInUser();
-                            user.setUsername(username);
-                            user.setEmail(email);
-                            user.setUserID(status.get("id").getAsInt());
-
-                            userLocalStore.storeUserData(user);
-                            startActivity(new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class));
                         } else {
-                            // User has been taken
-                            Helpers.showAlertDialog(SignUpPart1Activity.this, "User Taken");
+                            // Error inserting user information
+                            Helpers.showAlertDialog(SignUpPart2Activity.this, "Error");
                         }
-
                         Helpers.hideProgressDialog(progressDialog);
                     }
-
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Helpers.displayToast(SignUpPart1Activity.this, "Error signing up. Try again.");
+                        Helpers.displayToast(SignUpPart2Activity.this, "Error signing up. Try again.");
                     }
                 });
 

@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments;
+package ravtrix.backpackerbuddy.fragments.message;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

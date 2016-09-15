@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.interfaces;
+package ravtrix.backpackerbuddy.interfacescom;
 
 /**
  * Created by Ravinder on 9/10/16.

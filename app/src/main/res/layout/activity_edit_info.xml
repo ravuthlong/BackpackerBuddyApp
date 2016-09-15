@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/greenLighter"
-    tools:context=".activities.EditInfoActivity">
+    tools:context=".activities.editinfo.EditInfoActivity">
 
     <include android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/greenLighter"
-        tools:context=".activities.EditInfoActivity">
+        tools:context=".activities.editinfo.EditInfoActivity">
 
         <FrameLayout
             android:id="@+id/frameLayout2"

@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments;
+package ravtrix.backpackerbuddy.fragments.userprofile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,11 +30,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.EditInfoActivity;
-import ravtrix.backpackerbuddy.activities.EditPhotoActivity;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
+import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
-import ravtrix.backpackerbuddy.interfaces.FragActivityProgressBarInterface;
-import ravtrix.backpackerbuddy.interfaces.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,10 +46,14 @@ import retrofit2.Response;
 public class UserProfileFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.profile_image_profile) protected CircleImageView profilePic;
-    @BindView(R.id.ll_edit) protected LinearLayout editLayout;
-    @BindView(R.id.ll_edit2) protected LinearLayout editLayout2;
-    @BindView(R.id.ll_edit3) protected LinearLayout editLayout3;
-    @BindView(R.id.ll_edit4) protected LinearLayout editLayout4;
+    @BindView(R.id.frag_user_profile_etLayout1) protected LinearLayout editLayout;
+    @BindView(R.id.frag_user_profile_etLayout2) protected LinearLayout editLayout2;
+    @BindView(R.id.frag_user_profile_etLayout3) protected LinearLayout editLayout3;
+    @BindView(R.id.frag_user_profile_etLayout4) protected LinearLayout editLayout4;
+    @BindView(R.id.ll_edit) protected LinearLayout editLayoutSub1;
+    @BindView(R.id.ll_edit2) protected LinearLayout editLayoutSub2;
+    @BindView(R.id.ll_edit3) protected LinearLayout editLayoutSub3;
+    @BindView(R.id.ll_edit4) protected LinearLayout editLayoutSub4;
     @BindView(R.id.title1) protected TextView title1;
     @BindView(R.id.title2) protected TextView title2;
     @BindView(R.id.title3) protected TextView title3;
@@ -86,6 +90,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         editLayout2.setOnClickListener(this);
         editLayout3.setOnClickListener(this);
         editLayout4.setOnClickListener(this);
+        imgbEditPhoto.setOnClickListener(this);
+        editLayoutSub1.setOnClickListener(this);
+        editLayoutSub2.setOnClickListener(this);
+        editLayoutSub3.setOnClickListener(this);
+        editLayoutSub4.setOnClickListener(this);
         imgbEditPhoto.setOnClickListener(this);
         userLocalStore = new UserLocalStore(getActivity());
 
@@ -137,20 +146,24 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
+            case R.id.frag_user_profile_etLayout1:
             case R.id.ll_edit:
                 setIntentEditInto(title1.getText().toString(), detailOne.getText().toString(), "1");
                 break;
+            case R.id.frag_user_profile_etLayout2:
             case R.id.ll_edit2:
                 setIntentEditInto(title2.getText().toString(), detailTwo.getText().toString(), "2");
                 break;
+            case R.id.frag_user_profile_etLayout3:
             case R.id.ll_edit3:
                 setIntentEditInto(title3.getText().toString(), detailThree.getText().toString(), "3");
                 break;
+            case R.id.frag_user_profile_etLayout4:
             case R.id.ll_edit4:
                 setIntentEditInto(title4.getText().toString(), detailFour.getText().toString(), "4");
                 break;
             case R.id.imgbEditPhoto:
-                startActivityForResult(new Intent(getActivity(), EditPhotoActivity.class), 1);
+                startActivityForResult(new Intent(getActivity(), OtherUserProfile.EditPhotoActivity.class), 1);
                 break;
             default:
         }

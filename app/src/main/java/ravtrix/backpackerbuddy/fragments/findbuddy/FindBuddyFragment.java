@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments;
+package ravtrix.backpackerbuddy.fragments.findbuddy;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 
 /**

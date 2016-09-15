@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.editpost;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

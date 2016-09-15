@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.login;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,57 +13,38 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.leakcanary.LeakCanary;
 
-import java.util.HashMap;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.location.UserLocation;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class LogInActivity extends OptionMenuSendBaseActivity {
+public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInView {
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     private UserLocalStore userLocalStore;
     private RetrofitUserInfo retrofitUser;
     private UserLocation userLocation;
+    private LogInPresenter logInPresenter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LeakCanary.install(getApplication());
-
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
-        setSupportActionBar(toolbar);
-
+        setToolbar();
         ButterKnife.bind(this);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
-
+        logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
         retrofitUser = new RetrofitUserInfo();
     }
@@ -73,9 +54,8 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
 
         switch (item.getItemId()) {
             case R.id.submitSend:
-
+                System.out.println("LOGGING IN");
                 logUserIn();
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -86,7 +66,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
      * Log user in if right credentials given by the user
      * Animate bouncing effect if the field is empty
      */
-
     private void logUserIn() {
         String username = etLoggedInUsername.getText().toString();
         String password = etLoggedInPassword.getText().toString();
@@ -103,53 +82,67 @@ public class LogInActivity extends OptionMenuSendBaseActivity {
             // Animation bounce if password field entered is empty
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
-            retrofitLogUserIn(username, password);
+
+            System.out.println("USERNAME: " + username) ;
+            System.out.println("PASSWORD: " + password) ;
+
+            logInPresenter.logUserIn(username, password);
+        }
+    }
+
+    private void setToolbar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
     }
 
     // Error if the user info is incorrect
-    private void showNoUserErrorMessage(){
+    @Override
+    public void showNoUserErrorMessage(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage("Incorrect user details");
         dialogBuilder.setPositiveButton("Ok", null);
         dialogBuilder.show();
     }
 
-
-
-    private void retrofitLogUserIn(String username, String password) {
-        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Logging In...");
-        // Prepare HashMap of username and password to send to retrofit call
-        HashMap<String, String> arguments = new HashMap<>();
-        arguments.put("username", username);
-        arguments.put("password", password);
-
-        Call<LoggedInUser> responseUser = retrofitUser.loggedInUser().userInfo(arguments);
-        responseUser.enqueue(new Callback<LoggedInUser>() {
-            @Override
-            public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
-                LoggedInUser user = response.body();
-
-                if (user.getStatus() == 0) {
-                    // User not found. 0 returned from PHP
-                    showNoUserErrorMessage();
-                } else {
-                    // User authenticated. Log user in
-                    userLocalStore.storeUserData(user);
-
-
-                    startActivity(new Intent(LogInActivity.this, UserMainPage.class));
-                }
-                Helpers.hideProgressDialog(progressDialog);
-            }
-            @Override
-            public void onFailure(Call<LoggedInUser> call, Throwable t) {
-                Helpers.displayToast(LogInActivity.this, "Error");
-
-            }
-        });
+    @Override
+    public void showProgressDialog() {
+        this.progressDialog = Helpers.showProgressDialog(this, "Logging In...");
     }
 
+    @Override
+    public void hideProgressDialog() {
+        Helpers.hideProgressDialog(progressDialog);
+    }
 
+    @Override
+    public void saveNewUser(LoggedInUser loggedInUser) {
+        userLocalStore.clearUserData();
+        userLocalStore.storeUserData(loggedInUser);
+    }
+
+    @Override
+    public void userCanLogIn() {
+        startActivity(new Intent(LogInActivity.this, UserMainPage.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        logInPresenter.onDestroy();
+    }
 }
