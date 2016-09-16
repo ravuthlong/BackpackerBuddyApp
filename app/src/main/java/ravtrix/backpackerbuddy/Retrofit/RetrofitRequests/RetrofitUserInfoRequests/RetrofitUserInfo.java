@@ -42,4 +42,8 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.UpdateLocation updateLocation() {
         return retrofit.create(RetrofitUserInfoInterfaces.UpdateLocation.class);
     }
+
+    public RetrofitUserInfoInterfaces.GetNearbyUsers getNearbyUsers() {
+        return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsers.class);
+    }
 }

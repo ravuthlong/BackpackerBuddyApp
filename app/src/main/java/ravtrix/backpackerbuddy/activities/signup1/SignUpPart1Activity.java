@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.activities.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.signup2.SignUpPart2Activity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.R;
@@ -124,5 +125,11 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, WelcomeActivity.class));
     }
 }

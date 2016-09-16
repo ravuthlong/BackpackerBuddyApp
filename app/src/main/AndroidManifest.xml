@@ -68,7 +68,7 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.otheruserprofile.OtherUserProfile$EditPhotoActivity"
+            android:name=".activities.EditPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editpost.EditPostActivity"

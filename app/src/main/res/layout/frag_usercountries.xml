@@ -31,13 +31,4 @@
         app:backgroundTint="@color/green"
         android:id="@+id/bFloatingActionButton" />
 
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        style="?android:attr/progressBarStyle"
-        android:id="@+id/spinner"
-        android:layout_gravity="center"
-        android:visibility="visible" />
 </android.support.design.widget.CoordinatorLayout>

@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
@@ -41,8 +41,6 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
     @BindView(R.id.main_swipe)protected WaveSwipeRefreshLayout waveSwipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
-    @BindView(R.id.spinner) protected ProgressBar spinner;
-
     private static final String TAG = ActivityFragment.class.getSimpleName();
     private ProgressDialog progressDialog;
     private List<FeedItem> feedItems;
@@ -51,16 +49,28 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     private UserLocalStore userLocalStore;
     private RetrofitUserCountries retrofitUserCountries;
     private FragActivityResetDrawer fragActivityResetDrawer;
+    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
+    private View view;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.fragActivityResetDrawer = (FragActivityResetDrawer) context;
+        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.frag_usercountries, container, false);
-        ButterKnife.bind(this, v);
+        view = inflater.inflate(R.layout.frag_usercountries, container, false);
+        view.setVisibility(View.GONE);
+        ButterKnife.bind(this, view);
 
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
+
+        fragActivityProgressBarInterface.setProgressBarVisible();
 
         waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
 
@@ -82,13 +92,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         retrieveUserCountryPostsRetrofit();
         handleFloatingButtonScroll(this.floatingActionButton);
 
-        return v;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.fragActivityResetDrawer = (FragActivityResetDrawer) context;
+        return view;
     }
 
     @Override
@@ -151,24 +155,27 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     // Make retrofit call to retrieve user country list to populate the recycler view
     private void retrieveUserCountryPostsRetrofit() {
 
-        spinner.setVisibility(View.VISIBLE);
         Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts()
                                     .countryPosts(userLocalStore.getLoggedInUser().getUserID());
         returnedFeed.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
-                spinner.setVisibility(View.GONE);
 
                 // Set up array list of country feeds
                 feedItems =  response.body();
                 feedListAdapter = new FeedListAdapter(ActivityFragment.this, feedItems,
                         userLocalStore.getLoggedInUser().getUserID());
                 setRecyclerView(feedListAdapter);
+                fragActivityProgressBarInterface.setProgressBarInvisible();
+                view.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<List<FeedItem>> call, Throwable t) {
                 System.out.println(t.getMessage());
+                fragActivityProgressBarInterface.setProgressBarInvisible();
+                view.setVisibility(View.VISIBLE);
+
             }
         });
     }

@@ -32,8 +32,9 @@
                 android:layout_height="wrap_content"
                 style="?android:attr/progressBarStyle"
                 android:id="@+id/spinner_main"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:indeterminate="false" />
         </FrameLayout>
 
 

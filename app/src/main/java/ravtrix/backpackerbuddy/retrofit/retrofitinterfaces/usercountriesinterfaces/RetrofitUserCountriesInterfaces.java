@@ -42,7 +42,6 @@ public class RetrofitUserCountriesInterfaces {
         Call<JsonObject> removeFavorite(@FieldMap HashMap<String, String> favoriteInfo);
     }
 
-
     public interface RemovePost {
         @FormUrlEncoded
         @POST("/removePost.php")

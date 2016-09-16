@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -30,20 +29,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
+import ravtrix.backpackerbuddy.activities.EditPhotoActivity;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 8/18/16.
  */
-public class UserProfileFragment extends Fragment implements View.OnClickListener {
+public class UserProfileFragment extends Fragment implements View.OnClickListener, IUserProfileView {
 
     @BindView(R.id.profile_image_profile) protected CircleImageView profilePic;
     @BindView(R.id.frag_user_profile_etLayout1) protected LinearLayout editLayout;
@@ -75,6 +70,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isDetailThreeAHint = true;
     private boolean isDetailFourAHint = true;
     private boolean refreshProfilePic = true;
+    private UserProfilePresenter presenter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
+        this.fragActivityUpdateProfilePic = (FragActivityUpdateProfilePic) context;
+    }
 
     @Nullable
     @Override
@@ -104,7 +107,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         System.out.println("LATITUDE: " + userLocalStore.getLoggedInUser().getLatitude());
 
-        retrofitFetchProfileInfo();
+        presenter = new UserProfilePresenter(this);
+        presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
+                userLocalStore.getLoggedInUser().getUserImageURL());
+        //retrofitFetchProfileInfo();
 
         return v;
     }
@@ -137,13 +143,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-        this.fragActivityUpdateProfilePic = (FragActivityUpdateProfilePic) context;
-    }
-
-    @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.frag_user_profile_etLayout1:
@@ -163,7 +162,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 setIntentEditInto(title4.getText().toString(), detailFour.getText().toString(), "4");
                 break;
             case R.id.imgbEditPhoto:
-                startActivityForResult(new Intent(getActivity(), OtherUserProfile.EditPhotoActivity.class), 1);
+                startActivityForResult(new Intent(getActivity(), EditPhotoActivity.class), 1);
                 break;
             default:
         }
@@ -198,72 +197,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         startActivityForResult(intent, 3);
     }
 
-    private void retrofitFetchProfileInfo() {
-
-        Call<JsonObject> jsonObjectCall =
-                RetrofitUserInfoSingleton
-                        .getRetrofitUserInfo()
-                        .getUserDetails()
-                        .getUserDetails(userLocalStore.getLoggedInUser().getUserID());
-        jsonObjectCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject responseJSON = response.body();
-                // If success
-                if (responseJSON.get("success").getAsInt() == 1) {
-
-                    responseJSON.get("firstname").getAsString();
-                    responseJSON.get("lastname").getAsString();
-                    username.setText(responseJSON.get("username").getAsString());
-
-                    if (!responseJSON.get("detailOne").getAsString().isEmpty()) {
-                        detailOne.setText(responseJSON.get("detailOne").getAsString());
-                        isDetailOneAHint = false;
-                    } else {
-                        detailOne.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
-                        detailOne.setHint("Write a summary about yourself.");
-                    }
-                    if (!responseJSON.get("detailTwo").getAsString().isEmpty()) {
-                        detailTwo.setText(responseJSON.get("detailTwo").getAsString());
-                        isDetailTwoAHint = false;
-                    } else {
-                        detailTwo.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
-                        detailTwo.setHint("List down six backpacking items you must have while backpacking.");
-                    }
-                    if (!responseJSON.get("detailThree").getAsString().isEmpty()) {
-                        detailThree.setText(responseJSON.get("detailThree").getAsString());
-                        isDetailThreeAHint = false;
-                    } else {
-                        detailThree.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
-                        detailThree.setText("Tell your potential backpacking buddy about your personality.");
-                    }
-                    if (!responseJSON.get("detailFour").getAsString().isEmpty()) {
-                        detailFour.setText(responseJSON.get("detailFour").getAsString());
-                        isDetailFourAHint = false;
-                    } else {
-                        detailFour.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
-                        detailFour.setText("Tell us how you would imagine your backpacking day to go.");
-                    }
-                }
-
-                if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
-                        (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-                    Picasso.with(getContext()).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
-                } else {
-                    Picasso.with(getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                            userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
-                }
-                // call
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                v.setVisibility(View.VISIBLE);
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -283,5 +216,113 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
                     new UserProfileFragment()).commit();
         }
+    }
+
+
+    @Override
+    public void setUsername(String username) {
+        this.username.setText(username);
+    }
+
+    @Override
+    public void setDetailOneText(String text) {
+        detailOne.setText(text);
+    }
+
+    @Override
+    public void setDetailOneHint(String hint) {
+        detailOne.setHint(hint);
+    }
+
+    @Override
+    public void setDetailTwoText(String text) {
+        detailTwo.setText(text);
+    }
+
+    @Override
+    public void setDetailTwoHint(String hint) {
+        detailTwo.setHint(hint);
+    }
+
+    @Override
+    public void setDetailThreeText(String text) {
+        detailThree.setText(text);
+    }
+
+    @Override
+    public void setDetailThreeHint(String hint) {
+        detailThree.setHint(hint);
+    }
+
+    @Override
+    public void setDetailFourText(String text) {
+        detailFour.setText(text);
+    }
+
+    @Override
+    public void setDetailFourHint(String hint) {
+        detailFour.setHint(hint);
+    }
+
+    @Override
+    public void setProfilePic(String pic) {
+        Picasso.with(getContext()).load(pic).noFade().into(profilePic);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        fragActivityProgressBarInterface.setProgressBarInvisible();
+    }
+
+    @Override
+    public void setViewVisible() {
+        v.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setDetailOneColor() {
+        detailOne.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+    }
+
+    @Override
+    public void setDetailTwoColor() {
+        detailTwo.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+    }
+
+    @Override
+    public void setDetailThreeColor() {
+        detailThree.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+    }
+
+    @Override
+    public void setDetailFourColor() {
+        detailFour.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+    }
+
+
+    @Override
+    public void isDetailOneAHint(boolean hint) {
+        isDetailOneAHint = hint;
+    }
+
+    @Override
+    public void isDetailTwoAHint(boolean hint) {
+        isDetailTwoAHint = hint;
+    }
+
+    @Override
+    public void isDetailThreeAHint(boolean hint) {
+        isDetailThreeAHint = hint;
+    }
+
+    @Override
+    public void isDetailFourAHint(boolean hint) {
+        isDetailFourAHint = hint;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 }

@@ -28,9 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
+import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
-import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyFragment;
+import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -165,7 +165,7 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
         fragmentList.add(new ActivityFragment());
-        fragmentList.add(new FindBuddyFragment());
+        fragmentList.add(new TabFragment());
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new UserProfileFragment());
@@ -175,7 +175,7 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
     // Start up state
     //Title Idex, with closed navigation drawer and default fragment 1
     private void screenStartUpState() {
-        setTitle("ActivityFragment");
+        setTitle("Activity");
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
     }

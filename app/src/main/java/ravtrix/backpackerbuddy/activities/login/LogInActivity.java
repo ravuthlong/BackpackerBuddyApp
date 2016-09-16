@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.activities.WelcomeActivity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.location.UserLocation;
@@ -144,5 +145,11 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     protected void onDestroy() {
         super.onDestroy();
         logInPresenter.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, WelcomeActivity.class));
     }
 }
