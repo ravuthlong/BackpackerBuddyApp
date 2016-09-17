@@ -10,9 +10,6 @@ public class UserLocalStore {
     public static final String SP_NAME = "userDetails";
     private SharedPreferences userLocalDataStore;
     private static LoggedInUser storedUser;
-    public static boolean isUserLoggedIn = false;
-    public static int visitCounter = 0;
-    public static boolean allowRefresh = false;
 
     public UserLocalStore(Context context) {
         userLocalDataStore = context.getSharedPreferences(SP_NAME, 0);

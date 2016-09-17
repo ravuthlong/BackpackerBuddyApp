@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <application
         android:name=".recyclerviewfeed.mainrecyclerview.app.AppController"
         android:allowBackup="true"
@@ -56,8 +55,8 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editinfo.EditInfoActivity"
             android:noHistory="true"
@@ -73,6 +72,12 @@
         <activity
             android:name=".activities.editpost.EditPostActivity"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".service.LocationService"
+            android:label="LocationService" />
+
+        <activity android:name=".SignUpPart3Activity"></activity>
     </application>
 
 </manifest>

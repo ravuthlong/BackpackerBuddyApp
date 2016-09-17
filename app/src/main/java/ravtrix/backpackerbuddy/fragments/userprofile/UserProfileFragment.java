@@ -2,8 +2,6 @@ package ravtrix.backpackerbuddy.fragments.userprofile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,16 +19,13 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.EditPhotoActivity;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -119,8 +114,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         System.out.println("SET LATITUDE: " + latitude);
         System.out.println("SET LONGITUDE: " + longitude);
-
-
+        tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
+        /*
         // Extract the address of the user
         Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
         try {
@@ -139,7 +134,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 
     @Override

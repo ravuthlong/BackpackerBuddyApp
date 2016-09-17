@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.activities.signup2;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,22 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.gson.JsonObject;
 import com.squareup.leakcanary.LeakCanary;
-
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.activities.UserMainPage;
-import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.SignUpPart3Activity;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 3/28/16.
@@ -57,11 +48,8 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
                 }
             });
         }
-
         userLocalStore = new UserLocalStore(this);
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,37 +57,30 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
         switch (item.getItemId()) {
             case R.id.submitSend:
 
-                HashMap<String, String> userInfo = new HashMap<>();
-                userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                userInfo.put("firstname", etFirstname.getText().toString());
-                userInfo.put("lastname", etLastname.getText().toString());
+                String username = "";
+                String password = "";
+                String email = "";
+                Double longitude = 0.0;
+                Double latitude = 0.0;
 
-                final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "");
+                Bundle signUp1Info = getIntent().getExtras();
+                if (signUp1Info != null) {
+                    username = signUp1Info.getString("username");
+                    password = signUp1Info.getString("password");
+                    email = signUp1Info.getString("email");
+                    longitude = signUp1Info.getDouble("longitude");
+                    latitude = signUp1Info.getDouble("latitude");
+                }
 
-                final Call<JsonObject> signUpPart2 =
-                        RetrofitUserInfoSingleton
-                                .getRetrofitUserInfo()
-                                .signUserUpPart2()
-                                .signUserUpPart2(userInfo);
-                signUpPart2.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        JsonObject result = response.body();
-                        if (result.get("status").getAsInt() == 1) {
-                            // Insert user information into the database successfully
-                            startActivity(new Intent(SignUpPart2Activity.this, UserMainPage.class));
-
-                        } else {
-                            // Error inserting user information
-                            Helpers.showAlertDialog(SignUpPart2Activity.this, "Error");
-                        }
-                        Helpers.hideProgressDialog(progressDialog);
-                    }
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Helpers.displayToast(SignUpPart2Activity.this, "Error signing up. Try again.");
-                    }
-                });
+                Intent intent = new Intent(SignUpPart2Activity.this, SignUpPart3Activity.class);
+                intent.putExtra("email", email);
+                intent.putExtra("username", username);
+                intent.putExtra("password", password);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("firstname", etFirstname.getText().toString());
+                intent.putExtra("lastname", etLastname.getText().toString());
+                startActivity(intent);
 
                 return true;
             default:

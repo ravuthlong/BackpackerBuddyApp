@@ -6,6 +6,41 @@
     android:orientation="vertical"
     android:background="@color/greenBackground">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_location_on_white_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Near"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageView3"
+            android:layout_toEndOf="@+id/imageView3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/frag_gridview_city"
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_toEndOf="@+id/textView3"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp" />
+
+    </RelativeLayout>
+
     <GridView
         android:id="@+id/grid_view"
         android:layout_width="match_parent"

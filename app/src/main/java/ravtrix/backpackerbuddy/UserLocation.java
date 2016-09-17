@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.location;
+package ravtrix.backpackerbuddy;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,16 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
-import ravtrix.backpackerbuddy.models.LoggedInUser;
-import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 
 /**
  * Created by Ravinder on 9/13/16.
@@ -33,13 +24,14 @@ public class UserLocation extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Context context;
-    private UserLocalStore userLocalStore;
+    private UserLocationInterface userLocationInterface;
 
     public UserLocation() {}
 
-    public UserLocation(Context context, UserLocalStore userLocalStore) {
+    public UserLocation(Context context, UserLocationInterface userLocationInterface) {
         this.context = context;
-        this.userLocalStore = userLocalStore;
+        this.userLocationInterface = userLocationInterface;
+        startLocationService();
     }
 
     public void startLocationService() {
@@ -75,34 +67,9 @@ public class UserLocation extends AppCompatActivity {
             public void onLocationChanged(Location location) {
                 final double longitude = location.getLongitude();
                 final double latitude = location.getLatitude();
-
-                System.out.println("LONGITUDE IS: " + location.getLongitude());
-
-                //UPDATE LOCATION
-
-                HashMap<String, String> locationHash = new HashMap<>();
-                locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                locationHash.put("longitude", Double.toString(location.getLongitude()));
-                locationHash.put("latitude", Double.toString(location.getLatitude()));
-
-                Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
-                jsonObjectCall.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                        // Reset local storage of user also after server-side update
-                        LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
-                                userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                                userLocalStore.getLoggedInUser().getUserImageURL(), latitude, longitude);
-                        userLocalStore.clearUserData();
-                        userLocalStore.storeUserData(loggedInUser);
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                    }
-                });
+                // Pass values over to sign up activity part 1
+                userLocationInterface.onReceivedLocation(latitude, longitude);
+                stopListener();
             }
 
             @Override

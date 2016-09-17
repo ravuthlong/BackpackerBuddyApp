@@ -77,9 +77,8 @@ public class UserProfileInteractor implements IUserProfileInteractor {
                     retrofitProfileListener.onError();
                 }
 
-                if ((userImageURL == null) ||
-                        (userImageURL.equals("0"))) {
-                    retrofitProfileListener.onSetProfilePic("http://i.imgur.com/268p4E0.jpg");
+                if ((userImageURL.equals("0"))) {
+                    retrofitProfileListener.onSetProfilePic("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png");
                     //Picasso.with(getContext()).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic); // setProfilePic
                 } else {
                     retrofitProfileListener.onSetProfilePic("http://backpackerbuddy.net23.net/profile_pic/" +

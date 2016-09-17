@@ -20,7 +20,6 @@ import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.activities.WelcomeActivity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.location.UserLocation;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
@@ -34,7 +33,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     private UserLocalStore userLocalStore;
     private RetrofitUserInfo retrofitUser;
-    private UserLocation userLocation;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
 

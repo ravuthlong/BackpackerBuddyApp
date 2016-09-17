@@ -1,50 +1,65 @@
 package ravtrix.backpackerbuddy.activities;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.google.gson.JsonObject;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
 import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
-import ravtrix.backpackerbuddy.location.UserLocation;
+import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.service.LocationService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class UserMainPage extends UserLocation implements NavigationView.OnNavigationItemSelectedListener,
+public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
         FragActivityResetDrawer, FragActivityUpdateProfilePic {
 
@@ -57,12 +72,14 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     private ImageButton settingsButton;
     private CircleImageView profilePic;
-    private ProgressBar progressBar;
+    @BindView(R.id.spinner_main) protected ProgressBar progressBar;
     private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
-    private UserLocation userLocation;
+    private BroadcastReceiver broadcastReceiver;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,34 +87,32 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
         //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
-
-        View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        progressBar = (ProgressBar) findViewById(R.id.spinner_main);
-
-        settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
-        profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
-        profilePic.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
 
-        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
-                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
+        checkRuntimePermissionAvail();
+
+        View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+        profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+
+        if ((userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+            Picasso.with(this)
+                    .load("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
+                    .noFade()
+                    .into(profilePic);
         } else {
             Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
                     userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
         }
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
-
+        profilePic.setOnClickListener(this);
         settingsButton.setOnClickListener(this);
         setSupportActionBar(toolbar);
         setUpFragments();
         screenStartUpState();
         setNavigationDrawerIcons();
         toggleListener();
-
-        userLocation = new UserLocation(this, userLocalStore);
-        userLocation.startLocationService();
     }
 
     @Override
@@ -125,7 +140,6 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
                 break;
             default:
         }
-
         changeFragment(this.currentPos);
 
         return true;
@@ -147,15 +161,12 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
                 resetNavigationDrawer();
                 break;
             default:
-
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        System.out.println("REQUEST CODE: " + requestCode);
         if (requestCode == 2) {
             refreshProfilePic = false;
         }
@@ -193,7 +204,6 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
             }
         }, 150);
     }
-
 
     // Listens to when drawer navigation is opened or closed.
     // Disabled menu items on action bar
@@ -241,6 +251,43 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
             navigationView.getMenu().getItem(i).setChecked(false);
         }
     }
+
+    private void checkRuntimePermissionAvail() {
+        // Check for user's SDK Version. SDK version >= Marshmallow need permission access
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                            PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[] {
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 1);
+            }
+        } else {
+            startService();
+        }
+    }
+
+    // Case for users with grant access needed. Location access granted.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startService();
+                }
+                break;
+        }
+    }
+
+    // User with granted access can access the location now. Start the location background service
+    private void startService() {
+        Intent intent = new Intent(getApplicationContext(), LocationService.class);
+        startService(intent);
+    }
+
     public List<Fragment> getFragList() {
         return this.fragmentList;
     }
@@ -259,13 +306,73 @@ public class UserMainPage extends UserLocation implements NavigationView.OnNavig
         super.onPause();
         // If user hit or hold home button, do not refresh profile picture
         this.userHitHome = true;
-        userLocation.stopListener();
+    }
 
+    // Stop location service
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("I'M DESTROYED");
+        Intent intent = new Intent(getApplicationContext(), LocationService.class);
+        stopService(intent);
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    final Double receivedLongitude = intent.getDoubleExtra("longitude",
+                            userLocalStore.getLoggedInUser().getLongitude());
+                    final Double receivedLatitude = intent.getDoubleExtra("latitude",
+                            userLocalStore.getLoggedInUser().getLatitude());
+
+                    Float distanceDifferenceInMeters = Helpers.distanceFromAtoBInFeet(receivedLongitude, receivedLatitude,
+                            userLocalStore.getLoggedInUser().getLongitude(), userLocalStore.getLoggedInUser().getLatitude());
+
+                    // If received user location is greater than 30 meters from last location then update
+                    // Otherwise, do not update
+                    if (distanceDifferenceInMeters > 100) {
+                        HashMap<String, String> locationHash = new HashMap<>();
+                        locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                        locationHash.put("longitude", Double.toString(receivedLongitude));
+                        locationHash.put("latitude", Double.toString(receivedLatitude));
+
+                        Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
+                        jsonObjectCall.enqueue(new Callback<JsonObject>() {
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                                // Reset local storage of user also after server-side update
+                                LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
+                                        userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
+                                        userLocalStore.getLoggedInUser().getUserImageURL(), receivedLatitude, receivedLongitude);
+                                userLocalStore.clearUserData();
+                                userLocalStore.storeUserData(loggedInUser);
+                            }
+
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    System.out.println("RECEIVED LONGITUDE AND LATITUDE: " +
+                            intent.getExtras().get("longitude") + " and " + intent.getExtras().get("latitude"));
+                    System.out.println("THIS MANY METER AWAY: " + distanceDifferenceInMeters);
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter("locationUpdate"));
+
+
         refreshProfilePic = !userHitHome;
 
         if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||

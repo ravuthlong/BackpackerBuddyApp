@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -29,6 +31,7 @@ import retrofit2.Response;
 public class FindBuddyNearFragment extends Fragment {
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
+    @BindView(R.id.frag_gridview_city) protected TextView city;
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
@@ -49,6 +52,9 @@ public class FindBuddyNearFragment extends Fragment {
         view.setVisibility(View.GONE);
 
         ButterKnife.bind(this, view);
+
+        city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
+                userLocalStore.getLoggedInUser().getLongitude()));
 
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
                 .getNearbyUsers()
