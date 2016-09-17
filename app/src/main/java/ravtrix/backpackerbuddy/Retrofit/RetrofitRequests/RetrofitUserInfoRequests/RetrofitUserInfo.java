@@ -22,11 +22,6 @@ public class RetrofitUserInfo {
         return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpPart1.class);
     }
 
-    public RetrofitUserInfoInterfaces.SignUserUpPart2 signUserUpPart2() {
-        return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpPart2.class);
-    }
-
-
     public RetrofitUserInfoInterfaces.GetUserDetails getUserDetails() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetUserDetails.class);
     }
