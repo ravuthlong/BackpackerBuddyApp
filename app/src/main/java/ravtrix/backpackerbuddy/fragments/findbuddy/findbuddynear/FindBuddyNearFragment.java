@@ -35,13 +35,12 @@ public class FindBuddyNearFragment extends Fragment {
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
+    private long currentTime;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-        fragActivityProgressBarInterface.setProgressBarVisible();
-        userLocalStore = new UserLocalStore(getActivity());
     }
 
     @Nullable
@@ -52,9 +51,16 @@ public class FindBuddyNearFragment extends Fragment {
         view.setVisibility(View.GONE);
 
         ButterKnife.bind(this, view);
+        fragActivityProgressBarInterface.setProgressBarVisible();
+        userLocalStore = new UserLocalStore(getActivity());
 
-        city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
-                userLocalStore.getLoggedInUser().getLongitude()));
+
+        currentTime = System.currentTimeMillis();
+        // If it's been a minute since last location update, do the update
+        if (Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 1) {
+            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
+        }
 
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
                 .getNearbyUsers()
@@ -63,18 +69,21 @@ public class FindBuddyNearFragment extends Fragment {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
-                fragActivityProgressBarInterface.setProgressBarInvisible();
 
                 CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList);
                 profileImageGridView.setAdapter(customGridViewAdapter);
+
                 profileImageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     }
                 });
-                view.setVisibility(View.VISIBLE);
+                fragActivityProgressBarInterface.setProgressBarInvisible();
 
+                view.setVisibility(View.VISIBLE);
+                city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
+                        userLocalStore.getLoggedInUser().getLongitude()));
             }
 
             @Override

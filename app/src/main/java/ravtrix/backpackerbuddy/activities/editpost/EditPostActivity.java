@@ -1,30 +1,72 @@
 package ravtrix.backpackerbuddy.activities.editpost;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.gson.JsonObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
+import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerFrom;
+import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerTo;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 9/12/16.
  */
-public class EditPostActivity extends OptionMenuSaveBaseActivity implements AdapterView.OnItemSelectedListener {
+public class EditPostActivity extends OptionMenuSaveBaseActivity implements AdapterView.OnItemSelectedListener,
+        View.OnClickListener, DatePickerListenerFrom, DatePickerListenerTo {
     @BindView(R.id.activity_travelSelection_spinnerCountries) protected Spinner spinnerCountries;
     @BindView(R.id.activity_travelSelection_tvDateArrival) protected TextView tvDateArrival;
     @BindView(R.id.activity_travelSelection_tvDateLeave) protected TextView tvDateLeave;
     private ArrayAdapter<CharSequence> countryArrayAdapter;
-    private BackgroundImage backgroundImage;
+    private static String[] fromDateArray, toDateArray;
+    private String chosenDateFrom, chosenDateTo, chosenCountry;
+    private UserLocalStore userLocalStore;
+
+    @Override
+    public void returnDateFrom(int year, int month, int day) {
+        tvDateLeave.setText((month + 1) + "/" + day + "/" + year);
+
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+        chosenDateFrom = yearString + "-" + monthString + "-" + dayString;
+    }
+
+    @Override
+    public void returnDateTo(int year, int month, int day) {
+        tvDateArrival.setText((month + 1) + "/" + day + "/" + year);
+
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+
+        chosenDateTo = yearString + "-" + monthString + "-" + dayString;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,16 +81,41 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
         spinnerCountries.setAdapter(countryArrayAdapter);
         spinnerCountries.setOnItemSelectedListener(this);
 
-        backgroundImage = new BackgroundImage();
-
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            spinnerCountries.setPrompt(bundle.getString("country"));
-            bundle.getString("from");
-            bundle.getString("until");
+            String[] country_array = getResources().getStringArray(R.array.countries);
+
+            for (int i = 0; i < country_array.length; i++) {
+                if (country_array[i].equals(bundle.getString("country"))) {
+                    spinnerCountries.setSelection(i);
+                }
+            }
+            String fromDate = bundle.getString("from");
+            String toDate = bundle.getString("until");
+
+            if (fromDate != null) {
+                this.chosenDateFrom = fromDate.replace("/", "-");
+            }
+            if (toDate != null) {
+                this.chosenDateTo = toDate.replace("/", "-");
+            }
+
+            System.out.println("FROM : " + fromDate);
+            System.out.println("UNTIL : " + toDate);
+
+            this.chosenCountry = bundle.getString("country");
+
+            tvDateLeave.setText(fromDate);
+            tvDateArrival.setText(toDate);
+
+            // Split date by month[0], day[1], year[2]
+            if (fromDate != null) {
+                fromDateArray = fromDate.split("/");
+            }
+            if (toDate != null) {
+                toDateArray = toDate.split("/");
+            }
         }
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,10 +133,38 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
                 }
             });
         }
+
+        spinnerCountries.setOnItemSelectedListener(this);
+        tvDateArrival.setOnClickListener(this);
+        tvDateLeave.setOnClickListener(this);
+        userLocalStore = new UserLocalStore(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.activity_travelSelection_tvDateLeave:
+                DialogFragment dateFragLeave = new DatePickerFragmentFrom();
+                dateFragLeave.show(getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.activity_travelSelection_tvDateArrival:
+                DialogFragment dateFragTo = new DatePickerFragmentTo();
+                dateFragTo.show(getSupportFragmentManager(), "datePicker");
+                break;
+            default:
+        }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (parent.getId()) {
+            case R.id.activity_travelSelection_spinnerCountries:
+                chosenCountry = parent.getItemAtPosition(position).toString();
+
+                break;
+        }
 
     }
 
@@ -82,9 +177,75 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.submitSave:
+
+                HashMap<String, String> travelSpotHash = new HashMap<>();
+                travelSpotHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                travelSpotHash.put("country", chosenCountry);
+                travelSpotHash.put("from", chosenDateFrom);
+                travelSpotHash.put("until", chosenDateTo);
+                Call<JsonObject> objectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry()
+                        .updateTravelSpot().updateTravelSpot(travelSpotHash);
+
+                objectCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (response.body().get("status").getAsInt() == 1) {
+                            startActivity(new Intent(EditPostActivity.this, UserMainPage.class));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        Helpers.displayToast(EditPostActivity.this, "Try again...");
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private DatePickerListenerFrom datePickerListenerFrom;
+
+        @Override
+        @NonNull
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Year, month day
+            this.datePickerListenerFrom = (DatePickerListenerFrom) getActivity();
+
+            return new DatePickerDialog(getActivity(), this, Integer.parseInt(fromDateArray[2]),
+                    Integer.parseInt(fromDateArray[0]) - 1, Integer.parseInt(fromDateArray[1]));
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            datePickerListenerFrom.returnDateFrom(year, monthOfYear, dayOfMonth);
+        }
+    }
+
+    public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private DatePickerListenerTo datePickerListenerTo;
+
+        @Override
+        @NonNull
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            datePickerListenerTo = (DatePickerListenerTo) getActivity();
+            // Year, month day
+            return new DatePickerDialog(getActivity(), this, Integer.parseInt(toDateArray[2]),
+                    Integer.parseInt(toDateArray[0]) - 1, Integer.parseInt(toDateArray[1]));
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            datePickerListenerTo.returnDateTo(year, monthOfYear, dayOfMonth);
         }
     }
 }

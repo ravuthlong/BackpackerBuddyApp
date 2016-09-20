@@ -34,4 +34,8 @@ public class RetrofitUserCountries {
     public RetrofitUserCountriesInterfaces.RemovePost removePost() {
         return retrofit.create(RetrofitUserCountriesInterfaces.RemovePost.class);
     }
+
+    public RetrofitUserCountriesInterfaces.UpdateTravelSpot updateTravelSpot() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.UpdateTravelSpot.class);
+    }
 }

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -42,9 +42,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
     protected static TextView tvDateArrival;
     protected static TextView tvDateLeave;
-
     protected String selectedCountry;
-    private ArrayAdapter<CharSequence> countryArrayAdapter;
     private static final int DIALOG_ID = 0;
     private static int thisYear;
     private static int thisDay;
@@ -62,7 +60,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         //refWatcher.watch(this);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
-        getActivity().setTitle("DestinationFragment");
+        getActivity().setTitle("Destination");
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         thisYear = c.get(Calendar.YEAR);
@@ -73,7 +71,8 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
 
         // Each item
-        countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.countries, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.countries, android.R.layout.simple_spinner_item);
         // Drop down
         countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountries.setAdapter(countryArrayAdapter);
@@ -84,8 +83,8 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         retrofitUserCountries = new RetrofitUserCountries();
         userLocalStore = new UserLocalStore(getActivity());
 
-        tvDateArrival.setText((thisMonth + 1) + "-" + thisDay + "-" + thisYear);
-        tvDateLeave.setText((thisMonth + 1) + "-" + (thisDay + 1) + "-" + thisYear);
+        tvDateArrival.setText((thisMonth + 1) + "/" + thisDay + "/" + thisYear);
+        tvDateLeave.setText((thisMonth + 1) + "/" + (thisDay + 1) + "/" + thisYear);
 
 
         dateFrom = thisYear + "-" + (thisMonth + 1) + "-" + thisDay;
@@ -141,9 +140,6 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         switch (parent.getId()) {
             case R.id.spinnerCountries:
                 selectedCountry = parent.getItemAtPosition(position).toString();
-
-                Toast.makeText(getActivity().getBaseContext(), parent.getItemAtPosition(position) +
-                        " selected..", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -167,7 +163,8 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         }
     }
 
-    public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment implements DatePickerDialog.OnDateSetListener {
+    public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -176,7 +173,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            tvDateArrival.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
+            tvDateArrival.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
             monthOfYear += 1;
             String yearString = Integer.toString(year);
             String monthString = Integer.toString(monthOfYear);
@@ -187,16 +184,18 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     }
 
 
-    public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment implements DatePickerDialog.OnDateSetListener {
+    public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
 
         @Override
+        @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
         }
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            tvDateLeave.setText((monthOfYear + 1) + "-" + dayOfMonth + "-" + year);
+            tvDateLeave.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
             monthOfYear += 1;
             String yearString = Integer.toString(year);
             String monthString = Integer.toString(monthOfYear);

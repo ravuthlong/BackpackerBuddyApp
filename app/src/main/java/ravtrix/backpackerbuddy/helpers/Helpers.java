@@ -9,10 +9,21 @@ import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import ravtrix.backpackerbuddy.UserLocation;
+import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
+import ravtrix.backpackerbuddy.models.LoggedInUser;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -103,5 +114,43 @@ public class Helpers {
         location2.setLongitude(longitude2);
 
         return location1.distanceTo(location2);
+    }
+
+    public static long timeDifInMinutes(long currentTime, long timeBefore) {
+        return TimeUnit.MILLISECONDS.toMinutes(currentTime - timeBefore);
+    }
+
+    public static void updateLocationAndTime(Context context, final UserLocalStore userLocalStore, final long currentTime) {
+        new UserLocation(context, new UserLocationInterface() {
+            @Override
+            public void onReceivedLocation(final double latitude, final double longitude) {
+
+                HashMap<String, String> locationHash = new HashMap<>();
+                locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                locationHash.put("longitude", Double.toString(longitude));
+                locationHash.put("latitude", Double.toString(latitude));
+                locationHash.put("time", Long.toString(currentTime));
+
+                Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
+                jsonObjectCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                        // Reset local storage of user also after server-side update
+                        LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
+                                userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
+                                userLocalStore.getLoggedInUser().getUserImageURL(), latitude, longitude,
+                                currentTime);
+                        userLocalStore.clearUserData();
+                        userLocalStore.storeUserData(loggedInUser);
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 }

@@ -30,18 +30,38 @@ public class LoggedInUser {
     @SerializedName("latitude")
     @Expose
     private Double latitude;
+    @SerializedName("time")
+    @Expose
+    private Long time;
 
     public LoggedInUser() {}
 
     public LoggedInUser(int userID, String email, String username, String userImageURL,
-                        double latitude, double longitude) {
+                        double latitude, double longitude, long currentTime) {
         this.userID = userID;
         this.email = email;
         this.username = username;
         this.userpic = userImageURL;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.time = currentTime;
 
+    }
+
+    public String getUserpic() {
+        return userpic;
+    }
+
+    public void setUserpic(String userpic) {
+        this.userpic = userpic;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
     public Double getLongitude() {

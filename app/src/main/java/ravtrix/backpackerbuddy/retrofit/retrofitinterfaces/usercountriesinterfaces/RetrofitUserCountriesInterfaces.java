@@ -47,4 +47,10 @@ public class RetrofitUserCountriesInterfaces {
         @POST("/removePost.php")
         Call<JsonObject> removePost(@Field("postID") int postID );
     }
+
+    public interface UpdateTravelSpot {
+        @FormUrlEncoded
+        @POST("/updateTravelSpot.php")
+        Call<JsonObject> updateTravelSpot(@FieldMap HashMap<String, String> travelSpotInfo);
+    }
 }

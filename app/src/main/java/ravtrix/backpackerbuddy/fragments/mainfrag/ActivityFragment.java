@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -51,6 +52,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     private FragActivityResetDrawer fragActivityResetDrawer;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
+    private long currentTime;
 
     @Override
     public void onAttach(Context context) {
@@ -66,6 +68,8 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         view = inflater.inflate(R.layout.frag_usercountries, container, false);
         view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
+
+        long time= System.currentTimeMillis();
 
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
@@ -89,6 +93,12 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         retrofitUserCountries = new RetrofitUserCountries();
         floatingActionButton.setOnClickListener(this);
 
+        currentTime = System.currentTimeMillis();
+        // If it's been a minute since last location update, do the update
+        if (Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 1) {
+            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
+        }
         retrieveUserCountryPostsRetrofit();
         handleFloatingButtonScroll(this.floatingActionButton);
 

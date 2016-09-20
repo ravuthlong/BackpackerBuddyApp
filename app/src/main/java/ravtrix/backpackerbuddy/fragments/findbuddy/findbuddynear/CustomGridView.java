@@ -58,6 +58,7 @@ public class CustomGridView extends BaseAdapter {
                     .load(profileURL.get(position).getUserpic())
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .placeholder(R.drawable.ic_placeholder)
                     .into(profileImage);
         } else {
             gridView = (View) convertView;

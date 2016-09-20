@@ -66,6 +66,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isDetailFourAHint = true;
     private boolean refreshProfilePic = true;
     private UserProfilePresenter presenter;
+    private long currentTime;
 
     @Override
     public void onAttach(Context context) {
@@ -96,11 +97,16 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         imgbEditPhoto.setOnClickListener(this);
         userLocalStore = new UserLocalStore(getActivity());
 
+        currentTime = System.currentTimeMillis();
+        // If it's been a minute since last location update, do the update
+        if (Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 1) {
+            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
+        }
+
         // Set user location
         setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
                 userLocalStore.getLoggedInUser().getLongitude());
-
-        System.out.println("LATITUDE: " + userLocalStore.getLoggedInUser().getLatitude());
 
         presenter = new UserProfilePresenter(this);
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
@@ -115,26 +121,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         System.out.println("SET LATITUDE: " + latitude);
         System.out.println("SET LONGITUDE: " + longitude);
         tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
-        /*
-        // Extract the address of the user
-        Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
-        try {
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            for (Address address : addresses) {
-                if (address != null) {
-
-                    String city = address.getLocality();
-                    if (city != null && !city.equals("")) {
-
-                        tvLocation.setText(city);
-                    } else {
-                        //
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }*/
     }
 
     @Override
@@ -213,108 +199,86 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
-
     @Override
     public void setUsername(String username) {
         this.username.setText(username);
     }
-
     @Override
     public void setDetailOneText(String text) {
         detailOne.setText(text);
     }
-
     @Override
     public void setDetailOneHint(String hint) {
         detailOne.setHint(hint);
     }
-
     @Override
     public void setDetailTwoText(String text) {
         detailTwo.setText(text);
     }
-
     @Override
     public void setDetailTwoHint(String hint) {
         detailTwo.setHint(hint);
     }
-
     @Override
     public void setDetailThreeText(String text) {
         detailThree.setText(text);
     }
-
     @Override
     public void setDetailThreeHint(String hint) {
         detailThree.setHint(hint);
     }
-
     @Override
     public void setDetailFourText(String text) {
         detailFour.setText(text);
     }
-
     @Override
     public void setDetailFourHint(String hint) {
         detailFour.setHint(hint);
     }
-
     @Override
     public void setProfilePic(String pic) {
         Picasso.with(getContext()).load(pic).noFade().into(profilePic);
     }
-
     @Override
     public void hideProgressBar() {
         fragActivityProgressBarInterface.setProgressBarInvisible();
     }
-
     @Override
     public void setViewVisible() {
         v.setVisibility(View.VISIBLE);
     }
-
     @Override
     public void setDetailOneColor() {
         detailOne.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
     }
-
     @Override
     public void setDetailTwoColor() {
         detailTwo.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
     }
-
     @Override
     public void setDetailThreeColor() {
         detailThree.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
     }
-
     @Override
     public void setDetailFourColor() {
         detailFour.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
     }
-
-
     @Override
     public void isDetailOneAHint(boolean hint) {
         isDetailOneAHint = hint;
     }
-
     @Override
     public void isDetailTwoAHint(boolean hint) {
         isDetailTwoAHint = hint;
     }
-
     @Override
     public void isDetailThreeAHint(boolean hint) {
         isDetailThreeAHint = hint;
     }
-
     @Override
     public void isDetailFourAHint(boolean hint) {
         isDetailFourAHint = hint;
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

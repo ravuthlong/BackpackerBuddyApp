@@ -31,7 +31,6 @@ public class LogInInteractor implements ILogInInteractor {
 
                 if (user.getStatus() == 0) {
                     // User not found. 0 returned from PHP
-                    System.out.println("ERROR");
                     onRetrofitLogInListener.onError();
 
                 } else {

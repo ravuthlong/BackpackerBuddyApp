@@ -22,6 +22,7 @@ public class UserLocalStore {
         spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
         spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
         spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
+        spEditor.putLong("time", loggedInUser.getTime());
 
         spEditor.apply();
     }
@@ -34,8 +35,9 @@ public class UserLocalStore {
         String userImageURL = userLocalDataStore.getString("userImageURL", "");
         double latitude = Double.longBitsToDouble(userLocalDataStore.getLong("latitude", 0));
         double longitude = Double.longBitsToDouble(userLocalDataStore.getLong("longitude", 0));
+        long time = userLocalDataStore.getLong("time", 0);
 
-        storedUser = new LoggedInUser(userID, email, username, userImageURL, latitude, longitude);
+        storedUser = new LoggedInUser(userID, email, username, userImageURL, latitude, longitude, time);
         return storedUser;
     }
 

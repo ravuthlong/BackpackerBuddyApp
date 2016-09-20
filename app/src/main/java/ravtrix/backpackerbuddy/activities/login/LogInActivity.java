@@ -53,7 +53,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
         switch (item.getItemId()) {
             case R.id.submitSend:
-                System.out.println("LOGGING IN");
                 logUserIn();
                 return true;
             default:
@@ -81,10 +80,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
             // Animation bounce if password field entered is empty
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
-
-            System.out.println("USERNAME: " + username) ;
-            System.out.println("PASSWORD: " + password) ;
-
             logInPresenter.logUserIn(username, password);
         }
     }

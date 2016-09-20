@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
@@ -38,6 +38,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
     private static final int RESULT_LOAD_IMAGE = 1;
     private UserLocalStore userLocalStore;
+    private long currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +149,8 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("latitude", Double.toString(latitude));
         userInfo.put("longitude", Double.toString(longitude));
         userInfo.put("userpic", encodedImage);
+        currentTime = System.currentTimeMillis();
+        userInfo.put("time", Long.toString(currentTime));
 
 
         // Make Retrofit call to communicate with the server
@@ -168,6 +171,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                     user.setUserImageURL(status.get("userpic").getAsString());
                     user.setLatitude(signedUpUser.getLatitude());
                     user.setLongitude(signedUpUser.getLongitude());
+                    user.setTime(currentTime);
                     userLocalStore.storeUserData(user);
                     startActivity(new Intent(SignUpPart3Activity.this, UserMainPage.class));
                 } else {

@@ -1,17 +1,10 @@
 package ravtrix.backpackerbuddy.activities;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -24,14 +17,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import com.google.gson.JsonObject;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,17 +35,11 @@ import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
-import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.service.LocationService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -79,8 +64,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private boolean userHitHome = false;
     private BroadcastReceiver broadcastReceiver;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +72,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
 
-        checkRuntimePermissionAvail();
+        //checkRuntimePermissionAvail();
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
@@ -192,8 +175,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     }
 
     private void changeFragment(final int currentPos) {
-
+        drawerLayout.closeDrawer(GravityCompat.START);
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                fragmentList.get(currentPos)).commit();
         // Delay to avoid lag when changing between option in navigation drawer
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -202,7 +189,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                         fragmentList.get(currentPos)).commit();
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
-        }, 150);
+        }, 150);*/
     }
 
     // Listens to when drawer navigation is opened or closed.
@@ -252,6 +239,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
     private void checkRuntimePermissionAvail() {
         // Check for user's SDK Version. SDK version >= Marshmallow need permission access
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -270,6 +258,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     // Case for users with grant access needed. Location access granted.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -282,11 +271,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     // User with granted access can access the location now. Start the location background service
     private void startService() {
         Intent intent = new Intent(getApplicationContext(), LocationService.class);
         startService(intent);
-    }
+    }*/
 
     public List<Fragment> getFragList() {
         return this.fragmentList;
@@ -312,18 +302,22 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
         System.out.println("I'M DESTROYED");
         Intent intent = new Intent(getApplicationContext(), LocationService.class);
         stopService(intent);
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
-        }
+        }*/
     }
+
+
 
     @Override
     public void onResume() {
         super.onResume();
 
+        /*
         if (broadcastReceiver == null) {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
@@ -338,11 +332,13 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
                     // If received user location is greater than 30 meters from last location then update
                     // Otherwise, do not update
-                    if (distanceDifferenceInMeters > 100) {
+                    if (distanceDifferenceInMeters > 0.2) {
+                        System.out.println("UPDATING");
                         HashMap<String, String> locationHash = new HashMap<>();
                         locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                         locationHash.put("longitude", Double.toString(receivedLongitude));
                         locationHash.put("latitude", Double.toString(receivedLatitude));
+                        locationHash.put("time", Long.toString(System.currentTimeMillis()));
 
                         Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
                         jsonObjectCall.enqueue(new Callback<JsonObject>() {
@@ -352,7 +348,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                                 // Reset local storage of user also after server-side update
                                 LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
                                         userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                                        userLocalStore.getLoggedInUser().getUserImageURL(), receivedLatitude, receivedLongitude);
+                                        userLocalStore.getLoggedInUser().getUserImageURL(), receivedLatitude, receivedLongitude,
+                                        userLocalStore.getLoggedInUser().getTime());
                                 userLocalStore.clearUserData();
                                 userLocalStore.storeUserData(loggedInUser);
                             }
@@ -371,7 +368,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             };
         }
         registerReceiver(broadcastReceiver, new IntentFilter("locationUpdate"));
-
+            */
 
         refreshProfilePic = !userHitHome;
 
