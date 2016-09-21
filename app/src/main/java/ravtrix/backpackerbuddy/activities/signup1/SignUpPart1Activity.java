@@ -21,6 +21,7 @@ import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.signup2.SignUpPart2Activity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 
 /**
@@ -32,6 +33,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  
     @BindView(R.id.etUsername) protected EditText etUsername;
     @BindView(R.id.etPassword) protected EditText etPassword;
     @BindView(R.id.etConfirmPass) protected  EditText etConfirmPassword;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,23 +41,8 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements  
         setContentView(R.layout.activity_signup1);
         LeakCanary.install(getApplication());
         ButterKnife.bind(this);
+        Helpers.setToolbar(this, toolbar);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
     }
 
     @Override

@@ -36,6 +36,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
     private static final int RESULT_LOAD_IMAGE = 1;
     private UserLocalStore userLocalStore;
     private long currentTime;
@@ -46,22 +47,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         setContentView(R.layout.activity_edit_photo);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
+        Helpers.setToolbar(this, toolbar);
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);

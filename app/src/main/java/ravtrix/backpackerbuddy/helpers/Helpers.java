@@ -7,6 +7,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -152,5 +155,24 @@ public class Helpers {
                 });
             }
         });
+    }
+
+    public static void setToolbar(final AppCompatActivity appCompatActivity, Toolbar toolbar) {
+
+        appCompatActivity.setSupportActionBar(toolbar);
+
+        if (appCompatActivity.getSupportActionBar() != null) {
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    appCompatActivity.onBackPressed();
+                }
+            });
+        }
     }
 }

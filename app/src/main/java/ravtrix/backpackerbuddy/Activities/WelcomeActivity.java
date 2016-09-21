@@ -31,18 +31,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
-        // Check to see if the user is already logged in. If so, go straight to main user page
-        userLocalStore = new UserLocalStore(this);
-        if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {
-            startActivity(new Intent(this, UserMainPage.class));
-        }
-
-        Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
-
-        tvBackpacker.setTypeface(monuFont);
-        tvBackpacker.setTextSize(85);
-        tvBuddy.setTypeface(monuFont);
-        tvBuddy.setTextSize(80);
+        checkIsUserLoggedIn();
+        setFontStyle();
         imgbSignUp.setOnClickListener(this);
         imgbLogIn.setOnClickListener(this);
     }
@@ -63,5 +53,22 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    private void setFontStyle() {
+        Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
+
+        tvBackpacker.setTypeface(monuFont);
+        tvBackpacker.setTextSize(85);
+        tvBuddy.setTypeface(monuFont);
+        tvBuddy.setTextSize(80);
+    }
+
+    // Check to see if the user is already logged in. If so, go straight to main user page
+    private void checkIsUserLoggedIn() {
+        userLocalStore = new UserLocalStore(this);
+        if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {
+            startActivity(new Intent(this, UserMainPage.class));
+        }
     }
 }

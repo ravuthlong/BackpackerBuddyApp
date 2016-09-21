@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -35,7 +34,6 @@ public class FindBuddyNearFragment extends Fragment {
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
-    private long currentTime;
 
     @Override
     public void onAttach(Context context) {
@@ -48,20 +46,18 @@ public class FindBuddyNearFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_gridview, container, false);
-        view.setVisibility(View.GONE);
-
+        view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
+        //linearLayout.setVisibility(View.INVISIBLE);
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
 
+        checkLocationUpdate();
+        fetchNearbyUsers();
+        return view;
+    }
 
-        currentTime = System.currentTimeMillis();
-        // If it's been a minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 1) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
-
+    private void fetchNearbyUsers() {
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
                 .getNearbyUsers()
                 .getNearbyUsers(userLocalStore.getLoggedInUser().getUserID(), 40);
@@ -70,26 +66,32 @@ public class FindBuddyNearFragment extends Fragment {
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
 
-                CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList);
+                CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
+                        view, fragActivityProgressBarInterface);
                 profileImageGridView.setAdapter(customGridViewAdapter);
 
-                profileImageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    }
-                });
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-
-                view.setVisibility(View.VISIBLE);
                 city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
                         userLocalStore.getLoggedInUser().getLongitude()));
             }
 
             @Override
             public void onFailure(Call<List<UserLocationInfo>> call, Throwable t) {
+                fragActivityProgressBarInterface.setProgressBarInvisible();
+                view.setVisibility(View.VISIBLE);
             }
         });
-        return view;
+    }
+
+    /*
+     * Check if location update is needed. If needed, update local store and server
+     */
+    private void checkLocationUpdate() {
+        long currentTime = System.currentTimeMillis();
+
+        // If it's been a minute since last location update, do the update
+        if (Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 1) {
+            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
+        }
     }
 }

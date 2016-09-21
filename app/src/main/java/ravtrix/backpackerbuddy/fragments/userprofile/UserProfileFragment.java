@@ -64,9 +64,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isDetailTwoAHint = true;
     private boolean isDetailThreeAHint = true;
     private boolean isDetailFourAHint = true;
-    private boolean refreshProfilePic = true;
     private UserProfilePresenter presenter;
-    private long currentTime;
 
     @Override
     public void onAttach(Context context) {
@@ -85,41 +83,23 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         fragActivityProgressBarInterface.setProgressBarVisible();
         ButterKnife.bind(this, v);
 
-        editLayout.setOnClickListener(this);
-        editLayout2.setOnClickListener(this);
-        editLayout3.setOnClickListener(this);
-        editLayout4.setOnClickListener(this);
-        imgbEditPhoto.setOnClickListener(this);
-        editLayoutSub1.setOnClickListener(this);
-        editLayoutSub2.setOnClickListener(this);
-        editLayoutSub3.setOnClickListener(this);
-        editLayoutSub4.setOnClickListener(this);
-        imgbEditPhoto.setOnClickListener(this);
         userLocalStore = new UserLocalStore(getActivity());
+        presenter = new UserProfilePresenter(this);
 
-        currentTime = System.currentTimeMillis();
-        // If it's been a minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 1) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
+        setViewListeners();
+        checkLocationUpdate();
+
 
         // Set user location
         setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
                 userLocalStore.getLoggedInUser().getLongitude());
 
-        presenter = new UserProfilePresenter(this);
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
-        //retrofitFetchProfileInfo();
-
         return v;
     }
 
     private void setUserLocation(double latitude, double longitude) {
-
-        System.out.println("SET LATITUDE: " + latitude);
-        System.out.println("SET LONGITUDE: " + longitude);
         tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
     }
 
@@ -196,6 +176,32 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
                     new UserProfileFragment()).commit();
+        }
+    }
+
+    private void setViewListeners() {
+        editLayout.setOnClickListener(this);
+        editLayout2.setOnClickListener(this);
+        editLayout3.setOnClickListener(this);
+        editLayout4.setOnClickListener(this);
+        imgbEditPhoto.setOnClickListener(this);
+        editLayoutSub1.setOnClickListener(this);
+        editLayoutSub2.setOnClickListener(this);
+        editLayoutSub3.setOnClickListener(this);
+        editLayoutSub4.setOnClickListener(this);
+        imgbEditPhoto.setOnClickListener(this);
+    }
+
+    /*
+     * Check if location update is needed. If needed, update local store and server
+     */
+    private void checkLocationUpdate() {
+        long currentTime = System.currentTimeMillis();
+
+        // If it's been a minute since last location update, do the update
+        if (Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 1) {
+            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
         }
     }
 

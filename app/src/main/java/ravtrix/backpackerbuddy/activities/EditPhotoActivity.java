@@ -37,6 +37,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
 
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
     private static final int RESULT_LOAD_IMAGE = 1;
     private boolean isNewPhotoSet = false;
     private UserLocalStore userLocalStore;
@@ -56,22 +57,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
                     userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(circleImageView);
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
+        Helpers.setToolbar(this, toolbar);
         setTitle("Set Photo");
         bEditImage.setOnClickListener(this);
     }

@@ -52,12 +52,16 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private List<Fragment> fragmentList;
     private int currentPos;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    @BindView(R.id.drawer_layout) protected DrawerLayout drawerLayout;
-    @BindView(R.id.toolbar) protected Toolbar toolbar;
-    @BindView(R.id.nav_view) protected NavigationView navigationView;
+    @BindView(R.id.drawer_layout)
+    protected DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    protected NavigationView navigationView;
     private ImageButton settingsButton;
     private CircleImageView profilePic;
-    @BindView(R.id.spinner_main) protected ProgressBar progressBar;
+    @BindView(R.id.spinner_main)
+    protected ProgressBar progressBar;
     private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
@@ -103,7 +107,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        switch(id) {
+        switch (id) {
             case R.id.navActivity:
                 navigationView.getMenu().getItem(0).setChecked(true);
                 currentPos = 0;
@@ -176,6 +180,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
     private void changeFragment(final int currentPos) {
         drawerLayout.closeDrawer(GravityCompat.START);
+
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 fragmentList.get(currentPos)).commit();
@@ -312,7 +317,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -397,15 +401,18 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     public void setDrawerSelected(int position) {
         navigationView.getMenu().getItem(position).setChecked(true);
     }
+
     @Override
     public void onResetDrawer() {
         resetNavigationDrawer();
         setTitle("User Profile");
     }
+
     @Override
     public void setProgressBarVisible() {
         progressBar.setVisibility(View.VISIBLE);
     }
+
     @Override
     public void setProgressBarInvisible() {
         progressBar.setVisibility(View.INVISIBLE);
@@ -418,3 +425,4 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         this.userHitHome = false;
     }
 }
+

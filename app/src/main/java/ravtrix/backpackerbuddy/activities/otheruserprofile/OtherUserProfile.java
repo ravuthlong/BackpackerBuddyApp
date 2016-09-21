@@ -42,25 +42,16 @@ public class OtherUserProfile extends AppCompatActivity {
 
         ButterKnife.bind(this);
         progressBar.setVisibility(View.VISIBLE);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
+        Helpers.setToolbar(this, toolbar);
 
         relativeLayout.setVisibility(View.INVISIBLE);
+        fetchOtherUserProfile();
+
+    }
+
+    private void fetchOtherUserProfile() {
+
         final Bundle postInfo = getIntent().getExtras();
 
         Call<JsonObject> returnedInfo = RetrofitUserInfoSingleton.getRetrofitUserInfo().getUserDetails().getUserDetails(postInfo.getInt("userID"));
@@ -87,7 +78,7 @@ public class OtherUserProfile extends AppCompatActivity {
 
                     Picasso.with(getApplicationContext())
                             .load("http://backpackerbuddy.net23.net/profile_pic/" +
-                            postInfo.getInt("userID") + ".JPG")
+                                    postInfo.getInt("userID") + ".JPG")
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .networkPolicy(NetworkPolicy.NO_CACHE)
                             .into(profileImage, new com.squareup.picasso.Callback() {

@@ -47,7 +47,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
+        android:gravity="center_horizontal"
         android:layout_below="@+id/frameLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -57,8 +57,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="cocomoco"
-            android:id="@+id/username_profile"
-            android:layout_gravity="center_horizontal" />
+            android:id="@+id/username_profile" />
 
         <ImageView
             android:layout_width="wrap_content"

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -31,6 +30,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
+    @BindView(R.id.toolbarLogIn) protected  Toolbar toolbar;
     private UserLocalStore userLocalStore;
     private RetrofitUserInfo retrofitUser;
     private LogInPresenter logInPresenter;
@@ -41,7 +41,8 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         super.onCreate(savedInstanceState);
         LeakCanary.install(getApplication());
         setContentView(R.layout.activity_login);
-        setToolbar();
+
+        Helpers.setToolbar(this, toolbar);
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
@@ -81,26 +82,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
             logInPresenter.logUserIn(username, password);
-        }
-    }
-
-    private void setToolbar() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SignUpPart3Activity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 /**
@@ -25,6 +25,7 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
 
     @BindView(R.id.etFirstname) protected EditText etFirstname;
     @BindView(R.id.etLastname) protected EditText etLastname;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -34,22 +35,7 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
         LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
+        Helpers.setToolbar(this, toolbar);
         userLocalStore = new UserLocalStore(this);
     }
 
