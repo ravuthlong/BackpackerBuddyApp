@@ -94,7 +94,6 @@ public class CustomGridView extends BaseAdapter {
             gridView = (View) convertView;
         }
 
-        System.out.println(counter.getCount());
         // Display layout only when all images has been loaded
         if (counter.getCount() == getCount()) {
             fragActivityProgressBarInterface.setProgressBarInvisible();
@@ -103,7 +102,7 @@ public class CustomGridView extends BaseAdapter {
         return gridView;
     }
 
-    // Keeps track how many picasso image has been loaded onto grid view
+    // Keeps track how many picasso images have been loaded onto grid view
     private class Counter {
         private int count = -1; // Indexing for array start at 0 so first item added should start at 0
 

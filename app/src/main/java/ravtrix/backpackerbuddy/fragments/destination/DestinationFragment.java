@@ -29,7 +29,7 @@ import ravtrix.backpackerbuddy.activities.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserCountries;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

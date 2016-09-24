@@ -1,7 +1,7 @@
 package ravtrix.backpackerbuddy.helpers;
 
 
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserInfo;
 
 /**
  * Created by Ravinder on 8/24/16.

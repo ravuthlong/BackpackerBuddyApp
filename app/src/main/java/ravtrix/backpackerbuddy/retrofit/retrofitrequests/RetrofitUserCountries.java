@@ -1,7 +1,7 @@
-package ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests;
+package ravtrix.backpackerbuddy.retrofit.retrofitrequests;
 
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.usercountriesinterfaces.RetrofitUserCountriesInterfaces;
+import ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.RetrofitUserCountriesInterfaces;
 import retrofit2.Retrofit;
 
 /**

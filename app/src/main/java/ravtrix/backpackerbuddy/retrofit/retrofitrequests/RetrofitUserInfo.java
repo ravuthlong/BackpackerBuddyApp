@@ -1,6 +1,6 @@
-package ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests;
+package ravtrix.backpackerbuddy.retrofit.retrofitrequests;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.userinfointerfaces.RetrofitUserInfoInterfaces;
+import ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.RetrofitUserInfoInterfaces;
 import retrofit2.Retrofit;
 
 /**

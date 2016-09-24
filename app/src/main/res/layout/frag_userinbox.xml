@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true">
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/refreshLayout2"
+        android:id="@+id/frag_userInbox_swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.swiperefreshlayouttest.MainActivity"
@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="#88a990"
             android:choiceMode="singleChoice"
-            android:id="@+id/postRecyclerView2"
+            android:id="@+id/frag_userinbox_recyclerView"
             android:layout_gravity='start'
             />
     </android.support.v4.widget.SwipeRefreshLayout>

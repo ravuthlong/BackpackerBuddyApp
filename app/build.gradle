@@ -5,6 +5,9 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    dexOptions {
+        preDexLibraries = false
+    }
     defaultConfig {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 16
@@ -20,13 +23,19 @@ android {
             shrinkResources true
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/notice'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:design:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
 
     // Circle Image View
@@ -53,10 +62,17 @@ dependencies {
 
     // leakcananry
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
     //Swipe refresh
     compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
 
+    // Firebase
+    compile 'com.google.firebase:firebase-messaging:9.4.0'
+    compile 'com.google.firebase:firebase-database:9.4.0'
+
+    // Firebase UI
+    compile 'com.firebaseui:firebase-ui-database:0.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
+

@@ -29,7 +29,7 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserCountries;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.retrofit.retrofitinterfaces.usercountriesinterfaces;
+package ravtrix.backpackerbuddy.retrofit.retrofitinterfaces;
 
 import com.google.gson.JsonObject;
 

@@ -1,6 +1,6 @@
 package ravtrix.backpackerbuddy.helpers;
 
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofitusercountriesrequests.RetrofitUserCountries;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserCountries;
 
 /**
  * Created by Ravinder on 9/10/16.

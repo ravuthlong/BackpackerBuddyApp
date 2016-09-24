@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "517012017225",
+    "firebase_url": "https://backpacker-buddy.firebaseio.com",
+    "project_id": "backpacker-buddy",
+    "storage_bucket": "backpacker-buddy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517012017225:android:dc6c19f25bddb58a",
+        "android_client_info": {
+          "package_name": "ravtrix.backpackerbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517012017225-4toj9ubmtrqh17ju7t132lmoodneipk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbWSd5cGW1C7zU8pIiDJcJzZFyqiOvCEo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

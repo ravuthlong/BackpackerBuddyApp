@@ -76,6 +76,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
 
+        //Check for Google Play Services APK
+        //If the device doesn’t have a compatible Google Play services APK, your app can call GooglePlayServicesUtil.getErrorDialog()
+
         //checkRuntimePermissionAvail();
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);

@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.List;
 
+import ravtrix.backpackerbuddy.ConversationActivity;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
@@ -40,6 +41,8 @@ import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ravtrix.backpackerbuddy.R.id.imgbEditPost;
 
 /**
  * Created by Ravinder on 2/25/16.
@@ -105,6 +108,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
         }
 
+
         holder.imageButtonStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +127,21 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             }
         });
 
-        holder.imgbEditPost.setOnClickListener(new View.OnClickListener() {
+        holder.imageButtonMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (userLocalStore.getLoggedInUser().getUserID() == currentPos.getUserID()) {
+                    Helpers.displayToast(activity.getContext(), "Can't message yourself...");
+                } else {
+                    Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
+                    convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
+                    activity.startActivity(convoIntent);
+                }
+            }
+        });
+
+        holder.imgEditPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopUp(currentPos.getUserID());
@@ -142,10 +160,10 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
-        private ImageButton imageButtonStar, imageButtonMail, imgbEditPost;
+        private ImageButton imageButtonStar, imageButtonMail, imgEditPost;
         private static final int NAVIGATION_ITEM = 4;
 
-        public ViewHolder(View itemView, final Context context) {
+        ViewHolder(View itemView, final Context context) {
             super(itemView);
             tvCountry = (TextView) itemView.findViewById(R.id.tvCountry);
             tvFromDate = (TextView) itemView.findViewById(R.id.tvFromDate);
@@ -154,7 +172,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
             imageButtonStar = (ImageButton) itemView.findViewById(R.id.imageButtonStar);
             imageButtonMail = (ImageButton) itemView.findViewById(R.id.imageButtonMail);
-            imgbEditPost = (ImageButton) itemView.findViewById(R.id.imgbEditPost);
+            imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
 
             backgroundLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

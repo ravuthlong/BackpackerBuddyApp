@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -21,7 +22,7 @@ import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActi
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.retrofituserinforequests.RetrofitUserInfo;
+import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserInfo;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -42,7 +43,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         LeakCanary.install(getApplication());
         setContentView(R.layout.activity_login);
 
-        Helpers.setToolbar(this, toolbar);
+        setToolbar();
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
@@ -125,5 +126,25 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, WelcomeActivity.class));
+    }
+
+    private void setToolbar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
     }
 }
