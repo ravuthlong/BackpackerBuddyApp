@@ -73,6 +73,7 @@ public class CustomGridView extends BaseAdapter {
                         @Override
                         public void onSuccess() {
                             counter.addCount();
+                            checkPicassoFinished();
                         }
 
                         @Override
@@ -95,11 +96,15 @@ public class CustomGridView extends BaseAdapter {
         }
 
         // Display layout only when all images has been loaded
+        checkPicassoFinished();
+        return gridView;
+    }
+
+    private void checkPicassoFinished() {
         if (counter.getCount() == getCount()) {
             fragActivityProgressBarInterface.setProgressBarInvisible();
             view.setVisibility(View.VISIBLE);
         }
-        return gridView;
     }
 
     // Keeps track how many picasso images have been loaded onto grid view

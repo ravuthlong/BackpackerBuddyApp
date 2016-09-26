@@ -71,7 +71,6 @@ public class ConversationActivity extends AppCompatActivity {
         mLinearLayoutManager.setStackFromEnd(true);
 
         bundle = getIntent().getExtras();
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         String otherUserID = "0";
         String myUserID = "0";

@@ -5,10 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import ravtrix.backpackerbuddy.R;
 
 /**
  * Created by Ravinder on 9/9/16.
@@ -17,12 +16,12 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable divider;
 
-    public DividerDecoration(Context context) {
+    public DividerDecoration(Context context, int dividerID) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>= API 21
-            divider = context.getResources().getDrawable(R.drawable.line_divider, context.getTheme());
+            divider = context.getResources().getDrawable(dividerID, context.getTheme());
         } else {
-            divider =  context.getResources().getDrawable(R.drawable.line_divider);
+            divider = ContextCompat.getDrawable(context, dividerID);
         }
     }
 

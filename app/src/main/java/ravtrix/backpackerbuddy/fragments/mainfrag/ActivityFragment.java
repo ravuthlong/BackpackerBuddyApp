@@ -69,8 +69,6 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 
-        long time= System.currentTimeMillis();
-
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
 
@@ -195,7 +193,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         recyclerView.setAdapter(feedListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity());
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
     }
 }

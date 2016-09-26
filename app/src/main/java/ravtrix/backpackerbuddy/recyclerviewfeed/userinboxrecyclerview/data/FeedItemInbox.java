@@ -21,6 +21,10 @@ public class FeedItemInbox {
     @SerializedName("userID")
     @Expose
     private int userID;
+    @SerializedName("status")
+    @Expose
+    int status;
+    private String chatRoom;
 
     public String getUsername() {
         return username;
@@ -52,5 +56,21 @@ public class FeedItemInbox {
 
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+
+    public String getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(String chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
