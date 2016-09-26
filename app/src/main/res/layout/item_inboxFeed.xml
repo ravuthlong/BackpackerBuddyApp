@@ -38,7 +38,7 @@
             android:layout_alignStart="@+id/item_inboxFeed_username"
             android:id="@+id/item_inboxFeed_lastMessage"
             android:layout_below="@+id/item_inboxFeed_username"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:text="Sep 9"

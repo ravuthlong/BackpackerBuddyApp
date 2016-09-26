@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,7 +46,6 @@ public class MessagesFragment extends Fragment {
     private DatabaseReference mFirebaseDatabaseReference;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
-
 
     @Override
     public void onAttach(Context context) {
@@ -74,6 +75,7 @@ public class MessagesFragment extends Fragment {
             @Override
             public void onResponse(Call<List<FeedItemInbox>> call, Response<List<FeedItemInbox>> response) {
                 feedItemInbox = response.body();
+
                 for (int i = 0; i < feedItemInbox.size(); i++) {
                     if (feedItemInbox.get(i).getStatus() == 0) {
                         // You made this chat room. your userID is the first of chat room name;
@@ -84,18 +86,14 @@ public class MessagesFragment extends Fragment {
                         // you didn't make this room
                         String chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
                                 Integer.toString(userLocalStore.getLoggedInUser().getUserID());
-                        System.out.println("USER ID: " + Integer.toString(feedItemInbox.get(i).getUserID()));
                         feedItemInbox.get(i).setChatRoom(chatName);
                     }
                 }
 
-                for (int i = 0; i < feedItemInbox.size(); i++) {
-                    System.out.println("CHATNAME: " + feedItemInbox.get(i).getChatRoom());
-                }
-
-                feedListAdapterInbox = new FeedListAdapterInbox(getContext(), feedItemInbox,
-                        view, fragActivityProgressBarInterface);
                 firebaseListener();
+                feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
+                        view, fragActivityProgressBarInterface);
+
             }
 
             @Override
@@ -138,13 +136,27 @@ public class MessagesFragment extends Fragment {
                         }
                     }
                     if (snapshot != null) {
+                        String time = snapshot.child("time").getValue().toString();
+
                         feedItemInbox.get(i).setLatestMessage(snapshot.child("text").getValue().toString());
                         // Converting timestamp into x ago format
                         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                                Long.parseLong(snapshot.child("time").getValue().toString()),
+                                Long.parseLong(time),
                                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
                         feedItemInbox.get(i).setLatestDate((String) timeAgo);
+                        feedItemInbox.get(i).setTimeMilli(Long.parseLong(time));
+                        if (snapshot.child("isOtherUserClicked").exists()) {
+                            feedItemInbox.get(i).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
+                        } else {
+                            feedItemInbox.get(i).setIsOtherUserClicked(1);
+                        }
+                        if (snapshot.child("userID").exists()) {
+                            feedItemInbox.get(i).setLastMessageUserID(Integer.parseInt(snapshot.child("userID").getValue().toString()));
+                        }
                     }
+                    feedItemInbox.get(i).setSnapshot(snapshot);
+
+                    Collections.sort(feedItemInbox);
                     setRecyclerView(feedListAdapterInbox);
                 }
             }
@@ -153,5 +165,19 @@ public class MessagesFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == 2) {
+            int postChangePosition = data.getIntExtra("position", 0);
+            String newMessage = data.getStringExtra("newMessage");
+
+            feedListAdapterInbox.getViewHolder().updateMessage(postChangePosition, newMessage);
+
+        }
+
     }
 }

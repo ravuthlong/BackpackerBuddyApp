@@ -10,15 +10,17 @@ public class Message {
     private String photoUrl;
     private long time;
     private int userID;
+    private int isOtherUserClicked;
 
     public Message() {
     }
 
-    public Message(int userID, String text, String photoUrl, long time) {
+    public Message(int userID, String text, String photoUrl, long time, int isOtherUserClicked) {
         this.userID = userID;
         this.text = text;
         this.photoUrl = photoUrl;
         this.time = time;
+        this.isOtherUserClicked = isOtherUserClicked;
     }
 
     public int getUserID() {
@@ -51,5 +53,13 @@ public class Message {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public int getIsOtherUserClicked() {
+        return isOtherUserClicked;
+    }
+
+    public void setIsOtherUserClicked(int isOtherUserClicked) {
+        this.isOtherUserClicked = isOtherUserClicked;
     }
 }

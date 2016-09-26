@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.recyclerviewfeed.userinboxrecyclerview.data;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Ravinder on 9/24/16.
  */
 
-public class FeedItemInbox {
+public class FeedItemInbox implements Comparable<FeedItemInbox> {
 
     @SerializedName("username")
     @Expose
@@ -23,8 +24,12 @@ public class FeedItemInbox {
     private int userID;
     @SerializedName("status")
     @Expose
-    int status;
+    private int status;
     private String chatRoom;
+    private int isOtherUserClicked;
+    private int lastMessageUserID;
+    private long timeMilli;
+    private transient DataSnapshot snapshot;
 
     public String getUsername() {
         return username;
@@ -72,5 +77,45 @@ public class FeedItemInbox {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getIsOtherUserClicked() {
+        return isOtherUserClicked;
+    }
+
+    public void setIsOtherUserClicked(int isOtherUserClicked) {
+        this.isOtherUserClicked = isOtherUserClicked;
+    }
+
+    public int getLastMessageUserID() {
+        return lastMessageUserID;
+    }
+
+    public void setLastMessageUserID(int lastMessageUserID) {
+        this.lastMessageUserID = lastMessageUserID;
+    }
+
+    public DataSnapshot getSnapshot() {
+        return snapshot;
+    }
+
+    public void setSnapshot(DataSnapshot snapshot) {
+        this.snapshot = snapshot;
+    }
+
+    public long getTimeMilli() {
+        return timeMilli;
+    }
+
+    public void setTimeMilli(long timeMilli) {
+        this.timeMilli = timeMilli;
+    }
+
+    @Override
+    public int compareTo(FeedItemInbox another) {
+
+        long anotherTime = another.getTimeMilli();
+        //descending order
+        return (int) (anotherTime - this.timeMilli);
     }
 }

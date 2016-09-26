@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -48,7 +49,7 @@ public class ConversationActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private String chatRoomName, chatRoomName2;
     private Bundle bundle;
-
+    private int chatPosition;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
     private UserLocalStore userLocalStore;
@@ -76,6 +77,7 @@ public class ConversationActivity extends AppCompatActivity {
         String myUserID = "0";
         if (bundle != null) {
             otherUserID = bundle.getString("otherUserID");
+            chatPosition = bundle.getInt("position");
         }
 
         myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
@@ -115,25 +117,31 @@ public class ConversationActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        String userMessage =  textMessage.getText().toString();
+
                         if (dataSnapshot.child(chatRoomName).exists()) {
                             System.out.println("CHILD EXISTS");
                             Message message = new
-                                    Message(userLocalStore.getLoggedInUser().getUserID(), textMessage.getText().toString(),
+                                    Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    System.currentTimeMillis());
+                                    System.currentTimeMillis(), 0);
                             mFirebaseDatabaseReference.child(chatRoomName)
                                     .push().setValue(message);
                             textMessage.setText("");
+
+                            passIntentResult(chatPosition, userMessage);
                         } else if (dataSnapshot.child(chatRoomName2).exists()) {
                             Message message = new
-                                    Message(userLocalStore.getLoggedInUser().getUserID(), textMessage.getText().toString(),
+                                    Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    System.currentTimeMillis());
+                                    System.currentTimeMillis(), 0);
                             mFirebaseDatabaseReference.child(chatRoomName2)
                                     .push().setValue(message);
                             textMessage.setText("");
+
+                            passIntentResult(chatPosition, userMessage);
                         } else {
 
                             // New chat, so create new chat in FCM and also database
@@ -144,36 +152,35 @@ public class ConversationActivity extends AppCompatActivity {
                             jsonObjectCall.enqueue(new Callback<JsonObject>() {
                                 @Override
                                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                    //sucess
+                                    //success
                                 }
-
                                 @Override
                                 public void onFailure(Call<JsonObject> call, Throwable t) {
 
                                 }
                             });
 
-
                             Map<String, Object> userData = new HashMap<>();
                             userData.put("photoUrl",
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG");
-                            userData.put("text", textMessage.getText().toString());
+                            userData.put("text", userMessage);
                             userData.put("time", System.currentTimeMillis());
                             userData.put("userID", userLocalStore.getLoggedInUser().getUserID());
+                            userData.put("isOtherUserClicked", 0); // If the other user viewed your message // 0 = false
                             mFirebaseDatabaseReference.child(chatRoomName).push().setValue(userData);
                             textMessage.setText("");
                             setRecyclerView(chatRoomName);
+
+                            passIntentResult(chatPosition, userMessage);
                         }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
             }
         });
-
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -201,13 +208,9 @@ public class ConversationActivity extends AppCompatActivity {
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, Message model, int position) {
-                System.out.println("!!!!POSITION :  " + position);
-                System.out.println("!!!!COUNT :  " + getItemCount());
-
                 if (position + 1 == getItemCount()) {
                     progressBar.setVisibility(View.INVISIBLE);
                 }
-
 
                 if (model.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
                     // It's the current user's chat so display it on the right side
@@ -265,6 +268,13 @@ public class ConversationActivity extends AppCompatActivity {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
+    private void passIntentResult(int position, String newMessage) {
+        Intent intent = new Intent();
+        intent.putExtra("position", position);
+        intent.putExtra("newMessage", newMessage);
+        setResult(2, intent);
+    }
+
     private class UserChat {
         private int userOne;
         private int userTwo;
@@ -284,5 +294,10 @@ public class ConversationActivity extends AppCompatActivity {
         public void setUserTwo(int userTwo) {
             this.userTwo = userTwo;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
