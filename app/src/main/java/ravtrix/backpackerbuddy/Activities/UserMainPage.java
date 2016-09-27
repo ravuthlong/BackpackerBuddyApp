@@ -120,13 +120,13 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 currentPos = 1;
                 setTitle("Find Buddy");
                 break;
-            case R.id.navDestination:
-                currentPos = 2;
-                setTitle("Manage Destination");
-                break;
             case R.id.navInbox:
-                currentPos = 3;
+                currentPos = 2;
                 setTitle("Inbox");
+                break;
+            case R.id.navDestination:
+                currentPos = 3;
+                setTitle("Manage Destination");
                 break;
             default:
         }
@@ -236,8 +236,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private void setNavigationDrawerIcons() {
         navigationView.getMenu().getItem(0).setIcon(R.drawable.ic_record_voice_over_black_24dp);
         navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
-        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_assignment_black_24dp);
-        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_chat_bubble_black_24dp);
+        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_chat_bubble_black_24dp);
+        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_assignment_black_24dp);
     }
 
     private void resetNavigationDrawer() {

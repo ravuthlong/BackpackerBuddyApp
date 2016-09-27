@@ -41,4 +41,8 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.GetNearbyUsers getNearbyUsers() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsers.class);
     }
+
+    public RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers getRecentlyOnlineUsers() {
+        return retrofit.create(RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers.class);
+    }
 }

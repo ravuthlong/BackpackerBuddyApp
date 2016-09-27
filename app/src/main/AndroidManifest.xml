@@ -54,7 +54,6 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editinfo.EditInfoActivity"

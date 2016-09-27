@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -10,12 +11,14 @@ import com.squareup.leakcanary.LeakCanary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.bSignOut) protected Button bSignOut;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
     private UserLocalStore userLocalStore;
 
     @Override
@@ -25,8 +28,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         LeakCanary.install(getApplication());
 
         ButterKnife.bind(this);
-        bSignOut.setOnClickListener(this);
+        Helpers.setToolbar(this, toolbar);
 
+        bSignOut.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
 
     }

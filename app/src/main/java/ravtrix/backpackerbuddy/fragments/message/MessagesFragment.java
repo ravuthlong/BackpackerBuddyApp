@@ -174,8 +174,15 @@ public class MessagesFragment extends Fragment {
         if (resultCode == 2) {
             int postChangePosition = data.getIntExtra("position", 0);
             String newMessage = data.getStringExtra("newMessage");
+            long time = data.getLongExtra("time", 0);
 
+            // Update latest message at the position the user sent a new message
             feedListAdapterInbox.getViewHolder().updateMessage(postChangePosition, newMessage);
+
+            // Update the timestamp at the position the user sent a new message
+            feedListAdapterInbox.getViewHolder().updateTime(postChangePosition, time);
+
+            System.out.println("GOT TIME : " + time);
 
         }
 

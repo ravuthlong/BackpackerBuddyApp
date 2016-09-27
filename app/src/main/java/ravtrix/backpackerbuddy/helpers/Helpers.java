@@ -72,6 +72,7 @@ public class Helpers {
     public static void showAlertDialogWithTwoOptions(final android.app.Activity activity, Context context, String message,
                                                      String positive, String negative) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder.setTitle("Backpacker Buddy");
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
             @Override

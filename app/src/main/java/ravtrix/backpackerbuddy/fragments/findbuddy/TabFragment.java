@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.FindBuddyNearFragment;
-import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
+import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.RecentlyOnlineUsersFragment;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -43,7 +43,7 @@ public class TabFragment extends Fragment  {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new FindBuddyNearFragment(), "Nearby");
-        adapter.addFragment(new MessagesFragment(), "Random");
+        adapter.addFragment(new RecentlyOnlineUsersFragment(), "Recently Online");
         viewPager.setAdapter(adapter);
     }
 

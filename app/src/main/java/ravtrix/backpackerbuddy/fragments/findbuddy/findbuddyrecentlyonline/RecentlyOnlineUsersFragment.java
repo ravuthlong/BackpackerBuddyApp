@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
+package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
-import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -26,11 +25,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Ravinder on 9/12/16.
+ * Created by Ravinder on 9/26/16.
  */
-public class FindBuddyNearFragment extends Fragment {
 
+public class RecentlyOnlineUsersFragment extends Fragment {
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
+    @BindView(R.id.frag_gridview_nearTxt) protected TextView nearTxt;
     @BindView(R.id.frag_gridview_city) protected TextView city;
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
@@ -44,35 +44,61 @@ public class FindBuddyNearFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_gridview, container, false);
         view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
-        //linearLayout.setVisibility(View.INVISIBLE);
+
+        nearTxt.setText("Recently");
+        city.setText("Online");
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
 
-        checkLocationUpdate();
-        fetchNearbyUsers();
+        fetchRecentlyOnlineUsers();
+
         return view;
+
     }
 
-    private void fetchNearbyUsers() {
-        Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
-                .getNearbyUsers()
-                .getNearbyUsers(userLocalStore.getLoggedInUser().getUserID(), 40);
+    /*
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            fragActivityProgressBarInterface.setProgressBarVisible();
+
+            nearTxt.setText("Recently");
+            city.setText("Online");
+            userLocalStore = new UserLocalStore(getActivity());
+            fetchRecentlyOnlineUsers();
+        } else {
+            // fragment is no longer visible
+        }
+    }*/
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // load data here
+        }else{
+            // fragment is no longer visible
+        }
+    }
+
+    private void fetchRecentlyOnlineUsers() {
+        Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .getRecentlyOnlineUsers()
+                .getRecentlyOnlineUsers(userLocalStore.getLoggedInUser().getUserID());
+
         retrofitCall.enqueue(new Callback<List<UserLocationInfo>>() {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
-
                 CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
                         view, fragActivityProgressBarInterface);
                 profileImageGridView.setAdapter(customGridViewAdapter);
-
-                city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
-                        userLocalStore.getLoggedInUser().getLongitude()));
             }
 
             @Override
@@ -81,18 +107,5 @@ public class FindBuddyNearFragment extends Fragment {
                 view.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    /*
-     * Check if location update is needed. If needed, update local store and server
-     */
-    private void checkLocationUpdate() {
-        long currentTime = System.currentTimeMillis();
-
-        // If it's been a minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 1) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
     }
 }

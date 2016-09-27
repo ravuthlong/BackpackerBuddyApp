@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,11 +165,25 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         // Update latest message in inbox fragment after user sent a new message
         public void updateMessage(int position, String message) {
 
-            FeedItemInbox clickedItem = feedItemInbox.get(position);
-            clickedItem.setLatestMessage(message);
+            FeedItemInbox currentItem = feedItemInbox.get(position);
+            currentItem.setLatestMessage(message);
 
             TextView lastMessage = (TextView) itemViews.get(position).findViewById(R.id.item_inboxFeed_lastMessage);
             lastMessage.setText(message);
+        }
+
+        // Update latest time in inbox fragment after user sent a new message
+        public void updateTime(int position, Long timestamp) {
+
+            FeedItemInbox currentItem = feedItemInbox.get(position);
+            // Converting timestamp into x ago format
+            CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                    Long.parseLong(String.valueOf(timestamp)),
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+            currentItem.setLatestDate(timeAgo.toString());
+
+            TextView latestTime = (TextView) itemViews.get(position).findViewById(R.id.item_inboxFeed_time);
+            latestTime.setText(timeAgo);
         }
     }
 

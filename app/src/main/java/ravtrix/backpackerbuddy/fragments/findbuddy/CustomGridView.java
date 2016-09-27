@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
+package ravtrix.backpackerbuddy.fragments.findbuddy;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +30,8 @@ public class CustomGridView extends BaseAdapter {
     private View view;
     private Counter counter;
 
-    CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
-                   FragActivityProgressBarInterface fragActivityProgressBarInterface) {
+    public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
+                          FragActivityProgressBarInterface fragActivityProgressBarInterface) {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
         this.view = view;

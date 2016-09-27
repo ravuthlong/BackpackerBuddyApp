@@ -53,6 +53,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private long currentTime;
+    RecyclerView.ItemDecoration dividerDecorator;
 
     @Override
     public void onAttach(Context context) {
@@ -73,17 +74,17 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         //refWatcher.watch(this);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
-
         waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
 
+
+        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
+        recyclerView.addItemDecoration(dividerDecorator);
+
+        // Listens for refresh
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
-                waveSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        waveSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1200);
+                retrieveUserCountryPostsRetrofit();
+                //waveSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -176,6 +177,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
                 setRecyclerView(feedListAdapter);
                 fragActivityProgressBarInterface.setProgressBarInvisible();
                 view.setVisibility(View.VISIBLE);
+                waveSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -183,7 +185,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
                 System.out.println(t.getMessage());
                 fragActivityProgressBarInterface.setProgressBarInvisible();
                 view.setVisibility(View.VISIBLE);
-
+                waveSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -193,8 +195,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         recyclerView.setAdapter(feedListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
-        recyclerView.addItemDecoration(dividerDecorator);
+
     }
 }
 

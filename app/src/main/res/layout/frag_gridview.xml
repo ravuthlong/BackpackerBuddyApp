@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Near"
-            android:id="@+id/textView3"
+            android:id="@+id/frag_gridview_nearTxt"
             android:layout_gravity="center_horizontal|top"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView3"
@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/frag_gridview_city"
-            android:layout_toRightOf="@+id/textView3"
-            android:layout_toEndOf="@+id/textView3"
+            android:layout_toRightOf="@+id/frag_gridview_nearTxt"
+            android:layout_toEndOf="@+id/frag_gridview_nearTxt"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp" />
 

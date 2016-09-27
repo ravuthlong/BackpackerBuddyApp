@@ -57,6 +57,11 @@ public class RetrofitUserInfoInterfaces {
             @GET("/fetchNearbyUsers.php?userID=[userID]&radius=[radius]")
             Call<List<UserLocationInfo>> getNearbyUsers(@Query("userID") int userID, @Query("radius") int radius);
     }
+
+    public interface GetRecentlyOnlineUsers {
+        @GET("/fetchRecentlyOnlineUsers.php?userID=[userID]")
+        Call<List<UserLocationInfo>> getRecentlyOnlineUsers(@Query("userID") int userID);
+    }
 }
 
 

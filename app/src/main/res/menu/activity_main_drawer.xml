@@ -10,10 +10,10 @@
             android:title="Find Buddy"
             />
         <item
-            android:id="@+id/navDestination"
-            android:title="Manage Destination" />
-        <item
             android:id="@+id/navInbox"
             android:title="Inbox" />
+        <item
+            android:id="@+id/navDestination"
+            android:title="Manage Destination" />
     </group>
 </menu>

@@ -3,22 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#93b49b">
+    android:background="@color/greenBackground">
 
-
-    <Button
-        android:id="@+id/btn2"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-
-        android:text="Email Address"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#b4d8c3"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:layout_gravity="start"
-        android:layout_marginTop="50dp" />
+    <include android:id="@+id/toolbar_main"
+        layout="@layout/frag_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent" />
 
     <Button
         android:id="@+id/btn1"
@@ -31,7 +21,8 @@
         android:layout_gravity="start"
         android:layout_below="@+id/btn2"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:textSize="15sp" />
 
     <Button
         android:layout_width="fill_parent"
@@ -45,7 +36,8 @@
         android:layout_below="@+id/btn1"
         android:layout_marginTop="52dp"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:textSize="15sp" />
 
     <Button
         android:layout_width="fill_parent"
@@ -58,7 +50,8 @@
         android:layout_below="@+id/button2"
         android:background="#b4d8c3"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:textSize="15sp" />
 
     <Button
         android:layout_width="match_parent"
@@ -72,7 +65,8 @@
         android:layout_marginBottom="55dp"
         android:layout_above="@+id/button3"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:textSize="15sp" />
 
     <Button
         android:layout_width="match_parent"
@@ -86,7 +80,26 @@
         android:layout_centerHorizontal="true"
         android:background="#b4d8c3"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp"
+
+        android:text="Email Address"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#b4d8c3"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:layout_gravity="start"
+        android:layout_marginTop="53dp"
+        android:layout_below="@+id/toolbar_main"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

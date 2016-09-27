@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ools="http://schemas.android.com/tools"
+    ools:ignore="ContentDescription"
     android:orientation="vertical">
 
     <LinearLayout
@@ -83,7 +84,6 @@
                 android:shadowRadius="2"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:text="kkkkk"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/imageButtonMail"
                 android:layout_toEndOf="@+id/imageButtonMail"
@@ -102,7 +102,6 @@
                 android:shadowRadius="2"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
-                android:text="hhhh"
                 android:layout_alignTop="@+id/tvFromDate"
                 android:layout_toRightOf="@+id/tvArrow"
                 android:layout_toEndOf="@+id/tvArrow" />
@@ -131,7 +130,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/abc_spinner_mtrl_am_alpha" />
+                android:background="@drawable/ic_arrow_drop_down_black_24dp" />
         </RelativeLayout>
     </LinearLayout>
 

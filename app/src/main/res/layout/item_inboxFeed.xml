@@ -28,7 +28,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:id="@+id/item_inboxFeed_username"
-            android:textSize="16sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:text="TextView"

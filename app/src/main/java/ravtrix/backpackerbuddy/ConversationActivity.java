@@ -118,30 +118,34 @@ public class ConversationActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String userMessage =  textMessage.getText().toString();
+                        Long time = System.currentTimeMillis();
 
                         if (dataSnapshot.child(chatRoomName).exists()) {
-                            System.out.println("CHILD EXISTS");
                             Message message = new
                                     Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    System.currentTimeMillis(), 0);
+                                    time, 0);
                             mFirebaseDatabaseReference.child(chatRoomName)
                                     .push().setValue(message);
                             textMessage.setText("");
 
-                            passIntentResult(chatPosition, userMessage);
+                            passIntentResult(chatPosition, userMessage, time);
+                            System.out.println("PUSH TIME : " + time);
+
                         } else if (dataSnapshot.child(chatRoomName2).exists()) {
                             Message message = new
                                     Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    System.currentTimeMillis(), 0);
+                                    time, 0);
                             mFirebaseDatabaseReference.child(chatRoomName2)
                                     .push().setValue(message);
                             textMessage.setText("");
 
-                            passIntentResult(chatPosition, userMessage);
+                            passIntentResult(chatPosition, userMessage, time);
+                            System.out.println("PUSH TIME : " + time);
+
                         } else {
 
                             // New chat, so create new chat in FCM and also database
@@ -165,14 +169,14 @@ public class ConversationActivity extends AppCompatActivity {
                                     "http://backpackerbuddy.net23.net/profile_pic/" +
                                             userLocalStore.getLoggedInUser().getUserID() + ".JPG");
                             userData.put("text", userMessage);
-                            userData.put("time", System.currentTimeMillis());
+                            userData.put("time", time);
                             userData.put("userID", userLocalStore.getLoggedInUser().getUserID());
                             userData.put("isOtherUserClicked", 0); // If the other user viewed your message // 0 = false
                             mFirebaseDatabaseReference.child(chatRoomName).push().setValue(userData);
                             textMessage.setText("");
                             setRecyclerView(chatRoomName);
 
-                            passIntentResult(chatPosition, userMessage);
+                            passIntentResult(chatPosition, userMessage, time);
                         }
                     }
                     @Override
@@ -268,10 +272,11 @@ public class ConversationActivity extends AppCompatActivity {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    private void passIntentResult(int position, String newMessage) {
+    private void passIntentResult(int position, String newMessage, long time) {
         Intent intent = new Intent();
         intent.putExtra("position", position);
         intent.putExtra("newMessage", newMessage);
+        intent.putExtra("time", time);
         setResult(2, intent);
     }
 
