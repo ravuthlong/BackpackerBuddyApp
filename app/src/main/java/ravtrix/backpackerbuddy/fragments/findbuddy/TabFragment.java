@@ -40,18 +40,59 @@ public class TabFragment extends Fragment  {
     }
 
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new FindBuddyNearFragment(), "Nearby");
+    private void setupViewPager(final ViewPager viewPager) {
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        FindBuddyNearFragment findBuddyNearFragment = new FindBuddyNearFragment();
+        System.out.println("BUDDY TAG: " + findBuddyNearFragment.getTag());
+        adapter.addFragment(findBuddyNearFragment, "Nearby");
         adapter.addFragment(new RecentlyOnlineUsersFragment(), "Recently Online");
         viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // scrolling
+            }
+
+            /*
+             * Creates a communication between the two tabs so it keeps the state of selected drop down
+             * in FindBuddyNearFragment
+             */
+            @Override
+            public void onPageSelected(int position) {
+                FindBuddyNearFragment fragmentOne = (FindBuddyNearFragment) adapter.getItem(0);
+                RecentlyOnlineUsersFragment fragmentTwo = (RecentlyOnlineUsersFragment) adapter.getItem(1);
+                int currentSelectedDropdown = 0;
+
+                // User currently viewing FindBuddyNearFragment
+                if (position == 0) {
+                    currentSelectedDropdown = fragmentTwo.getCurrentSelectedDropdown();
+                    fragmentOne.setCurrentSelectedDropdown(currentSelectedDropdown);
+                }
+                // User currently viewing RecentlyOnlineUsersFragment
+                if (position == 1) {
+                    currentSelectedDropdown = fragmentOne.getCurrentSelectedDropdown();
+                    fragmentTwo.setCurrentSelectedDropdown(currentSelectedDropdown);
+                }
+
+                System.out.println("CURRENT SELECTED DROPDOWN!!!: " + currentSelectedDropdown);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //System.out.println("PAGE SCROLL!!!: " + state);
+
+            }
+
+
+        });
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -65,7 +106,7 @@ public class TabFragment extends Fragment  {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
@@ -74,5 +115,8 @@ public class TabFragment extends Fragment  {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
     }
+
+
 }

@@ -41,7 +41,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".activities.UserMainPage"
+            android:name=".activities.maincountry.UserMainPage"
             android:label="User Main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -65,7 +65,7 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditPhotoActivity"
+            android:name=".activities.editphoto.EditPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editpost.EditPostActivity"
@@ -88,7 +88,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.SignUpPart3Activity" />
+        <activity android:name=".activities.signup3.SignUpPart3Activity" />
         <activity
             android:name=".ConversationActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

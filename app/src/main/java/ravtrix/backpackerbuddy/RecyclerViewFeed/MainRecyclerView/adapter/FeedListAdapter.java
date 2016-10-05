@@ -30,7 +30,7 @@ import ravtrix.backpackerbuddy.ConversationActivity;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;

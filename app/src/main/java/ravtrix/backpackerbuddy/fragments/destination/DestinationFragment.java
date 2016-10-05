@@ -17,27 +17,22 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
-
 import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserCountries;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class DestinationFragment extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class DestinationFragment extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener,
+        View.OnClickListener, IDestinationView {
 
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
     protected static TextView tvDateArrival;
@@ -49,8 +44,10 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     private static int thisMonth;
     private static String dateFrom;
     private static String dateTo;
-    private RetrofitUserCountries retrofitUserCountries;
     private UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
+    private DestinationPresenter destinationPresenter;
+    private Calendar c = Calendar.getInstance();
 
     @Nullable
     @Override
@@ -61,34 +58,17 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
         getActivity().setTitle("Destination");
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        thisYear = c.get(Calendar.YEAR);
-        thisMonth = c.get(Calendar.MONTH);
-        thisDay = c.get(Calendar.DAY_OF_MONTH);
-
+        setTodayDate();
         tvDateArrival = (TextView) v.findViewById(R.id.tvDateArrival);
         tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
 
-        // Each item
-        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.countries, android.R.layout.simple_spinner_item);
-        // Drop down
-        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCountries.setAdapter(countryArrayAdapter);
-
+        setCountrySpinnerDropdown();
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
-        retrofitUserCountries = new RetrofitUserCountries();
         userLocalStore = new UserLocalStore(getActivity());
-
-        tvDateArrival.setText((thisMonth + 1) + "/" + thisDay + "/" + thisYear);
-        tvDateLeave.setText((thisMonth + 1) + "/" + (thisDay + 1) + "/" + thisYear);
-
-
-        dateFrom = thisYear + "-" + (thisMonth + 1) + "-" + thisDay;
-        dateTo = thisYear + "-" + (thisMonth + 1) + "-" + (thisDay + 1);
+        destinationPresenter = new DestinationPresenter(this);
+        setDefaultDateFromAndTo();
 
         return v;
     }
@@ -98,40 +78,19 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
         switch (item.getItemId()) {
             case R.id.submitSend:
-                final ProgressDialog progressDialog = Helpers.showProgressDialog(getActivity(), "Posting...");
 
+                showProgressDialog();
                 HashMap<String, String> travelSpot = new HashMap<>();
                 travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                 travelSpot.put("country", selectedCountry);
                 travelSpot.put("from", dateFrom);
                 travelSpot.put("until", dateTo);
 
-                Call<JsonObject> insertSpot = retrofitUserCountries.insertTravelSpot().travelSpot(travelSpot);
-
-                insertSpot.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        JsonObject status = response.body();
-                        if (status.get("status").getAsInt() == 1) {
-                            // Success
-
-                        } else {
-                            // failed
-                        }
-
-                        Helpers.hideProgressDialog(progressDialog);
-                        startActivity(new Intent(getActivity(), UserMainPage.class));
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        System.out.println(t.getMessage());
-                    }
-                });
+                // call retrofit to insert travel spot
+                destinationPresenter.insertTravelRetrofit(travelSpot);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -163,10 +122,35 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         }
     }
 
+    // Use the current date as the default date in the picker
+    private void setTodayDate() {
+        thisYear = c.get(Calendar.YEAR);
+        thisMonth = c.get(Calendar.MONTH);
+        thisDay = c.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private void setDefaultDateFromAndTo() {
+        tvDateArrival.setText((thisMonth + 1) + "/" + thisDay + "/" + thisYear);
+        tvDateLeave.setText((thisMonth + 1) + "/" + (thisDay + 1) + "/" + thisYear);
+
+        dateFrom = thisYear + "-" + (thisMonth + 1) + "-" + thisDay;
+        dateTo = thisYear + "-" + (thisMonth + 1) + "-" + (thisDay + 1);
+    }
+
+    private void setCountrySpinnerDropdown() {
+        // Each item
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.countries, android.R.layout.simple_spinner_item);
+        // Drop down
+        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountries.setAdapter(countryArrayAdapter);
+    }
+
     public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
         @Override
+        @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
         }
@@ -182,7 +166,6 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
             dateFrom = yearString + "-" + monthString + "-" + dayString;
         }
     }
-
 
     public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
             implements DatePickerDialog.OnDateSetListener {
@@ -205,5 +188,29 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         }
     }
 
+    @Override
+    public void showProgressDialog() {
+        this.progressDialog = Helpers.showProgressDialog(getActivity(), "Posting...");
+    }
 
+    @Override
+    public void hideProgressDialog() {
+        Helpers.hideProgressDialog(progressDialog);
+    }
+
+    @Override
+    public void startMainActivity() {
+        startActivity(new Intent(getActivity(), UserMainPage.class));
+    }
+
+    @Override
+    public void showToastError() {
+        Helpers.displayToast(getActivity(), "Error");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destinationPresenter.onDestroy();
+    }
 }

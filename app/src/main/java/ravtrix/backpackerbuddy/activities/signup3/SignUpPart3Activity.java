@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.signup3;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.google.gson.JsonObject;
-
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
@@ -23,23 +21,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
-import ravtrix.backpackerbuddy.models.LoggedInUser;
-import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements View.OnClickListener {
+public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements View.OnClickListener, ISignUpPart3View {
 
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     private static final int RESULT_LOAD_IMAGE = 1;
-    private UserLocalStore userLocalStore;
-    private long currentTime;
+    private SignUpPart3Presenter signUpPart3Presenter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +43,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         Helpers.setToolbar(this, toolbar);
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
-        userLocalStore = new UserLocalStore(this);
+        signUpPart3Presenter = new SignUpPart3Presenter(this);
     }
 
     @Override
@@ -78,7 +71,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.submitSend:
                 signUserUp();
@@ -89,8 +81,8 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     }
 
     private void signUserUp() {
-        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
 
+        showProgressBar();
         String username = "";
         String password = "";
         String email = "";
@@ -120,12 +112,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             lastname = signUp1Info.getString("lastname");
         }
 
-        final SignedUpUser signedUpUser = new SignedUpUser();
-        signedUpUser.setUsername(username);
-        signedUpUser.setEmail(email);
-        signedUpUser.setLatitude(latitude);
-        signedUpUser.setLongitude(longitude);
-
         HashMap<String, String> userInfo = new HashMap<>();
         userInfo.put("firstname", firstname);
         userInfo.put("lastname", lastname);
@@ -135,86 +121,31 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("latitude", Double.toString(latitude));
         userInfo.put("longitude", Double.toString(longitude));
         userInfo.put("userpic", encodedImage);
-        currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis();
         userInfo.put("time", Long.toString(currentTime));
 
-
         // Make Retrofit call to communicate with the server
-        Call<JsonObject> returnedStatus = RetrofitUserInfoSingleton.getRetrofitUserInfo().signUserUpPart1().signedUpStatus(userInfo);
-        returnedStatus.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonObject status = response.body();
-
-                int userStatus = status.get("status").getAsInt();
-
-                // Sign up success
-                if (userStatus == 1) {
-                    LoggedInUser user = new LoggedInUser();
-                    user.setUsername(signedUpUser.getUsername());
-                    user.setEmail(signedUpUser.getEmail());
-                    user.setUserID(status.get("id").getAsInt());
-                    user.setUserImageURL(status.get("userpic").getAsString());
-                    user.setLatitude(signedUpUser.getLatitude());
-                    user.setLongitude(signedUpUser.getLongitude());
-                    user.setTime(currentTime);
-                    userLocalStore.storeUserData(user);
-                    startActivity(new Intent(SignUpPart3Activity.this, UserMainPage.class));
-                } else {
-                    // User has been taken
-                    Helpers.showAlertDialog(SignUpPart3Activity.this, "Error. Try again...");
-                }
-
-                Helpers.hideProgressDialog(progressDialog);
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(SignUpPart3Activity.this, "Error signing up. Try again.");
-                Helpers.hideProgressDialog(progressDialog);
-
-            }
-        });
+        signUpPart3Presenter.retrofitStoreUser(userInfo);
     }
 
 
-    private class SignedUpUser {
-        private String username;
-        private String email;
-        private Double longitude;
-        private Double latitude;
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-        public Double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(Double longitude) {
-            this.longitude = longitude;
-        }
-
-        public Double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(Double latitude) {
-            this.latitude = latitude;
-        }
+    @Override
+    public void startUserMainPage() {
+        startActivity(new Intent(SignUpPart3Activity.this, UserMainPage.class));
     }
 
+    @Override
+    public void showAlertDialogError() {
+        Helpers.showAlertDialog(SignUpPart3Activity.this, "Error. Try again...");
+    }
 
+    @Override
+    public void showProgressBar() {
+        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
+    }
+
+    @Override
+    public void hideProgressBar() {
+        Helpers.hideProgressDialog(progressDialog);
+    }
 }

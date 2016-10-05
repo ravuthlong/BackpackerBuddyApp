@@ -45,4 +45,8 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers getRecentlyOnlineUsers() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers.class);
     }
+
+    public RetrofitUserInfoInterfaces.IsUsernameTaken isUsernameTaken() {
+        return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameTaken.class);
+    }
 }

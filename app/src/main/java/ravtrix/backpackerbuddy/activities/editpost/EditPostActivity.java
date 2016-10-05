@@ -16,57 +16,31 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.UserMainPage;
+import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerFrom;
 import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerTo;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 9/12/16.
  */
 public class EditPostActivity extends OptionMenuSaveBaseActivity implements AdapterView.OnItemSelectedListener,
-        View.OnClickListener, DatePickerListenerFrom, DatePickerListenerTo {
+        View.OnClickListener, DatePickerListenerFrom, DatePickerListenerTo, IEditPostView {
     @BindView(R.id.activity_travelSelection_spinnerCountries) protected Spinner spinnerCountries;
     @BindView(R.id.activity_travelSelection_tvDateArrival) protected TextView tvDateArrival;
     @BindView(R.id.activity_travelSelection_tvDateLeave) protected TextView tvDateLeave;
-    private ArrayAdapter<CharSequence> countryArrayAdapter;
     private static String[] fromDateArray, toDateArray;
     private String chosenDateFrom, chosenDateTo, chosenCountry;
     private UserLocalStore userLocalStore;
+    private EditPostPresenter editPostPresenter;
 
-    @Override
-    public void returnDateFrom(int year, int month, int day) {
-        tvDateLeave.setText((month + 1) + "/" + day + "/" + year);
-
-        String yearString = Integer.toString(year);
-        String monthString = Integer.toString(month + 1);
-        String dayString = Integer.toString(day);
-        chosenDateFrom = yearString + "-" + monthString + "-" + dayString;
-    }
-
-    @Override
-    public void returnDateTo(int year, int month, int day) {
-        tvDateArrival.setText((month + 1) + "/" + day + "/" + year);
-
-        String yearString = Integer.toString(year);
-        String monthString = Integer.toString(month + 1);
-        String dayString = Integer.toString(day);
-
-        chosenDateTo = yearString + "-" + monthString + "-" + dayString;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,48 +48,9 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
         setContentView(R.layout.activity_travelselection);
         ButterKnife.bind(this);
 
-        // Each item
-        countryArrayAdapter = ArrayAdapter.createFromResource(this, R.array.countries, android.R.layout.simple_spinner_item);
-        // Drop down
-        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCountries.setAdapter(countryArrayAdapter);
-        spinnerCountries.setOnItemSelectedListener(this);
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            String[] country_array = getResources().getStringArray(R.array.countries);
-
-            for (int i = 0; i < country_array.length; i++) {
-                if (country_array[i].equals(bundle.getString("country"))) {
-                    spinnerCountries.setSelection(i);
-                }
-            }
-            String fromDate = bundle.getString("from");
-            String toDate = bundle.getString("until");
-
-            if (fromDate != null) {
-                this.chosenDateFrom = fromDate.replace("/", "-");
-            }
-            if (toDate != null) {
-                this.chosenDateTo = toDate.replace("/", "-");
-            }
-
-            System.out.println("FROM : " + fromDate);
-            System.out.println("UNTIL : " + toDate);
-
-            this.chosenCountry = bundle.getString("country");
-
-            tvDateLeave.setText(fromDate);
-            tvDateArrival.setText(toDate);
-
-            // Split date by month[0], day[1], year[2]
-            if (fromDate != null) {
-                fromDateArray = fromDate.split("/");
-            }
-            if (toDate != null) {
-                toDateArray = toDate.split("/");
-            }
-        }
+        setCountryAdapter();
+        setSelectedCountryAndDate();
+        editPostPresenter = new EditPostPresenter(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -162,10 +97,8 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
         switch (parent.getId()) {
             case R.id.activity_travelSelection_spinnerCountries:
                 chosenCountry = parent.getItemAtPosition(position).toString();
-
                 break;
         }
-
     }
 
     @Override
@@ -183,22 +116,8 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
                 travelSpotHash.put("country", chosenCountry);
                 travelSpotHash.put("from", chosenDateFrom);
                 travelSpotHash.put("until", chosenDateTo);
-                Call<JsonObject> objectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry()
-                        .updateTravelSpot().updateTravelSpot(travelSpotHash);
 
-                objectCall.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        if (response.body().get("status").getAsInt() == 1) {
-                            startActivity(new Intent(EditPostActivity.this, UserMainPage.class));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
-                        Helpers.displayToast(EditPostActivity.this, "Try again...");
-                    }
-                });
+                editPostPresenter.editPost(travelSpotHash);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -244,9 +163,83 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
             datePickerListenerTo.returnDateTo(year, monthOfYear, dayOfMonth);
         }
+    }
+
+    private void setCountryAdapter() {
+        // Each item
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(this,
+                R.array.countries, android.R.layout.simple_spinner_item);
+        // Drop down
+        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountries.setAdapter(countryArrayAdapter);
+        spinnerCountries.setOnItemSelectedListener(this);
+    }
+
+    private void setSelectedCountryAndDate() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String[] country_array = getResources().getStringArray(R.array.countries);
+
+            for (int i = 0; i < country_array.length; i++) {
+                if (country_array[i].equals(bundle.getString("country"))) {
+                    spinnerCountries.setSelection(i);
+                }
+            }
+            String fromDate = bundle.getString("from");
+            String toDate = bundle.getString("until");
+
+            if (fromDate != null) {
+                this.chosenDateFrom = fromDate.replace("/", "-");
+            }
+            if (toDate != null) {
+                this.chosenDateTo = toDate.replace("/", "-");
+            }
+
+            this.chosenCountry = bundle.getString("country");
+
+            tvDateLeave.setText(fromDate);
+            tvDateArrival.setText(toDate);
+
+            // Split date by month[0], day[1], year[2]
+            if (fromDate != null) {
+                fromDateArray = fromDate.split("/");
+            }
+            if (toDate != null) {
+                toDateArray = toDate.split("/");
+            }
+        }
+    }
+
+    @Override
+    public void returnDateFrom(int year, int month, int day) {
+        tvDateLeave.setText((month + 1) + "/" + day + "/" + year);
+
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+        chosenDateFrom = yearString + "-" + monthString + "-" + dayString;
+    }
+
+    @Override
+    public void returnDateTo(int year, int month, int day) {
+        tvDateArrival.setText((month + 1) + "/" + day + "/" + year);
+
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+        chosenDateTo = yearString + "-" + monthString + "-" + dayString;
+    }
+
+    @Override
+    public void startMainPageActivity() {
+        startActivity(new Intent(EditPostActivity.this, UserMainPage.class));
+    }
+
+    @Override
+    public void displayTryAgainToast() {
+        Helpers.displayToast(EditPostActivity.this, "Try again...");
     }
 }
 

@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.editphoto;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -33,7 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements View.OnClickListener {
+public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements View.OnClickListener,
+        IEditPhotoView {
 
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
@@ -41,6 +42,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     private static final int RESULT_LOAD_IMAGE = 1;
     private boolean isNewPhotoSet = false;
     private UserLocalStore userLocalStore;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +126,10 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     }
 
 
+
     private void retrofitUploadProfileImg() {
 
-        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Uploading");
-
+        showProgressDialog();
         // Turn image into base 64 encoded string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ((BitmapDrawable) circleImageView
@@ -172,5 +174,25 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 Helpers.displayToast(EditPhotoActivity.this, "Upload Error");
             }
         });
+    }
+
+    @Override
+    public void showUploadError() {
+        Helpers.displayToast(EditPhotoActivity.this, "Upload Error");
+    }
+
+    @Override
+    public void newPhotoSet() {
+        isNewPhotoSet = false;
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        Helpers.hideProgressDialog(progressDialog);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        this.progressDialog = Helpers.showProgressDialog(this, "Uploading");
     }
 }

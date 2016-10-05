@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.maincountry;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.SettingsActivity;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
 import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;

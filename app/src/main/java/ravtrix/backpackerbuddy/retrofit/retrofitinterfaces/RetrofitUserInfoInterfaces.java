@@ -62,6 +62,11 @@ public class RetrofitUserInfoInterfaces {
         @GET("/fetchRecentlyOnlineUsers.php?userID=[userID]")
         Call<List<UserLocationInfo>> getRecentlyOnlineUsers(@Query("userID") int userID);
     }
+
+    public interface IsUsernameTaken {
+        @GET("/checkUsernameTaken.php?username=[username]")
+        Call<JsonObject> isUsernameTaken(@Query("username") String username);
+    }
 }
 
 

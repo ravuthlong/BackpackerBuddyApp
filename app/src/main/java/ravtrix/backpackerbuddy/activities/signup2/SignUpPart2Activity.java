@@ -13,20 +13,24 @@ import com.squareup.leakcanary.LeakCanary;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.SignUpPart3Activity;
+import ravtrix.backpackerbuddy.activities.signup3.SignUpPart3Activity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 /**
  * Created by Ravinder on 3/28/16.
  */
-public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
+public class SignUpPart2Activity extends OptionMenuSendBaseActivity implements ISignUpPart2View {
 
     @BindView(R.id.etFirstname) protected EditText etFirstname;
     @BindView(R.id.etLastname) protected EditText etLastname;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
-    private UserLocalStore userLocalStore;
+    private SignUpPart2Presenter signUpPart2Presenter;
+    private String username = "";
+    private String password = "";
+    private String email = "";
+    private Double longitude = 0.0;
+    private Double latitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
         ButterKnife.bind(this);
 
         Helpers.setToolbar(this, toolbar);
-        userLocalStore = new UserLocalStore(this);
+        signUpPart2Presenter = new SignUpPart2Presenter(this);
     }
 
     @Override
@@ -51,63 +55,26 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
         }
     }
 
-
     // Validate that user input is in correct format
     public void inputValidationAndNextStep() {
 
         String lastname = etLastname.getText().toString();
         String firstname = etFirstname.getText().toString();
-
-        String errorFields = "";
-
-        if (lastname.matches("")) {
-            errorFields += "Missing Last Name \n";
-        } else if (!isAlpha(lastname)) {
-            errorFields += "Last Name must only contain letters\n";
-        }
-        if (firstname.matches("")) {
-            errorFields += "Missing First Name \n";
-        } else if (!isAlpha(firstname)) {
-            errorFields += "First Name must only contain letters\n";
-        }
-        if (errorFields.length() > 0) {
-            Toast toast= Toast.makeText(getApplicationContext(),
-                    errorFields, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
-        } else {
-            startSignUpPart3(firstname, lastname);
-        }
+        signUpPart2Presenter.inputValidation(firstname, lastname);
     }
 
-    // Validate string must only contain letters
-    private boolean isAlpha(String text) {
-        char[] chars = text.toCharArray();
-        boolean isValid = true;
-
-        for (char c : chars) {
-            if(!Character.isLetter(c)) {
-                isValid = false;
-            }
-        }
-        return isValid;
+    @Override
+    public void displayInputErrorToast(String errorFields) {
+        Toast toast= Toast.makeText(this,
+                errorFields, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
     }
 
-    private void startSignUpPart3(String firstname, String lastname) {
-        String username = "";
-        String password = "";
-        String email = "";
-        Double longitude = 0.0;
-        Double latitude = 0.0;
+    @Override
+    public void startSignUpPart3(String firstname, String lastname) {
 
-        Bundle signUp1Info = getIntent().getExtras();
-        if (signUp1Info != null) {
-            username = signUp1Info.getString("username");
-            password = signUp1Info.getString("password");
-            email = signUp1Info.getString("email");
-            longitude = signUp1Info.getDouble("longitude");
-            latitude = signUp1Info.getDouble("latitude");
-        }
+        getBundleExtra();
 
         Intent intent = new Intent(SignUpPart2Activity.this, SignUpPart3Activity.class);
         intent.putExtra("email", email);
@@ -118,6 +85,16 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity {
         intent.putExtra("firstname", firstname);
         intent.putExtra("lastname", lastname);
         startActivity(intent);
+    }
 
+    private void getBundleExtra() {
+        Bundle signUp1Info = getIntent().getExtras();
+        if (signUp1Info != null) {
+            username = signUp1Info.getString("username");
+            password = signUp1Info.getString("password");
+            email = signUp1Info.getString("email");
+            longitude = signUp1Info.getDouble("longitude");
+            latitude = signUp1Info.getDouble("latitude");
+        }
     }
 }

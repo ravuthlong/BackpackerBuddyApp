@@ -46,11 +46,14 @@ public class MessagesFragment extends Fragment {
     private DatabaseReference mFirebaseDatabaseReference;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
+    private RecyclerView.ItemDecoration dividerDecorator;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
+        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
+
     }
 
     @Nullable
@@ -110,8 +113,6 @@ public class MessagesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapterInbox);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerView.addItemDecoration(dividerDecorator);
     }
 

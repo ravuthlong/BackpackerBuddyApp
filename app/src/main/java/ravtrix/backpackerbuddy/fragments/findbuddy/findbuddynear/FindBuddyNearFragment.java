@@ -4,10 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,24 +24,26 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import static ravtrix.backpackerbuddy.R.id.spinner;
 
 /**
  * Created by Ravinder on 9/12/16.
  */
-public class FindBuddyNearFragment extends Fragment {
+public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearView {
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
+    private MenuItem item;
+    private FindBuddyPresenter findBuddyPresenter;
+    private Spinner distanceSpinner;
+    private int currentSelectedDropdown = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -49,38 +58,105 @@ public class FindBuddyNearFragment extends Fragment {
         view = inflater.inflate(R.layout.frag_gridview, container, false);
         view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
-        //linearLayout.setVisibility(View.INVISIBLE);
+        setHasOptionsMenu(true);
+
+        System.out.println("ON CREATE VIEW!!!");
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
+        findBuddyPresenter = new FindBuddyPresenter(this);
 
         checkLocationUpdate();
-        fetchNearbyUsers();
+        findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
         return view;
     }
 
-    private void fetchNearbyUsers() {
-        Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
-                .getNearbyUsers()
-                .getNearbyUsers(userLocalStore.getLoggedInUser().getUserID(), 40);
-        retrofitCall.enqueue(new Callback<List<UserLocationInfo>>() {
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.dropdown_toolbar, menu);
+        System.out.println("MAKING!!");
+
+        item = menu.findItem(spinner);
+
+        distanceSpinner = (Spinner) MenuItemCompat.getActionView(item);
+
+        ArrayAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.distance_DropDown,
+                R.layout.distance_dropdown);
+
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        distanceSpinner.setAdapter(spinnerAdapter);
+        distanceSpinner.setSelection(currentSelectedDropdown);
+
+        setSpinnerListener();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            System.out.println("VISIBLE!!");
+            if (distanceSpinner != null) {
+                System.out.println("CURRENT SELECTED: " + currentSelectedDropdown);
+                distanceSpinner.setSelection(currentSelectedDropdown);
+            }
+        }
+    }
+
+
+    private void setSpinnerListener() {
+        distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
-                List<UserLocationInfo> userList = response.body();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                        view, fragActivityProgressBarInterface);
-                profileImageGridView.setAdapter(customGridViewAdapter);
+                /*
+                 * Position 0 = 25 miles
+                 * Position 1 = 50 miles
+                 * Position 2 = 100 miles
+                 * Position 3 = 200 miles
+                 */
 
-                city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
-                        userLocalStore.getLoggedInUser().getLongitude()));
+                // Only refresh retrofit if the selected drop down option is not the same as the selected drop down before
+                if (currentSelectedDropdown != position) {
+                    switch (position) {
+                        case 0:
+                            System.out.println("AAAHHH");
+                            currentSelectedDropdown = 0;
+                            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
+                            break;
+                        case 1:
+                            currentSelectedDropdown = 1;
+                            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 50);
+                            break;
+                        case 2:
+                            currentSelectedDropdown = 2;
+                            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 100);
+                            break;
+                        case 3:
+                            currentSelectedDropdown = 3;
+                            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 200);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<List<UserLocationInfo>> call, Throwable t) {
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                view.setVisibility(View.VISIBLE);
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Nothing selected.
             }
         });
+    }
+
+    public int getCurrentSelectedDropdown() {
+        return this.currentSelectedDropdown;
+    }
+
+    public void setCurrentSelectedDropdown(int currentSelectedDropdown) {
+        this.currentSelectedDropdown = currentSelectedDropdown;
     }
 
     /*
@@ -94,5 +170,40 @@ public class FindBuddyNearFragment extends Fragment {
                 userLocalStore.getLoggedInUser().getTime()) > 1) {
             Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
         }
+    }
+
+    @Override
+    public void setCustomGridView(List<UserLocationInfo> userList) {
+        CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
+                view, fragActivityProgressBarInterface);
+        profileImageGridView.setAdapter(customGridViewAdapter);
+    }
+
+    @Override
+    public void setCityText() {
+        city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
+                userLocalStore.getLoggedInUser().getLongitude()));
+    }
+
+    @Override
+    public void showErrorToast() {
+        Helpers.displayToast(getContext(), "Error");
+    }
+
+    @Override
+    public void setViewVisible() {
+        view.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressbar() {
+        fragActivityProgressBarInterface.setProgressBarInvisible();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        //findBuddyPresenter.onDestroy();
     }
 }

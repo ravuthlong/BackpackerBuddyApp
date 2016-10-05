@@ -14,6 +14,13 @@
     <string name="random"> Random</string>
     <string name="nearby"> Nearby </string>
 
+    <string-array name="distance_DropDown">
+        <item>25 miles</item>
+        <item>50 miles</item>
+        <item>100 miles</item>
+        <item>200 miles</item>
+    </string-array>
+
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Albania</item>

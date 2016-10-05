@@ -33,7 +33,7 @@
                 android:ems="10"
                 android:id="@+id/etEmail"
                 android:hint="@string/email"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:paddingBottom="10dp" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -45,7 +45,7 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:id="@+id/etUsername"
                 android:hint="@string/username"
                 android:paddingBottom="10dp" />
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:id="@+id/etPassword"
                 android:hint="@string/password"
                 android:paddingBottom="10dp" />
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:id="@+id/etConfirmPass"
                 android:hint="@string/confirmPassword"
                 android:paddingBottom="10dp" />

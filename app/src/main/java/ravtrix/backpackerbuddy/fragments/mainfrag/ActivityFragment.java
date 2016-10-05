@@ -53,7 +53,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private long currentTime;
-    RecyclerView.ItemDecoration dividerDecorator;
+    private RecyclerView.ItemDecoration dividerDecorator;
 
     @Override
     public void onAttach(Context context) {
@@ -69,6 +69,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         view = inflater.inflate(R.layout.frag_usercountries, container, false);
         view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
         //refWatcher.watch(this);
@@ -84,7 +85,6 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
                 retrieveUserCountryPostsRetrofit();
-                //waveSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -104,6 +104,13 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         return view;
     }
 
+    // Remove distance spinner when user changes fragment
+    @Override
+    public void onStop() {
+        super.onStop();
+        //dropdownToolbar.removeView(distance_spinner);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -117,28 +124,6 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         }
     }
 
-    /*
-    @Override
-    public void onRefresh() {
-
-        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts().countryPosts();
-
-        returnedFeed.enqueue(new Callback<List<FeedItem>>() {
-            @Override
-            public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
-                feedItems = response.body();
-                feedListAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<List<FeedItem>> call, Throwable t) {
-                System.out.println(t.getMessage());
-
-            }
-        });
-
-        refreshLayout.setRefreshing(false);
-    }*/
 
     // Hide floating action button on scroll down and show on scroll up
     private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {

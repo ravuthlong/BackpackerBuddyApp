@@ -35,6 +35,7 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
+    private int currentSelectedDropdown;
 
     @Override
     public void onAttach(Context context) {
@@ -60,33 +61,6 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
     }
 
-    /*
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            fragActivityProgressBarInterface.setProgressBarVisible();
-
-            nearTxt.setText("Recently");
-            city.setText("Online");
-            userLocalStore = new UserLocalStore(getActivity());
-            fetchRecentlyOnlineUsers();
-        } else {
-            // fragment is no longer visible
-        }
-    }*/
-
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // load data here
-        }else{
-            // fragment is no longer visible
-        }
-    }
-
     private void fetchRecentlyOnlineUsers() {
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
                 .getRecentlyOnlineUsers()
@@ -107,5 +81,13 @@ public class RecentlyOnlineUsersFragment extends Fragment {
                 view.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public void setCurrentSelectedDropdown(int currentSelectedDropdown) {
+        this.currentSelectedDropdown = currentSelectedDropdown;
+    }
+
+    public int getCurrentSelectedDropdown() {
+        return this.currentSelectedDropdown;
     }
 }

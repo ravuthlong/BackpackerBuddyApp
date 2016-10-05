@@ -5,4 +5,7 @@ package ravtrix.backpackerbuddy.activities.editpost;
  */
 public interface IEditPostView {
 
+    void startMainPageActivity();
+    void displayTryAgainToast();
+
 }
