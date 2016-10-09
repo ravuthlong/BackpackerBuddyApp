@@ -11,12 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp"
+        android:id="@+id/grid_relativeLayout"
         android:gravity="center_horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
+            android:id="@+id/grid_locationImage"
             android:src="@drawable/ic_location_on_white_24dp" />
 
         <TextView
@@ -26,13 +27,12 @@
             android:id="@+id/frag_gridview_nearTxt"
             android:layout_gravity="center_horizontal|top"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imageView3"
-            android:layout_toEndOf="@+id/imageView3" />
+            android:layout_toRightOf="@+id/grid_locationImage"
+            android:layout_toEndOf="@+id/grid_locationImage" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/frag_gridview_city"
             android:layout_toRightOf="@+id/frag_gridview_nearTxt"
             android:layout_toEndOf="@+id/frag_gridview_nearTxt"
@@ -48,4 +48,5 @@
         android:columnWidth="110dp"
         android:gravity="center"
         android:numColumns="auto_fit" />
+
 </LinearLayout>

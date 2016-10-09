@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
+import ravtrix.backpackerbuddy.fragments.ausercountryposts.AUserCountryPostsFragment;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
 import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
@@ -169,7 +170,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new ActivityFragment());
         fragmentList.add(new TabFragment());
         fragmentList.add(new MessagesFragment());
-        fragmentList.add(new MessagesFragment());
+        fragmentList.add(new AUserCountryPostsFragment());
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DestinationFragment());
     }

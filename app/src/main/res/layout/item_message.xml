@@ -21,13 +21,15 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="visible">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:id="@+id/item_inboxFeed_profileImage"
-            android:src="@drawable/default_photo" />
+            android:id="@+id/item_countryFeed_profileImage"
+            android:src="@drawable/default_photo"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,11 +37,50 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/item_message_message"
             android:textSize="14sp"
-            android:layout_weight="1"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:visibility="visible"
+            android:background="@drawable/bubleft" />
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_message2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:gravity="right|center_vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/item_message_message2"
+            android:textSize="14sp"
+            android:paddingRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:paddingLeft="40dp"
+            android:background="@drawable/bubright"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/item_inboxFeed_profileImage2"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/item_inboxFeed_profileImage2"
+            android:src="@drawable/default_photo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

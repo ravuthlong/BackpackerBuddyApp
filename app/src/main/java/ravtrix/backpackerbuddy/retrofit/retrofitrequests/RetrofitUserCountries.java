@@ -15,12 +15,16 @@ public class RetrofitUserCountries {
         retrofit = Helpers.retrofitBuilder(this.retrofit, Helpers.ServerURL.SERVER_URL);
     }
 
-    public RetrofitUserCountriesInterfaces.getNotLoggedInCountryPosts getNotLoggedInCountryPosts() {
-        return retrofit.create(RetrofitUserCountriesInterfaces.getNotLoggedInCountryPosts.class);
+    public RetrofitUserCountriesInterfaces.GetNotLoggedInCountryPosts getNotLoggedInCountryPosts() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.GetNotLoggedInCountryPosts.class);
     }
 
-    public RetrofitUserCountriesInterfaces.insertTravelSpot insertTravelSpot() {
-        return retrofit.create(RetrofitUserCountriesInterfaces.insertTravelSpot.class);
+    public RetrofitUserCountriesInterfaces.GetAUserCountryPosts getAUserCountryPosts() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.GetAUserCountryPosts.class);
+    }
+
+    public RetrofitUserCountriesInterfaces.InsertTravelSpot insertTravelSpot() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.InsertTravelSpot.class);
     }
 
     public RetrofitUserCountriesInterfaces.InsertFavorite insertFavoritePost() {

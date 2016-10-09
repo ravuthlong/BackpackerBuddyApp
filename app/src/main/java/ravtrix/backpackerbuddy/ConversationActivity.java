@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -53,6 +54,7 @@ public class ConversationActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
     private UserLocalStore userLocalStore;
+    private final UserChat userChat = new UserChat();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,6 @@ public class ConversationActivity extends AppCompatActivity {
         chatRoomName2 = otherUserID + myUserID;
 
         // Create userChat object
-        final UserChat userChat = new UserChat();
         userChat.setUserOne(Integer.parseInt(myUserID));
         userChat.setUserTwo(Integer.parseInt(otherUserID));
 
@@ -94,13 +95,11 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(chatRoomName).exists()) {
-                    System.out.println("CHILD EXISTS");
                     setRecyclerView(chatRoomName);
                 } if (dataSnapshot.child(chatRoomName2).exists()) {
                     setRecyclerView(chatRoomName2);
                 } else  {
                     progressBar.setVisibility(View.INVISIBLE);
-                    System.out.println("CHILD DOESN'T EXISTS");
                 }
             }
             @Override
@@ -112,98 +111,39 @@ public class ConversationActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (textMessage.getText().toString().equals("")) {
+                    Helpers.displayToast(ConversationActivity.this, "Empty message");
+                } else {
+                    sendMessage();
+                }
 
-                mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-                mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String userMessage =  textMessage.getText().toString();
-                        Long time = System.currentTimeMillis();
-
-                        if (dataSnapshot.child(chatRoomName).exists()) {
-                            Message message = new
-                                    Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                                    "http://backpackerbuddy.net23.net/profile_pic/" +
-                                            userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    time, 0);
-                            mFirebaseDatabaseReference.child(chatRoomName)
-                                    .push().setValue(message);
-                            textMessage.setText("");
-
-                            passIntentResult(chatPosition, userMessage, time);
-                            System.out.println("PUSH TIME : " + time);
-
-                        } else if (dataSnapshot.child(chatRoomName2).exists()) {
-                            Message message = new
-                                    Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                                    "http://backpackerbuddy.net23.net/profile_pic/" +
-                                            userLocalStore.getLoggedInUser().getUserID() + ".JPG",
-                                    time, 0);
-                            mFirebaseDatabaseReference.child(chatRoomName2)
-                                    .push().setValue(message);
-                            textMessage.setText("");
-
-                            passIntentResult(chatPosition, userMessage, time);
-                            System.out.println("PUSH TIME : " + time);
-
-                        } else {
-
-                            // New chat, so create new chat in FCM and also database
-                            Call<JsonObject> jsonObjectCall = RetrofitUserChatSingleton.getRetrofitUserChat()
-                                    .insertNewChat()
-                                    .insertNewChat(userChat.getUserOne(), userChat.getUserTwo());
-
-                            jsonObjectCall.enqueue(new Callback<JsonObject>() {
-                                @Override
-                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                    //success
-                                }
-                                @Override
-                                public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                                }
-                            });
-
-                            Map<String, Object> userData = new HashMap<>();
-                            userData.put("photoUrl",
-                                    "http://backpackerbuddy.net23.net/profile_pic/" +
-                                            userLocalStore.getLoggedInUser().getUserID() + ".JPG");
-                            userData.put("text", userMessage);
-                            userData.put("time", time);
-                            userData.put("userID", userLocalStore.getLoggedInUser().getUserID());
-                            userData.put("isOtherUserClicked", 0); // If the other user viewed your message // 0 = false
-                            mFirebaseDatabaseReference.child(chatRoomName).push().setValue(userData);
-                            textMessage.setText("");
-                            setRecyclerView(chatRoomName);
-
-                            passIntentResult(chatPosition, userMessage, time);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
             }
         });
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView;
+        TextView messageTextView1, messageTextView2;
         TextView timeTextView;
-        CircleImageView messengerImageView;
-        LinearLayout layoutMessage;
+        CircleImageView messengerImageView1, messengerImageView2;
+        LinearLayout layoutMessage1;
+        RelativeLayout layoutMessage2;
 
 
         public MessageViewHolder(View v) {
             super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.item_message_message);
+            messageTextView1 = (TextView) itemView.findViewById(R.id.item_message_message);
             timeTextView = (TextView) itemView.findViewById(R.id.item_time);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage);
-            layoutMessage = (LinearLayout) itemView.findViewById(R.id.layout_message);
+            messengerImageView1 = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
+            layoutMessage1 = (LinearLayout) itemView.findViewById(R.id.layout_message);
+
+            messageTextView2 = (TextView) itemView.findViewById(R.id.item_message_message2);
+            messengerImageView2 = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage2);
+            layoutMessage2 = (RelativeLayout) itemView.findViewById(R.id.layout_message2);
         }
     }
 
     private void setRecyclerView(String roomName) {
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
                 Message.class,
                 R.layout.item_message,
@@ -213,40 +153,57 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, Message model, int position) {
                 if (position + 1 == getItemCount()) {
+                    System.out.println("HIDE PROGRESSBAR");
                     progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 if (model.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                    // It's the current user's chat so display it on the right side
+                    viewHolder.layoutMessage2.setVisibility(View.VISIBLE);
+                    viewHolder.layoutMessage1.setVisibility(View.GONE);
+                    TextView messageTextView2 = viewHolder.messageTextView2;
 
-                    TextView messageTextView = viewHolder.messageTextView;
-                    //messageTextView.setGravity(Gravity.LEFT);
-                    CircleImageView profileImage = viewHolder.messengerImageView;
-                    viewHolder.layoutMessage.removeAllViews();
+                    messageTextView2.setText(model.getText());
+                    //messageTextView2.setBackground(ContextCompat.getDrawable(ConversationActivity.this, R.drawable.bubright));
 
-                    viewHolder.layoutMessage.addView(messageTextView);
-                    viewHolder.layoutMessage.addView(profileImage);
+                    // Converting timestamp into x ago format
+                    CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                            model.getTime(),
+                            System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
 
-                }
+                    viewHolder.timeTextView.setText(timeAgo);
+                    if (model.getPhotoUrl() == null) {
+                        viewHolder.messengerImageView2.setImageDrawable(ContextCompat.getDrawable(ConversationActivity.this,
+                                R.drawable.ic_chat_bubble_black_24dp));
+                    } else {
+                        Picasso.with(ConversationActivity.this)
+                                .load(model.getPhotoUrl())
+                                .into(viewHolder.messengerImageView2);
+                    }
 
-                viewHolder.messageTextView.setText(model.getText());
-
-                // Converting timestamp into x ago format
-                CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                        model.getTime(),
-                        System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
-
-                viewHolder.timeTextView.setText(timeAgo);
-                if (model.getPhotoUrl() == null) {
-                    viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(ConversationActivity.this,
-                            R.drawable.ic_chat_bubble_black_24dp));
                 } else {
-                    Picasso.with(ConversationActivity.this)
-                            .load(model.getPhotoUrl())
-                            .into(viewHolder.messengerImageView);
+                    viewHolder.layoutMessage1.setVisibility(View.VISIBLE);
+                    viewHolder.layoutMessage2.setVisibility(View.GONE);
+                    TextView messageTextView1 = viewHolder.messageTextView1;
+
+                    messageTextView1.setText(model.getText());
+                    //messageTextView1.setBackground(ContextCompat.getDrawable(ConversationActivity.this, R.drawable.bubleft));
+
+                    // Converting timestamp into x ago format
+                    CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                            model.getTime(),
+                            System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+
+                    viewHolder.timeTextView.setText(timeAgo);
+                    if (model.getPhotoUrl() == null) {
+                        viewHolder.messengerImageView1.setImageDrawable(ContextCompat.getDrawable(ConversationActivity.this,
+                                R.drawable.ic_chat_bubble_black_24dp));
+                    } else {
+                        Picasso.with(ConversationActivity.this)
+                                .load(model.getPhotoUrl())
+                                .into(viewHolder.messengerImageView1);
+                    }
                 }
             }
-
             @Override
             public int getItemCount() {
                 return super.getItemCount();
@@ -270,6 +227,80 @@ public class ConversationActivity extends AppCompatActivity {
 
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+    }
+
+
+    private void sendMessage() {
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userMessage =  textMessage.getText().toString();
+                Long time = System.currentTimeMillis();
+
+                if (dataSnapshot.child(chatRoomName).exists()) {
+                    Message message = new
+                            Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
+                            "http://backpackerbuddy.net23.net/profile_pic/" +
+                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG",
+                            time, 0);
+                    mFirebaseDatabaseReference.child(chatRoomName)
+                            .push().setValue(message);
+                    textMessage.setText("");
+
+                    passIntentResult(chatPosition, userMessage, time);
+                    System.out.println("PUSH TIME : " + time);
+
+                } else if (dataSnapshot.child(chatRoomName2).exists()) {
+                    Message message = new
+                            Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
+                            "http://backpackerbuddy.net23.net/profile_pic/" +
+                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG",
+                            time, 0);
+                    mFirebaseDatabaseReference.child(chatRoomName2)
+                            .push().setValue(message);
+                    textMessage.setText("");
+
+                    passIntentResult(chatPosition, userMessage, time);
+                    System.out.println("PUSH TIME : " + time);
+
+                } else {
+
+                    // New chat, so create new chat in FCM and also database
+                    Call<JsonObject> jsonObjectCall = RetrofitUserChatSingleton.getRetrofitUserChat()
+                            .insertNewChat()
+                            .insertNewChat(userChat.getUserOne(), userChat.getUserTwo());
+
+                    jsonObjectCall.enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            //success
+                        }
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                        }
+                    });
+
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("photoUrl",
+                            "http://backpackerbuddy.net23.net/profile_pic/" +
+                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG");
+                    userData.put("text", userMessage);
+                    userData.put("time", time);
+                    userData.put("userID", userLocalStore.getLoggedInUser().getUserID());
+                    userData.put("isOtherUserClicked", 0); // If the other user viewed your message // 0 = false
+                    mFirebaseDatabaseReference.child(chatRoomName).push().setValue(userData);
+                    textMessage.setText("");
+                    setRecyclerView(chatRoomName);
+
+                    passIntentResult(chatPosition, userMessage, time);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void passIntentResult(int position, String newMessage, long time) {

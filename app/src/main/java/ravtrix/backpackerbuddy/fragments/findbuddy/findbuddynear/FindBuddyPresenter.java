@@ -20,6 +20,7 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
 
     @Override
     public void fetchBuddyNearRetrofit(int userID, int distance) {
+        view.setViewInvisible();
         findBuddyNearInteractor.fetchNearbyUsersRetrofit(userID, distance, new OnFindBuddyNearListener() {
 
             @Override

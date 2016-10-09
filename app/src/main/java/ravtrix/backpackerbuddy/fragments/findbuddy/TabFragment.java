@@ -42,9 +42,8 @@ public class TabFragment extends Fragment  {
 
     private void setupViewPager(final ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        FindBuddyNearFragment findBuddyNearFragment = new FindBuddyNearFragment();
-        System.out.println("BUDDY TAG: " + findBuddyNearFragment.getTag());
-        adapter.addFragment(findBuddyNearFragment, "Nearby");
+
+        adapter.addFragment(new FindBuddyNearFragment(), "Nearby");
         adapter.addFragment(new RecentlyOnlineUsersFragment(), "Recently Online");
         viewPager.setAdapter(adapter);
 

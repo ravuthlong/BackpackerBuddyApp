@@ -29,14 +29,20 @@ public class CustomGridView extends BaseAdapter {
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private Counter counter;
+    private OnFinishedImageLoading onFinishedImageLoading;
+    private View gridView;
+    CircleImageView profileImage;
 
     public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
-                          FragActivityProgressBarInterface fragActivityProgressBarInterface) {
+                          FragActivityProgressBarInterface fragActivityProgressBarInterface,
+                          OnFinishedImageLoading onFinishedImageLoading) {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
         this.view = view;
         this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
-        counter = new Counter();
+        this.onFinishedImageLoading = onFinishedImageLoading;
+        counter = new Counter(-1);
+        counter.setCount();
     }
 
     @Override
@@ -56,14 +62,14 @@ public class CustomGridView extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View gridView;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
             gridView = new View(context);
-            gridView = inflater.inflate(R.layout.item_gridview, null);
-            CircleImageView profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImage1);
+            gridView = inflater.inflate(R.layout.item_gridview, parent, false);
+            profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImage1);
+
             Picasso.with(context)
                     .load(nearbyUserInfo.get(position).getUserpic())
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -78,6 +84,7 @@ public class CustomGridView extends BaseAdapter {
 
                         @Override
                         public void onError() {
+                            System.out.println("ERROR!!!!");
 
                         }
                     });
@@ -101,9 +108,11 @@ public class CustomGridView extends BaseAdapter {
     }
 
     private void checkPicassoFinished() {
+        System.out.println("counter at: " + counter.getCount());
+        System.out.println("REAL COUNT at: " + getCount());
+
         if (counter.getCount() == getCount()) {
-            fragActivityProgressBarInterface.setProgressBarInvisible();
-            view.setVisibility(View.VISIBLE);
+            onFinishedImageLoading.onFinishedImageLoading();
         }
     }
 
@@ -111,6 +120,14 @@ public class CustomGridView extends BaseAdapter {
     private class Counter {
         private int count = -1; // Indexing for array start at 0 so first item added should start at 0
 
+        Counter() {}
+        Counter(int count) {
+            this.count = count;
+        }
+
+        void setCount() {
+            this.count = -1;
+        }
         void addCount() {
             count++;
         }

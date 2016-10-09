@@ -3,6 +3,8 @@ package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -22,20 +24,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.ConversationActivity;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
-import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
-import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 import retrofit2.Call;
@@ -47,7 +52,7 @@ import static ravtrix.backpackerbuddy.R.id.imgbEditPost;
 /**
  * Created by Ravinder on 2/25/16.
  */
-public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHolder> {
+public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMain.ViewHolder> {
 
     private ActivityFragment activity;
     private LayoutInflater inflater;
@@ -56,16 +61,14 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     private int loggedInUser;
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
-    private UserLocalStore userLocalStore;
     private Button bEditPost, bDeletePost, bReportPost;
 
-    public FeedListAdapter(ActivityFragment activity, List<FeedItem> feedItems, int loggedInUser) {
+    public FeedListAdapterMain(ActivityFragment activity, List<FeedItem> feedItems, int loggedInUser) {
         inflater = LayoutInflater.from(activity.getContext());
         this.activity = activity;
         this.feedItems = feedItems;
         this.loggedInUser = loggedInUser;
         this.fragActivityResetDrawer = (FragActivityResetDrawer) activity.getActivity();
-        userLocalStore = new UserLocalStore(activity.getContext());
     }
 
     @Override
@@ -91,10 +94,27 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.tvToDate.setTypeface(dateFont);
         holder.tvArrow.setTypeface(dateFont);
 
+
         final FeedItem currentPos = feedItems.get(position);
+
+        // Prevent long country names from getting cut from the screen. Adjust text size.
+        if (currentPos.getCountry().length() >= 15) {
+            holder.tvCountry.setTextSize(30);
+        }
+
         holder.tvCountry.setText(currentPos.getCountry());
         holder.tvFromDate.setText(currentPos.getFromDate());
         holder.tvToDate.setText(currentPos.getToDate());
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+        holder.profileImage.setColorFilter(filter);
+        Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                currentPos.getUserID() + ".JPG")
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
+                .into(holder.profileImage);
 
         // Set image background based on country name. Hash will return the correct background id
         if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
@@ -131,7 +151,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                if (userLocalStore.getLoggedInUser().getUserID() == currentPos.getUserID()) {
+                if (loggedInUser == currentPos.getUserID()) {
                     Helpers.displayToast(activity.getContext(), "Can't message yourself...");
                 } else {
                     Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
@@ -161,6 +181,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
         private ImageButton imageButtonStar, imageButtonMail, imgEditPost;
+        private CircleImageView profileImage;
         private static final int NAVIGATION_ITEM = 4;
 
         ViewHolder(View itemView, final Context context) {
@@ -173,6 +194,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             imageButtonStar = (ImageButton) itemView.findViewById(R.id.imageButtonStar);
             imageButtonMail = (ImageButton) itemView.findViewById(R.id.imageButtonMail);
             imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
+            profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
             backgroundLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,7 +235,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     // Prepare a HashMap with userID and postID the logged in user want to do database operation to
     private HashMap<String, String> getHashMapWithInfo(int postID) {
         HashMap<String, String> favoriteInfoHashMap = new HashMap<>();
-        favoriteInfoHashMap.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+        favoriteInfoHashMap.put("userID", Integer.toString(loggedInUser));
         favoriteInfoHashMap.put("postID", Integer.toString(postID));
         return favoriteInfoHashMap;
     }
@@ -243,7 +265,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
         bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
 
-        if (userLocalStore.getLoggedInUser().getUserID() == postUserID) {
+        if (loggedInUser == postUserID) {
             bDeletePost.setVisibility(View.VISIBLE);
             bEditPost.setVisibility(View.VISIBLE);
         }

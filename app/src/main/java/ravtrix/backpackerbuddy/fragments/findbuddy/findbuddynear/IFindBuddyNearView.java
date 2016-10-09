@@ -14,5 +14,6 @@ interface IFindBuddyNearView {
     void setCityText();
     void showErrorToast();
     void setViewVisible();
+    void setViewInvisible();
     void hideProgressbar();
 }

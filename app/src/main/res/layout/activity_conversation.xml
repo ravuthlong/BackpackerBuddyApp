@@ -44,7 +44,7 @@
             android:layout_marginLeft="10dp"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:maxLines="5"
             android:scrollbars="vertical"
             android:layout_alignParentBottom="true"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -38,8 +39,9 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.frag_userinbox_recyclerView) protected RecyclerView recyclerView;
+    @BindView(R.id.frag_userInbox_swipeRefresh) protected SwipeRefreshLayout swipeRefreshLayout;
     private FeedListAdapterInbox feedListAdapterInbox;
     private List<FeedItemInbox> feedItemInbox;
     private UserLocalStore userLocalStore;
@@ -53,7 +55,6 @@ public class MessagesFragment extends Fragment {
         super.onAttach(context);
         fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
         dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
-
     }
 
     @Nullable
@@ -66,10 +67,20 @@ public class MessagesFragment extends Fragment {
         view.setVisibility(View.INVISIBLE);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
-
         userLocalStore = new UserLocalStore(getContext());
-        //feedListAdapterInbox = new FeedListAdapterInbox(getActivity());
+        swipeRefreshLayout.setOnRefreshListener(this);
 
+        fetchUserInboxChat();
+        return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchUserInboxChat();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void fetchUserInboxChat() {
         Call<List<FeedItemInbox>> retrofitCall = RetrofitUserChatSingleton.getRetrofitUserChat()
                 .fetchUserInbox()
                 .fetchUserInbox(userLocalStore.getLoggedInUser().getUserID());
@@ -77,36 +88,34 @@ public class MessagesFragment extends Fragment {
         retrofitCall.enqueue(new Callback<List<FeedItemInbox>>() {
             @Override
             public void onResponse(Call<List<FeedItemInbox>> call, Response<List<FeedItemInbox>> response) {
-                feedItemInbox = response.body();
+
+                feedItemInbox = response.body(); // Retrofit returns back the user IDs you're chatting with
+                // and whether or not you are the creator of that chat
 
                 for (int i = 0; i < feedItemInbox.size(); i++) {
                     if (feedItemInbox.get(i).getStatus() == 0) {
-                        // You made this chat room. your userID is the first of chat room name;
+                        // You made this chat room. your userID is the first of chat room name (Firebase chat name)
                         String chatName = userLocalStore.getLoggedInUser().getUserID() +
                                 Integer.toString(feedItemInbox.get(i).getUserID());
                         feedItemInbox.get(i).setChatRoom(chatName);
                     } else {
-                        // you didn't make this room
+                        // you didn't make this room. your userID is the second of chat room name (Firebase chat name)
                         String chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
                                 Integer.toString(userLocalStore.getLoggedInUser().getUserID());
                         feedItemInbox.get(i).setChatRoom(chatName);
                     }
                 }
 
-                firebaseListener();
+                firebaseListener(); // Call listener to fill inbox recyclerview data
                 feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
                         view, fragActivityProgressBarInterface);
 
             }
-
             @Override
             public void onFailure(Call<List<FeedItemInbox>> call, Throwable t) {
                 System.out.println(t.getMessage());
             }
         });
-
-
-        return view;
     }
 
     private void setRecyclerView(FeedListAdapterInbox feedListAdapterInbox) {
@@ -127,6 +136,7 @@ public class MessagesFragment extends Fragment {
                     String chatName = feedItemInbox.get(i).getChatRoom();
                     Iterator<DataSnapshot> iterator = dataSnapshot.child(chatName).getChildren().iterator();
 
+                    // Iterate to the last child of the chatroom to get latest snapshot for latest message
                     if (dataSnapshot.child(chatName).exists()) {
                         // access last message
                         long count = dataSnapshot.child(chatName).getChildrenCount(); // Number of children
@@ -136,16 +146,21 @@ public class MessagesFragment extends Fragment {
                             snapshot = iterator.next();
                         }
                     }
+
+                    /*
+                     * Set the components of each inbox message by getting its child from the database through key vale pair
+                     */
                     if (snapshot != null) {
                         String time = snapshot.child("time").getValue().toString();
-
                         feedItemInbox.get(i).setLatestMessage(snapshot.child("text").getValue().toString());
+
                         // Converting timestamp into x ago format
                         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                                 Long.parseLong(time),
                                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
                         feedItemInbox.get(i).setLatestDate((String) timeAgo);
                         feedItemInbox.get(i).setTimeMilli(Long.parseLong(time));
+
                         if (snapshot.child("isOtherUserClicked").exists()) {
                             feedItemInbox.get(i).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
                         } else {
@@ -156,14 +171,14 @@ public class MessagesFragment extends Fragment {
                         }
                     }
                     feedItemInbox.get(i).setSnapshot(snapshot);
-
-                    Collections.sort(feedItemInbox);
-                    setRecyclerView(feedListAdapterInbox);
                 }
+                // Sort chat rooms in order based on time
+                Collections.sort(feedItemInbox);
+                setRecyclerView(feedListAdapterInbox);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                System.out.println(databaseError.getMessage());
             }
         });
     }
@@ -182,10 +197,6 @@ public class MessagesFragment extends Fragment {
 
             // Update the timestamp at the position the user sent a new message
             feedListAdapterInbox.getViewHolder().updateTime(postChangePosition, time);
-
-            System.out.println("GOT TIME : " + time);
-
         }
-
     }
 }

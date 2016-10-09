@@ -23,13 +23,13 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapter;
+import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapterMain;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserCountries;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,15 +45,13 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     private static final String TAG = ActivityFragment.class.getSimpleName();
     private ProgressDialog progressDialog;
     private List<FeedItem> feedItems;
-    private FeedListAdapter feedListAdapter;
+    private FeedListAdapterMain feedListAdapter;
     private FloatingActionButton postWidget;
     private UserLocalStore userLocalStore;
-    private RetrofitUserCountries retrofitUserCountries;
     private FragActivityResetDrawer fragActivityResetDrawer;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private long currentTime;
-    private RecyclerView.ItemDecoration dividerDecorator;
 
     @Override
     public void onAttach(Context context) {
@@ -78,7 +76,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
 
 
-        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
 
         // Listens for refresh
@@ -88,8 +86,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
             }
         });
 
-        userLocalStore = new UserLocalStore(getActivity());
-        retrofitUserCountries = new RetrofitUserCountries();
+        userLocalStore = new UserLocalStore(getContext());
         floatingActionButton.setOnClickListener(this);
 
         currentTime = System.currentTimeMillis();
@@ -149,15 +146,16 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
     // Make retrofit call to retrieve user country list to populate the recycler view
     private void retrieveUserCountryPostsRetrofit() {
 
-        Call<List<FeedItem>> returnedFeed = retrofitUserCountries.getNotLoggedInCountryPosts()
-                                    .countryPosts(userLocalStore.getLoggedInUser().getUserID());
+        Call<List<FeedItem>> returnedFeed = RetrofitUserCountrySingleton.getRetrofitUserCountry()
+                                            .getNotLoggedInCountryPosts()
+                                            .countryPosts(userLocalStore.getLoggedInUser().getUserID());
         returnedFeed.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
 
                 // Set up array list of country feeds
                 feedItems =  response.body();
-                feedListAdapter = new FeedListAdapter(ActivityFragment.this, feedItems,
+                feedListAdapter = new FeedListAdapterMain(ActivityFragment.this, feedItems,
                         userLocalStore.getLoggedInUser().getUserID());
                 setRecyclerView(feedListAdapter);
                 fragActivityProgressBarInterface.setProgressBarInvisible();
@@ -175,7 +173,7 @@ public class ActivityFragment extends Fragment implements  View.OnClickListener 
         });
     }
 
-    private void setRecyclerView(FeedListAdapter feedListAdapter) {
+    private void setRecyclerView(FeedListAdapterMain feedListAdapter) {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

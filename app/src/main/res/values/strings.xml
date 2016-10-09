@@ -13,6 +13,7 @@
     <string name="saveToolbar">Save</string>
     <string name="random"> Random</string>
     <string name="nearby"> Nearby </string>
+    <string name="dash">-</string>
 
     <string-array name="distance_DropDown">
         <item>25 miles</item>

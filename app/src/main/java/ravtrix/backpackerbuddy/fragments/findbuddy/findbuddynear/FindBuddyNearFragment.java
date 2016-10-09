@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
+import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -37,7 +39,8 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
-    private View view;
+    private ProgressDialog progressDialog;
+    private View fragView;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private MenuItem item;
@@ -55,19 +58,18 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_gridview, container, false);
-        view.setVisibility(View.INVISIBLE);
-        ButterKnife.bind(this, view);
+        fragView = inflater.inflate(R.layout.frag_gridview, container, false);
+
+        ButterKnife.bind(this, fragView);
         setHasOptionsMenu(true);
 
-        System.out.println("ON CREATE VIEW!!!");
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
         findBuddyPresenter = new FindBuddyPresenter(this);
 
         checkLocationUpdate();
         findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
-        return view;
+        return fragView;
     }
 
 
@@ -75,10 +77,8 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.dropdown_toolbar, menu);
-        System.out.println("MAKING!!");
 
         item = menu.findItem(spinner);
-
         distanceSpinner = (Spinner) MenuItemCompat.getActionView(item);
 
         ArrayAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -88,26 +88,13 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         distanceSpinner.setAdapter(spinnerAdapter);
         distanceSpinner.setSelection(currentSelectedDropdown);
-
         setSpinnerListener();
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            System.out.println("VISIBLE!!");
-            if (distanceSpinner != null) {
-                System.out.println("CURRENT SELECTED: " + currentSelectedDropdown);
-                distanceSpinner.setSelection(currentSelectedDropdown);
-            }
-        }
-    }
-
-
     private void setSpinnerListener() {
+
         distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -122,7 +109,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
                 if (currentSelectedDropdown != position) {
                     switch (position) {
                         case 0:
-                            System.out.println("AAAHHH");
                             currentSelectedDropdown = 0;
                             findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
                             break;
@@ -175,7 +161,13 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void setCustomGridView(List<UserLocationInfo> userList) {
         CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                view, fragActivityProgressBarInterface);
+                profileImageGridView, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
+            @Override
+            public void onFinishedImageLoading() {
+                hideProgressbar();
+                setViewVisible();
+            }
+        });
         profileImageGridView.setAdapter(customGridViewAdapter);
     }
 
@@ -191,11 +183,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     }
 
     @Override
-    public void setViewVisible() {
-        view.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void hideProgressbar() {
         fragActivityProgressBarInterface.setProgressBarInvisible();
     }
@@ -203,7 +190,16 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void onDestroy() {
         super.onDestroy();
+        findBuddyPresenter.onDestroy();
+    }
 
-        //findBuddyPresenter.onDestroy();
+    @Override
+    public void setViewInvisible() {
+        fragView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setViewVisible() {
+        fragView.setVisibility(View.VISIBLE);
     }
 }

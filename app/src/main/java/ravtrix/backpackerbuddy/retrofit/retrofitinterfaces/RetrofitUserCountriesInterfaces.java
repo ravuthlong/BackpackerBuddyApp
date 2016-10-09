@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.List;
 
+import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -19,12 +20,17 @@ import retrofit2.http.Query;
  */
 public class RetrofitUserCountriesInterfaces {
 
-    public interface getNotLoggedInCountryPosts {
+    public interface GetNotLoggedInCountryPosts {
         @GET("/fetchActivities.php?userID=[userID]")
         Call<List<FeedItem>> countryPosts(@Query("userID") int userID);
     }
 
-    public interface insertTravelSpot {
+    public interface GetAUserCountryPosts {
+        @GET("/fetchAUserPosts.php?userID=[userID]")
+        Call<List<FeedItemAUserCountry>> getAUserCountryPosts(@Query("userID") int userID);
+    }
+
+    public interface InsertTravelSpot {
         @FormUrlEncoded
         @POST("/insertTravelSpot.php")
         Call<JsonObject> travelSpot(@FieldMap HashMap<String, String> travelSpotInfo);

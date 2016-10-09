@@ -71,7 +71,6 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        System.out.println("CALLING ME");
         FeedItemInbox currentItem = feedItemInbox.get(position);
 
         Picasso.with(context).load("http://backpackerbuddy.net23.net/profile_pic/" +
@@ -128,7 +127,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
             itemViews.add(i, itemView);
             i++;
 
-            profileImage = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage);
+            profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
             username = (TextView) itemView.findViewById(R.id.item_inboxFeed_username);
             latestMessage = (TextView) itemView.findViewById(R.id.item_inboxFeed_lastMessage);
             date = (TextView) itemView.findViewById(R.id.item_inboxFeed_time);

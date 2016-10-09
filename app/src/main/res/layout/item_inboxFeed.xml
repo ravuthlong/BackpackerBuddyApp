@@ -15,7 +15,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:id="@+id/item_inboxFeed_profileImage"
+            android:id="@+id/item_countryFeed_profileImage"
             android:src="@drawable/default_photo" />
 
         <TextView
@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/item_inboxFeed_profileImage"
-            android:layout_toEndOf="@+id/item_inboxFeed_profileImage"
+            android:layout_toRightOf="@+id/item_countryFeed_profileImage"
+            android:layout_toEndOf="@+id/item_countryFeed_profileImage"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:id="@+id/item_inboxFeed_username"

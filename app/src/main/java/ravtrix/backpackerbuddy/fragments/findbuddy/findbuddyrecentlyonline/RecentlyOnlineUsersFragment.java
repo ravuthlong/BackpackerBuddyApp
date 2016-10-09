@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
+import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -71,7 +72,13 @@ public class RecentlyOnlineUsersFragment extends Fragment {
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
                 CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                        view, fragActivityProgressBarInterface);
+                        view, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
+                    @Override
+                    public void onFinishedImageLoading() {
+                        hideProgressbar();
+                        setViewVisible();
+                    }
+                });
                 profileImageGridView.setAdapter(customGridViewAdapter);
             }
 
@@ -89,5 +96,13 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
     public int getCurrentSelectedDropdown() {
         return this.currentSelectedDropdown;
+    }
+
+    private void setViewVisible() {
+        view.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressbar() {
+        fragActivityProgressBarInterface.setProgressBarInvisible();
     }
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     xmlns:ools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     ools:ignore="ContentDescription"
     android:orientation="vertical">
 
@@ -63,6 +64,7 @@
                 android:shadowDx="4"
                 android:shadowDy="4"
                 android:shadowRadius="4"
+                android:maxLines="1"
                 android:layout_below="@+id/tvFromDate"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -109,7 +111,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
+                android:text="@string/dash"
                 android:id="@+id/tvArrow"
                 android:textSize="17sp"
                 android:textColor="#000000"
@@ -123,6 +125,7 @@
                 android:layout_toRightOf="@+id/tvFromDate"
                 android:layout_toEndOf="@+id/tvFromDate" />
 
+
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,6 +134,26 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_arrow_drop_down_black_24dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tvCountry"
+                android:layout_toEndOf="@+id/imageButtonStar"
+                android:gravity="center_horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/item_countryFeed_profileImage"
+                    android:src="@drawable/default_photo"
+                    app:border_color="#73FFFFFF"
+                    app:border_width="2dp"
+                    />
+            </LinearLayout>
+
+
         </RelativeLayout>
     </LinearLayout>
 
