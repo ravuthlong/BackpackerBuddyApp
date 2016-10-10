@@ -89,7 +89,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         setViewListeners();
         checkLocationUpdate();
 
-
         // Set user location
         setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
                 userLocalStore.getLoggedInUser().getLongitude());
@@ -243,7 +242,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
     @Override
     public void setProfilePic(String pic) {
-        Picasso.with(getContext()).load(pic).noFade().into(profilePic);
+        Picasso.with(getContext()).load(pic).noFade().into(profilePic, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                hideProgressBar();
+                setViewVisible();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
     @Override
     public void hideProgressBar() {

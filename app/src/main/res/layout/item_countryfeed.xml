@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
     xmlns:ools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     ools:ignore="ContentDescription"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_height="150dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,24 +33,24 @@
 
             <ImageButton
                 android:layout_width="60dp"
-                android:layout_height="59dp"
                 android:id="@+id/imageButtonStar"
                 android:background="@drawable/button_green"
 
                 android:src="@drawable/ic_star_border_white_36dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_height="74dp" />
 
             <ImageButton
                 android:layout_width="60dp"
-                android:layout_height="59dp"
                 android:id="@+id/imageButtonMail"
                 android:background="@drawable/button_green"
                 android:src="@drawable/ic_mail_outline_white_36dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_height="74dp" />
 
             <TextView
                 android:id="@+id/tvCountry"
@@ -141,16 +141,16 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tvCountry"
                 android:layout_toEndOf="@+id/imageButtonStar"
-                android:gravity="center_horizontal">
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_alignParentTop="false">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
                     android:id="@+id/item_countryFeed_profileImage"
                     android:src="@drawable/default_photo"
-                    app:border_color="#73FFFFFF"
-                    app:border_width="2dp"
-                    />
+                    app:border_color="#8CFFFFFF"
+                    app:border_width="7dp"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp" />
             </LinearLayout>
 
 

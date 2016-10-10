@@ -23,14 +23,13 @@ import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.Recen
  * Created by Ravinder on 3/29/16.
  */
 
-public class TabFragment extends Fragment  {
+public class FindBuddyTabFragment extends Fragment  {
     @BindView(R.id.viewpager) protected ViewPager viewPager;
     @BindView(R.id.tabs) protected TabLayout tabLayout;
-    private View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.frag_tabs, container, false);
+        View v = inflater.inflate(R.layout.frag_tabs, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
 

@@ -3,12 +3,12 @@ package ravtrix.backpackerbuddy.fragments.userprofile;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class UserProfilePresenter implements  IUserProfilePresenter {
+class UserProfilePresenter implements  IUserProfilePresenter {
 
     private IUserProfileView view;
     private UserProfileInteractor userProfileInteractor;
 
-    public UserProfilePresenter(IUserProfileView view) {
+    UserProfilePresenter(IUserProfileView view) {
         this.view = view;
         userProfileInteractor = new UserProfileInteractor();
     }
@@ -16,14 +16,10 @@ public class UserProfilePresenter implements  IUserProfilePresenter {
     @Override
     public void getUserInfo(int userID, String userImgURL) {
         userProfileInteractor.getUserIntoRetrofit(userID, userImgURL, new RetrofitProfileListener() {
-            @Override
-            public void onSuccess() {
-
-            }
 
             @Override
             public void onError() {
-
+                System.out.println("ERROR FETCHING USER INFO");
             }
 
             @Override
@@ -74,16 +70,6 @@ public class UserProfilePresenter implements  IUserProfilePresenter {
             @Override
             public void onSetProfilePic(String pic) {
                 view.setProfilePic(pic);
-            }
-
-            @Override
-            public void onHideProgressBar() {
-                view.hideProgressBar();
-            }
-
-            @Override
-            public void onSetViewVisible() {
-                view.setViewVisible();
             }
 
             @Override

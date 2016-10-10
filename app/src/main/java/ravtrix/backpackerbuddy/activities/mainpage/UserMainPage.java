@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities.maincountry;
+package ravtrix.backpackerbuddy.activities.mainpage;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,8 +32,8 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
 import ravtrix.backpackerbuddy.fragments.ausercountryposts.AUserCountryPostsFragment;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
-import ravtrix.backpackerbuddy.fragments.findbuddy.TabFragment;
-import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
+import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
+import ravtrix.backpackerbuddy.fragments.mainfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -167,8 +167,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(new ActivityFragment());
-        fragmentList.add(new TabFragment());
+        fragmentList.add(new CountryTabFragment());
+        fragmentList.add(new FindBuddyTabFragment());
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new AUserCountryPostsFragment());
         fragmentList.add(new UserProfileFragment());
@@ -429,5 +429,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         // Invoked to set new profile picture
         this.userHitHome = false;
     }
+
 }
 

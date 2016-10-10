@@ -41,7 +41,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".activities.maincountry.UserMainPage"
+            android:name=".activities.mainpage.UserMainPage"
             android:label="User Main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

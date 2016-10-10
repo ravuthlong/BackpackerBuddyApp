@@ -58,7 +58,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         switch(v.getId()) {
             case R.id.btn_save:
                 if (!presenter.checkEmptyString(editText.getText().toString())) {
-                    presenter.editUserInfo(editText.getText().toString(), presenter.getDetailType());
+                    presenter.editUserInfo(editText.getText().toString().trim(), presenter.getDetailType());
                 }
                 break;
             default:

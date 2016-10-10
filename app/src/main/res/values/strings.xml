@@ -14,6 +14,10 @@
     <string name="random"> Random</string>
     <string name="nearby"> Nearby </string>
     <string name="dash">-</string>
+    <string name="details">Details</string>
+    <string name="sixThings">The six must haves in your backpack</string>
+    <string name="personality">Describe your personality</string>
+    <string name="idealDay">Your ideal backpacking day</string>
 
     <string-array name="distance_DropDown">
         <item>25 miles</item>

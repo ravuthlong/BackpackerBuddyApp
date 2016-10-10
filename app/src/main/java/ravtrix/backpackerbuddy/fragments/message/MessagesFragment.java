@@ -80,6 +80,18 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    private void setRecyclerView(FeedListAdapterInbox feedListAdapterInbox) {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(feedListAdapterInbox);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(dividerDecorator);
+    }
+
+
+    /*
+     * Fetch all the chats user is in from the database and their latest message,
+     * latest time from Firebase cloud
+     */
     private void fetchUserInboxChat() {
         Call<List<FeedItemInbox>> retrofitCall = RetrofitUserChatSingleton.getRetrofitUserChat()
                 .fetchUserInbox()
@@ -118,13 +130,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         });
     }
 
-    private void setRecyclerView(FeedListAdapterInbox feedListAdapterInbox) {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(feedListAdapterInbox);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(dividerDecorator);
-    }
-
     private void firebaseListener() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -152,7 +157,14 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                      */
                     if (snapshot != null) {
                         String time = snapshot.child("time").getValue().toString();
-                        feedItemInbox.get(i).setLatestMessage(snapshot.child("text").getValue().toString());
+
+                        String latestMessage = snapshot.child("text").getValue().toString();
+
+                        if (countLines(latestMessage) > 4) {
+                            latestMessage = getFirstFourLines(latestMessage);
+                        }
+
+                        feedItemInbox.get(i).setLatestMessage(latestMessage);
 
                         // Converting timestamp into x ago format
                         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -192,11 +204,25 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
             String newMessage = data.getStringExtra("newMessage");
             long time = data.getLongExtra("time", 0);
 
+            if (countLines(newMessage) > 4) {
+                newMessage = getFirstFourLines(newMessage);
+            }
+
             // Update latest message at the position the user sent a new message
             feedListAdapterInbox.getViewHolder().updateMessage(postChangePosition, newMessage);
 
             // Update the timestamp at the position the user sent a new message
             feedListAdapterInbox.getViewHolder().updateTime(postChangePosition, time);
         }
+    }
+
+    private static int countLines(String str){
+        String[] lines = str.split("\r\n|\r|\n");
+        return  lines.length;
+    }
+
+    private static String getFirstFourLines(String str) {
+        String[] lines = str.split("\r\n|\r|\n");
+        return lines[0] + "\n" + lines[1] + "\n" + lines[2] + "\n" + lines[3] + "...";
     }
 }

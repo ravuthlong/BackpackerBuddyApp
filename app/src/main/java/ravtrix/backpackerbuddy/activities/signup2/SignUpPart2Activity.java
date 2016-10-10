@@ -58,8 +58,8 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity implements I
     // Validate that user input is in correct format
     public void inputValidationAndNextStep() {
 
-        String lastname = etLastname.getText().toString();
-        String firstname = etFirstname.getText().toString();
+        String lastname = etLastname.getText().toString().trim();
+        String firstname = etFirstname.getText().toString().trim();
         signUpPart2Presenter.inputValidation(firstname, lastname);
     }
 

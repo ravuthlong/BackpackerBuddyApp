@@ -8,7 +8,7 @@
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".fragments.userprofile.UserProfileFragment"
     android:background="@color/greenBackground">
 
@@ -258,12 +258,9 @@
                     android:layout_gravity="bottom" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
-
-
 
 </RelativeLayout>
 
-
 </ScrollView>
+

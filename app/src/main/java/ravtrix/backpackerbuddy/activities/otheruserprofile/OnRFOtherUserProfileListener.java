@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
  * Created by Ravinder on 9/27/16.
  */
 
-public interface OnRFOtherUserProfileListener {
+interface OnRFOtherUserProfileListener {
     void onSuccess(JsonObject otherUserJSON);
     void onFailure();
 }

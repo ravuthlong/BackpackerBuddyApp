@@ -3,7 +3,7 @@ package ravtrix.backpackerbuddy.fragments.userprofile;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public interface IUserProfileView {
+interface IUserProfileView {
 
     void setUsername(String username);
     void setDetailOneText(String text);

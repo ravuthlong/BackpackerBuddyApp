@@ -2,6 +2,7 @@ package ravtrix.backpackerbuddy.fragments.ausercountryposts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import retrofit2.Response;
 public class AUserCountryPostsFragment extends Fragment {
 
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
+    @BindView(R.id.bFloatingActionButton) protected FloatingActionButton bFloatingAdd;
     private View view;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private FeedListAdapterAUserPosts feedListAdapterAUserPosts;
@@ -43,6 +45,7 @@ public class AUserCountryPostsFragment extends Fragment {
         //view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 
+        bFloatingAdd.setVisibility(View.INVISIBLE);
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
 

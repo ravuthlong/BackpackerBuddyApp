@@ -54,8 +54,8 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     // Validate that user input is in correct format
     public void inputValidationAndNextStep() {
 
-        String username = etUsername.getText().toString();
-        String email = etEmail.getText().toString();
+        String username = etUsername.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         String confirmPass = etConfirmPassword.getText().toString();
 

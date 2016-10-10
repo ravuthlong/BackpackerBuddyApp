@@ -3,14 +3,13 @@ package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,23 +20,25 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.ConversationActivity;
+import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
-import ravtrix.backpackerbuddy.activities.maincountry.UserMainPage;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.fragments.mainfrag.ActivityFragment;
+import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
+import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
@@ -52,122 +53,189 @@ import static ravtrix.backpackerbuddy.R.id.imgbEditPost;
 /**
  * Created by Ravinder on 2/25/16.
  */
-public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMain.ViewHolder> {
+public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
 
-    private ActivityFragment activity;
-    private LayoutInflater inflater;
+    private CountryRecentFragment activity;
     private List<FeedItem> feedItems;
     private BackgroundImage backgroundImage;
     private int loggedInUser;
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
     private Button bEditPost, bDeletePost, bReportPost;
+    private Counter counter;
+    private OnFinishedImageLoading onFinishedImageLoading;
 
-    public FeedListAdapterMain(ActivityFragment activity, List<FeedItem> feedItems, int loggedInUser) {
-        inflater = LayoutInflater.from(activity.getContext());
+    private OnLoadMoreListener onLoadMoreListener;
+    private LinearLayoutManager mLinearLayoutManager;
+
+    private boolean isMoreLoading = false;
+    private int visibleThreshold = 1;
+    private int firstVisibleItem, visibleItemCount, totalItemCount;
+
+    public interface OnLoadMoreListener{
+        void onLoadMore();
+    }
+
+    public FeedListAdapterMain(CountryRecentFragment activity, int loggedInUser,
+                               OnLoadMoreListener onLoadMoreListener) {
+
         this.activity = activity;
-        this.feedItems = feedItems;
         this.loggedInUser = loggedInUser;
         this.fragActivityResetDrawer = (FragActivityResetDrawer) activity.getActivity();
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Custom root of recycle view
-        View view = inflater.inflate(R.layout.item_countryfeed, parent, false);
-        // Hold a structure of a view. See class viewholder, which holds the structure
-        ViewHolder holder = new ViewHolder(view, activity.getContext());
+        //this.onFinishedImageLoading = onFinishedImageLoading;
+        this.onLoadMoreListener=onLoadMoreListener;
         backgroundImage = new BackgroundImage();
-
-        return holder;
+        this.feedItems = new ArrayList<>();
+        counter = new Counter(0);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        // Initialize fonts
-        Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Trench.otf");
-        Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
-
-        holder.tvCountry.setTypeface(countryFont);
-        holder.tvFromDate.setTypeface(dateFont);
-        holder.tvToDate.setTypeface(dateFont);
-        holder.tvArrow.setTypeface(dateFont);
-
-
-        final FeedItem currentPos = feedItems.get(position);
-
-        // Prevent long country names from getting cut from the screen. Adjust text size.
-        if (currentPos.getCountry().length() >= 15) {
-            holder.tvCountry.setTextSize(30);
-        }
-
-        holder.tvCountry.setText(currentPos.getCountry());
-        holder.tvFromDate.setText(currentPos.getFromDate());
-        holder.tvToDate.setText(currentPos.getToDate());
-
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-        holder.profileImage.setColorFilter(filter);
-        Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                currentPos.getUserID() + ".JPG")
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .into(holder.profileImage);
-
-        // Set image background based on country name. Hash will return the correct background id
-        if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
-            holder.backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
-        }
-
-        if (currentPos.getClicked() == 1) {
-            holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
-            currentPos.isFavorite();
+        if (viewType == VIEW_ITEM) {
+            return new ViewHolder(LayoutInflater.from(activity.getContext()).inflate(R.layout.item_countryfeed, parent, false));
         } else {
-            holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+            return new ProgressViewHolder(LayoutInflater.from(activity.getContext()).inflate(R.layout.item_progress, parent, false));
         }
+    }
+
+    public void addAll(List<FeedItem> feedItems){
+        this.feedItems.clear();
+        this.feedItems.addAll(feedItems);
+        notifyDataSetChanged();
+    }
+
+    public void addItemMore(List<FeedItem> feedTen){
+        int currentSize = feedItems.size();
+        this.feedItems.addAll(feedTen);
+        notifyItemRangeChanged(currentSize, feedItems.size());
+    }
 
 
-        holder.imageButtonStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public void setMoreLoading(boolean isMoreLoading) {
+        this.isMoreLoading = isMoreLoading;
+    }
 
-                if (currentPos.getClicked() == 1) {
-                    // Cancel from favorite list - database/local model
-                    retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext());
-                    currentPos.setClicked(0);
-                    holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
-                } else {
-                    // Insert to favorite list - database/ local model
-                    retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext());
-                    currentPos.setClicked(1);
-                    holder.imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+    public void setProgressMore(final boolean isProgress) {
+        if (isProgress) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    feedItems.add(null);
+                    notifyItemInserted(feedItems.size() - 1);
                 }
+            });
+        } else {
+            feedItems.remove(feedItems.size() - 1);
+            notifyItemRemoved(feedItems.size());
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof ViewHolder) {
+            // Initialize fonts
+            Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Trench.otf");
+            Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
+
+            ((ViewHolder) holder).tvCountry.setTypeface(countryFont);
+            ((ViewHolder) holder).tvFromDate.setTypeface(dateFont);
+            ((ViewHolder) holder).tvToDate.setTypeface(dateFont);
+            ((ViewHolder) holder).tvArrow.setTypeface(dateFont);
+
+
+            final FeedItem currentPos = feedItems.get(position);
+
+            // Prevent long country names from getting cut from the screen. Adjust text size.
+            if (currentPos.getCountry().length() >= 15) {
+                ((ViewHolder) holder).tvCountry.setTextSize(30);
+            } else {
+                ((ViewHolder) holder).tvCountry.setTextSize(45);
             }
-        });
 
-        holder.imageButtonMail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            ((ViewHolder) holder).tvCountry.setText(currentPos.getCountry());
+            ((ViewHolder) holder).tvFromDate.setText(currentPos.getFromDate());
+            ((ViewHolder) holder).tvToDate.setText(currentPos.getToDate());
 
-                if (loggedInUser == currentPos.getUserID()) {
-                    Helpers.displayToast(activity.getContext(), "Can't message yourself...");
-                } else {
-                    Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
-                    convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
-                    activity.startActivity(convoIntent);
+            Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                    currentPos.getUserID() + ".JPG")
+                    .resize(400, 400)
+                    .centerCrop()
+                    .placeholder(R.drawable.default_photo)
+                    .into(((ViewHolder) holder).profileImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("LOADING IMAGE");
+                            counter.addCount();
+                            //checkPicassoFinished();
+                        }
+
+                        @Override
+                        public void onError() {
+                            // error
+                        }
+                    });
+
+            // Set image background based on country name. Hash will return the correct background id
+            if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
+                ((ViewHolder) holder).backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
+            }
+
+            if (currentPos.getClicked() == 1) {
+                ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+                currentPos.isFavorite();
+            } else {
+                ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+            }
+
+
+            ((ViewHolder) holder).imageButtonStar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (currentPos.getClicked() == 1) {
+                        // Cancel from favorite list - database/local model
+                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext());
+                        currentPos.setClicked(0);
+                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+                    } else {
+                        // Insert to favorite list - database/ local model
+                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext());
+                        currentPos.setClicked(1);
+                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+                    }
                 }
-            }
-        });
+            });
 
-        holder.imgEditPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopUp(currentPos.getUserID());
-                setPopUpDialogItemListener(currentPos.getId(), currentPos);
-            }
-        });
+            ((ViewHolder) holder).imageButtonMail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (loggedInUser == currentPos.getUserID()) {
+                        Helpers.displayToast(activity.getContext(), "Can't message yourself...");
+                    } else {
+                        Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
+                        convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
+                        activity.startActivity(convoIntent);
+                    }
+                }
+            });
+
+            ((ViewHolder) holder).imgEditPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopUp(currentPos.getUserID());
+                    setPopUpDialogItemListener(currentPos.getId(), currentPos);
+                }
+            });
+        }
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return feedItems.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
@@ -175,8 +243,17 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMai
         return feedItems.size();
     }
 
+    private class ProgressViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar pBar;
+        ProgressViewHolder(View v) {
+            super(v);
+            pBar = (ProgressBar) v.findViewById(R.id.pBar);
+        }
+    }
+
+
     // Holder knows and references where the fields are
-    class ViewHolder extends RecyclerView.ViewHolder {
+    private class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
@@ -184,7 +261,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMai
         private CircleImageView profileImage;
         private static final int NAVIGATION_ITEM = 4;
 
-        ViewHolder(View itemView, final Context context) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvCountry = (TextView) itemView.findViewById(R.id.tvCountry);
             tvFromDate = (TextView) itemView.findViewById(R.id.tvFromDate);
@@ -215,7 +292,29 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMai
         }
     }
 
-    private void performFragTransaction(final ActivityFragment activity, final int navigationItem) {
+    public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager){
+        this.mLinearLayoutManager=linearLayoutManager;
+    }
+
+    public void setRecyclerView(RecyclerView mView){
+        mView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                visibleItemCount = recyclerView.getChildCount();
+                totalItemCount = mLinearLayoutManager.getItemCount();
+                firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+                if (!isMoreLoading && (totalItemCount - visibleItemCount)<= (firstVisibleItem + visibleThreshold)) {
+                    if (onLoadMoreListener != null) {
+                        onLoadMoreListener.onLoadMore();
+                    }
+                    isMoreLoading = true;
+                }
+            }
+        });
+    }
+
+    private void performFragTransaction(final CountryRecentFragment activity, final int navigationItem) {
         // Delay to avoid lag when changing between option in navigation drawer
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -363,4 +462,22 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<FeedListAdapterMai
             }
         });
     }
+
+    /*
+    private void checkPicassoFinished() {
+        System.out.println("COUNTER: " + counter.getCount());
+        System.out.println("TOTAL COUNT:  " + getItemCount());
+
+        // Let 15 be the recyclerview loading standard
+        if (getItemCount() < 15) {
+                System.out.println("111111111");
+                onFinishedImageLoading.onFinishedImageLoading();
+
+        } else {
+            System.out.println("222222222");
+            if (counter.getCount() >= 15) { // Wait until at least 15 images load before displaying view
+                onFinishedImageLoading.onFinishedImageLoading();
+            }
+        }
+    }*/
 }

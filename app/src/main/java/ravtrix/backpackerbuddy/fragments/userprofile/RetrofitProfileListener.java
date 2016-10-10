@@ -3,9 +3,8 @@ package ravtrix.backpackerbuddy.fragments.userprofile;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public interface RetrofitProfileListener {
+interface RetrofitProfileListener {
 
-    void onSuccess();
     void onError();
     void onSetUsername(String username);
     void onSetDetailOneText(String text);
@@ -17,8 +16,6 @@ public interface RetrofitProfileListener {
     void onSetDetailFourText(String text);
     void onSetDetailFourHint(String hint);
     void onSetProfilePic(String pic);
-    void onHideProgressBar();
-    void onSetViewVisible();
     void onSetDetailOneColor();
     void onSetDetailTwoColor();
     void onSetDetailThreeColor();

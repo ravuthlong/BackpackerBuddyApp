@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -26,12 +27,9 @@ public class CustomGridView extends BaseAdapter {
 
     private Context context;
     private List<UserLocationInfo> nearbyUserInfo;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private Counter counter;
     private OnFinishedImageLoading onFinishedImageLoading;
-    private View gridView;
-    CircleImageView profileImage;
 
     public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
                           FragActivityProgressBarInterface fragActivityProgressBarInterface,
@@ -39,9 +37,8 @@ public class CustomGridView extends BaseAdapter {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
         this.view = view;
-        this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
         this.onFinishedImageLoading = onFinishedImageLoading;
-        counter = new Counter(-1);
+        counter = new Counter(0);
         counter.setCount();
     }
 
@@ -64,6 +61,8 @@ public class CustomGridView extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View gridView;
+        CircleImageView profileImage;
 
         if (convertView == null) {
             gridView = new View(context);
@@ -108,32 +107,8 @@ public class CustomGridView extends BaseAdapter {
     }
 
     private void checkPicassoFinished() {
-        System.out.println("counter at: " + counter.getCount());
-        System.out.println("REAL COUNT at: " + getCount());
-
         if (counter.getCount() == getCount()) {
             onFinishedImageLoading.onFinishedImageLoading();
-        }
-    }
-
-    // Keeps track how many picasso images have been loaded onto grid view
-    private class Counter {
-        private int count = -1; // Indexing for array start at 0 so first item added should start at 0
-
-        Counter() {}
-        Counter(int count) {
-            this.count = count;
-        }
-
-        void setCount() {
-            this.count = -1;
-        }
-        void addCount() {
-            count++;
-        }
-
-        int getCount() {
-            return count;
         }
     }
 }

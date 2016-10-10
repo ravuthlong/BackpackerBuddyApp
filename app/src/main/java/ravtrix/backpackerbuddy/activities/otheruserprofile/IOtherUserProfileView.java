@@ -4,7 +4,7 @@ package ravtrix.backpackerbuddy.activities.otheruserprofile;
  * Created by Ravinder on 9/27/16.
  */
 
-public interface IOtherUserProfileView {
+interface IOtherUserProfileView {
 
     //username.setText(responseJSON.get("username").getAsString());
     //userDetailOne.setText(responseJSON.get("detailOne").getAsString());

@@ -49,7 +49,6 @@ public class ConversationActivity extends AppCompatActivity {
     @BindView(R.id.activity_conversation_spinner) protected ProgressBar progressBar;
     private LinearLayoutManager mLinearLayoutManager;
     private String chatRoomName, chatRoomName2;
-    private Bundle bundle;
     private int chatPosition;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -73,7 +72,7 @@ public class ConversationActivity extends AppCompatActivity {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
 
-        bundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
 
         String otherUserID = "0";
         String myUserID = "0";
@@ -128,7 +127,6 @@ public class ConversationActivity extends AppCompatActivity {
         LinearLayout layoutMessage1;
         RelativeLayout layoutMessage2;
 
-
         public MessageViewHolder(View v) {
             super(v);
             messageTextView1 = (TextView) itemView.findViewById(R.id.item_message_message);
@@ -142,6 +140,11 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Set recycler view to show appropriate data at the right position
+     * The current chatter should have their messages on the right side
+     * The receiver should have their messages on the left side
+     */
     private void setRecyclerView(String roomName) {
 
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
@@ -163,7 +166,6 @@ public class ConversationActivity extends AppCompatActivity {
                     TextView messageTextView2 = viewHolder.messageTextView2;
 
                     messageTextView2.setText(model.getText());
-                    //messageTextView2.setBackground(ContextCompat.getDrawable(ConversationActivity.this, R.drawable.bubright));
 
                     // Converting timestamp into x ago format
                     CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -186,8 +188,6 @@ public class ConversationActivity extends AppCompatActivity {
                     TextView messageTextView1 = viewHolder.messageTextView1;
 
                     messageTextView1.setText(model.getText());
-                    //messageTextView1.setBackground(ContextCompat.getDrawable(ConversationActivity.this, R.drawable.bubleft));
-
                     // Converting timestamp into x ago format
                     CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                             model.getTime(),
@@ -230,12 +230,16 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
 
+    /*
+     * Send/Save new message to Firebase cloud. Save in the chat room name if room exists.
+     * Otherwise, if room doesn't exist between the two users yet, make a new room
+     */
     private void sendMessage() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String userMessage =  textMessage.getText().toString();
+                String userMessage =  textMessage.getText().toString().trim();
                 Long time = System.currentTimeMillis();
 
                 if (dataSnapshot.child(chatRoomName).exists()) {
@@ -249,7 +253,6 @@ public class ConversationActivity extends AppCompatActivity {
                     textMessage.setText("");
 
                     passIntentResult(chatPosition, userMessage, time);
-                    System.out.println("PUSH TIME : " + time);
 
                 } else if (dataSnapshot.child(chatRoomName2).exists()) {
                     Message message = new
@@ -262,8 +265,6 @@ public class ConversationActivity extends AppCompatActivity {
                     textMessage.setText("");
 
                     passIntentResult(chatPosition, userMessage, time);
-                    System.out.println("PUSH TIME : " + time);
-
                 } else {
 
                     // New chat, so create new chat in FCM and also database
@@ -303,6 +304,10 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * On back press, pass the new sent message to the MessagesFragment, so it can
+     * update the latest message on its list
+     */
     private void passIntentResult(int position, String newMessage, long time) {
         Intent intent = new Intent();
         intent.putExtra("position", position);
@@ -315,19 +320,19 @@ public class ConversationActivity extends AppCompatActivity {
         private int userOne;
         private int userTwo;
 
-        public int getUserOne() {
+        int getUserOne() {
             return userOne;
         }
 
-        public void setUserOne(int userOne) {
+        void setUserOne(int userOne) {
             this.userOne = userOne;
         }
 
-        public int getUserTwo() {
+        int getUserTwo() {
             return userTwo;
         }
 
-        public void setUserTwo(int userTwo) {
+        void setUserTwo(int userTwo) {
             this.userTwo = userTwo;
         }
     }

@@ -43,7 +43,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     private View fragView;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
-    private MenuItem item;
     private FindBuddyPresenter findBuddyPresenter;
     private Spinner distanceSpinner;
     private int currentSelectedDropdown = 0;
@@ -78,7 +77,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.dropdown_toolbar, menu);
 
-        item = menu.findItem(spinner);
+        MenuItem item = menu.findItem(spinner);
         distanceSpinner = (Spinner) MenuItemCompat.getActionView(item);
 
         ArrayAdapter spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -107,6 +106,8 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
                 // Only refresh retrofit if the selected drop down option is not the same as the selected drop down before
                 if (currentSelectedDropdown != position) {
+                    fragActivityProgressBarInterface.setProgressBarVisible();
+
                     switch (position) {
                         case 0:
                             currentSelectedDropdown = 0;

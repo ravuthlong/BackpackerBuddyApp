@@ -10,7 +10,7 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class UserProfileInteractor implements IUserProfileInteractor {
+class UserProfileInteractor implements IUserProfileInteractor {
 
     @Override
     public void getUserIntoRetrofit(final int userID, final String userImageURL, final RetrofitProfileListener retrofitProfileListener) {
@@ -25,8 +25,6 @@ public class UserProfileInteractor implements IUserProfileInteractor {
                 JsonObject responseJSON = response.body();
                 // If success
                 if (responseJSON.get("success").getAsInt() == 1) {
-                    retrofitProfileListener.onSuccess();
-
                     responseJSON.get("firstname").getAsString();
                     responseJSON.get("lastname").getAsString();
                     retrofitProfileListener.onSetUsername(responseJSON.get("username").getAsString()); //set username
@@ -87,8 +85,6 @@ public class UserProfileInteractor implements IUserProfileInteractor {
                            // userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
                 }
                 // call
-                retrofitProfileListener.onHideProgressBar();
-                retrofitProfileListener.onSetViewVisible();
                 //fragActivityProgressBarInterface.setProgressBarInvisible(); // hideprogressbar
                 //v.setVisibility(View.VISIBLE); // setViewVisible
             }

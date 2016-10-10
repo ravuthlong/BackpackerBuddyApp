@@ -6,12 +6,12 @@ import com.google.gson.JsonObject;
  * Created by Ravinder on 9/27/16.
  */
 
-public class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
+class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
 
     private OtherUserProfileInteractor otherUserProfileInteractor;
     private IOtherUserProfileView view;
 
-    public OtherUserProfilePresenter(IOtherUserProfileView iOtherUserProfileView) {
+    OtherUserProfilePresenter(IOtherUserProfileView iOtherUserProfileView) {
         this.view = iOtherUserProfileView;
         otherUserProfileInteractor = new OtherUserProfileInteractor();
     }

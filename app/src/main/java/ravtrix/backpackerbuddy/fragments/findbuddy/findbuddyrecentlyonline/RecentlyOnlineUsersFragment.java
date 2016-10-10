@@ -37,6 +37,7 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private int currentSelectedDropdown;
+    private boolean firstTimeVisible;
 
     @Override
     public void onAttach(Context context) {
@@ -51,18 +52,31 @@ public class RecentlyOnlineUsersFragment extends Fragment {
         view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
 
+        firstTimeVisible = true;
         nearTxt.setText("Recently");
         city.setText("Online");
-        fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
 
-        fetchRecentlyOnlineUsers();
-
         return view;
+    }
 
+    /*
+     * Only fetch retrofit recently online users when this fragment becomes visible
+     * Note: Fragments in tab view-pagers are all called onCreateView()
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser && firstTimeVisible) {
+            firstTimeVisible = false;
+            fetchRecentlyOnlineUsers();
+        }
     }
 
     private void fetchRecentlyOnlineUsers() {
+        fragActivityProgressBarInterface.setProgressBarVisible();
+
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
                 .getRecentlyOnlineUsers()
                 .getRecentlyOnlineUsers(userLocalStore.getLoggedInUser().getUserID());
