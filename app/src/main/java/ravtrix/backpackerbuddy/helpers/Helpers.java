@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.helpers;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -175,5 +176,13 @@ public class Helpers {
                 }
             });
         }
+    }
+
+    public static boolean isBundleNull(Activity context) {
+        boolean isBundleNull = false;
+        if (context.getIntent().getExtras() == null) {
+            isBundleNull = true;
+        }
+        return isBundleNull;
     }
 }

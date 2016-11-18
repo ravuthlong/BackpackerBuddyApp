@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,9 +36,17 @@ public class FindBuddyTabFragment extends Fragment  {
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        new Handler().postDelayed(
+                new Runnable(){
+                    @Override
+                    public void run() {
+                        tabLayout.getTabAt(0).select();
+                    }
+                }, 100);
+
         return v;
     }
-
 
     private void setupViewPager(final ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
@@ -60,7 +69,7 @@ public class FindBuddyTabFragment extends Fragment  {
             public void onPageSelected(int position) {
                 FindBuddyNearFragment fragmentOne = (FindBuddyNearFragment) adapter.getItem(0);
                 RecentlyOnlineUsersFragment fragmentTwo = (RecentlyOnlineUsersFragment) adapter.getItem(1);
-                int currentSelectedDropdown = 0;
+                int currentSelectedDropdown;
 
                 // User currently viewing FindBuddyNearFragment
                 if (position == 0) {
@@ -72,8 +81,6 @@ public class FindBuddyTabFragment extends Fragment  {
                     currentSelectedDropdown = fragmentOne.getCurrentSelectedDropdown();
                     fragmentTwo.setCurrentSelectedDropdown(currentSelectedDropdown);
                 }
-
-                System.out.println("CURRENT SELECTED DROPDOWN!!!: " + currentSelectedDropdown);
             }
 
             @Override

@@ -7,7 +7,7 @@ package ravtrix.backpackerbuddy;
 // Keeps track how many picasso images have been loaded onto grid view
 public class Counter {
 
-    private int count = 0; // Indexing for array start at 0 so first item added should start at 0
+    private int count = -1; // Indexing for array start at -1 so first item added should start at -1
 
     public Counter() {}
     public Counter(int count) {
@@ -15,7 +15,7 @@ public class Counter {
     }
 
     public void setCount() {
-        this.count = 0;
+        this.count = -1;
     }
     public void addCount() {
         count++;

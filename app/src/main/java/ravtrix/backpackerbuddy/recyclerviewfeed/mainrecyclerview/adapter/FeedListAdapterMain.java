@@ -85,7 +85,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         this.loggedInUser = loggedInUser;
         this.fragActivityResetDrawer = (FragActivityResetDrawer) activity.getActivity();
         //this.onFinishedImageLoading = onFinishedImageLoading;
-        this.onLoadMoreListener=onLoadMoreListener;
+        this.onLoadMoreListener = onLoadMoreListener;
         backgroundImage = new BackgroundImage();
         this.feedItems = new ArrayList<>();
         counter = new Counter(0);
@@ -107,6 +107,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    // Add 10 more items to feed list
     public void addItemMore(List<FeedItem> feedTen){
         int currentSize = feedItems.size();
         this.feedItems.addAll(feedTen);
@@ -114,10 +115,23 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
+    public void resetAll() {
+        this.visibleThreshold = 1;
+        this.feedItems.clear();
+        this.onLoadMoreListener = null;
+        this.firstVisibleItem = 0;
+        this.visibleItemCount = 0;
+        this.totalItemCount = 0;
+    }
+
     public void setMoreLoading(boolean isMoreLoading) {
         this.isMoreLoading = isMoreLoading;
     }
 
+
+    /* Controlling of adding and removing spinner for loading more items in recycler view
+     * feedItem adds null so viewholder can inflate the spinner
+     */
     public void setProgressMore(final boolean isProgress) {
         if (isProgress) {
             new Handler().post(new Runnable() {
@@ -233,9 +247,19 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+
     @Override
     public int getItemViewType(int position) {
-        return feedItems.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        int viewType = 0;
+
+        if (feedItems.get(position) != null) {
+            viewType = VIEW_ITEM;
+        } else if (feedItems.get(position) == null && feedItems.size() >= 10) {
+            viewType = VIEW_PROG;
+        }
+
+        return viewType;
+        //return feedItems.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
@@ -293,25 +317,30 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager){
-        this.mLinearLayoutManager=linearLayoutManager;
+        this.mLinearLayoutManager = linearLayoutManager;
     }
 
     public void setRecyclerView(RecyclerView mView){
-        mView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = recyclerView.getChildCount();
-                totalItemCount = mLinearLayoutManager.getItemCount();
-                firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
-                if (!isMoreLoading && (totalItemCount - visibleItemCount)<= (firstVisibleItem + visibleThreshold)) {
-                    if (onLoadMoreListener != null) {
-                        onLoadMoreListener.onLoadMore();
+        System.out.println("SIZE IS : " + feedItems.size());
+
+        if (feedItems.size() >= 10) {
+            mView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    visibleItemCount = recyclerView.getChildCount();
+                    totalItemCount = mLinearLayoutManager.getItemCount();
+                    firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+                    if (!isMoreLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                        if (onLoadMoreListener != null) {
+                            System.out.println("CALLING LOAD MORE");
+                            onLoadMoreListener.onLoadMore();
+                        }
+                        isMoreLoading = true;
                     }
-                    isMoreLoading = true;
                 }
-            }
-        });
+            });
+        }
     }
 
     private void performFragTransaction(final CountryRecentFragment activity, final int navigationItem) {
@@ -323,7 +352,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                 fragActivityResetDrawer.onResetDrawer();
 
                 // Perform fragment replacement
-                fragmentManager = activity.getFragmentManager();
+                fragmentManager = activity.getParentFragment().getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
                         ((UserMainPage) activity.getActivity()).getFragList().get(navigationItem)).commit();
                 ((UserMainPage) activity.getActivity()).getDrawerLayout().closeDrawer(GravityCompat.START);
@@ -466,15 +495,12 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     /*
     private void checkPicassoFinished() {
         System.out.println("COUNTER: " + counter.getCount());
-        System.out.println("TOTAL COUNT:  " + getItemCount());
 
         // Let 15 be the recyclerview loading standard
         if (getItemCount() < 15) {
-                System.out.println("111111111");
                 onFinishedImageLoading.onFinishedImageLoading();
 
         } else {
-            System.out.println("222222222");
             if (counter.getCount() >= 15) { // Wait until at least 15 images load before displaying view
                 onFinishedImageLoading.onFinishedImageLoading();
             }

@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,9 +11,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -46,8 +49,8 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
     @BindView(R.id.main_swipe)protected WaveSwipeRefreshLayout waveSwipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
+    @BindView(R.id.tvNoInfo_FragUserCountries) protected TextView tvNoResult;
     private static final String TAG = CountryRecentFragment.class.getSimpleName();
-    private ProgressDialog progressDialog;
     private List<FeedItem> feedItems;
     private List<FeedItem> feedTen;
     private FeedListAdapterMain feedListAdapter;
@@ -56,9 +59,9 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     private FragActivityResetDrawer fragActivityResetDrawer;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
-    private long currentTime;
-    private int feedSize = 0;
+    private Bundle receivedQueryBundle;
     private LinearLayoutManager linearLayoutManager;
+    private boolean isUserRefresh = false;
 
     @Override
     public void onAttach(Context context) {
@@ -71,11 +74,13 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_usercountries, container, false);
+        view = inflater.inflate(R.layout.frag_usercountries_recent, container, false);
         view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
+        feedListAdapter = null;
+        userLocalStore = new UserLocalStore(getActivity());
         feedItems = new ArrayList<>();
         feedTen = new ArrayList<>();
         //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
@@ -86,26 +91,48 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
         setRefreshListener();
-        userLocalStore = new UserLocalStore(getContext());
         this.linearLayoutManager = new LinearLayoutManager(getActivity());
         floatingActionButton.setOnClickListener(this);
 
-        currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis();
         // If it's been a minute since last location update, do the update
         if (Helpers.timeDifInMinutes(currentTime,
                 userLocalStore.getLoggedInUser().getTime()) > 1) {
             Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
         }
-        retrieveUserCountryPostsRetrofit();
+
+        if (receivedQueryBundle != null) {
+            // Retrieve with filter
+            retrieveUserCountryFilteredPostsRetrofit(receivedQueryBundle.getInt("month"),
+                    receivedQueryBundle.getString("country"));
+        } else {
+            // Retrieve without filter (Newest posts)
+            retrieveUserCountryPostsRetrofit();
+        }
         handleFloatingButtonScroll(this.floatingActionButton);
         return view;
     }
 
-    // Remove distance spinner when user changes fragment
     @Override
-    public void onStop() {
-        super.onStop();
-        //dropdownToolbar.removeView(distance_spinner);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.toolbar_recent_posts, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.tbRecentPosts:
+
+                // Refresh recycler view for recent posts
+                feedListAdapter.resetAll();
+                retrieveUserCountryPostsRetrofit();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override
@@ -143,56 +170,95 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         });
     }
 
-    // Make retrofit call to retrieve user country list to populate the recycler view
+    // Make retrofit to retrieve user country posts with filter option to populate recycler view
+    private void retrieveUserCountryFilteredPostsRetrofit(int month, String country) {
+        Call<List<FeedItem>> filterRetrofit = RetrofitUserCountrySingleton.getRetrofitUserCountry()
+                .getFilteredPosts()
+                .getFilterdPosts(month, userLocalStore.getLoggedInUser().getUserID(), country);
+
+        filterRetrofit.enqueue(new Callback<List<FeedItem>>() {
+            @Override
+            public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
+                setRespondFeed(response);
+            }
+            @Override
+            public void onFailure(Call<List<FeedItem>> call, Throwable t) {
+                showErrorMessage();
+            }
+        });
+    }
+
+    // Make retrofit call to retrieve user country posts to populate recycler view
     private void retrieveUserCountryPostsRetrofit() {
 
         Call<List<FeedItem>> returnedFeed = RetrofitUserCountrySingleton.getRetrofitUserCountry()
                                             .getNotLoggedInCountryPosts()
-                                            .countryPosts(userLocalStore.getLoggedInUser().getUserID());
+                                            .countryPosts(
+                                                    userLocalStore.getLoggedInUser().getUserID());
         returnedFeed.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
-
-                // Set up array list of country feeds
-                feedItems =  response.body();
-
-                for (int i = 0; i < 10; i++) {
-                    feedTen.add(i, feedItems.get(i));
-                }
-
-                feedListAdapter = new FeedListAdapterMain(CountryRecentFragment.this,
-                        userLocalStore.getLoggedInUser().getUserID(), CountryRecentFragment.this);
-                feedListAdapter.setLinearLayoutManager(linearLayoutManager);
-                feedListAdapter.setRecyclerView(recyclerView);
-                feedListAdapter.addAll(feedTen);
-
-                setRecyclerView(feedListAdapter);
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                view.setVisibility(View.VISIBLE);
-                waveSwipeRefreshLayout.setRefreshing(false);
+                setRespondFeed(response);
             }
-
             @Override
             public void onFailure(Call<List<FeedItem>> call, Throwable t) {
-                System.out.println(t.getMessage());
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                view.setVisibility(View.VISIBLE);
-                waveSwipeRefreshLayout.setRefreshing(false);
+                showErrorMessage();
             }
         });
+    }
+
+    // Set up recycler view when the feed is received from Retrofit
+    private void setRespondFeed( Response<List<FeedItem>> response) {
+        // Set up array list of country feeds
+        feedTen.clear();
+        feedItems = response.body();
+        int loop = 0;
+
+        if (feedItems == null) {
+            this.waveSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+            this.tvNoResult.setVisibility(View.VISIBLE);
+            System.out.println(" NULL FEED ");
+        } else if (feedItems.size() < 11) {
+            loop = feedItems.size();
+        } else {
+            loop = 10;
+        }
+
+        for (int i = 0; i < loop; i++) {
+            feedTen.add(i, feedItems.get(i));
+        }
+
+        feedListAdapter = new FeedListAdapterMain(CountryRecentFragment.this,
+                userLocalStore.getLoggedInUser().getUserID(), CountryRecentFragment.this);
+
+        feedListAdapter.setLinearLayoutManager(linearLayoutManager);
+        feedListAdapter.addAll(feedTen);
+        feedListAdapter.setRecyclerView(recyclerView);
+
+        setRecyclerView(feedListAdapter);
+        fragActivityProgressBarInterface.setProgressBarInvisible();
+        view.setVisibility(View.VISIBLE);
+        waveSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void showErrorMessage() {
+        Helpers.displayToast(getContext(), "Error");
+        fragActivityProgressBarInterface.setProgressBarInvisible();
+        view.setVisibility(View.VISIBLE);
+        waveSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void setRecyclerView(FeedListAdapterMain feedListAdapter) {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapter);
         recyclerView.setLayoutManager(this.linearLayoutManager);
-
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        //this.feedListAdapter
 
         // Remove cache from Picasso so next time the page reloads the image and not use cache
         // Cache was used for recycler view scrolling only.
@@ -208,6 +274,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         // Listens for refresh
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
+                feedListAdapter.resetAll();
                 retrieveUserCountryPostsRetrofit();
             }
         });
@@ -216,6 +283,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @Override
     public void onLoadMore() {
 
+        // Load 10 more posts when the user reaches the bottom of the page
         feedListAdapter.setProgressMore(true);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -225,7 +293,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                 int start = feedListAdapter.getItemCount();
                 int end = start + 10; // ten more added
 
-                for (int i = start + 1; i < end; i++) {
+                for (int i = start; i < end; i++) {
                     if (i < feedItems.size()) {
                         feedTen.add(feedItems.get(i));
                     } else {
@@ -235,7 +303,13 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                 feedListAdapter.addItemMore(feedTen);
                 feedListAdapter.setMoreLoading(false);
             }
-        },2000);
+        }, 1000);
+    }
+
+    // Set bundle received from filter fragment
+    public void setReceivedQueryBundle(Bundle receivedQueryBundle) {
+        this.receivedQueryBundle = receivedQueryBundle;
+        System.out.println("BUNDLE RECEIVED: " + receivedQueryBundle.getString("country"));
     }
 }
 

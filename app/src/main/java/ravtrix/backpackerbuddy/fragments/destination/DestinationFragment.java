@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     private ProgressDialog progressDialog;
     private DestinationPresenter destinationPresenter;
     private Calendar c = Calendar.getInstance();
+    protected static Calendar dateTypeFrom, dateTypeUntil;
 
     @Nullable
     @Override
@@ -78,16 +80,23 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
         switch (item.getItemId()) {
             case R.id.submitSend:
+                // Submit destination
 
-                showProgressDialog();
-                HashMap<String, String> travelSpot = new HashMap<>();
-                travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                travelSpot.put("country", selectedCountry);
-                travelSpot.put("from", dateFrom);
-                travelSpot.put("until", dateTo);
+                if (destinationPresenter.isDateValid(dateTypeFrom, dateTypeUntil)) {
+                    // If date is valid. First date is before second date.
+                    showProgressDialog();
+                    HashMap<String, String> travelSpot = new HashMap<>();
+                    travelSpot.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                    travelSpot.put("country", selectedCountry);
+                    travelSpot.put("from", dateFrom);
+                    travelSpot.put("until", dateTo);
 
-                // call retrofit to insert travel spot
-                destinationPresenter.insertTravelRetrofit(travelSpot);
+                    // call retrofit to insert travel spot
+                    destinationPresenter.insertTravelRetrofit(travelSpot);
+                } else {
+                    Toast.makeText(getContext(), "Date from must be before Date until", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -163,6 +172,11 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
             String monthString = Integer.toString(monthOfYear);
             String dayString = Integer.toString(dayOfMonth);
 
+            dateTypeFrom = Calendar.getInstance();
+            dateTypeFrom.set(Calendar.DATE, Integer.valueOf(dayString));
+            dateTypeFrom.set(Calendar.MONTH, Integer.valueOf(monthString));
+            dateTypeFrom.set(Calendar.YEAR, Integer.valueOf(yearString));
+
             dateFrom = yearString + "-" + monthString + "-" + dayString;
         }
     }
@@ -183,6 +197,11 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
             String yearString = Integer.toString(year);
             String monthString = Integer.toString(monthOfYear);
             String dayString = Integer.toString(dayOfMonth);
+
+            dateTypeUntil = Calendar.getInstance();
+            dateTypeUntil.set(Calendar.DATE, Integer.valueOf(dayString));
+            dateTypeUntil.set(Calendar.MONTH, Integer.valueOf(monthString));
+            dateTypeUntil.set(Calendar.YEAR, Integer.valueOf(yearString));
 
             dateTo = yearString + "-" + monthString + "-" + dayString;
         }

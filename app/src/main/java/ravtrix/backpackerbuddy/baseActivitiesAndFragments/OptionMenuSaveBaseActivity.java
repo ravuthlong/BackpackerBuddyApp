@@ -17,5 +17,4 @@ public class OptionMenuSaveBaseActivity extends AppCompatActivity{
         menuInflater.inflate(R.menu.toolbar_save, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 }

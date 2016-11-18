@@ -69,6 +69,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
     private BroadcastReceiver broadcastReceiver;
+    private CountryTabFragment countryTabFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,15 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
                     userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
         }
+
+        // If bundle is not null. The filter fragment sent a bundle to update main
+        this.countryTabFragment = new CountryTabFragment();
+
+        if (!Helpers.isBundleNull(this)) {
+            // Pass bundle onto the tab fragment
+            this.countryTabFragment.setHasBundle(getIntent().getExtras());
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
         profilePic.setOnClickListener(this);
@@ -167,7 +177,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(new CountryTabFragment());
+        fragmentList.add(this.countryTabFragment);
         fragmentList.add(new FindBuddyTabFragment());
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new AUserCountryPostsFragment());

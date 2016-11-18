@@ -2,6 +2,8 @@ package ravtrix.backpackerbuddy.fragments.destination;
 
 import com.google.gson.JsonObject;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
@@ -38,5 +40,14 @@ class DestinationInteractor implements IDestinationInteractor {
                 onRetrofitDestinationListener.onFailure();
             }
         });
+    }
+
+    @Override
+    public boolean isDateValid(Calendar from, Calendar to) {
+
+        Date dateFrom = from.getTime();
+        Date dateUntil = to.getTime();
+
+        return dateUntil.after(dateFrom);
     }
 }

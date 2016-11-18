@@ -25,6 +25,12 @@ public class RetrofitUserCountriesInterfaces {
         Call<List<FeedItem>> countryPosts(@Query("userID") int userID);
     }
 
+    public interface GetFilteredPosts {
+        @GET("/fetchPostsWithFilter.php?month=[month]&userID=[userID]&country=[country]")
+        Call<List<FeedItem>> getFilterdPosts(@Query("month") int month, @Query("userID") int userID,
+                                             @Query("country") String country);
+    }
+
     public interface GetAUserCountryPosts {
         @GET("/fetchAUserPosts.php?userID=[userID]")
         Call<List<FeedItemAUserCountry>> getAUserCountryPosts(@Query("userID") int userID);

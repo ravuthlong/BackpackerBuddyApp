@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.destination;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -9,5 +10,6 @@ import java.util.HashMap;
 interface IDestinationPresenter {
 
     void insertTravelRetrofit(HashMap<String, String> travelSpot);
+    boolean isDateValid(Calendar from, Calendar to);
     void onDestroy();
 }

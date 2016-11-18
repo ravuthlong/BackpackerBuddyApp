@@ -38,8 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imgbEditPhoto"
-            android:layout_gravity="center"
-            android:background="@android:drawable/ic_menu_camera" />
+            android:background="@android:drawable/ic_menu_camera"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal" />
 
     </FrameLayout>
 

@@ -42,4 +42,8 @@ public class RetrofitUserCountries {
     public RetrofitUserCountriesInterfaces.UpdateTravelSpot updateTravelSpot() {
         return retrofit.create(RetrofitUserCountriesInterfaces.UpdateTravelSpot.class);
     }
+
+    public RetrofitUserCountriesInterfaces.GetFilteredPosts getFilteredPosts() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.GetFilteredPosts.class);
+    }
 }

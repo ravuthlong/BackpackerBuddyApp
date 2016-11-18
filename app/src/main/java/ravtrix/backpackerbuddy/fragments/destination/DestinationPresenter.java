@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.destination;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -31,6 +32,11 @@ class DestinationPresenter implements IDestinationPresenter {
                 view.showToastError();
             }
         });
+    }
+
+    @Override
+    public boolean isDateValid(Calendar from, Calendar to) {
+        return destinationInteractor.isDateValid(from, to);
     }
 
     @Override

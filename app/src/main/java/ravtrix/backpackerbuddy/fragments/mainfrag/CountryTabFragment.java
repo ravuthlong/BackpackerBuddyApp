@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.mainfrag;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,28 +24,54 @@ import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFra
  * Created by Ravinder on 10/9/16.
  */
 
-public class CountryTabFragment extends Fragment {
+public class CountryTabFragment extends Fragment implements OnSendBundleToRecentFragment {
 
     @BindView(R.id.viewpager) protected ViewPager viewPager;
     @BindView(R.id.tabs) protected TabLayout tabLayout;
+    private CountryTabFragment.ViewPagerAdapter adapter;
+    private CountryRecentFragment countryRecentFragment;
+    private CountryFilterFragment countryFilterFragment;
+    private Bundle bundle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_tabs, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
+        setRetainInstance(true);
+
+        this.countryRecentFragment = new CountryRecentFragment();
+        this.countryFilterFragment = new CountryFilterFragment();
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        if (this.bundle != null) {
+            this.countryRecentFragment.setReceivedQueryBundle(bundle);
+            adapter.changeTitle();
+            adapter.notifyDataSetChanged();
+        }
+
+        new Handler().postDelayed(
+                new Runnable(){
+                    @Override
+                    public void run() {
+                        tabLayout.getTabAt(0).select();
+                    }
+                }, 100);
         return v;
     }
 
-
+    public void setHasBundle(Bundle bundle) {
+        this.bundle = bundle;
+    }
+    // Set up the two tabs, one being the "Recent Posts" and the other being "Filter Tools"
     private void setupViewPager(final ViewPager viewPager) {
-        final CountryTabFragment.ViewPagerAdapter adapter = new CountryTabFragment.ViewPagerAdapter(getChildFragmentManager());
+        System.out.println("SETTING UP TABS");
+        adapter = new CountryTabFragment.ViewPagerAdapter(getChildFragmentManager());
 
-        adapter.addFragment(new CountryRecentFragment(), "Recent Posts");
-        adapter.addFragment(new CountryFilterFragment(), "Filter");
+        adapter.addFragment(this.countryRecentFragment, "Recent Posts");
+        adapter.addFragment(this.countryFilterFragment, "Filter Tools");
         viewPager.setAdapter(adapter);
     }
 
@@ -76,7 +103,29 @@ public class CountryTabFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
 
+        void changeTitle() {
+            adapter.mFragmentTitleList.set(0, "Filtered Posts");
+        }
     }
 
+    private String getFragmentTag(int viewPagerId, int fragmentPosition)
+    {
+        return "android:switcher:" + viewPagerId + ":" + fragmentPosition;
+    }
 
+    @Override
+    public void onSendBundleToRecentFragment(Bundle queryInfo) {
+
+        String fragmentTag = getFragmentTag(this.viewPager.getId(), 0);
+
+        //CountryRecentFragment fragmentOne = (CountryRecentFragment) this.adapter.getItem(0);
+        //CountryRecentFragment fragmentOne = (CountryRecentFragment) getFragmentManager().findFragmentByTag(fragmentTag);
+        //fragmentOne.setReceivedQueryBundle(queryInfo);
+        //fragmentOne.refreshPageWithFilterQuery();
+        //tabLayout.getTabAt(0).select();
+        //Intent intent = new Intent(getContext(), UserMainPage.class);
+
+        //startActivity(intent);
+        //System.out.println("I RECEIVED THAT " + queryInfo.getString("country"));
+    }
 }

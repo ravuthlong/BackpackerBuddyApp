@@ -41,7 +41,7 @@ public class AUserCountryPostsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.frag_usercountries, container, false);
+        view = inflater.inflate(R.layout.frag_usercountries_recent, container, false);
         //view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 

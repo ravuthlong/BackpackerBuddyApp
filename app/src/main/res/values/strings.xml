@@ -18,12 +18,34 @@
     <string name="sixThings">The six must haves in your backpack</string>
     <string name="personality">Describe your personality</string>
     <string name="idealDay">Your ideal backpacking day</string>
+    <string name="submitFilter">Submit Filter</string>
+    <string name="tbRecentPosts">Recent Posts</string>
 
     <string-array name="distance_DropDown">
         <item>25 miles</item>
         <item>50 miles</item>
         <item>100 miles</item>
         <item>200 miles</item>
+    </string-array>
+
+    <string-array name="distance_sort_DropDown">
+        <item>DESC</item>
+        <item>ASC</item>
+    </string-array>
+
+    <string-array name="month_DropDown">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
     <string-array name="countries">
