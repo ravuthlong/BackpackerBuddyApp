@@ -8,6 +8,7 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 # Some Noteable Tools Used </b>
 * MySQL for database </b>
 * Firebase Cloud Messaging for chat </b>
+* Google location service API </b>
 * Retrofit for REST client </b>
 * Picasso for image loading </b>
 * ButterKnife for view injection </b>
