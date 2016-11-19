@@ -1,7 +1,7 @@
 # Backpacker Buddy App
 
 BACKPACKER BUDDY App is my current Android project where solo travelers can connect with one another and plan a solo traveling trip together. </b>
-The user can sign up, create a personalized profile, see who's around them, who's recently online, chat and manage their accounts. </b>
+The user can sign up, create a personalized profile, post their traveling itineraries, see who's around them, who's recently online, who's going to be in which country at which date, chat and manage their accounts. </b>
 
 This personal project was inspired by my solo trip around Eastern Europe in June of 2016. :)
 
