@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.view.Gravity;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 
 /**
  * Created by Ravinder on 9/27/16.
@@ -37,7 +36,7 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
         }
         if (email.matches("")) {
             errorFields += "Missing Email \n";
-        } else if (!isEmailValid(email)) {
+        } else if (!Helpers.isEmailValid(email)) {
             errorFields += "Email is in invalid format (Ex. xxxx@xxx.xxx)\n";
         }
         if(!password.equals(etConfirmPassword)) {
@@ -70,20 +69,6 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
                 }
             });
         }
-    }
-
-    // Validate email input format
-    private static boolean isEmailValid(String email) {
-        boolean isValid = false;
-
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()) {
-            isValid = true;
-        }
-        return isValid;
     }
 
     // Validate password length, must be 6 or more

@@ -27,6 +27,12 @@ public class UserLocalStore {
         spEditor.apply();
     }
 
+    public void changeEmail(String newEmail) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putString("email", newEmail);
+        spEditor.apply();
+    }
+
     // Return current logged in user if exist
     public LoggedInUser getLoggedInUser() {
         int userID = userLocalDataStore.getInt("userID", 0);

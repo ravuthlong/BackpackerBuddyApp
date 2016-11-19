@@ -52,6 +52,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         messageButton.setOnClickListener(this);
         relativeLayout.setVisibility(View.INVISIBLE);
         setToolbar();
+        this.setTitle("User Profile");
         showProgressbar();
         fetchOtherUserProfile();
     }

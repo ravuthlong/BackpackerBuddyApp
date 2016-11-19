@@ -11,7 +11,7 @@ import retrofit2.Response;
  * Created by Ravinder on 9/28/16.
  */
 
-public class SignUpPart1Interactor implements ISignUpPart1Interactor {
+class SignUpPart1Interactor implements ISignUpPart1Interactor {
 
     @Override
     public void isUsernameTaken(String username, final OnRetrofitSignUp1 onRetrofitSignUp1) {

@@ -12,9 +12,9 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class EditPostInteractor implements IEditPostInteractor {
+class EditPostInteractor implements IEditPostInteractor {
 
-    public EditPostInteractor() {}
+    EditPostInteractor() {}
 
 
     @Override

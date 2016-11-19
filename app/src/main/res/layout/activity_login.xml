@@ -20,6 +20,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:paddingLeft="70dp"
+        android:paddingRight="70dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
@@ -30,14 +31,15 @@
             android:layout_height="wrap_content"
             float:fletPadding="10dp"
             android:layout_marginTop="10dp">
+
             <EditText
+                android:id="@+id/etLoggedInUsername"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:ems="10"
-                android:hint="Username"
-                android:paddingBottom="10dp"
-                android:id="@+id/etLoggedInUsername" />
+                android:hint="@string/username"
+                android:paddingBottom="10dp" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
@@ -45,13 +47,13 @@
             android:layout_height="wrap_content"
             float:fletPadding="10dp">
             <EditText
+                android:id="@+id/etLoggedInPassword"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:hint="Password"
-                android:paddingBottom="10dp"
-                android:id="@+id/etLoggedInPassword" />
+                android:hint="@string/password"
+                android:paddingBottom="10dp" />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
     </LinearLayout>
 

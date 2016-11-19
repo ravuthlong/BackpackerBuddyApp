@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
@@ -34,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Ravinder on 8/17/16.
  */
+
 public class Helpers {
 
     private Helpers() {}
@@ -42,6 +44,12 @@ public class Helpers {
         public static final String SERVER_URL = "http://backpackerbuddy.net23.net";
     }
 
+    /**
+     * Create a progress dialog object
+     * @param context       the context to display the dialog
+     * @param message       the message to be displayed
+     * @return              the progress dialog object
+     */
     public static ProgressDialog showProgressDialog(Context context, String message) {
         ProgressDialog pDialog = new ProgressDialog(context);
         pDialog.setMessage(message);
@@ -50,12 +58,20 @@ public class Helpers {
         return pDialog;
     }
 
+    /**
+     * Hide progress dialog
+     * @param pDialog       the progress dialog to be hidden
+     */
     public static void hideProgressDialog(ProgressDialog pDialog) {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
-    public static Retrofit retrofitBuilder(Retrofit retrofit, String serverURL)  {
+    /**
+     * Create a retrofit object
+     * @param serverURL       the url to the server
+     */
+    public static Retrofit retrofitBuilder(String serverURL)  {
 
         return new Retrofit.Builder()
                 .baseUrl(serverURL)
@@ -63,6 +79,11 @@ public class Helpers {
                 .build();
     }
 
+    /**
+     * Show an alert dialog
+     * @param context       the context to show alert dialog
+     * @param message       the message to be displayed
+     */
     public static void showAlertDialog(Context context, String message) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setMessage(message);
@@ -70,6 +91,14 @@ public class Helpers {
         dialogBuilder.show();
     }
 
+    /**
+     * Create an alert dialog with positive buttons
+     * @param activity      the activity for the dialog
+     * @param context       the context to show alert dialog
+     * @param message       the message to be displayed
+     * @param positive      the text for positive button
+     * @param negative      the text for negative button
+     */
     public static void showAlertDialogWithTwoOptions(final android.app.Activity activity, Context context, String message,
                                                      String positive, String negative) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
@@ -85,10 +114,22 @@ public class Helpers {
         dialogBuilder.show();
     }
 
+    /**
+     * Display a toast on the screen
+     * @param context       the context to display the toast
+     * @param string        the message to be diaplyed
+     */
     public static void displayToast(Context context, String string) {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Find the city name, given the latitude and longitude
+     * @param context       the context of the class
+     * @param latitude      the latitude of the location
+     * @param longitude     the longitude of the location
+     * @return              the city name
+     */
     public static String cityGeocoder(Context context, double latitude, double longitude) {
 
         Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
@@ -109,22 +150,22 @@ public class Helpers {
         return null;
     }
 
-    public static float distanceFromAtoBInFeet(double longitude1, double latitude1, double longitude2, double latitude2) {
-
-        Location location1 = new Location("");
-        location1.setLatitude(latitude1);
-        location1.setLongitude(longitude1);
-        Location location2 = new Location("");
-        location2.setLatitude(latitude2);
-        location2.setLongitude(longitude2);
-
-        return location1.distanceTo(location2);
-    }
-
+    /**
+     * Calculate the time difference between two given times
+     * @param currentTime       the current time
+     * @param timeBefore        the time before
+     * @return                  the difference
+     */
     public static long timeDifInMinutes(long currentTime, long timeBefore) {
         return TimeUnit.MILLISECONDS.toMinutes(currentTime - timeBefore);
     }
 
+    /**
+     * Update the location and time for a user in the backend
+     * @param context           the context of the class
+     * @param userLocalStore    the local information about the user
+     * @param currentTime       the current time
+     */
     public static void updateLocationAndTime(Context context, final UserLocalStore userLocalStore, final long currentTime) {
         new UserLocation(context, new UserLocationInterface() {
             @Override
@@ -159,13 +200,18 @@ public class Helpers {
         });
     }
 
+    /**
+     * Set the toolbar to an activity ot fragment
+     * @param appCompatActivity         the activity
+     * @param toolbar                   the toolbar for activity/fragment
+     */
     public static void setToolbar(final AppCompatActivity appCompatActivity, Toolbar toolbar) {
 
         appCompatActivity.setSupportActionBar(toolbar);
 
         if (appCompatActivity.getSupportActionBar() != null) {
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+            appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
 
         if (toolbar != null) {
@@ -178,11 +224,33 @@ public class Helpers {
         }
     }
 
+    /**
+     * Check if a bundle of a given context is null
+     * @param context       the context of the bundle
+     * @return              true is bundle is null, false if not
+     */
     public static boolean isBundleNull(Activity context) {
         boolean isBundleNull = false;
         if (context.getIntent().getExtras() == null) {
             isBundleNull = true;
         }
         return isBundleNull;
+    }
+
+    /**
+     * Check to see if the email is valid
+     * @param email         the email to be checked
+     * @return              true if email is valid, false if not
+     */
+    public static boolean isEmailValid(String email) {
+        boolean isValid = false;
+
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
     }
 }

@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greenBackground">
 
-    <include android:id="@+id/toolbar_main"
+    <include
+        android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" />
 
     <Button
-        android:id="@+id/btn1"
-        android:text="Password"
+        android:id="@+id/bPassword"
+        android:text="@string/password"
         android:textAllCaps="false"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="#b4d8c3"
         android:textAlignment="textStart"
         android:layout_gravity="start"
-        android:layout_below="@+id/btn2"
+        android:layout_below="@+id/bEmail"
         android:paddingLeft="10dp"
         android:paddingRight="0dp"
         android:textSize="15sp" />
 
     <Button
+        android:id="@+id/button2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
         android:textAllCaps="false"
         android:background="#b4d8c3"
-        android:text="Notification"
+        android:text="@string/txtNotification"
         android:textAlignment="textStart"
         android:layout_gravity="start"
-        android:layout_below="@+id/btn1"
+        android:layout_below="@+id/bPassword"
         android:layout_marginTop="52dp"
         android:paddingLeft="10dp"
         android:paddingRight="0dp"
         android:textSize="15sp" />
 
     <Button
+        android:id="@+id/button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Send feedback"
-        android:id="@+id/button"
+        android:text="@string/txtFeedback"
         android:textAllCaps="false"
         android:textAlignment="textStart"
         android:layout_gravity="start"
@@ -54,10 +56,10 @@
         android:textSize="15sp" />
 
     <Button
+        android:id="@+id/bSignOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:id="@+id/bSignOut"
+        android:text="@string/txtSignOut"
         android:textAllCaps="false"
         android:textAlignment="textStart"
         android:layout_gravity="start"
@@ -69,13 +71,13 @@
         android:textSize="15sp" />
 
     <Button
+        android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="About"
+        android:text="@string/txtAbout"
         android:textAlignment="textStart"
         android:layout_gravity="start"
         android:textAllCaps="false"
-        android:id="@+id/button3"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#b4d8c3"
@@ -84,11 +86,10 @@
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/btn2"
+        android:id="@+id/bEmail"
         android:paddingLeft="10dp"
         android:paddingRight="0dp"
-
-        android:text="Email Address"
+        android:text="@string/email"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#b4d8c3"
@@ -100,6 +101,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="15sp" />
-
-
 </RelativeLayout>

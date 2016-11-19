@@ -11,10 +11,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/AppToolbar"
         android:background="#4a6b43">
 
     </android.support.v7.widget.Toolbar>
-
-
 </android.support.design.widget.CoordinatorLayout>
 

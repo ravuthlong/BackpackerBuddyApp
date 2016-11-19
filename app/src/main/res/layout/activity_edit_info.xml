@@ -9,22 +9,21 @@
     android:background="@color/greenLighter"
     tools:context=".activities.editinfo.EditInfoActivity">
 
-    <include android:id="@+id/toolbar_main"
+    <include
+        android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
     </include>
-
 
 <ScrollView
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fillViewport="false">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/greenLighter"
         tools:context=".activities.editinfo.EditInfoActivity">
 
@@ -41,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|top"
-                android:text="Info"
+                android:text="@string/info"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </FrameLayout>
 
@@ -54,12 +53,13 @@
             android:layout_below="@+id/frameLayout2"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@android:color/transparent"
+            android:background="#32FFFFFF"
             android:gravity="top|left"
             android:inputType="textMultiLine"
             android:maxLines="10"
             android:scrollbars="vertical"
-            android:hint="Info" />
+            android:hint="@string/info"
+            android:padding="5dp" />
     </RelativeLayout>
 </ScrollView>
-    </LinearLayout>
+</LinearLayout>

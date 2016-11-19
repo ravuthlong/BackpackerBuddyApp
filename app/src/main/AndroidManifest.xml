@@ -69,29 +69,32 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editpost.EditPostActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <service
             android:name=".fcm.FirebaseMessagingService"
             android:exported="false">
-        <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-        </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
         </service>
-
         <service
             android:name=".fcm.FirebaseIDService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <activity android:name=".activities.signup3.SignUpPart3Activity" />
         <activity
             android:name=".ConversationActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activities.ChangeEmail"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.ChangePassword"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

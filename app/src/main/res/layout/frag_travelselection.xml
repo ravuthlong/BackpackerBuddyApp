@@ -2,14 +2,13 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/greenBackground">
 
@@ -19,7 +18,8 @@
         android:layout_height="fill_parent"
         android:background="@color/greenLighter"
         android:layout_margin="30dp"
-        android:paddingLeft="20dp">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -28,21 +28,20 @@
             android:layout_marginTop="20dp">
 
             <TextView
+                android:id="@+id/tvCountry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Country"
-                android:id="@+id/tvCountry"
-                android:textSize="22dp"
+                android:text="@string/country"
+                android:textSize="22sp"
                 android:typeface="sans" />
 
             <Spinner
+                android:id="@+id/spinnerCountries"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerCountries"
                 android:spinnerMode="dialog"
                 android:layout_gravity="center_horizontal" />
-
         </LinearLayout>
 
         <TableLayout
@@ -56,18 +55,18 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/tvArrival"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="From"
-                    android:id="@+id/tvArrival"
-                    android:textSize="20dp" />
+                    android:text="@string/from"
+                    android:textSize="20sp" />
 
                 <TextView
+                    android:id="@+id/tvDateArrival"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Select Date of Arrival"
-                    android:id="@+id/tvDateArrival"
+                    android:text="@string/dateOfArrival"
                     android:background="#ffffff"
                     android:layout_marginTop="45dp"
                     android:layout_gravity="center_horizontal"
@@ -80,19 +79,19 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Until"
-                    android:id="@+id/textView"
-                    android:textSize="20dp"
+                    android:text="@string/until"
+                    android:textSize="20sp"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
+                    android:id="@+id/tvDateLeave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Select Date of Leave"
-                    android:id="@+id/tvDateLeave"
+                    android:text="@string/dateOfLeave"
                     android:background="#ffffff"
                     android:layout_column="4"
                     android:layout_marginLeft="20dp" />
@@ -114,11 +113,11 @@
                 android:layout_marginTop="10dp">
 
                 <EditText
+                    android:id="@+id/editText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/editText"
                     android:inputType="textMultiLine"
-                    android:hint="Additional information"
+                    android:hint="@string/additionInfo"
                     android:background="@drawable/edit_text_border"
                     android:layout_gravity="left|top"
                     android:maxLength="250"
@@ -127,7 +126,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 </LinearLayout>
 </ScrollView>

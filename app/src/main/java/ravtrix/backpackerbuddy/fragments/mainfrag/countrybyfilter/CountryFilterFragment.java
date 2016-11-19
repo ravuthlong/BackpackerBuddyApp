@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
-import ravtrix.backpackerbuddy.fragments.mainfrag.OnSendBundleToRecentFragment;
 
 /**
  * Created by Ravinder on 10/9/16.
@@ -26,8 +25,6 @@ import ravtrix.backpackerbuddy.fragments.mainfrag.OnSendBundleToRecentFragment;
 public class CountryFilterFragment extends Fragment {
     @BindView(R.id.frag_filter_spinnerCountry) protected Spinner spinnerCountry;
     @BindView(R.id.frag_filter_spinnerMonth) protected Spinner spinnerMonth;
-    @BindView(R.id.frag_filter_spinnerDistance) protected Spinner spinnerDistance;
-    private OnSendBundleToRecentFragment onSendBundleToRecentFragment;
     private Bundle queryBundle;
 
     @Nullable
@@ -51,19 +48,7 @@ public class CountryFilterFragment extends Fragment {
         spinnerAdapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMonth.setAdapter(spinnerAdapterMonth);
 
-        ArrayAdapter spinnerAdapterDistance = ArrayAdapter.createFromResource(getContext(),
-                R.array.distance_sort_DropDown,
-                android.R.layout.simple_spinner_item);
-        spinnerAdapterDistance.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDistance.setAdapter(spinnerAdapterDistance);
-
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.onSendBundleToRecentFragment = (OnSendBundleToRecentFragment) getParentFragment();
     }
 
     @Override
@@ -137,7 +122,6 @@ public class CountryFilterFragment extends Fragment {
                 Intent intent = new Intent(getContext(), UserMainPage.class);
                 intent.putExtra("country", spinnerCountry.getSelectedItem().toString());
                 intent.putExtra("month", month);
-                intent.putExtra("distance", spinnerDistance.getSelectedItem().toString());
                 startActivity(intent);
 
 

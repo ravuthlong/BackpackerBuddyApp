@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
     <TextView
-        android:text="No post matching search"
+        android:id="@+id/frag_userinbox_recyclerView"
+        android:text="@string/noPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvNoInfo_FragUserCountries"
         android:visibility="gone"
         android:gravity="center_vertical|center_horizontal"
         android:layout_gravity="center_vertical"
         android:textSize="18sp" />
 
     <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+        android:id="@+id/main_swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_swipe">
+        android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/greenBackground"
-            android:choiceMode="singleChoice"
-            android:id="@+id/postRecyclerView1"
-            android:layout_gravity='start'
-            >
+        android:id="@+id/postRecyclerView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greenBackground"
+        android:choiceMode="singleChoice"
+        android:layout_gravity='start' >
 
     </android.support.v7.widget.RecyclerView>
     </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
-
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/fab_add"
         app:fabSize="normal"
-        app:backgroundTint="@color/green"
-        android:id="@+id/bFloatingActionButton" />
+        app:backgroundTint="@color/green" />
 
 </android.support.design.widget.CoordinatorLayout>

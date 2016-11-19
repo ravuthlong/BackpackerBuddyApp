@@ -49,4 +49,12 @@ public class RetrofitUserInfo {
     public RetrofitUserInfoInterfaces.IsUsernameTaken isUsernameTaken() {
         return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameTaken.class);
     }
+
+    public RetrofitUserInfoInterfaces.ChangePassword changePassword() {
+        return retrofit.create(RetrofitUserInfoInterfaces.ChangePassword.class);
+    }
+
+    public RetrofitUserInfoInterfaces.ChangeEmail changeEmail() {
+        return retrofit.create(RetrofitUserInfoInterfaces.ChangeEmail.class);
+    }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_change_email"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greenBackground"
+    tools:context="ravtrix.backpackerbuddy.activities.ChangeEmail">
+
+    <include
+        android:id="@+id/toolbar_main"
+        layout="@layout/frag_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
+    </include>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greenLighter"
+        android:layout_margin="15dp"
+        android:paddingTop="20dp">
+
+        <EditText
+            android:id="@+id/tvEmail_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:background="#B5CCBB"
+            android:padding="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+        <EditText
+            android:id="@+id/tvPassword_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:hint="@string/passwordHint"
+            android:background="#B5CCBB"
+            android:padding="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginTop="50dp" />
+
+    </LinearLayout>
+</LinearLayout>

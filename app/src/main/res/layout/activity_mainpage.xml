@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#68a390">
 
@@ -12,25 +14,26 @@
         android:layout_marginLeft="10dp">
 
         <TextView
+            android:id="@+id/tvBackpacker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Backpacker "
-            android:id="@+id/tvBackpacker"
+            android:text="@string/backpacker"
             android:layout_gravity="center" />
 
         <TextView
+            android:id="@+id/tvBuddy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Buddy"
-            android:id="@+id/tvBuddy"
+            android:text="@string/buddy"
             android:layout_gravity="center_horizontal" />
 
         <ImageView
+            android:id="@+id/imageView"
+            android:contentDescription="@string/app_name"
             android:layout_width="140dp"
             android:layout_height="150dp"
-            android:id="@+id/imageView"
             android:layout_gravity="center_horizontal|top"
             android:background="@drawable/backpack"
             android:layout_marginTop="20dp" />
@@ -46,28 +49,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-
         <ImageButton
+            android:id="@+id/imgbLogIn"
+            android:contentDescription="@string/login"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:id="@+id/imgbLogIn"
             android:background="@drawable/login"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp" />
 
         <ImageButton
+            android:id="@+id/imgbSignUp"
+            android:contentDescription="@string/signUp"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:id="@+id/imgbSignUp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/signup"
-            android:layout_alignTop="@+id/imgbLogIn"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp" />
 
-
-
     </LinearLayout>
-
 </RelativeLayout>

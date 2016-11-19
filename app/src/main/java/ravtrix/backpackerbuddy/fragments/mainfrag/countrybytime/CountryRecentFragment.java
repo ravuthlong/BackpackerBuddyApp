@@ -123,7 +123,8 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
 
         switch (item.getItemId()) {
             case R.id.tbRecentPosts:
-
+                this.waveSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                this.tvNoResult.setVisibility(View.INVISIBLE);
                 // Refresh recycler view for recent posts
                 feedListAdapter.resetAll();
                 retrieveUserCountryPostsRetrofit();
@@ -131,7 +132,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -148,7 +148,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         }
     }
 
-
     // Hide floating action button on scroll down and show on scroll up
     private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {
         this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -158,7 +157,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                     floatingActionButton.hide();
                 }
             }
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 
@@ -217,7 +215,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         if (feedItems == null) {
             this.waveSwipeRefreshLayout.setVisibility(View.INVISIBLE);
             this.tvNoResult.setVisibility(View.VISIBLE);
-            System.out.println(" NULL FEED ");
+            //System.out.println(" NULL FEED ");
         } else if (feedItems.size() < 11) {
             loop = feedItems.size();
         } else {

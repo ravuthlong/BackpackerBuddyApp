@@ -19,6 +19,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @BindView(R.id.bSignOut) protected Button bSignOut;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.bPassword) protected Button bChangePassword;
+    @BindView(R.id.bEmail) protected Button bChangeEmail;
+
     private UserLocalStore userLocalStore;
 
     @Override
@@ -29,8 +32,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        this.setTitle("settings");
 
         bSignOut.setOnClickListener(this);
+        bChangePassword.setOnClickListener(this);
+        bChangeEmail.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
 
     }
@@ -43,6 +49,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 userLocalStore.clearUserData();
                 startActivity(new Intent(this, WelcomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                break;
+            case R.id.bPassword:
+                startActivity(new Intent(this, ChangePassword.class));
+                break;
+            case R.id.bEmail:
+                startActivity(new Intent(this, ChangeEmail.class));
+                break;
+            default:
+                break;
         }
     }
 

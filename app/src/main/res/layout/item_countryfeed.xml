@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:ools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,11 +9,11 @@
     android:layout_height="150dp">
 
     <LinearLayout
+        android:id="@+id/backgroundLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="#859f97"
-        android:id="@+id/backgroundLayout"
         android:clickable="true">
 
         <RelativeLayout
@@ -32,10 +33,9 @@
                 android:layout_toStartOf="@+id/tvFromDate" />
 
             <ImageButton
-                android:layout_width="60dp"
                 android:id="@+id/imageButtonStar"
+                android:layout_width="60dp"
                 android:background="@drawable/button_green"
-
                 android:src="@drawable/ic_star_border_white_36dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
@@ -43,8 +43,8 @@
                 android:layout_height="74dp" />
 
             <ImageButton
-                android:layout_width="60dp"
                 android:id="@+id/imageButtonMail"
+                android:layout_width="60dp"
                 android:background="@drawable/button_green"
                 android:src="@drawable/ic_mail_outline_white_36dp"
                 android:layout_alignParentTop="true"
@@ -92,9 +92,9 @@
                 android:layout_marginTop="4dp" />
 
             <TextView
+                android:id="@+id/tvToDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvToDate"
                 android:gravity="center"
                 android:textSize="17sp"
                 android:textColor="#000000"
@@ -109,10 +109,10 @@
                 android:layout_toEndOf="@+id/tvArrow" />
 
             <TextView
+                android:id="@+id/tvArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dash"
-                android:id="@+id/tvArrow"
                 android:textSize="17sp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
@@ -125,11 +125,10 @@
                 android:layout_toRightOf="@+id/tvFromDate"
                 android:layout_toEndOf="@+id/tvFromDate" />
 
-
             <ImageButton
+                android:id="@+id/imgbEditPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imgbEditPost"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -152,10 +151,6 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp" />
             </LinearLayout>
-
-
         </RelativeLayout>
     </LinearLayout>
-
-
 </LinearLayout>

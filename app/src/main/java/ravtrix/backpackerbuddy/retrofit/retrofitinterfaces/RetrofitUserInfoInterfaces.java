@@ -67,6 +67,18 @@ public class RetrofitUserInfoInterfaces {
         @GET("/checkUsernameTaken.php?username=[username]")
         Call<JsonObject> isUsernameTaken(@Query("username") String username);
     }
+
+    public interface ChangePassword {
+        @FormUrlEncoded
+        @POST("/changePassword.php")
+        Call<JsonObject> changePassword(@FieldMap HashMap<String, String> user);
+    }
+
+    public interface ChangeEmail {
+        @FormUrlEncoded
+        @POST("/changeEmail.php")
+        Call<JsonObject> changeEmail(@FieldMap HashMap<String, String> user);
+    }
 }
 
 

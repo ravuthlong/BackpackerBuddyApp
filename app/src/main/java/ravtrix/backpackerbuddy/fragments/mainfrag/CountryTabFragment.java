@@ -24,7 +24,7 @@ import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFra
  * Created by Ravinder on 10/9/16.
  */
 
-public class CountryTabFragment extends Fragment implements OnSendBundleToRecentFragment {
+public class CountryTabFragment extends Fragment {
 
     @BindView(R.id.viewpager) protected ViewPager viewPager;
     @BindView(R.id.tabs) protected TabLayout tabLayout;
@@ -108,24 +108,4 @@ public class CountryTabFragment extends Fragment implements OnSendBundleToRecent
         }
     }
 
-    private String getFragmentTag(int viewPagerId, int fragmentPosition)
-    {
-        return "android:switcher:" + viewPagerId + ":" + fragmentPosition;
-    }
-
-    @Override
-    public void onSendBundleToRecentFragment(Bundle queryInfo) {
-
-        String fragmentTag = getFragmentTag(this.viewPager.getId(), 0);
-
-        //CountryRecentFragment fragmentOne = (CountryRecentFragment) this.adapter.getItem(0);
-        //CountryRecentFragment fragmentOne = (CountryRecentFragment) getFragmentManager().findFragmentByTag(fragmentTag);
-        //fragmentOne.setReceivedQueryBundle(queryInfo);
-        //fragmentOne.refreshPageWithFilterQuery();
-        //tabLayout.getTabAt(0).select();
-        //Intent intent = new Intent(getContext(), UserMainPage.class);
-
-        //startActivity(intent);
-        //System.out.println("I RECEIVED THAT " + queryInfo.getString("country"));
-    }
 }
