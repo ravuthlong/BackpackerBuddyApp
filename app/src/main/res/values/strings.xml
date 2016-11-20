@@ -28,7 +28,7 @@
     <string name="month">Month</string>
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
-    <string name="detailFour">No ideal day? Let's ask them.</string>
+    <string name="detailFour">No ideal day? Let\'s ask them.</string>
     <string name="detailTwo">No information about their must haves.</string>
     <string name="noPost">No post matching search</string>
     <string name="txtNotification">Notification</string>
@@ -52,7 +52,7 @@
     <string name="title_activity_travel_selection">TravelSelection</string>
     <string name="hntMessage">Type message here</string>
     <string name="until">Until</string>
-    <string name="detailThree">User doesn't seem to have a personality. Ask them.</string>
+    <string name="detailThree">User doesn\'t seem to have a personality. Ask them.</string>
     <string name="detailOne">User did not fill details out. Ask them.</string>
     <string name="username">Username</string>
     <string name="idealDay">Your ideal backpacking day</string>

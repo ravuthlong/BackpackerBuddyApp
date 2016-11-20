@@ -12,7 +12,7 @@ public class RetrofitUserCountries {
     private Retrofit retrofit;
 
     public RetrofitUserCountries() {
-        retrofit = Helpers.retrofitBuilder(this.retrofit, Helpers.ServerURL.SERVER_URL);
+        retrofit = Helpers.retrofitBuilder(Helpers.ServerURL.SERVER_URL);
     }
 
     public RetrofitUserCountriesInterfaces.GetNotLoggedInCountryPosts getNotLoggedInCountryPosts() {

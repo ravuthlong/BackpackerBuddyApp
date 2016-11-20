@@ -12,7 +12,7 @@ public class RetrofitUserChat {
     private Retrofit retrofit;
 
     public RetrofitUserChat() {
-        retrofit = Helpers.retrofitBuilder(this.retrofit, Helpers.ServerURL.SERVER_URL);
+        retrofit = Helpers.retrofitBuilder(Helpers.ServerURL.SERVER_URL);
     }
 
     public RetrofitUserChatInterfaces.InsertNewChat insertNewChat() {

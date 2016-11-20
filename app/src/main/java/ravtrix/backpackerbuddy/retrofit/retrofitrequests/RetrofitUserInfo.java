@@ -11,7 +11,7 @@ public class RetrofitUserInfo {
     private Retrofit retrofit;
 
     public RetrofitUserInfo() {
-        retrofit = Helpers.retrofitBuilder(this.retrofit, Helpers.ServerURL.SERVER_URL);
+        retrofit = Helpers.retrofitBuilder(Helpers.ServerURL.SERVER_URL);
     }
 
     public RetrofitUserInfoInterfaces.LogUserIn loggedInUser() {
@@ -56,5 +56,9 @@ public class RetrofitUserInfo {
 
     public RetrofitUserInfoInterfaces.ChangeEmail changeEmail() {
         return retrofit.create(RetrofitUserInfoInterfaces.ChangeEmail.class);
+    }
+
+    public RetrofitUserInfoInterfaces.InsertNotificationToken insertNotificationToken() {
+        return retrofit.create(RetrofitUserInfoInterfaces.InsertNotificationToken.class);
     }
 }

@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true">
 
     <TextView
-        android:id="@+id/frag_userinbox_recyclerView"
+        android:id="@+id/tvNoInfo_FragUserCountries"
         android:text="@string/noPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

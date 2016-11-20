@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
@@ -80,6 +82,10 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         }
     }
 
+
+    /**
+     * Sign user up with information provided by the user during the sign up process
+     */
     private void signUserUp() {
 
         showProgressBar();
@@ -123,11 +129,19 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("userpic", encodedImage);
         long currentTime = System.currentTimeMillis();
         userInfo.put("time", Long.toString(currentTime));
+        userInfo.put("token", getFCMToken());
 
         // Make Retrofit call to communicate with the server
         signUpPart3Presenter.retrofitStoreUser(userInfo);
     }
 
+    /**
+     * Get Notification token from fire base
+     * @return the token
+     */
+    String getFCMToken() {
+        return FirebaseInstanceId.getInstance().getToken();
+    }
 
     @Override
     public void startUserMainPage() {

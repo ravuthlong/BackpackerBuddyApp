@@ -4,9 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="180dp"
     android:background="@android:color/transparent"
-    android:orientation="vertical"
-    >
-
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -19,10 +17,9 @@
             android:id="@+id/bEditPost"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:text="Edit Post"
+            android:text="@string/editPost"
             android:textColor="#000000"
             android:visibility="gone" />
 
@@ -32,28 +29,22 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:text="Delete Post"
+            android:text="@string/deletePost"
             android:textColor="#000000"
             android:visibility="gone" />
-
-
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="55dp">
-
         <Button
             android:id="@+id/bReportPost"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-
-            android:text="Report"
+            android:text="@string/report"
             android:textColor="#AB0000"
             android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>
-
-
 </LinearLayout>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -81,7 +82,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         //Check for Google Play Services APK
         //If the device doesn’t have a compatible Google Play services APK, your app can call GooglePlayServicesUtil.getErrorDialog()
-
         //checkRuntimePermissionAvail();
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -115,6 +115,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         screenStartUpState();
         setNavigationDrawerIcons();
         toggleListener();
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        System.out.println("TOKEN IS: " + token);
+
     }
 
     @Override
@@ -318,76 +322,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         this.userHitHome = true;
     }
 
-    // Stop location service
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        /*
-        System.out.println("I'M DESTROYED");
-        Intent intent = new Intent(getApplicationContext(), LocationService.class);
-        stopService(intent);
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-        }*/
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
-
-        /*
-        if (broadcastReceiver == null) {
-            broadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    final Double receivedLongitude = intent.getDoubleExtra("longitude",
-                            userLocalStore.getLoggedInUser().getLongitude());
-                    final Double receivedLatitude = intent.getDoubleExtra("latitude",
-                            userLocalStore.getLoggedInUser().getLatitude());
-
-                    Float distanceDifferenceInMeters = Helpers.distanceFromAtoBInFeet(receivedLongitude, receivedLatitude,
-                            userLocalStore.getLoggedInUser().getLongitude(), userLocalStore.getLoggedInUser().getLatitude());
-
-                    // If received user location is greater than 30 meters from last location then update
-                    // Otherwise, do not update
-                    if (distanceDifferenceInMeters > 0.2) {
-                        System.out.println("UPDATING");
-                        HashMap<String, String> locationHash = new HashMap<>();
-                        locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                        locationHash.put("longitude", Double.toString(receivedLongitude));
-                        locationHash.put("latitude", Double.toString(receivedLatitude));
-                        locationHash.put("time", Long.toString(System.currentTimeMillis()));
-
-                        Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
-                        jsonObjectCall.enqueue(new Callback<JsonObject>() {
-                            @Override
-                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                                // Reset local storage of user also after server-side update
-                                LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
-                                        userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                                        userLocalStore.getLoggedInUser().getUserImageURL(), receivedLatitude, receivedLongitude,
-                                        userLocalStore.getLoggedInUser().getTime());
-                                userLocalStore.clearUserData();
-                                userLocalStore.storeUserData(loggedInUser);
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                            }
-                        });
-                    }
-
-                    System.out.println("RECEIVED LONGITUDE AND LATITUDE: " +
-                            intent.getExtras().get("longitude") + " and " + intent.getExtras().get("latitude"));
-                    System.out.println("THIS MANY METER AWAY: " + distanceDifferenceInMeters);
-                }
-            };
-        }
-        registerReceiver(broadcastReceiver, new IntentFilter("locationUpdate"));
-            */
 
         refreshProfilePic = !userHitHome;
 

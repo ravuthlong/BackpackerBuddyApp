@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/item_inboxFeed_relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/item_inboxFeed_relativeLayout"
         android:background="@color/greenLighter"
         android:padding="12dp">
 
-
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_countryFeed_profileImage"
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:id="@+id/item_countryFeed_profileImage"
             android:src="@drawable/default_photo" />
 
         <TextView
-            android:text="Username"
+            android:id="@+id/item_inboxFeed_username"
+            android:text="@string/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -27,27 +27,24 @@
             android:layout_toEndOf="@+id/item_countryFeed_profileImage"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:id="@+id/item_inboxFeed_username"
             android:textSize="17sp" />
 
         <TextView
-            android:text="TextView"
+            android:id="@+id/item_inboxFeed_lastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/item_inboxFeed_username"
             android:layout_alignStart="@+id/item_inboxFeed_username"
-            android:id="@+id/item_inboxFeed_lastMessage"
             android:layout_below="@+id/item_inboxFeed_username"
             android:textSize="13sp" />
 
         <TextView
-            android:text="Sep 9"
+            android:id="@+id/item_inboxFeed_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/grayHint"
-            android:id="@+id/item_inboxFeed_time" />
+            android:textColor="@color/grayHint" />
     </RelativeLayout>
 </LinearLayout>

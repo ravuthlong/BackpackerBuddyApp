@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -16,13 +15,12 @@ import com.squareup.leakcanary.LeakCanary;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.WelcomeActivity;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.retrofit.retrofitrequests.RetrofitUserInfo;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -33,7 +31,6 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     @BindView(R.id.toolbarLogIn) protected  Toolbar toolbar;
     private UserLocalStore userLocalStore;
-    private RetrofitUserInfo retrofitUser;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
 
@@ -43,11 +40,10 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         LeakCanary.install(getApplication());
         setContentView(R.layout.activity_login);
 
-        setToolbar();
+        Helpers.setToolbar(this, toolbar);
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
-        retrofitUser = new RetrofitUserInfo();
     }
 
     @Override
@@ -62,7 +58,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         }
     }
 
-    /*
+    /**
      * Log user in if right credentials given by the user
      * Animate bouncing effect if the field is empty
      */
@@ -126,25 +122,5 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, WelcomeActivity.class));
-    }
-
-    private void setToolbar() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
     }
 }
