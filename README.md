@@ -15,7 +15,7 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 * ButterKnife for view injection </b>
 
 
-Images below are screenshot of project in progress. This is not the final version.
+Images below are screenshots of project in progress. This is not the final version.
 ![Alt text](http://i.imgur.com/GOhWzZj.png)
 ![Alt text](http://i.imgur.com/5wTCuTM.png)
 ![Alt text](http://i.imgur.com/aVWfklf.png)
