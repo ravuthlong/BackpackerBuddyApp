@@ -89,7 +89,7 @@
 
         <activity android:name=".activities.signup3.SignUpPart3Activity" />
         <activity
-            android:name=".ConversationActivity"
+            android:name=".activities.chat.ConversationActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activities.ChangeEmail"
             android:screenOrientation="portrait" />

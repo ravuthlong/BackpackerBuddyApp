@@ -11,17 +11,18 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class LogInInteractor implements ILogInInteractor {
+class LogInInteractor implements ILogInInteractor {
 
-    public LogInInteractor() {}
+    LogInInteractor() {}
 
     @Override
-    public void logInRetrofit(String username, String password, final OnRetrofitLogInListener onRetrofitLogInListener) {
+    public void logInRetrofit(String username, String password, String token, final OnRetrofitLogInListener onRetrofitLogInListener) {
 
         // Prepare HashMap of username and password to send to retrofit call
         HashMap<String, String> arguments = new HashMap<>();
         arguments.put("username", username);
         arguments.put("password", password);
+        arguments.put("token", token);
 
         Call<LoggedInUser> responseUser = RetrofitUserInfoSingleton.getRetrofitUserInfo().loggedInUser().userInfo(arguments);
         responseUser.enqueue(new Callback<LoggedInUser>() {

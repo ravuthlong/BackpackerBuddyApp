@@ -23,4 +23,8 @@ public class RetrofitUserChat {
         return retrofit.create(RetrofitUserChatInterfaces.FetchUserInbox.class);
     }
 
+    public RetrofitUserChatInterfaces.SendNotification sendNotification() {
+        return retrofit.create(RetrofitUserChatInterfaces.SendNotification.class);
+    }
+
 }

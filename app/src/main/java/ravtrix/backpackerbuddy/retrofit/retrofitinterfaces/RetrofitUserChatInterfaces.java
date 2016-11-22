@@ -28,4 +28,10 @@ public class RetrofitUserChatInterfaces {
         @GET("/fetchUserChat.php?userID=[userID]")
         Call<List<FeedItemInbox>> fetchUserInbox(@Query("userID") int userID);
     }
+
+    public interface SendNotification {
+        @FormUrlEncoded
+        @POST("/sendNotification.php")
+        Call<JsonObject> sendNotification(@Field("userID") int userID, @Field("message") String message);
+    }
 }

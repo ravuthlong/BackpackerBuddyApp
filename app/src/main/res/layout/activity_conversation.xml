@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greenLighter"
-    tools:context="ravtrix.backpackerbuddy.ConversationActivity">
+    tools:context="ravtrix.backpackerbuddy.activities.chat.ConversationActivity">
 
     <include
         android:id="@+id/toolbar_main"

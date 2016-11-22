@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy;
+package ravtrix.backpackerbuddy.activities.chat;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,6 +32,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fcm.model.Message;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
@@ -39,6 +40,8 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton.getRetrofitUserChat;
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -54,6 +57,7 @@ public class ConversationActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private UserLocalStore userLocalStore;
     private final UserChat userChat = new UserChat();
+    private  String otherUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class ConversationActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
 
-        toolbar.setTitle("Conversation");
+        setTitle("Conversation");
         toolbar.setTitleTextColor(Color.WHITE);
 
         progressBar.setVisibility(View.VISIBLE);
@@ -74,14 +78,15 @@ public class ConversationActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        String otherUserID = "0";
-        String myUserID = "0";
+        otherUserID = "0";
+        String myUserID;
         if (bundle != null) {
-            otherUserID = bundle.getString("otherUserID");
+            otherUserID = bundle.getString("otherUserID"); // ID of the other user in chat
             chatPosition = bundle.getInt("position");
         }
 
         myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
+        // Create name combo. Only one of these two names exist for the convo between the two users.
         chatRoomName = myUserID + otherUserID;
         chatRoomName2 = otherUserID + myUserID;
 
@@ -93,6 +98,7 @@ public class ConversationActivity extends AppCompatActivity {
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // Find which room exists
                 if (dataSnapshot.child(chatRoomName).exists()) {
                     setRecyclerView(chatRoomName);
                 } if (dataSnapshot.child(chatRoomName2).exists()) {
@@ -114,6 +120,7 @@ public class ConversationActivity extends AppCompatActivity {
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
                     sendMessage();
+
                 }
 
             }
@@ -156,7 +163,6 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, Message model, int position) {
                 if (position + 1 == getItemCount()) {
-                    System.out.println("HIDE PROGRESSBAR");
                     progressBar.setVisibility(View.INVISIBLE);
                 }
 
@@ -268,7 +274,7 @@ public class ConversationActivity extends AppCompatActivity {
                 } else {
 
                     // New chat, so create new chat in FCM and also database
-                    Call<JsonObject> jsonObjectCall = RetrofitUserChatSingleton.getRetrofitUserChat()
+                    Call<JsonObject> jsonObjectCall = getRetrofitUserChat()
                             .insertNewChat()
                             .insertNewChat(userChat.getUserOne(), userChat.getUserTwo());
 
@@ -297,6 +303,10 @@ public class ConversationActivity extends AppCompatActivity {
 
                     passIntentResult(chatPosition, userMessage, time);
                 }
+
+
+                // Notify the other user the message has been sent to them
+                notifyOtherUser(userMessage);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -314,6 +324,25 @@ public class ConversationActivity extends AppCompatActivity {
         intent.putExtra("newMessage", newMessage);
         intent.putExtra("time", time);
         setResult(2, intent);
+    }
+
+    private void notifyOtherUser(String message) {
+        // Notify the other user the message has been sent to them
+        Call<JsonObject> retrofit = RetrofitUserChatSingleton.getRetrofitUserChat()
+                .sendNotification()
+                .sendNotification(Integer.parseInt(otherUserID),
+                        userLocalStore.getLoggedInUser().getUsername() +
+                                ": " + message);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // Notified the other user
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+            }
+        });
     }
 
     private class UserChat {

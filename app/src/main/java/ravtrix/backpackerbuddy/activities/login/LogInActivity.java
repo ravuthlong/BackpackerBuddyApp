@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.leakcanary.LeakCanary;
 
 import butterknife.BindView;
@@ -40,7 +42,8 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         LeakCanary.install(getApplication());
         setContentView(R.layout.activity_login);
 
-        Helpers.setToolbar(this, toolbar);
+        //Helpers.setToolbar(this, toolbar);
+        setToolbar();
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
@@ -65,6 +68,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     private void logUserIn() {
         String username = etLoggedInUsername.getText().toString();
         String password = etLoggedInPassword.getText().toString();
+        String token = FirebaseInstanceId.getInstance().getToken();
 
         if (username.isEmpty() && password.isEmpty()) {
             // Animation bounce if username AND password fields entered are empty
@@ -78,7 +82,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
             // Animation bounce if password field entered is empty
             YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
         } else {
-            logInPresenter.logUserIn(username, password);
+            logInPresenter.logUserIn(username, password, token);
         }
     }
 
@@ -122,5 +126,25 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, WelcomeActivity.class));
+    }
+
+    private void setToolbar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
     }
 }

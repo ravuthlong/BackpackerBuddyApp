@@ -37,6 +37,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
         LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        setTitle("Sign Up Part 1");
         signUpPart1Presenter = new SignUpPart1Presenter(this);
     }
 

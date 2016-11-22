@@ -33,6 +33,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "FCM Notification Message: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getBody());
+        } else {
+            // From server php
+            sendNotification(remoteMessage.getData().get("message"));
         }
     }
 
@@ -48,7 +51,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Backpacker Buddy Notification")
+                .setContentTitle("New Message")
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(notificationSound)

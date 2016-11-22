@@ -43,6 +43,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         ButterKnife.bind(this);
 
         Helpers.setToolbar(this, toolbar);
+        setTitle("Sign Up Part 3");
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
         signUpPart3Presenter = new SignUpPart3Presenter(this);

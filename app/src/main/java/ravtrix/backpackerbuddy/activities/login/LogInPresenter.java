@@ -5,21 +5,21 @@ import ravtrix.backpackerbuddy.models.LoggedInUser;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class LogInPresenter implements ILogInPresenter {
+class LogInPresenter implements ILogInPresenter {
     private ILogInView view;
     private LogInInteractor logInInteractor;
 
-    public LogInPresenter(ILogInView view) {
+    LogInPresenter(ILogInView view) {
         this.view = view;
         this.logInInteractor = new LogInInteractor();
     }
 
     @Override
-    public void logUserIn(String username, String password) {
+    public void logUserIn(String username, String password, String token) {
 
         view.showProgressDialog();
 
-        logInInteractor.logInRetrofit(username, password, new OnRetrofitLogInListener() {
+        logInInteractor.logInRetrofit(username, password, token, new OnRetrofitLogInListener() {
 
             @Override
             public void onSuccess(LoggedInUser loggedInUser) {

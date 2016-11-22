@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
@@ -61,7 +63,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     private View view;
     private Bundle receivedQueryBundle;
     private LinearLayoutManager linearLayoutManager;
-    private boolean isUserRefresh = false;
 
     @Override
     public void onAttach(Context context) {
@@ -126,8 +127,9 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                 this.waveSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 this.tvNoResult.setVisibility(View.INVISIBLE);
                 // Refresh recycler view for recent posts
-                feedListAdapter.resetAll();
-                retrieveUserCountryPostsRetrofit();
+                //feedListAdapter.resetAll();
+                //retrieveUserCountryPostsRetrofit();
+                startActivity(new Intent(getContext(), UserMainPage.class));
 
                 return true;
             default:
@@ -307,7 +309,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     // Set bundle received from filter fragment
     public void setReceivedQueryBundle(Bundle receivedQueryBundle) {
         this.receivedQueryBundle = receivedQueryBundle;
-        System.out.println("BUNDLE RECEIVED: " + receivedQueryBundle.getString("country"));
     }
 }
 

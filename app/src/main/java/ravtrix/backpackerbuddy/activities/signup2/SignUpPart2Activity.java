@@ -38,8 +38,8 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity implements I
         setContentView(R.layout.activity_signup2);
         LeakCanary.install(getApplication());
         ButterKnife.bind(this);
-
         Helpers.setToolbar(this, toolbar);
+        setTitle("Sign Up Part 2");
         signUpPart2Presenter = new SignUpPart2Presenter(this);
     }
 
