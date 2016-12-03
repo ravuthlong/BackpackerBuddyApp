@@ -36,6 +36,9 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
 
+
+    private static final String TAG = "LoginActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,19 +73,22 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         String password = etLoggedInPassword.getText().toString();
         String token = FirebaseInstanceId.getInstance().getToken();
 
-        if (username.isEmpty() && password.isEmpty()) {
-            // Animation bounce if username AND password fields entered are empty
-            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
-            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
+        // Only continue if google play services is available
+        if (Helpers.checkPlayServices(this)) {
+            if (username.isEmpty() && password.isEmpty()) {
+                // Animation bounce if username AND password fields entered are empty
+                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
+                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
 
-        } else if (username.isEmpty()) {
-            // Animation bounce if username field entered is empty
-            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
-        } else if (password.isEmpty()) {
-            // Animation bounce if password field entered is empty
-            YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
-        } else {
-            logInPresenter.logUserIn(username, password, token);
+            } else if (username.isEmpty()) {
+                // Animation bounce if username field entered is empty
+                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
+            } else if (password.isEmpty()) {
+                // Animation bounce if password field entered is empty
+                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
+            } else {
+                logInPresenter.logUserIn(username, password, token);
+            }
         }
     }
 
@@ -147,4 +153,5 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
             });
         }
     }
+
 }

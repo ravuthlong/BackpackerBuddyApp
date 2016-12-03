@@ -32,6 +32,7 @@ public class RetrofitUserChatInterfaces {
     public interface SendNotification {
         @FormUrlEncoded
         @POST("/sendNotification.php")
-        Call<JsonObject> sendNotification(@Field("userID") int userID, @Field("message") String message);
+        Call<JsonObject> sendNotification(@Field("userID") int userID, @Field("message") String message,
+                                          @Field("senderID") int senderID);
     }
 }

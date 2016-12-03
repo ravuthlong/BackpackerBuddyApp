@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -254,5 +256,27 @@ public class Helpers {
             isValid = true;
         }
         return isValid;
+    }
+
+    /**
+     * Check to see if google play services is available on the device
+     * @param activity          the activity to check play services availability
+     * @return                  true if available, false if not
+     */
+    public static boolean checkPlayServices(Activity activity) {
+        final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(activity, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                activity.finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

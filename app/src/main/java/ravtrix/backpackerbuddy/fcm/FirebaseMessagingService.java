@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.firebase.messaging.RemoteMessage;
 
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
+import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 
 /**
  * Created by Ravinder on 9/21/16.
@@ -32,15 +32,17 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "FCM Notification Message: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getBody(), "0");
         } else {
             // From server php
-            sendNotification(remoteMessage.getData().get("message"));
+            sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"));
         }
     }
 
-    private void sendNotification(String body) {
-        Intent intent = new Intent(this, UserMainPage.class);
+    private void sendNotification(String body, String senderID) {
+
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra("otherUserID", senderID);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // 0 is request code

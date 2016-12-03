@@ -103,7 +103,7 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
         this.snapshot = snapshot;
     }
 
-    public long getTimeMilli() {
+    private long getTimeMilli() {
         return timeMilli;
     }
 

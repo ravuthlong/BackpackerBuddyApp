@@ -76,8 +76,6 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
                 if (response.body().get("status").getAsInt() == 1) {
                     Helpers.displayToast(ChangeEmail.this, "Email changed successfully");
                     userLocalStore.changeEmail(email);
-
-                    System.out.println("CURRENT EMAIL: " + userLocalStore.getLoggedInUser().getEmail());
                 }  else {
                     // Changed unsuccessfully
                     Helpers.displayToast(ChangeEmail.this, "Problem changing email1");

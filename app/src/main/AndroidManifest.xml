@@ -43,6 +43,7 @@
         <activity
             android:name=".activities.mainpage.UserMainPage"
             android:label="User Main"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -90,6 +91,7 @@
         <activity android:name=".activities.signup3.SignUpPart3Activity" />
         <activity
             android:name=".activities.chat.ConversationActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".activities.ChangeEmail"
             android:screenOrientation="portrait" />

@@ -58,6 +58,7 @@ public class ConversationActivity extends AppCompatActivity {
     private UserLocalStore userLocalStore;
     private final UserChat userChat = new UserChat();
     private  String otherUserID;
+    private ConversationPresentor conversationPresentor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,6 @@ public class ConversationActivity extends AppCompatActivity {
 
         setTitle("Conversation");
         toolbar.setTitleTextColor(Color.WHITE);
-
         progressBar.setVisibility(View.VISIBLE);
 
         userLocalStore = new UserLocalStore(this);
@@ -331,9 +331,8 @@ public class ConversationActivity extends AppCompatActivity {
         Call<JsonObject> retrofit = RetrofitUserChatSingleton.getRetrofitUserChat()
                 .sendNotification()
                 .sendNotification(Integer.parseInt(otherUserID),
-                        userLocalStore.getLoggedInUser().getUsername() +
-                                ": " + message);
-
+                         userLocalStore.getLoggedInUser().getUsername() +
+                                ": " + message, userLocalStore.getLoggedInUser().getUserID());
         retrofit.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
