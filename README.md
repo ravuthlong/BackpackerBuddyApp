@@ -15,7 +15,6 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 * ButterKnife for view injection </b>
 
 
-Images below are screenshots of project in progress. This is not the final version.
 ![Alt text](http://i.imgur.com/GOhWzZj.png)
 ![Alt text](http://i.imgur.com/5wTCuTM.png)
 ![Alt text](http://i.imgur.com/aVWfklf.png)
@@ -24,3 +23,6 @@ Images below are screenshots of project in progress. This is not the final versi
 ![Alt text](http://i.imgur.com/lnTNK3k.png)
 ![Alt text](http://i.imgur.com/SD4lgvr.png)
 ![Alt text](http://i.imgur.com/mBwF6ZS.png)
+
+![Alt text](http://i.imgur.com/SQtmBDh.png)<br>
+https://play.google.com/store/apps/details?id=ravtrix.backpackerbuddy
