@@ -96,9 +96,9 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         floatingActionButton.setOnClickListener(this);
 
         long currentTime = System.currentTimeMillis();
-        // If it's been a minute since last location update, do the update
+        // If it's been 5 minute since last location update, do the update
         if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 1) {
+                userLocalStore.getLoggedInUser().getTime()) > 5) {
             Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
         }
 

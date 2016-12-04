@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     dexOptions {
         preDexLibraries = false
     }
@@ -12,18 +13,17 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            shrinkResources true
+            shrinkResources false
         }
     }
-
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE-FIREBASE.txt'
@@ -32,44 +32,34 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-
     // Circle Image View
     compile 'de.hdodenhof:circleimageview:1.3.0'
-
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
-
     // Picasso image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     // Animations
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
-
     // Retrofit HTTP Client
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-
     // Floating Action Button
     compile 'com.github.clans:fab:1.6.4'
-
     // leakcananry
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-
     //Swipe refresh
     compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
-
     // Firebase
     compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
-
     // Firebase UI
     compile 'com.firebaseui:firebase-ui-database:0.4.0'
 }

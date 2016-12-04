@@ -13,8 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
@@ -30,7 +28,6 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LeakCanary.install(getApplication());
         setContentView(R.layout.activity_edit_info);
         ButterKnife.bind(this);
         setEditText();

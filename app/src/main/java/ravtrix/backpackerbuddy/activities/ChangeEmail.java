@@ -32,9 +32,7 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         setContentView(R.layout.activity_change_email);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
-
-        this.setTitle("Change email");
-
+        setToolbarTitle();
         userLocalStore = new UserLocalStore(this);
         newEmail.setText(userLocalStore.getLoggedInUser().getEmail());
     }
@@ -57,7 +55,11 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         }
     }
 
-    // Retrofit call to update email
+    /**
+     * Retrofit call to update email
+     * @param email         new email
+     * @param password      user password
+     */
     private void changeEmail(final String email, String password) {
 
         final HashMap<String, String> userInfo = new HashMap<>();
@@ -88,7 +90,10 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         });
     }
 
-    // Check if edit texts have any missing fields
+    /**
+     * Check if the edit texts have missing fields
+     * @return true is missing fields, else false
+     */
     private boolean haveMissingField() {
         boolean missingInfo = false;
 
@@ -97,5 +102,9 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
             missingInfo = true;
         }
         return missingInfo;
+    }
+
+    private void setToolbarTitle() {
+        this.setTitle("Change email");
     }
 }

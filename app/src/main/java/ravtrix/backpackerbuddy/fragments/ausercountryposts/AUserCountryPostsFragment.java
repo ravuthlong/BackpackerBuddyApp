@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class AUserCountryPostsFragment extends Fragment {
 
     @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton bFloatingAdd;
+    @BindView(R.id.tvNoInfo_FragUserCountries) protected TextView noInfoTv;
     private View view;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private FeedListAdapterAUserPosts feedListAdapterAUserPosts;
@@ -63,8 +65,9 @@ public class AUserCountryPostsFragment extends Fragment {
         retrofitCall.enqueue(new Callback<List<FeedItemAUserCountry>>() {
             @Override
             public void onResponse(Call<List<FeedItemAUserCountry>> call, Response<List<FeedItemAUserCountry>> response) {
-                if (response == null) {
-                    System.out.println("YOU HAVE NO POST HAHA");
+                if (response.body().get(0).isSuccess() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    noInfoTv.setVisibility(View.VISIBLE);
 
                 } else {
                     feedItemAUserCountries = response.body();

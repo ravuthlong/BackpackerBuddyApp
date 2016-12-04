@@ -8,7 +8,7 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class EditInfoPresenter implements IEditPresenter {
+class EditInfoPresenter implements IEditPresenter {
 
     private IEditInfoView view;
     private EditInfoInteractor infoInteractor;
@@ -16,7 +16,7 @@ public class EditInfoPresenter implements IEditPresenter {
     private Intent intent;
     private String detailType;
 
-    public EditInfoPresenter(IEditInfoView editInfoView) {
+    EditInfoPresenter(IEditInfoView editInfoView) {
         this.view = editInfoView;
         infoInteractor = new EditInfoInteractor();
         userLocalStore = new UserLocalStore((Activity) editInfoView);

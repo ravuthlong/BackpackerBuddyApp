@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
@@ -36,7 +34,6 @@ public class SignUpPart2Activity extends OptionMenuSendBaseActivity implements I
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup2);
-        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
         setTitle("Sign Up Part 2");

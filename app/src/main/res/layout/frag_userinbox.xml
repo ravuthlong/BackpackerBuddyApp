@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:id="@+id/frag_userinbox_linearLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
+
+
+    <TextView
+        android:id="@+id/tvNoInfo_FragInbox"
+        android:text="@string/noInbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:textSize="18sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/frag_userInbox_swipeRefresh"
@@ -24,4 +35,5 @@
             android:layout_gravity='start'
             />
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+</RelativeLayout>

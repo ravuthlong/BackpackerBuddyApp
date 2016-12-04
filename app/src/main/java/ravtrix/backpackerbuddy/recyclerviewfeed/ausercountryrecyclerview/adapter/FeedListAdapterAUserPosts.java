@@ -31,7 +31,6 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
     private AUserCountryPostsFragment fragment;
     private LayoutInflater inflater;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
-    private int loggedInUser;
     private BackgroundImage backgroundImage;
 
     public FeedListAdapterAUserPosts(AUserCountryPostsFragment fragment,
@@ -39,7 +38,6 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
         inflater = LayoutInflater.from(fragment.getContext());
         this.fragment = fragment;
         this.feedItemAUserCountries = feedItems;
-        this.loggedInUser = loggedInUser;
         backgroundImage = new BackgroundImage();
 
     }

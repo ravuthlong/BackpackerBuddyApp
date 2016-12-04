@@ -35,7 +35,6 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
         this.setTitle("Change password");
-
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -57,7 +56,11 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
         }
     }
 
-    // Retrofit call to update password
+    /**
+     * Retrofit call to update password
+     * @param oldPassword       old password
+     * @param newPassword       new password
+     */
     private void changePassword(String oldPassword, String newPassword) {
 
         HashMap<String, String> userInfo = new HashMap<>();
@@ -87,12 +90,21 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
         });
     }
 
-    // Check if the new password and new confirm password matches
+
+    /**
+     * Check if the new password and new confirm password matches
+     * @param newPassword       the new password
+     * @param newPassword2      the new password retyped
+     * @return                  true is matched, else false
+     */
     private boolean isNewPasswordMatch(String newPassword, String newPassword2) {
         return newPassword.equals(newPassword2);
     }
 
-    // Check if the edit texts have missing fields
+    /**
+     * Check if the edit texts have missing fields
+     * @return true is missing fields, else false
+     */
     private boolean haveMissingField() {
         boolean missingInfo = false;
 

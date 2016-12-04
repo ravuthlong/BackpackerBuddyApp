@@ -29,7 +29,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
-        //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
 
         checkIsUserLoggedIn();
@@ -65,7 +64,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         tvBuddy.setTextSize(80);
     }
 
-    // Check to see if the user is already logged in. If so, go straight to main user page
+    /**
+     * Check to see if the user is already logged in. If so, go straight to main user page
+     */
     private void checkIsUserLoggedIn() {
         userLocalStore = new UserLocalStore(this);
         if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {

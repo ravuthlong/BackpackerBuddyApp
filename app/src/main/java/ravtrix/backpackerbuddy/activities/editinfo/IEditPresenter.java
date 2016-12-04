@@ -3,7 +3,7 @@ package ravtrix.backpackerbuddy.activities.editinfo;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public interface IEditPresenter {
+interface IEditPresenter {
 
     boolean checkEmptyString(String text);
     void editUserInfo(String newPost, String editType);

@@ -153,17 +153,6 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.body().get("status").getAsInt() == 1) {
 
-                    /*
-                    LoggedInUser replaceUser = new LoggedInUser();
-                    replaceUser.setUserID(userLocalStore.getLoggedInUser().getUserID());
-                    replaceUser.setEmail(userLocalStore.getLoggedInUser().getEmail());
-                    replaceUser.setUsername(userLocalStore.getLoggedInUser().getUsername());
-                    replaceUser.setUserImageURL(response.body().get("userImageURL").getAsString());
-
-                    userLocalStore.clearUserData();
-                    userLocalStore.storeUserData(replaceUser);
-                    */
-
                     // After uploaded
                     isNewPhotoSet = false;
                     Helpers.hideProgressDialog(progressDialog);

@@ -13,16 +13,22 @@ import retrofit2.Response;
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class EditInfoInteractor implements IEditInfoInteractor {
+class EditInfoInteractor implements IEditInfoInteractor {
 
-    public EditInfoInteractor() {
+    EditInfoInteractor() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isStringEmpty(String text) {
         return text.isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void editUserInfoRetrofit(String newPost, String editType, UserLocalStore userLocalStore,
                                 final OnRetrofitCompleteListener onRetrofitCompleteListener) {

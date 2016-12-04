@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ravtrix.backpackerbuddy">
+    package="ravtrix.backpackerbuddy"
+    android:versionCode="2"
+    android:versionName="1.1"
+    >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -43,13 +46,11 @@
         <activity
             android:name=".activities.mainpage.UserMainPage"
             android:label="User Main"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.login.LogInActivity"
             android:label="Log In Activity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible" />
@@ -58,8 +59,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editinfo.EditInfoActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activities.otheruserprofile.OtherUserProfile"

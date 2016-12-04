@@ -34,6 +34,17 @@ public class FeedItemAUserCountry {
     @Expose
     private String username;
 
+    @SerializedName("success")
+    @Expose
+    private int success;
+
+    public int isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(int success) {
+        this.success = success;
+    }
     public String getFirstname() {
         return firstname;
     }

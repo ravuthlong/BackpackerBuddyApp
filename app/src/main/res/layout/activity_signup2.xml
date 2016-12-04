@@ -31,7 +31,7 @@
                 android:id="@+id/etFirstname"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:ems="10"
                 android:hint="@string/firstName"
                 android:paddingBottom="10dp" />
@@ -45,7 +45,7 @@
                 android:id="@+id/etLastname"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:ems="10"
                 android:hint="@string/lastName"
                 android:paddingBottom="10dp" />

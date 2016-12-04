@@ -1,12 +1,11 @@
 package ravtrix.backpackerbuddy.activities.signup1;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-import com.squareup.leakcanary.LeakCanary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,12 +28,12 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     @BindView(R.id.etConfirmPass) protected  EditText etConfirmPassword;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     private SignUpPart1Presenter signUpPart1Presenter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup1);
-        LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
         setTitle("Sign Up Part 1");
@@ -55,6 +54,8 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     // Validate that user input is in correct format
     public void inputValidationAndNextStep() {
 
+        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
+
         String username = etUsername.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
@@ -74,6 +75,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
         new UserLocation(getApplicationContext(), new UserLocationInterface() {
             @Override
             public void onReceivedLocation(double latitude, double longitude) {
+                Helpers.hideProgressDialog(progressDialog);
 
                 Intent intent = new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class);
                 intent.putExtra("email", email);

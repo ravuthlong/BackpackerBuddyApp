@@ -12,6 +12,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,6 +43,7 @@ import retrofit2.Response;
 public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.frag_userinbox_recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.frag_userInbox_swipeRefresh) protected SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tvNoInfo_FragInbox) protected TextView noInbox;
     private FeedListAdapterInbox feedListAdapterInbox;
     private List<FeedItemInbox> feedItemInbox;
     private UserLocalStore userLocalStore;
@@ -61,8 +63,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.frag_userinbox, container, false);
-        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
-        //refWatcher.watch(this);
+
         ButterKnife.bind(this, view);
         view.setVisibility(View.INVISIBLE);
 
@@ -102,29 +103,40 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void onResponse(Call<List<FeedItemInbox>> call, Response<List<FeedItemInbox>> response) {
 
                 feedItemInbox = response.body(); // Retrofit returns back the user IDs you're chatting with
-                // and whether or not you are the creator of that chat
+                                                    // and whether or not you are the creator of that chat
 
-                for (int i = 0; i < feedItemInbox.size(); i++) {
-                    if (feedItemInbox.get(i).getStatus() == 0) {
-                        // You made this chat room. your userID is the first of chat room name (Firebase chat name)
-                        String chatName = userLocalStore.getLoggedInUser().getUserID() +
-                                Integer.toString(feedItemInbox.get(i).getUserID());
-                        feedItemInbox.get(i).setChatRoom(chatName);
-                    } else {
-                        // you didn't make this room. your userID is the second of chat room name (Firebase chat name)
-                        String chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
-                                Integer.toString(userLocalStore.getLoggedInUser().getUserID());
-                        feedItemInbox.get(i).setChatRoom(chatName);
+
+                if (feedItemInbox.get(0).getStatus() == 0) {
+                    fragActivityProgressBarInterface.setProgressBarInvisible();
+                    view.setVisibility(View.VISIBLE);
+                    noInbox.setVisibility(View.VISIBLE);
+                    swipeRefreshLayout.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+
+                    for (int i = 0; i < feedItemInbox.size(); i++) {
+                        if (feedItemInbox.get(i).getStatus() == 0) {
+                            // You made this chat room. your userID is the first of chat room name (Firebase chat name)
+                            String chatName = userLocalStore.getLoggedInUser().getUserID() +
+                                    Integer.toString(feedItemInbox.get(i).getUserID());
+                            feedItemInbox.get(i).setChatRoom(chatName);
+                        } else {
+                            // you didn't make this room. your userID is the second of chat room name (Firebase chat name)
+                            String chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
+                                    Integer.toString(userLocalStore.getLoggedInUser().getUserID());
+                            feedItemInbox.get(i).setChatRoom(chatName);
+                        }
                     }
-                }
 
-                firebaseListener(); // Call listener to fill inbox recyclerview data
-                feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
-                        view, fragActivityProgressBarInterface);
+                    firebaseListener(); // Call listener to fill inbox recyclerview data
+                    feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
+                            view, fragActivityProgressBarInterface);
+                }
 
             }
             @Override
             public void onFailure(Call<List<FeedItemInbox>> call, Throwable t) {
+                fragActivityProgressBarInterface.setProgressBarInvisible();
                 System.out.println(t.getMessage());
             }
         });

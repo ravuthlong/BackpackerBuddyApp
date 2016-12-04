@@ -179,8 +179,6 @@ public class Helpers {
                 locationHash.put("latitude", Double.toString(latitude));
                 locationHash.put("time", Long.toString(currentTime));
 
-                System.out.println("CURRENT TIME: " + Long.toString(currentTime));
-
                 Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
                 jsonObjectCall.enqueue(new Callback<JsonObject>() {
                     @Override

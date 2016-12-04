@@ -57,7 +57,7 @@
     <string name="username">Username</string>
     <string name="idealDay">Your ideal backpacking day</string>
     <string name="dash">-</string>
-
+    <string name="noInbox">No message inbox :(</string>
     <string-array name="distance_DropDown">
         <item>25 miles</item>
         <item>50 miles</item>

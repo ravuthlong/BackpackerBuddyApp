@@ -7,13 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,7 +26,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        LeakCanary.install(getApplication());
 
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);

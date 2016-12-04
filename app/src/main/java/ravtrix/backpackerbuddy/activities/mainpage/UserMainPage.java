@@ -1,7 +1,6 @@
 package ravtrix.backpackerbuddy.activities.mainpage;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.squareup.leakcanary.RefWatcher;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -65,7 +63,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private CircleImageView profilePic;
     @BindView(R.id.spinner_main)
     protected ProgressBar progressBar;
-    private RefWatcher refWatcher; // Leakcanary memory leak watcher for fragments
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
@@ -117,8 +114,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         toggleListener();
 
         String token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println("TOKEN IS: " + token);
-
     }
 
     @Override
@@ -242,11 +237,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         super.onPostCreate(savedInstanceState);
         // Sync it based on if navigation drawer is selected or not.
         actionBarDrawerToggle.syncState();
-    }
-
-    public static RefWatcher getRefWatcher(Context context) {
-        UserMainPage userMainPage = (UserMainPage) context.getApplicationContext();
-        return userMainPage.refWatcher; // Can access private data. Fragments share the same context
     }
 
     private void setNavigationDrawerIcons() {

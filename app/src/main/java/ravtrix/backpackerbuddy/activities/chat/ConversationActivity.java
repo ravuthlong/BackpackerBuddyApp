@@ -35,7 +35,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fcm.model.Message;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +42,7 @@ import retrofit2.Response;
 
 import static ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton.getRetrofitUserChat;
 
-public class ConversationActivity extends AppCompatActivity {
+public class ConversationActivity extends AppCompatActivity implements IConversationView {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.chat_recyclerView) protected RecyclerView mMessageRecyclerView;
@@ -72,59 +71,14 @@ public class ConversationActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         progressBar.setVisibility(View.VISIBLE);
 
+        conversationPresentor = new ConversationPresentor(this);
         userLocalStore = new UserLocalStore(this);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
 
-        Bundle bundle = getIntent().getExtras();
-
-        otherUserID = "0";
-        String myUserID;
-        if (bundle != null) {
-            otherUserID = bundle.getString("otherUserID"); // ID of the other user in chat
-            chatPosition = bundle.getInt("position");
-        }
-
-        myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
-        // Create name combo. Only one of these two names exist for the convo between the two users.
-        chatRoomName = myUserID + otherUserID;
-        chatRoomName2 = otherUserID + myUserID;
-
-        // Create userChat object
-        userChat.setUserOne(Integer.parseInt(myUserID));
-        userChat.setUserTwo(Integer.parseInt(otherUserID));
-
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Find which room exists
-                if (dataSnapshot.child(chatRoomName).exists()) {
-                    setRecyclerView(chatRoomName);
-                } if (dataSnapshot.child(chatRoomName2).exists()) {
-                    setRecyclerView(chatRoomName2);
-                } else  {
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (textMessage.getText().toString().equals("")) {
-                    Helpers.displayToast(ConversationActivity.this, "Empty message");
-                } else {
-                    sendMessage();
-
-                }
-
-            }
-        });
+        getChatRoomInformation();
+        setChatRoom();
+        setSendMessageListener();
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -147,10 +101,11 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    /**
      * Set recycler view to show appropriate data at the right position
      * The current chatter should have their messages on the right side
      * The receiver should have their messages on the left side
+     * @param roomName          the room number to access in FCM
      */
     private void setRecyclerView(String roomName) {
 
@@ -235,8 +190,7 @@ public class ConversationActivity extends AppCompatActivity {
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-
-    /*
+    /**
      * Send/Save new message to Firebase cloud. Save in the chat room name if room exists.
      * Otherwise, if room doesn't exist between the two users yet, make a new room
      */
@@ -304,9 +258,9 @@ public class ConversationActivity extends AppCompatActivity {
                     passIntentResult(chatPosition, userMessage, time);
                 }
 
-
                 // Notify the other user the message has been sent to them
-                notifyOtherUser(userMessage);
+                conversationPresentor.notifyOtherUser(userMessage, otherUserID, userLocalStore.getLoggedInUser().getUsername(),
+                        userLocalStore.getLoggedInUser().getUserID());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -314,9 +268,13 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
-    /*
+
+    /**
      * On back press, pass the new sent message to the MessagesFragment, so it can
      * update the latest message on its list
+     * @param position          position of message
+     * @param newMessage        the new message
+     * @param time              the new time stamp
      */
     private void passIntentResult(int position, String newMessage, long time) {
         Intent intent = new Intent();
@@ -326,24 +284,64 @@ public class ConversationActivity extends AppCompatActivity {
         setResult(2, intent);
     }
 
-    private void notifyOtherUser(String message) {
-        // Notify the other user the message has been sent to them
-        Call<JsonObject> retrofit = RetrofitUserChatSingleton.getRetrofitUserChat()
-                .sendNotification()
-                .sendNotification(Integer.parseInt(otherUserID),
-                         userLocalStore.getLoggedInUser().getUsername() +
-                                ": " + message, userLocalStore.getLoggedInUser().getUserID());
-        retrofit.enqueue(new Callback<JsonObject>() {
+    private void getChatRoomInformation() {
+        Bundle bundle = getIntent().getExtras();
+
+        otherUserID = "0";
+        String myUserID;
+        if (bundle != null) {
+            otherUserID = bundle.getString("otherUserID"); // ID of the other user in chat
+            chatPosition = bundle.getInt("position");
+        }
+        myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
+        // Create name combo. Only one of these two names exist for the convo between the two users.
+        chatRoomName = myUserID + otherUserID;
+        chatRoomName2 = otherUserID + myUserID;
+
+        // Create userChat object
+        userChat.setUserOne(Integer.parseInt(myUserID));
+        userChat.setUserTwo(Integer.parseInt(otherUserID));
+    }
+
+    private void setChatRoom() {
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                // Notified the other user
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Find which room exists
+                if (dataSnapshot.child(chatRoomName).exists()) {
+                    setRecyclerView(chatRoomName);
+                } if (dataSnapshot.child(chatRoomName2).exists()) {
+                    setRecyclerView(chatRoomName2);
+                } else  {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
 
+    private void setSendMessageListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (textMessage.getText().toString().equals("")) {
+                    Helpers.displayToast(ConversationActivity.this, "Empty message");
+                } else {
+                    sendMessage();
+
+                }
+
+            }
+        });
+    }
+
+    /**
+     * UserChat class holding the users in the conversation
+     */
     private class UserChat {
         private int userOne;
         private int userTwo;

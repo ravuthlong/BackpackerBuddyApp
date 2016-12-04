@@ -12,7 +12,6 @@ import android.widget.EditText;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.squareup.leakcanary.LeakCanary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,10 +41,8 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LeakCanary.install(getApplication());
         setContentView(R.layout.activity_login);
 
-        //Helpers.setToolbar(this, toolbar);
         setToolbar();
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
