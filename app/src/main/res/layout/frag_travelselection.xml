@@ -22,10 +22,10 @@
         android:paddingRight="20dp">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="30dp">
 
             <TextView
                 android:id="@+id/tvCountry"
@@ -41,24 +41,22 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dialog"
+                android:layout_marginTop="15dp"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
 
-        <TableLayout
-            android:orientation="horizontal"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:layout_marginTop="30dp">
 
                 <TextView
                     android:id="@+id/tvArrival"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/from"
+                    android:layout_gravity="center_horizontal"
                     android:textSize="20sp" />
 
                 <TextView
@@ -68,22 +66,22 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/dateOfArrival"
                     android:background="#ffffff"
-                    android:layout_marginTop="45dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_column="4"
-                    android:layout_marginLeft="10dp" />
-            </TableRow>
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp">
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/until"
                     android:textSize="20sp"
+                    android:layout_marginTop="25dp"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
@@ -93,38 +91,10 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/dateOfLeave"
                     android:background="#ffffff"
-                    android:layout_column="4"
-                    android:layout_marginLeft="20dp" />
-            </TableRow>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp" />
+            </LinearLayout>
 
-        </TableLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="40dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp">
-
-                <EditText
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="textMultiLine"
-                    android:hint="@string/additionInfo"
-                    android:background="@drawable/edit_text_border"
-                    android:layout_gravity="left|top"
-                    android:maxLength="250"
-                    android:padding="10dp" />
-            </FrameLayout>
         </LinearLayout>
-
     </LinearLayout>
-</LinearLayout>
 </ScrollView>

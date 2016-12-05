@@ -71,8 +71,7 @@ public class AUserCountryPostsFragment extends Fragment {
 
                 } else {
                     feedItemAUserCountries = response.body();
-                    feedListAdapterAUserPosts = new FeedListAdapterAUserPosts(AUserCountryPostsFragment.this, feedItemAUserCountries,
-                            userLocalStore.getLoggedInUser().getUserID());
+                    feedListAdapterAUserPosts = new FeedListAdapterAUserPosts(AUserCountryPostsFragment.this, feedItemAUserCountries);
                     setRecyclerView(feedListAdapterAUserPosts);
                 }
             }

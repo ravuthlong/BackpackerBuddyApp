@@ -1,24 +1,40 @@
 package ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.ausercountryposts.AUserCountryPostsFragment;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static ravtrix.backpackerbuddy.R.id.imgbEditPost;
 
@@ -32,14 +48,14 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
     private LayoutInflater inflater;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private BackgroundImage backgroundImage;
+    private Button bEditPost, bDeletePost, bReportPost;
 
     public FeedListAdapterAUserPosts(AUserCountryPostsFragment fragment,
-                                     List<FeedItemAUserCountry> feedItems, int loggedInUser) {
+                                     List<FeedItemAUserCountry> feedItems) {
         inflater = LayoutInflater.from(fragment.getContext());
         this.fragment = fragment;
         this.feedItemAUserCountries = feedItems;
         backgroundImage = new BackgroundImage();
-
     }
 
     @Override
@@ -84,6 +100,14 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
         holder.imageButtonMail.setVisibility(View.GONE);
         holder.imageButtonStar.setVisibility(View.GONE);
         holder.profileImage.setVisibility(View.GONE);
+
+        holder.imgEditPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp(currentPos.getUserID());
+                setPopUpDialogItemListener(currentPos.getId(), currentPos);
+            }
+        });
     }
 
     @Override
@@ -112,6 +136,73 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
             profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
         }
+    }
+
+    // Displaying the pop up to manage posts
+    private void showPopUp(int postUserID) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+        LayoutInflater inflater = fragment.getActivity().getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.pop_up_managepost,
+                null);
+        final AlertDialog dialog = builder.create();
+        assert dialog.getWindow() != null;
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.setView(dialogLayout, 0, 0, 0, 0);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity= Gravity.BOTTOM;
+        window.setAttributes(lp);
+
+        bEditPost = (Button) dialogLayout.findViewById(R.id.bEditPost);
+        bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
+        bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
+
+        bDeletePost.setVisibility(View.VISIBLE);
+        bEditPost.setVisibility(View.VISIBLE);
+
+
+        builder.setView(dialogLayout);
+        dialog.show();
+    }
+
+
+    // Pop up dialog to manage posts
+    private void setPopUpDialogItemListener(final int postID, final FeedItemAUserCountry currentItem) {
+
+        bEditPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+                intent.putExtra("country", currentItem.getCountry());
+                intent.putExtra("from", currentItem.getFromDate());
+                intent.putExtra("until", currentItem.getToDate());
+                fragment.getActivity().startActivity(intent);
+            }
+        });
+        bDeletePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry().removePost().removePost(postID);
+                jsonObjectCall.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        fragment.getActivity().startActivity(new Intent(fragment.getContext(), UserMainPage.class));
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
     }
 
 }

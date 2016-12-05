@@ -182,7 +182,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                     .into(((ViewHolder) holder).profileImage, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
-                            System.out.println("LOADING IMAGE");
                             counter.addCount();
                             //checkPicassoFinished();
                         }
@@ -321,7 +320,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setRecyclerView(RecyclerView mView){
-        System.out.println("SIZE IS : " + feedItems.size());
 
         if (feedItems.size() >= 10) {
             mView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -332,8 +330,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                     totalItemCount = mLinearLayoutManager.getItemCount();
                     firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
                     if (!isMoreLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                        if (onLoadMoreListener != null) {
-                            System.out.println("CALLING LOAD MORE");
+                        if (onLoadMoreListener != null) { // Load more items
                             onLoadMoreListener.onLoadMore();
                         }
                         isMoreLoading = true;
@@ -375,6 +372,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         View dialogLayout = inflater.inflate(R.layout.pop_up_managepost,
                 null);
         final AlertDialog dialog = builder.create();
+        assert dialog.getWindow() != null;
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -437,7 +435,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         bReportPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("CLICKED ON REPORT BUTTON");
+                System.out.println("REPORT");
             }
         });
     }

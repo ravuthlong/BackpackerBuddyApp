@@ -106,7 +106,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                                     // and whether or not you are the creator of that chat
 
 
-                if (feedItemInbox.get(0).getStatus() == 0) {
+                if (feedItemInbox.get(0).getSuccess() == 0) {
                     fragActivityProgressBarInterface.setProgressBarInvisible();
                     view.setVisibility(View.VISIBLE);
                     noInbox.setVisibility(View.VISIBLE);
@@ -114,15 +114,17 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                     recyclerView.setVisibility(View.GONE);
                 } else {
 
+                    String chatName;
+
                     for (int i = 0; i < feedItemInbox.size(); i++) {
                         if (feedItemInbox.get(i).getStatus() == 0) {
                             // You made this chat room. your userID is the first of chat room name (Firebase chat name)
-                            String chatName = userLocalStore.getLoggedInUser().getUserID() +
+                             chatName = userLocalStore.getLoggedInUser().getUserID() +
                                     Integer.toString(feedItemInbox.get(i).getUserID());
                             feedItemInbox.get(i).setChatRoom(chatName);
                         } else {
                             // you didn't make this room. your userID is the second of chat room name (Firebase chat name)
-                            String chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
+                            chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
                                     Integer.toString(userLocalStore.getLoggedInUser().getUserID());
                             feedItemInbox.get(i).setChatRoom(chatName);
                         }
@@ -169,7 +171,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                      */
                     if (snapshot != null) {
                         String time = snapshot.child("time").getValue().toString();
-
                         String latestMessage = snapshot.child("text").getValue().toString();
 
                         if (countLines(latestMessage) > 4) {

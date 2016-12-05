@@ -25,11 +25,22 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
     @SerializedName("status")
     @Expose
     private int status;
+    @SerializedName("success")
+    @Expose
+    private int success;
     private String chatRoom;
     private int isOtherUserClicked;
     private int lastMessageUserID;
     private long timeMilli;
     private transient DataSnapshot snapshot;
+
+    public int getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(int success) {
+        this.success = success;
+    }
 
     public String getUsername() {
         return username;
