@@ -3,7 +3,6 @@ package ravtrix.backpackerbuddy.helpers;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
@@ -96,24 +95,16 @@ public class Helpers {
     /**
      * Create an alert dialog with positive buttons
      * @param activity      the activity for the dialog
-     * @param context       the context to show alert dialog
      * @param message       the message to be displayed
-     * @param positive      the text for positive button
      * @param negative      the text for negative button
      */
-    public static void showAlertDialogWithTwoOptions(final android.app.Activity activity, Context context, String message,
-                                                     String positive, String negative) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-        dialogBuilder.setTitle("Backpacker Buddy");
+    public static AlertDialog.Builder showAlertDialogWithTwoOptions(final android.app.Activity activity, String title, String message,
+                                                     String negative) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
+        dialogBuilder.setTitle(title);
         dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                activity.finish();
-            }
-        });
         dialogBuilder.setNegativeButton(negative, null);
-        dialogBuilder.show();
+        return dialogBuilder;
     }
 
     /**
@@ -169,10 +160,11 @@ public class Helpers {
      * @param currentTime       the current time
      */
     public static void updateLocationAndTime(Context context, final UserLocalStore userLocalStore, final long currentTime) {
-        new UserLocation(context, new UserLocationInterface() {
+
+        UserLocation userLocation = new UserLocation((Activity) context);
+        userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(final double latitude, final double longitude) {
-
                 HashMap<String, String> locationHash = new HashMap<>();
                 locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                 locationHash.put("longitude", Double.toString(longitude));

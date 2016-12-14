@@ -2,7 +2,9 @@ package ravtrix.backpackerbuddy.activities.signup3;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,6 +60,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
             default:
+                break;
         }
     }
 
@@ -65,9 +68,23 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            circleImageView.setImageURI(selectedImage);
+
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String picturePath = null;
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            }
+
+            circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
     }
 

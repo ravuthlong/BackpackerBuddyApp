@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.ausercountryposts;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
+import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.adapter.FeedListAdapterAUserPosts;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
@@ -38,15 +40,24 @@ public class AUserCountryPostsFragment extends Fragment {
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private FeedListAdapterAUserPosts feedListAdapterAUserPosts;
     private UserLocalStore userLocalStore;
+    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.frag_usercountries_recent, container, false);
-        //view.setVisibility(View.GONE);
+        view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 
+        fragActivityProgressBarInterface.setProgressBarVisible();
         bFloatingAdd.setVisibility(View.INVISIBLE);
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
@@ -70,10 +81,12 @@ public class AUserCountryPostsFragment extends Fragment {
                     noInfoTv.setVisibility(View.VISIBLE);
 
                 } else {
+                    view.setVisibility(View.VISIBLE);
                     feedItemAUserCountries = response.body();
                     feedListAdapterAUserPosts = new FeedListAdapterAUserPosts(AUserCountryPostsFragment.this, feedItemAUserCountries);
                     setRecyclerView(feedListAdapterAUserPosts);
                 }
+                fragActivityProgressBarInterface.setProgressBarInvisible();
             }
             @Override
             public void onFailure(Call<List<FeedItemAUserCountry>> call, Throwable t) {

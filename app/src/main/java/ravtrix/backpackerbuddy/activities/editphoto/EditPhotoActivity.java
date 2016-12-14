@@ -3,7 +3,9 @@ package ravtrix.backpackerbuddy.activities.editphoto;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,13 +54,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
 
-        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
-                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(circleImageView);
-        } else {
-            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(circleImageView);
-        }
+        checkProfileImage();
         Helpers.setToolbar(this, toolbar);
         setTitle("Set Photo");
         bEditImage.setOnClickListener(this);
@@ -82,7 +78,21 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri selectedImage = data.getData();
-            circleImageView.setImageURI(selectedImage);
+
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            String picturePath = null;
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            }
+
+            circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             isNewPhotoSet = true; // User selected a new image
         }
     }
@@ -163,6 +173,16 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 Helpers.displayToast(EditPhotoActivity.this, "Upload Error");
             }
         });
+    }
+
+    private void checkProfileImage() {
+        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
+                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(circleImageView);
+        } else {
+            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(circleImageView);
+        }
     }
 
     @Override

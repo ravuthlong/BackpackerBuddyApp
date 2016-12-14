@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.activities.mainpage;
 
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -302,7 +304,15 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Helpers.showAlertDialogWithTwoOptions(UserMainPage.this, this, "Are you sure you want to exit?", "Yes", "No");
+        AlertDialog.Builder builder = Helpers.showAlertDialogWithTwoOptions(UserMainPage.this, "Backpacker Buddy",
+                "Are you sure you want to exit?", "No");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     @Override

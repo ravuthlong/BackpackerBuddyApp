@@ -78,7 +78,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
         getChatRoomInformation();
         setChatRoom();
-        setSendMessageListener();
+        setListeners();
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -125,7 +125,22 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     viewHolder.layoutMessage2.setVisibility(View.VISIBLE);
                     viewHolder.layoutMessage1.setVisibility(View.GONE);
                     TextView messageTextView2 = viewHolder.messageTextView2;
-
+                    /*
+                    messageTextView2.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            AlertDialog.Builder builder = Helpers.showAlertDialogWithTwoOptions(ConversationActivity.this,
+                                    "Delete Message?", getResources().getString(R.string.deleteMessage), "Cancel");
+                            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //delete
+                                }
+                            });
+                            builder.show();
+                            return true;
+                        }
+                    });*/
                     messageTextView2.setText(model.getText());
 
                     // Converting timestamp into x ago format
@@ -147,7 +162,22 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     viewHolder.layoutMessage1.setVisibility(View.VISIBLE);
                     viewHolder.layoutMessage2.setVisibility(View.GONE);
                     TextView messageTextView1 = viewHolder.messageTextView1;
-
+                    /*
+                    messageTextView1.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            AlertDialog.Builder builder = showAlertDialogWithTwoOptions(ConversationActivity.this,
+                                    "Delete Message?", getResources().getString(R.string.deleteMessage), "Cancel");
+                            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //delete
+                                }
+                            });
+                            builder.show();
+                            return true;
+                        }
+                    });*/
                     messageTextView1.setText(model.getText());
                     // Converting timestamp into x ago format
                     CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -324,7 +354,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         });
     }
 
-    private void setSendMessageListener() {
+    private void setListeners() {
+
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

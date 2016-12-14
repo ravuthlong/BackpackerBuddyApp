@@ -30,20 +30,18 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
-    @BindView(R.id.toolbarLogIn) protected  Toolbar toolbar;
+    @BindView(R.id.toolbarLogIn) protected Toolbar toolbar;
     private UserLocalStore userLocalStore;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
-
-
-    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         setToolbar();
+        this.setTitle("Log In");
+
         ButterKnife.bind(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
@@ -150,5 +148,4 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
             });
         }
     }
-
 }

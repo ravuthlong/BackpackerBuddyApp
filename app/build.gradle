@@ -4,7 +4,7 @@ apply plugin: 'android-apt'
 android {
     signingConfigs {
     }
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion "23.0.2"
     dexOptions {
         preDexLibraries = false
@@ -12,9 +12,9 @@ android {
     defaultConfig {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
-        targetSdkVersion 23
-        versionCode 2
-        versionName "1.1"
+        targetSdkVersion 25
+        versionCode 7
+        versionName "1.2.4"
 
     }
     buildTypes {
@@ -34,8 +34,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     // Circle Image View
     compile 'de.hdodenhof:circleimageview:1.3.0'

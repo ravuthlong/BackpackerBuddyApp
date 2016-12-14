@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
-        this.setTitle("settings");
+        this.setTitle("Settings");
 
         bSignOut.setOnClickListener(this);
         bChangePassword.setOnClickListener(this);

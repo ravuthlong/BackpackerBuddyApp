@@ -2,7 +2,9 @@ package ravtrix.backpackerbuddy.activities.signup1;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -29,6 +31,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     private SignUpPart1Presenter signUpPart1Presenter;
     private ProgressDialog progressDialog;
+    private UserLocation userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
         Helpers.setToolbar(this, toolbar);
         setTitle("Sign Up Part 1");
         signUpPart1Presenter = new SignUpPart1Presenter(this);
+        userLocation = new UserLocation(this);
     }
 
     @Override
@@ -54,13 +58,10 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     // Validate that user input is in correct format
     public void inputValidationAndNextStep() {
 
-        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
-
         String username = etUsername.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
         String confirmPass = etConfirmPassword.getText().toString();
-
         signUpPart1Presenter.inputValidation(username, password, email, confirmPass);
     }
 
@@ -72,9 +73,12 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
     @Override
     public void startSignUpPart2Activity(final String email, final String username, final String password) {
-        new UserLocation(getApplicationContext(), new UserLocationInterface() {
+        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
+
+        userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(double latitude, double longitude) {
+                System.out.println("RECEIVED");
                 Helpers.hideProgressDialog(progressDialog);
 
                 Intent intent = new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class);
@@ -96,5 +100,17 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
     @Override
     public void displayErrorToast() {
         Helpers.displayToast(this, "Error. Try again...");
+    }
+
+    // Case for users with grant access needed. Location access granted.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    userLocation.configureButton();
+                }
+                break;
+        }
     }
 }
