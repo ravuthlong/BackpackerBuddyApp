@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
@@ -28,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
-import ravtrix.backpackerbuddy.fragments.ausercountryposts.AUserCountryPostsFragment;
+import ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts.AUserCountryPostsFragment;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
@@ -48,7 +47,7 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
     private LayoutInflater inflater;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private BackgroundImage backgroundImage;
-    private Button bEditPost, bDeletePost, bReportPost;
+    private Button bEditPost, bDeletePost;
 
     public FeedListAdapterAUserPosts(AUserCountryPostsFragment fragment,
                                      List<FeedItemAUserCountry> feedItems) {
@@ -63,9 +62,7 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
         // Custom root of recycle view
         View view = inflater.inflate(R.layout.item_countryfeed, parent, false);
         // Hold a structure of a view. See class viewholder, which holds the structure
-        FeedListAdapterAUserPosts.ViewHolder holder = new FeedListAdapterAUserPosts.ViewHolder(view,
-                fragment.getContext());
-        return holder;
+        return new FeedListAdapterAUserPosts.ViewHolder(view);
     }
 
     @Override
@@ -123,7 +120,7 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
         private ImageButton imageButtonStar, imageButtonMail, imgEditPost;
         private CircleImageView profileImage;
 
-        ViewHolder(View itemView, final Context context) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvCountry = (TextView) itemView.findViewById(R.id.tvCountry);
             tvFromDate = (TextView) itemView.findViewById(R.id.tvFromDate);
@@ -162,7 +159,6 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
 
         bEditPost = (Button) dialogLayout.findViewById(R.id.bEditPost);
         bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
-        bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
 
         bDeletePost.setVisibility(View.VISIBLE);
         bEditPost.setVisibility(View.VISIBLE);

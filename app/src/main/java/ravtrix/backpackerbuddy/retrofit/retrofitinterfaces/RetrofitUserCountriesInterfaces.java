@@ -36,6 +36,11 @@ public class RetrofitUserCountriesInterfaces {
         Call<List<FeedItemAUserCountry>> getAUserCountryPosts(@Query("userID") int userID);
     }
 
+    public interface GetAUserFavPosts {
+        @GET("/fetchAUserFavPosts.php?userID=[userID]")
+        Call<List<FeedItem>> getAUserFavPosts(@Query("userID") int userID);
+    }
+
     public interface InsertTravelSpot {
         @FormUrlEncoded
         @POST("/insertTravelSpot.php")

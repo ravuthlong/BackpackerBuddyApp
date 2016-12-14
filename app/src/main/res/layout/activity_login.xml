@@ -4,18 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
-    xmlns:local="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayoutSignUp"
     android:weightSum="5"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarLogIn"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#4a6b43"
-        local:popupTheme="@style/AppTheme.PopupOverlay"
-        />
+    <include android:id="@+id/toolbar_main"
+        layout="@layout/frag_toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent" />
 
     <LinearLayout
         android:orientation="vertical"

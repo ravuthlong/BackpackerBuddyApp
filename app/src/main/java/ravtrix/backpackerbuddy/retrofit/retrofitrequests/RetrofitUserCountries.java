@@ -23,6 +23,10 @@ public class RetrofitUserCountries {
         return retrofit.create(RetrofitUserCountriesInterfaces.GetAUserCountryPosts.class);
     }
 
+    public RetrofitUserCountriesInterfaces.GetAUserFavPosts getAUserFavPosts() {
+        return retrofit.create(RetrofitUserCountriesInterfaces.GetAUserFavPosts.class);
+    }
+
     public RetrofitUserCountriesInterfaces.InsertTravelSpot insertTravelSpot() {
         return retrofit.create(RetrofitUserCountriesInterfaces.InsertTravelSpot.class);
     }

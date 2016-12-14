@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -30,7 +29,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
-    @BindView(R.id.toolbarLogIn) protected Toolbar toolbar;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
     private UserLocalStore userLocalStore;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
@@ -39,10 +38,9 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setToolbar();
-        this.setTitle("Log In");
-
         ButterKnife.bind(this);
+        Helpers.setToolbar(this, toolbar);
+        setTitle("Log In");
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
     }
@@ -127,25 +125,5 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, WelcomeActivity.class));
-    }
-
-    private void setToolbar() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarLogIn);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
     }
 }

@@ -36,7 +36,17 @@ public class FeedItem {
     @Expose
     private int clicked;
     private boolean isFavorite;
+    @SerializedName("success")
+    @Expose
+    private int success;
 
+    public int isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(int success) {
+        this.success = success;
+    }
 
     public int getClicked() {
         return clicked;

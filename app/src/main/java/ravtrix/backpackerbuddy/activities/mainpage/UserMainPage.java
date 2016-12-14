@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -31,10 +30,10 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
-import ravtrix.backpackerbuddy.fragments.ausercountryposts.AUserCountryPostsFragment;
 import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
 import ravtrix.backpackerbuddy.fragments.mainfrag.CountryTabFragment;
+import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -80,7 +79,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         userLocalStore = new UserLocalStore(this);
 
         //Check for Google Play Services APK
-        //If the device doesn’t have a compatible Google Play services APK, your app can call GooglePlayServicesUtil.getErrorDialog()
         //checkRuntimePermissionAvail();
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -114,8 +112,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         screenStartUpState();
         setNavigationDrawerIcons();
         toggleListener();
-
-        String token = FirebaseInstanceId.getInstance().getToken();
     }
 
     @Override
@@ -181,7 +177,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(this.countryTabFragment);
         fragmentList.add(new FindBuddyTabFragment());
         fragmentList.add(new MessagesFragment());
-        fragmentList.add(new AUserCountryPostsFragment());
+        fragmentList.add(new ManageDestinationTabFragment());
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DestinationFragment());
     }

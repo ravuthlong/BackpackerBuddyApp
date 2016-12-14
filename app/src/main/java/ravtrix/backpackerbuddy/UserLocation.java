@@ -29,16 +29,23 @@ public class UserLocation {
         this.context = context;
     }
 
+    /**
+     * Start location service to collect latitude and longitude
+     * @param userLocationInterface         Interface to detect when location is received
+     */
     public void startLocationService(UserLocationInterface userLocationInterface) {
         this.userLocationInterface = userLocationInterface;
         setLocationListener();
         checkPermission();
     }
 
+
+    /**
+     * Check if permission to use GPS is given, if not display option to enable
+     */
     private void checkPermission() {
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
         // Check for user's SDK Version. SDK version >= Marshmallow need permission access
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -60,6 +67,9 @@ public class UserLocation {
     }
 
 
+    /**
+     * Listener for location
+     */
     private void setLocationListener() {
         locationListener = new LocationListener() {
             @Override
@@ -96,7 +106,9 @@ public class UserLocation {
         }
     }
 
-    // User with granted access can access the location now
+    /**
+     * Cause location listener to start listening
+     */
     public void configureButton() {
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);

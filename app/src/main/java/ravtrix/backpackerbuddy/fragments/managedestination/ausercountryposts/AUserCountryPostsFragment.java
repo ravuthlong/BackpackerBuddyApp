@@ -1,9 +1,8 @@
-package ravtrix.backpackerbuddy.fragments.ausercountryposts;
+package ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,9 +32,8 @@ import retrofit2.Response;
 
 public class AUserCountryPostsFragment extends Fragment {
 
-    @BindView(R.id.postRecyclerView1) protected RecyclerView recyclerView;
-    @BindView(R.id.bFloatingActionButton) protected FloatingActionButton bFloatingAdd;
-    @BindView(R.id.tvNoInfo_FragUserCountries) protected TextView noInfoTv;
+    @BindView(R.id.recyclerView_userPost) protected RecyclerView recyclerView;
+    @BindView(R.id.tvNoInfo_FragUserPost) protected TextView noInfoTv;
     private View view;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private FeedListAdapterAUserPosts feedListAdapterAUserPosts;
@@ -53,12 +51,12 @@ public class AUserCountryPostsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.frag_usercountries_recent, container, false);
+        view = inflater.inflate(R.layout.frag_user_posts, container, false);
         view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
-        bFloatingAdd.setVisibility(View.INVISIBLE);
+
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
 
@@ -76,12 +74,13 @@ public class AUserCountryPostsFragment extends Fragment {
         retrofitCall.enqueue(new Callback<List<FeedItemAUserCountry>>() {
             @Override
             public void onResponse(Call<List<FeedItemAUserCountry>> call, Response<List<FeedItemAUserCountry>> response) {
+
+                view.setVisibility(View.VISIBLE);
                 if (response.body().get(0).isSuccess() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     noInfoTv.setVisibility(View.VISIBLE);
 
                 } else {
-                    view.setVisibility(View.VISIBLE);
                     feedItemAUserCountries = response.body();
                     feedListAdapterAUserPosts = new FeedListAdapterAUserPosts(AUserCountryPostsFragment.this, feedItemAUserCountries);
                     setRecyclerView(feedListAdapterAUserPosts);

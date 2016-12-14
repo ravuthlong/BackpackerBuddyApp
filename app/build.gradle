@@ -13,8 +13,8 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 7
-        versionName "1.2.4"
+        versionCode 8
+        versionName "1.2.5"
 
     }
     buildTypes {
@@ -65,4 +65,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-

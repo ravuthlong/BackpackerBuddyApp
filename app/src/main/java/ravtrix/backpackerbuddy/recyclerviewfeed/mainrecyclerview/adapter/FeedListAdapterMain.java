@@ -31,9 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
@@ -60,7 +60,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     private CountryRecentFragment activity;
     private List<FeedItem> feedItems;
     private BackgroundImage backgroundImage;
-    private int loggedInUser;
+    private final int loggedInUser;
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
     private Button bEditPost, bDeletePost, bReportPost;
@@ -211,12 +211,12 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     if (currentPos.getClicked() == 1) {
                         // Cancel from favorite list - database/local model
-                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext());
+                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
                         currentPos.setClicked(0);
                         ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
                     } else {
                         // Insert to favorite list - database/ local model
-                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext());
+                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
                         currentPos.setClicked(1);
                         ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
                     }
@@ -358,7 +358,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     // Prepare a HashMap with userID and postID the logged in user want to do database operation to
-    private HashMap<String, String> getHashMapWithInfo(int postID) {
+    public static HashMap<String, String> getHashMapWithInfo(int postID, final int loggedInUser) {
         HashMap<String, String> favoriteInfoHashMap = new HashMap<>();
         favoriteInfoHashMap.put("userID", Integer.toString(loggedInUser));
         favoriteInfoHashMap.put("postID", Integer.toString(postID));
@@ -444,8 +444,8 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     // Retrofit
 
     // Insert into favorite list in database
-    private void retrofitInsertToFavoriteList(int postID, final Context context) {
-        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID);
+    public static void retrofitInsertToFavoriteList(int postID, final Context context, int loggedInUser) {
+        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID, loggedInUser);
 
         Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton
                 .getRetrofitUserCountry()
@@ -467,8 +467,8 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     // Remove from favorite list in database
-    private void retrofitRemoveFromFavoriteList(int postID, final Context context) {
-        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID);
+    public static void retrofitRemoveFromFavoriteList(int postID, final Context context, int loggedInUser) {
+        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID, loggedInUser);
 
         Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton
                 .getRetrofitUserCountry()
@@ -485,7 +485,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                Helpers.displayToast(context, "Problem removing");
             }
         });
     }

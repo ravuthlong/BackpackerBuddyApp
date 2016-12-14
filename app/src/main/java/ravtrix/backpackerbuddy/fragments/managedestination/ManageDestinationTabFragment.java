@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.mainfrag;
+package ravtrix.backpackerbuddy.fragments.managedestination;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,41 +17,48 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.mainfrag.countrybyfilter.CountryFilterFragment;
-import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFragment;
+import ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts.AUserCountryPostsFragment;
+import ravtrix.backpackerbuddy.fragments.managedestination.auserfavoriteposts.AUserFavPostsFragment;
 
 /**
- * Created by Ravinder on 10/9/16.
+ * Created by Ravinder on 12/13/16.
  */
 
-public class CountryTabFragment extends Fragment {
-
+public class ManageDestinationTabFragment extends Fragment {
     @BindView(R.id.viewpager) protected ViewPager viewPager;
     @BindView(R.id.tabs) protected TabLayout tabLayout;
-    private CountryTabFragment.ViewPagerAdapter adapter;
-    private CountryRecentFragment countryRecentFragment;
-    private CountryFilterFragment countryFilterFragment;
-    private Bundle bundle;
+    private AUserCountryPostsFragment aUserCountryPostsFragment;
+    private AUserFavPostsFragment aUserFavPostsFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_tabs, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
-        setRetainInstance(true);
 
-        this.countryRecentFragment = new CountryRecentFragment();
-        this.countryFilterFragment = new CountryFilterFragment();
+        this.aUserCountryPostsFragment = new AUserCountryPostsFragment();
+        this.aUserFavPostsFragment = new AUserFavPostsFragment();
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+        setFirstTabSelectedOnStart();
+        return v;
+    }
 
-        if (this.bundle != null) {
-            this.countryRecentFragment.setReceivedQueryBundle(bundle);
-            adapter.changeTitle();
-            adapter.notifyDataSetChanged();
-        }
+    /**
+     * Set up the two tabs, one being the "Recent Posts" and the other being "Filter Tools"
+     * @param viewPager         the view pager for the tabs
+     */
+    private void setupViewPager(final ViewPager viewPager) {
+        ManageDestinationTabFragment.ViewPagerAdapter adapter =
+                new ManageDestinationTabFragment.ViewPagerAdapter(getChildFragmentManager());
 
+        adapter.addFragment(this.aUserCountryPostsFragment, "Your Posts");
+        adapter.addFragment(this.aUserFavPostsFragment, "Watch List");
+        viewPager.setAdapter(adapter);
+    }
+
+    private void setFirstTabSelectedOnStart() {
         new Handler().postDelayed(
                 new Runnable(){
                     @Override
@@ -59,23 +66,6 @@ public class CountryTabFragment extends Fragment {
                         tabLayout.getTabAt(0).select();
                     }
                 }, 100);
-        return v;
-    }
-
-    public void setHasBundle(Bundle bundle) {
-        this.bundle = bundle;
-    }
-
-    /**
-     * Set up the two tabs, one being the "Recent Posts" and the other being "Filter Tools"
-     * @param viewPager         the viewpager for the tabs
-     */
-    private void setupViewPager(final ViewPager viewPager) {
-        adapter = new CountryTabFragment.ViewPagerAdapter(getChildFragmentManager());
-
-        adapter.addFragment(this.countryRecentFragment, "Recent Posts");
-        adapter.addFragment(this.countryFilterFragment, "Filter Tools");
-        viewPager.setAdapter(adapter);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -104,10 +94,6 @@ public class CountryTabFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
-        }
-
-        void changeTitle() {
-            adapter.mFragmentTitleList.set(0, "Filtered Posts");
         }
     }
 
