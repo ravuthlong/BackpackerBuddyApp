@@ -39,8 +39,6 @@ public class CustomGridView extends BaseAdapter {
         this.view = view;
         this.onFinishedImageLoading = onFinishedImageLoading;
         counter = new Counter(-1);
-
-        System.out.println("COUNTER IS : " + counter.getCount());
     }
 
     @Override
@@ -79,14 +77,11 @@ public class CustomGridView extends BaseAdapter {
                         @Override
                         public void onSuccess() {
                             counter.addCount();
-                            System.out.println("COUNTER ADD IS : " + counter.getCount());
                             checkPicassoFinished();
                         }
 
                         @Override
                         public void onError() {
-                            System.out.println("ERROR!!!!");
-
                         }
                     });
 
