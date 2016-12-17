@@ -78,30 +78,75 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:paddingRight="20dp"
                     android:id="@+id/username_otherProfile" />
 
                 <ImageView
-                    android:id="@+id/imageView2"
-                    android:contentDescription="@string/location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location_on_white_24dp" />
+                    app:srcCompat="@drawable/ic_flight_land_black_24dp"
+                    android:id="@+id/imgNotTravel"
+                    android:contentDescription="@string/statusNotTravel"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/activity_other_tvLocation"
+                    android:id="@+id/txtNotTravel"
+                    android:text="@string/statusNotTravel"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_flight_takeoff_blue_24dp"
+                    android:id="@+id/imgTravel"
+                    android:contentDescription="@string/statusTravel"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/txtTravel"
+                    android:text="@string/statusTravel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
-            <LinearLayout
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/linearlayout3">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:contentDescription="@string/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_location_on_white_24dp" />
+
+                    <TextView
+                        android:id="@+id/activity_other_tvLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/greenLighter"
                 android:layout_marginBottom="90dp"
-                android:layout_marginTop="10dp"
-                style="@style/PaddingPage" >
+                android:layout_marginTop="15dp"
+                style="@style/PaddingPage"
+                android:paddingBottom="25dp"
+                    android:id="@+id/linearlayout4">
 
                 <TextView
                     android:id="@+id/textView2"
@@ -203,11 +248,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_user_profile"
-                    android:padding="20dp"
                     android:gravity="center"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="20dp"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

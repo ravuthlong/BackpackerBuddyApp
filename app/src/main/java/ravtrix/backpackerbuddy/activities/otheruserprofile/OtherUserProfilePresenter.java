@@ -31,6 +31,16 @@ class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
                        otherUserJSON.get("longitude").getAsString().trim());
                 view.loadProfileImage("http://backpackerbuddy.net23.net/profile_pic/" +
                         userID + ".JPG");
+
+                if (otherUserJSON.get("traveling").getAsInt() == 0) {
+                    // User is not traveling
+                    view.showImgNotTravel();
+                    view.showTxtNotTravel();
+                } else {
+                    // User is traveling
+                    view.showImgTravel();
+                    view.showTxtTravel();
+                }
             }
 
             @Override

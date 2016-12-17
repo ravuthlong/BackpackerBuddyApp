@@ -50,6 +50,8 @@
     <string name="report">Report</string>
     <string name="saveToolbar">Save</string>
     <string name="signUp">Sign Up</string>
+    <string name="statusTravel">Traveling</string>
+    <string name="statusNotTravel">Not Traveling</string>
     <string name="sixThings">The six must haves in your backpack</string>
     <string name="submitFilter">Submit Filter</string>
     <string name="submitSignup1">submitSignUp1</string>

@@ -94,9 +94,6 @@ public class AUserFavPostsFragment extends Fragment {
                 System.out.println(t.getMessage());
             }
         });
-
-
-
     }
 
     private void setRecyclerView(FeedListAdapterUserFav feedListAdapterUserFav) {

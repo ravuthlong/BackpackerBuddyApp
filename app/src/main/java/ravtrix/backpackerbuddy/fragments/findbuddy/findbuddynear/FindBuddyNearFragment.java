@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,7 +38,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
-    private ProgressDialog progressDialog;
     private View fragView;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
@@ -70,8 +68,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
         return fragView;
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -165,6 +161,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
                 profileImageGridView, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
             @Override
             public void onFinishedImageLoading() {
+                System.out.println("FINISHED 1");
                 hideProgressbar();
                 setViewVisible();
             }

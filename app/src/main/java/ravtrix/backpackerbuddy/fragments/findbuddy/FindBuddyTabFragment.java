@@ -49,6 +49,7 @@ public class FindBuddyTabFragment extends Fragment  {
     }
 
     private void setupViewPager(final ViewPager viewPager) {
+
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         adapter.addFragment(new FindBuddyNearFragment(), "Nearby");

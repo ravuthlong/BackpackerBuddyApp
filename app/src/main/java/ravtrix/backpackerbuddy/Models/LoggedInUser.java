@@ -33,19 +33,31 @@ public class LoggedInUser {
     @SerializedName("time")
     @Expose
     private Long time;
+    @SerializedName("traveling")
+    @Expose
+    private int traveling;
 
     public LoggedInUser() {}
 
-    public LoggedInUser(int userID, String email, String username, String userImageURL,
+    public LoggedInUser(int userID, String email, String username, String userImageURL, int traveling,
                         double latitude, double longitude, long currentTime) {
         this.userID = userID;
         this.email = email;
         this.username = username;
         this.userpic = userImageURL;
+        this.traveling = traveling;
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = currentTime;
 
+    }
+
+    public int getTraveling() {
+        return traveling;
+    }
+
+    public void setTraveling(int traveling) {
+        this.traveling = traveling;
     }
 
     public String getUserpic() {

@@ -38,6 +38,10 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.UpdateLocation.class);
     }
 
+    public RetrofitUserInfoInterfaces.UpdateTravelingStatus updateTravelingStatus() {
+        return retrofit.create(RetrofitUserInfoInterfaces.UpdateTravelingStatus.class);
+    }
+
     public RetrofitUserInfoInterfaces.GetNearbyUsers getNearbyUsers() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsers.class);
     }

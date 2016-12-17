@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,7 +39,10 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.activity_other_noSix) protected TextView noSix;
     @BindView(R.id.activity_other_noPersonality) protected TextView noPersonality;
     @BindView(R.id.activity_other_noIdeal) protected TextView noIdeal;
-
+    @BindView(R.id.imgTravel) protected ImageView imgTravel;
+    @BindView(R.id.imgNotTravel) protected ImageView imgNotTravel;
+    @BindView(R.id.txtTravel) protected TextView txtTravel;
+    @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
     private OtherUserProfilePresenter otherUserProfilePresenter;
     private int otherUserID;
 
@@ -166,5 +170,45 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     public void displayErrorToast() {
         Helpers.displayToast(OtherUserProfile.this, "Error");
+    }
+
+    @Override
+    public void showImgTravel() {
+        this.imgTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showImgNotTravel() {
+        this.imgNotTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTxtTravel() {
+        this.txtTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTxtNotTravel() {
+        this.txtNotTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideImgTravel() {
+        this.imgTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideImgNotTravel() {
+        this.imgNotTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideTxtTravel() {
+        this.txtTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideTxtNotTravel() {
+        this.txtNotTravel.setVisibility(View.GONE);
     }
 }

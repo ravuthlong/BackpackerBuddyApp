@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
  * Created by Ravinder on 3/28/16.
  */
 public class UserLocalStore {
-    public static final String SP_NAME = "userDetails";
+    private static final String SP_NAME = "userDetails";
     private SharedPreferences userLocalDataStore;
     private static LoggedInUser storedUser;
 
@@ -19,6 +19,7 @@ public class UserLocalStore {
         spEditor.putInt("userID", loggedInUser.getUserID());
         spEditor.putString("email", loggedInUser.getEmail());
         spEditor.putString("username", loggedInUser.getUsername());
+        spEditor.putInt("traveling", loggedInUser.getTraveling());
         spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
         spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
         spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
@@ -33,9 +34,16 @@ public class UserLocalStore {
         spEditor.apply();
     }
 
+    public void changeTravelStat(int status) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putInt("traveling", status);
+        spEditor.apply();
+    }
+
     // Return current logged in user if exist
     public LoggedInUser getLoggedInUser() {
         int userID = userLocalDataStore.getInt("userID", 0);
+        int traveling = userLocalDataStore.getInt("traveling", 0);
         String email = userLocalDataStore.getString("email", "");
         String username = userLocalDataStore.getString("username", "");
         String userImageURL = userLocalDataStore.getString("userImageURL", "");
@@ -43,7 +51,7 @@ public class UserLocalStore {
         double longitude = Double.longBitsToDouble(userLocalDataStore.getLong("longitude", 0));
         long time = userLocalDataStore.getLong("time", 0);
 
-        storedUser = new LoggedInUser(userID, email, username, userImageURL, latitude, longitude, time);
+        storedUser = new LoggedInUser(userID, email, username, userImageURL, traveling, latitude, longitude, time);
         return storedUser;
     }
 

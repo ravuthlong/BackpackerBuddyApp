@@ -5,13 +5,6 @@ package ravtrix.backpackerbuddy.activities.otheruserprofile;
  */
 
 interface IOtherUserProfileView {
-
-    //username.setText(responseJSON.get("username").getAsString());
-    //userDetailOne.setText(responseJSON.get("detailOne").getAsString());
-    //userDetailTwo.setText(responseJSON.get("detailTwo").getAsString());
-    //userDetailThree.setText(responseJSON.get("detailThree").getAsString());
-    //userDetailFour.setText(responseJSON.get("detailFour").getAsString());
-
     void setUsername(String username);
     void setUserDetailOne(String userDetailOne);
     void setUserDetailTwo(String userDetailTwo);
@@ -22,5 +15,12 @@ interface IOtherUserProfileView {
     void fetchOtherUserProfile();
     void displayErrorToast();
     void showProgressbar();
-
+    void showImgTravel();
+    void showImgNotTravel();
+    void showTxtTravel();
+    void showTxtNotTravel();
+    void hideImgTravel();
+    void hideImgNotTravel();
+    void hideTxtTravel();
+    void hideTxtNotTravel();
 }

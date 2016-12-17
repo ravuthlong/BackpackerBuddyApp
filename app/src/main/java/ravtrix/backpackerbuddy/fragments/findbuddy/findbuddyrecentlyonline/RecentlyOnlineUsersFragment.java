@@ -30,14 +30,14 @@ import retrofit2.Response;
  */
 
 public class RecentlyOnlineUsersFragment extends Fragment {
-    @BindView(R.id.grid_view) protected GridView profileImageGridView;
-    @BindView(R.id.frag_gridview_nearTxt) protected TextView nearTxt;
-    @BindView(R.id.frag_gridview_city) protected TextView city;
+    @BindView(R.id.grid_viewOnline) protected GridView profileImageGridView;
+    @BindView(R.id.frag_gridview_nearTxtOnline) protected TextView nearTxt;
+    @BindView(R.id.frag_gridview_cityOnline) protected TextView city;
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private int currentSelectedDropdown;
-    private boolean firstTimeVisible;
+    private CustomGridView customGridViewAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -48,33 +48,23 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_gridview, container, false);
-        view.setVisibility(View.INVISIBLE);
+        view = inflater.inflate(R.layout.frag_gridview_online, container, false);
+
         ButterKnife.bind(this, view);
 
-        firstTimeVisible = true;
         nearTxt.setText("Recently");
         city.setText("Online");
+
         userLocalStore = new UserLocalStore(getActivity());
+        fetchRecentlyOnlineUsers();
 
         return view;
     }
 
-    /*
-     * Only fetch retrofit recently online users when this fragment becomes visible
-     * Note: Fragments in tab view-pagers are all called onCreateView()
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser && firstTimeVisible) {
-            firstTimeVisible = false;
-            fetchRecentlyOnlineUsers();
-        }
-    }
 
     private void fetchRecentlyOnlineUsers() {
+        //view.setVisibility(View.INVISIBLE);
         fragActivityProgressBarInterface.setProgressBarVisible();
 
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
@@ -85,12 +75,11 @@ public class RecentlyOnlineUsersFragment extends Fragment {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
-                CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
+                customGridViewAdapter = new CustomGridView(getActivity(), userList,
                         view, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
                     @Override
                     public void onFinishedImageLoading() {
                         hideProgressbar();
-                        setViewVisible();
                     }
                 });
                 profileImageGridView.setAdapter(customGridViewAdapter);
@@ -110,10 +99,6 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
     public int getCurrentSelectedDropdown() {
         return this.currentSelectedDropdown;
-    }
-
-    private void setViewVisible() {
-        view.setVisibility(View.VISIBLE);
     }
 
     private void hideProgressbar() {

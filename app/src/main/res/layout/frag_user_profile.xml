@@ -46,46 +46,17 @@
     </FrameLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:id="@+id/username_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:contentDescription="@string/profilePic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_location_on_white_24dp" />
-
-        <TextView
-            android:id="@+id/user_profile_tvLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/location" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/linearLayout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/frameLayout"
+        android:layout_below="@+id/linearLayout5"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="70dp"
         android:background="@color/greenLighter"
         android:layout_marginBottom="30dp"
-        style="@style/PaddingPage" >
+        style="@style/PaddingPage"
+        android:layout_marginTop="15dp">
 
         <LinearLayout
             android:id="@+id/frag_user_profile_etLayout1"
@@ -264,6 +235,88 @@
                     android:layout_gravity="bottom" />
             </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/linearLayout4"
+        android:id="@+id/linearLayout5">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:contentDescription="@string/profilePic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location_on_white_24dp" />
+
+        <TextView
+            android:id="@+id/user_profile_tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/location" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/frameLayout"
+        android:layout_alignParentStart="true"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/username_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="20dp"
+            android:paddingLeft="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_flight_land_black_24dp"
+            android:id="@+id/imgNotTravel"
+            android:contentDescription="@string/statusNotTravel"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtNotTravel"
+            android:text="@string/statusNotTravel"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_flight_takeoff_blue_24dp"
+            android:id="@+id/imgTravel"
+            android:contentDescription="@string/statusTravel"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtTravel"
+            android:text="@string/statusTravel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imgTravelStatusEdit"
+            android:contentDescription="@string/edit"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:background="@android:drawable/ic_menu_edit" />
+
     </LinearLayout>
 </RelativeLayout>
 </ScrollView>

@@ -31,13 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
@@ -63,9 +61,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int loggedInUser;
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
-    private Button bEditPost, bDeletePost, bReportPost;
-    private Counter counter;
-    private OnFinishedImageLoading onFinishedImageLoading;
+    private Button bEditPost, bDeletePost;
 
     private OnLoadMoreListener onLoadMoreListener;
     private LinearLayoutManager mLinearLayoutManager;
@@ -84,11 +80,9 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         this.activity = activity;
         this.loggedInUser = loggedInUser;
         this.fragActivityResetDrawer = (FragActivityResetDrawer) activity.getActivity();
-        //this.onFinishedImageLoading = onFinishedImageLoading;
         this.onLoadMoreListener = onLoadMoreListener;
         backgroundImage = new BackgroundImage();
         this.feedItems = new ArrayList<>();
-        counter = new Counter(0);
     }
 
     @Override
@@ -101,149 +95,21 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void addAll(List<FeedItem> feedItems){
-        this.feedItems.clear();
-        this.feedItems.addAll(feedItems);
-        notifyDataSetChanged();
-    }
-
-    // Add 10 more items to feed list
-    public void addItemMore(List<FeedItem> feedTen){
-        int currentSize = feedItems.size();
-        this.feedItems.addAll(feedTen);
-        notifyItemRangeChanged(currentSize, feedItems.size());
-    }
-
-
-    public void resetAll() {
-        this.visibleThreshold = 1;
-        this.feedItems.clear();
-        this.onLoadMoreListener = null;
-        this.firstVisibleItem = 0;
-        this.visibleItemCount = 0;
-        this.totalItemCount = 0;
-    }
-
-    public void setMoreLoading(boolean isMoreLoading) {
-        this.isMoreLoading = isMoreLoading;
-    }
-
-
-    /* Controlling of adding and removing spinner for loading more items in recycler view
-     * feedItem adds null so viewholder can inflate the spinner
-     */
-    public void setProgressMore(final boolean isProgress) {
-        if (isProgress) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    feedItems.add(null);
-                    notifyItemInserted(feedItems.size() - 1);
-                }
-            });
-        } else {
-            feedItems.remove(feedItems.size() - 1);
-            notifyItemRemoved(feedItems.size());
-        }
-    }
-
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof ViewHolder) {
-            // Initialize fonts
-            Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Trench.otf");
-            Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
-
-            ((ViewHolder) holder).tvCountry.setTypeface(countryFont);
-            ((ViewHolder) holder).tvFromDate.setTypeface(dateFont);
-            ((ViewHolder) holder).tvToDate.setTypeface(dateFont);
-            ((ViewHolder) holder).tvArrow.setTypeface(dateFont);
-
-
             final FeedItem currentPos = feedItems.get(position);
 
-            // Prevent long country names from getting cut from the screen. Adjust text size.
-            if (currentPos.getCountry().length() >= 15) {
-                ((ViewHolder) holder).tvCountry.setTextSize(30);
-            } else {
-                ((ViewHolder) holder).tvCountry.setTextSize(45);
-            }
-
-            ((ViewHolder) holder).tvCountry.setText(currentPos.getCountry());
-            ((ViewHolder) holder).tvFromDate.setText(currentPos.getFromDate());
-            ((ViewHolder) holder).tvToDate.setText(currentPos.getToDate());
-
-            Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    currentPos.getUserID() + ".JPG")
-                    .resize(400, 400)
-                    .centerCrop()
-                    .placeholder(R.drawable.default_photo)
-                    .into(((ViewHolder) holder).profileImage, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            counter.addCount();
-                            //checkPicassoFinished();
-                        }
-
-                        @Override
-                        public void onError() {
-                            // error
-                        }
-                    });
-
-            // Set image background based on country name. Hash will return the correct background id
-            if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
-                ((ViewHolder) holder).backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
-            }
-
-            if (currentPos.getClicked() == 1) {
-                ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
-                currentPos.isFavorite();
-            } else {
-                ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
-            }
-
-
-            ((ViewHolder) holder).imageButtonStar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (currentPos.getClicked() == 1) {
-                        // Cancel from favorite list - database/local model
-                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
-                        currentPos.setClicked(0);
-                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
-                    } else {
-                        // Insert to favorite list - database/ local model
-                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
-                        currentPos.setClicked(1);
-                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
-                    }
-                }
-            });
-
-            ((ViewHolder) holder).imageButtonMail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (loggedInUser == currentPos.getUserID()) {
-                        Helpers.displayToast(activity.getContext(), "Can't message yourself...");
-                    } else {
-                        Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
-                        convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
-                        activity.startActivity(convoIntent);
-                    }
-                }
-            });
-
-            ((ViewHolder) holder).imgEditPost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showPopUp(currentPos.getUserID());
-                    setPopUpDialogItemListener(currentPos.getId(), currentPos);
-                }
-            });
+            initVisibilityItems(holder, currentPos);
+            initTypeface(holder);
+            initTextInfo(holder, currentPos);
+            initProfileImage(holder, currentPos);
+            initBackgroundImage(holder, currentPos);
+            initStarStatus(holder, currentPos);
+            initStarButtonListener(holder, currentPos);
+            initMessageButtonListener(holder, currentPos);
+            initEditPostListener(holder, currentPos);
         }
     }
 
@@ -315,6 +181,52 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public void addAll(List<FeedItem> feedItems){
+        this.feedItems.clear();
+        this.feedItems.addAll(feedItems);
+        notifyDataSetChanged();
+    }
+
+    // Add 10 more items to feed list
+    public void addItemMore(List<FeedItem> feedTen){
+        int currentSize = feedItems.size();
+        this.feedItems.addAll(feedTen);
+        notifyItemRangeChanged(currentSize, feedItems.size());
+    }
+
+
+    public void resetAll() {
+        this.visibleThreshold = 1;
+        this.feedItems.clear();
+        this.onLoadMoreListener = null;
+        this.firstVisibleItem = 0;
+        this.visibleItemCount = 0;
+        this.totalItemCount = 0;
+    }
+
+    public void setMoreLoading(boolean isMoreLoading) {
+        this.isMoreLoading = isMoreLoading;
+    }
+
+
+    /* Controlling of adding and removing spinner for loading more items in recycler view
+     * feedItem adds null so viewholder can inflate the spinner
+     */
+    public void setProgressMore(final boolean isProgress) {
+        if (isProgress) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    feedItems.add(null);
+                    notifyItemInserted(feedItems.size() - 1);
+                }
+            });
+        } else {
+            feedItems.remove(feedItems.size() - 1);
+            notifyItemRemoved(feedItems.size());
+        }
+    }
+
     public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager){
         this.mLinearLayoutManager = linearLayoutManager;
     }
@@ -358,7 +270,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     // Prepare a HashMap with userID and postID the logged in user want to do database operation to
-    public static HashMap<String, String> getHashMapWithInfo(int postID, final int loggedInUser) {
+    private static HashMap<String, String> getHashMapWithInfo(int postID, final int loggedInUser) {
         HashMap<String, String> favoriteInfoHashMap = new HashMap<>();
         favoriteInfoHashMap.put("userID", Integer.toString(loggedInUser));
         favoriteInfoHashMap.put("postID", Integer.toString(postID));
@@ -389,7 +301,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
         bEditPost = (Button) dialogLayout.findViewById(R.id.bEditPost);
         bDeletePost = (Button) dialogLayout.findViewById(R.id.bDeletePost);
-        bReportPost = (Button) dialogLayout.findViewById(R.id.bReportPost);
 
         if (loggedInUser == postUserID) {
             bDeletePost.setVisibility(View.VISIBLE);
@@ -429,13 +340,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     }
                 });
-            }
-        });
-
-        bReportPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("REPORT");
             }
         });
     }
@@ -490,18 +394,113 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    /*
-    private void checkPicassoFinished() {
-        System.out.println("COUNTER: " + counter.getCount());
-
-        // Let 15 be the recyclerview loading standard
-        if (getItemCount() < 15) {
-                onFinishedImageLoading.onFinishedImageLoading();
-
+    private void initVisibilityItems(RecyclerView.ViewHolder holder, FeedItem currentPos) {
+        if (loggedInUser == currentPos.getUserID()) {
+            ((ViewHolder) holder).imageButtonMail.setVisibility(View.GONE);
+            ((ViewHolder) holder).imageButtonStar.setVisibility(View.GONE);
+            ((ViewHolder) holder).imgEditPost.setVisibility(View.VISIBLE);
         } else {
-            if (counter.getCount() >= 15) { // Wait until at least 15 images load before displaying view
-                onFinishedImageLoading.onFinishedImageLoading();
-            }
+            ((ViewHolder) holder).imageButtonMail.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).imageButtonStar.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).imgEditPost.setVisibility(View.GONE);
         }
-    }*/
+    }
+
+    private void initTypeface(RecyclerView.ViewHolder holder) {
+        // Initialize fonts
+        Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Trench.otf");
+        Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
+
+        ((ViewHolder) holder).tvCountry.setTypeface(countryFont);
+        ((ViewHolder) holder).tvFromDate.setTypeface(dateFont);
+        ((ViewHolder) holder).tvToDate.setTypeface(dateFont);
+        ((ViewHolder) holder).tvArrow.setTypeface(dateFont);
+    }
+
+    private void initTextInfo(RecyclerView.ViewHolder holder, FeedItem currentPos) {
+        // Prevent long country names from getting cut from the screen. Adjust text size.
+        if (currentPos.getCountry().length() >= 15) {
+            ((ViewHolder) holder).tvCountry.setTextSize(30);
+        } else {
+            ((ViewHolder) holder).tvCountry.setTextSize(45);
+        }
+        ((ViewHolder) holder).tvCountry.setText(currentPos.getCountry());
+        ((ViewHolder) holder).tvFromDate.setText(currentPos.getFromDate());
+        ((ViewHolder) holder).tvToDate.setText(currentPos.getToDate());
+    }
+
+    private void initProfileImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {
+        Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                currentPos.getUserID() + ".JPG")
+                .resize(400, 400)
+                .centerCrop()
+                .placeholder(R.drawable.default_photo)
+                .into(((ViewHolder) holder).profileImage);
+    }
+
+    private void initBackgroundImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {
+        // Set image background based on country name. Hash will return the correct background id
+        if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
+            ((ViewHolder) holder).backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
+        }
+    }
+
+    private void initStarStatus(RecyclerView.ViewHolder holder, FeedItem currentPos) {
+        if (currentPos.getClicked() == 1) {
+            ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+            currentPos.isFavorite();
+        } else {
+            ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+        }
+    }
+
+    private void initStarButtonListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {
+        ((ViewHolder) holder).imageButtonStar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (loggedInUser == currentPos.getUserID()) {
+                    Helpers.displayToast(activity.getContext(), "Can't bookmark yourself...");
+                } else {
+                    if (currentPos.getClicked() == 1) {
+                        // Cancel from favorite list - database/local model
+                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
+                        currentPos.setClicked(0);
+                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+                    } else {
+                        // Insert to favorite list - database/ local model
+                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
+                        currentPos.setClicked(1);
+                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+                    }
+                }
+            }
+        });
+    }
+
+    private void initMessageButtonListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {
+        ((ViewHolder) holder).imageButtonMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (loggedInUser == currentPos.getUserID()) {
+                    Helpers.displayToast(activity.getContext(), "Can't message yourself...");
+                } else {
+                    Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
+                    convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
+                    activity.startActivity(convoIntent);
+                }
+            }
+        });
+    }
+
+    private void initEditPostListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {
+        ((ViewHolder) holder).imgEditPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp(currentPos.getUserID());
+                setPopUpDialogItemListener(currentPos.getId(), currentPos);
+            }
+        });
+    }
 }

@@ -179,7 +179,8 @@ public class Helpers {
                         // Reset local storage of user also after server-side update
                         LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
                                 userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                                userLocalStore.getLoggedInUser().getUserImageURL(), latitude, longitude,
+                                userLocalStore.getLoggedInUser().getUserImageURL(), userLocalStore.getLoggedInUser().getTraveling(),
+                                latitude, longitude,
                                 currentTime);
                         userLocalStore.clearUserData();
                         userLocalStore.storeUserData(loggedInUser);

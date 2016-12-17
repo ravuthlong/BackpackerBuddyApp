@@ -17,6 +17,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.managedestination.auserfavoriteposts.AUserFavPostsFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
@@ -148,6 +149,18 @@ public class FeedListAdapterUserFav extends RecyclerView.Adapter<FeedListAdapter
             imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
             profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
+            backgroundLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    FeedItem clickedItem = feedItemAUserFav.get(position);
+
+                    Intent postInfo = new Intent(fragment.getActivity(), OtherUserProfile.class);
+                    postInfo.putExtra("postID", clickedItem.getId());
+                    postInfo.putExtra("userID", clickedItem.getUserID());
+                    fragment.startActivity(postInfo);
+                }
+            });
         }
     }
 }

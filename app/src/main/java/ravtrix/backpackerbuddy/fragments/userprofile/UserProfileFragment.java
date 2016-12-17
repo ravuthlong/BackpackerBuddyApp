@@ -1,34 +1,44 @@
 package ravtrix.backpackerbuddy.fragments.userprofile;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
+import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Ravinder on 8/18/16.
@@ -55,9 +65,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.username_profile) protected TextView username;
     @BindView(R.id.imgbEditPhoto) protected ImageButton imgbEditPhoto;
     @BindView(R.id.user_profile_tvLocation) protected TextView tvLocation;
+    @BindView(R.id.imgTravel) protected ImageView imgTravel;
+    @BindView(R.id.imgNotTravel) protected ImageView imgNotTravel;
+    @BindView(R.id.txtTravel) protected TextView txtTravel;
+    @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
+    @BindView(R.id.imgTravelStatusEdit) protected ImageView imgTravelStatusEdit;
     private UserLocalStore userLocalStore;
     private View v;
-    private ProgressBar progressBar;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private FragActivityUpdateProfilePic fragActivityUpdateProfilePic;
     private boolean isDetailOneAHint = true;
@@ -65,6 +79,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isDetailThreeAHint = true;
     private boolean isDetailFourAHint = true;
     private UserProfilePresenter presenter;
+    private ProgressDialog progressDialog;
+    private int travelStatus;
 
     @Override
     public void onAttach(Context context) {
@@ -92,9 +108,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         // Set user location
         setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
                 userLocalStore.getLoggedInUser().getLongitude());
-
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
+
+        travelStatus = userLocalStore.getLoggedInUser().getTraveling();
+        if (travelStatus == 0) { // not traveling
+            imgNotTravel.setVisibility(View.VISIBLE);
+            txtNotTravel.setVisibility(View.VISIBLE);
+        } else {
+            imgTravel.setVisibility(View.VISIBLE);
+            txtTravel.setVisibility(View.VISIBLE);
+        }
+
         return v;
     }
 
@@ -123,6 +148,51 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.imgbEditPhoto:
                 startActivityForResult(new Intent(getActivity(), EditPhotoActivity.class), 1);
+                break;
+            case R.id.imgTravelStatusEdit:
+                AlertDialog.Builder alertDialog = Helpers.showAlertDialogWithTwoOptions(getActivity(), "Travel Status",
+                        "Change your traveling status?", "No");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progressDialog = Helpers.showProgressDialog(getContext(), "Updating...");
+
+                        final HashMap<String, String> userInfo = new HashMap<>();
+                        userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+
+                        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                                .updateTravelingStatus()
+                                .updateTravelStatus(userInfo);
+
+                        retrofit.enqueue(new Callback<JsonObject>() {
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                if (travelStatus == 0) {
+                                    // User is now traveling
+                                    imgNotTravel.setVisibility(View.GONE);
+                                    txtNotTravel.setVisibility(View.GONE);
+                                    imgTravel.setVisibility(View.VISIBLE);
+                                    txtTravel.setVisibility(View.VISIBLE);
+                                } else {
+                                    // User no longer travels
+                                    imgTravel.setVisibility(View.GONE);
+                                    txtTravel.setVisibility(View.GONE);
+                                    imgNotTravel.setVisibility(View.VISIBLE);
+                                    txtNotTravel.setVisibility(View.VISIBLE);
+                                }
+                                // Change local store value for travel status
+                                int newStatus = userLocalStore.getLoggedInUser().getTraveling() == 1 ? 0 : 1;
+                                userLocalStore.changeTravelStat(newStatus);
+                                Helpers.hideProgressDialog(progressDialog);
+                            }
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+                                Helpers.displayToast(getContext(), "Error");
+                            }
+                        });
+                    }
+                });
+                alertDialog.show();
                 break;
             default:
         }
@@ -189,10 +259,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         editLayoutSub3.setOnClickListener(this);
         editLayoutSub4.setOnClickListener(this);
         imgbEditPhoto.setOnClickListener(this);
+        imgTravelStatusEdit.setOnClickListener(this);
     }
 
-    /*
-     * Check if location update is needed. If needed, update local store and server
+    /**
+     *   Check if location update is needed. If needed, update local store and server
      */
     private void checkLocationUpdate() {
         long currentTime = System.currentTimeMillis();

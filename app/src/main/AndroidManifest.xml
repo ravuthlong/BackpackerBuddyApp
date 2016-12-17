@@ -46,6 +46,7 @@
         <activity
             android:name=".activities.login.LogInActivity"
             android:label="Log In Activity"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
