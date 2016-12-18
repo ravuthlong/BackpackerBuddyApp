@@ -3,17 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/navGeneral"
+            android:title="@string/generalChat" />
+        <item
             android:id="@+id/navActivity"
-            android:title="Activity" />
+            android:title="@string/travelPost" />
         <item
             android:id="@+id/navFindBuddy"
-            android:title="Find Buddy"
+            android:title="@string/findBud"
             />
         <item
             android:id="@+id/navInbox"
-            android:title="Inbox" />
+            android:title="@string/inbox" />
         <item
             android:id="@+id/navDestination"
-            android:title="Manage Destination" />
+            android:title="@string/manageDes" />
     </group>
 </menu>

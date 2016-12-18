@@ -24,14 +24,18 @@
     <string name="editPhotoDes">Edit Profile Photo</string>
     <string name="email">Email Address</string>
     <string name="filterBy">Filter By</string>
+    <string name="findBud">Find Buddy</string>
     <string name="firstName">First Name</string>
     <string name="from">From</string>
+    <string name="generalChat">General Chat</string>
     <string name="hntMessage">Type message here</string>
     <string name="idealDay">Your ideal backpacking day</string>
+    <string name="inbox">Inbox</string>
     <string name="info">Info</string>
     <string name="lastName">Last Name</string>
     <string name="location">Location</string>
     <string name="login">Log In</string>
+    <string name="manageDes">Manage Destination</string>
     <string name="month">Month</string>
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
@@ -57,6 +61,7 @@
     <string name="submitSignup1">submitSignUp1</string>
     <string name="submitSignup2">submitSignup2</string>
     <string name="title_activity_travel_selection">TravelSelection</string>
+    <string name="travelPost">Travel Posts</string>
     <string name="txtAbout">About</string>
     <string name="txtFeedback">Send feedback</string>
     <string name="txtNotification">Notification</string>

@@ -40,6 +40,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Ravinder on 8/18/16.
  */
@@ -230,7 +232,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data.getBooleanExtra("refresh", true)) { // only refresh if new photo set
             Picasso.with(getContext())
                     .load("http://backpackerbuddy.net23.net/profile_pic/" +
                             userLocalStore.getLoggedInUser().getUserID() + ".JPG")

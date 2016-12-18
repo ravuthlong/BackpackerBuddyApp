@@ -8,6 +8,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:itemTextAppearance">@color/colorAccent</item>
+        <item name="alertDialogTheme">@style/AlertDialog</item>
     </style>
 
     <!-- Base application theme. -->

@@ -161,7 +161,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
                 profileImageGridView, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
             @Override
             public void onFinishedImageLoading() {
-                System.out.println("FINISHED 1");
                 hideProgressbar();
                 setViewVisible();
             }

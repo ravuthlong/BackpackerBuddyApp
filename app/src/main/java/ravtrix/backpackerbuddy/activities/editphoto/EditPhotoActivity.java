@@ -43,6 +43,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     private static final int RESULT_LOAD_IMAGE = 1;
     private boolean isNewPhotoSet = false;
+    private boolean isNewPhotoSetAlias = false;
     private UserLocalStore userLocalStore;
     private ProgressDialog progressDialog;
 
@@ -94,6 +95,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
 
             circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             isNewPhotoSet = true; // User selected a new image
+            isNewPhotoSetAlias = true;
         }
     }
 
@@ -102,12 +104,14 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         if (isNewPhotoSet) {
             showAlertDialog();
         } else {
-            super.onBackPressed();
+            System.out.println("SEND DATA " +  isNewPhotoSetAlias);
             Intent intent = new Intent();
-            intent.putExtra("refresh", 0);
+            intent.putExtra("refresh", isNewPhotoSetAlias);
             setResult(RESULT_OK, intent);
+            super.onBackPressed();
         }
     }
+
 
     private void showAlertDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -134,8 +138,6 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     private void retrofitUploadProfileImg() {
 

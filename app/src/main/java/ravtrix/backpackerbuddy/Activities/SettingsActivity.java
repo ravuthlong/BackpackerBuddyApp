@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.bPassword) protected Button bChangePassword;
     @BindView(R.id.bEmail) protected Button bChangeEmail;
+    @BindView(R.id.bFeedback) protected Button bFeedback;
 
     private UserLocalStore userLocalStore;
 
@@ -34,8 +36,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         bSignOut.setOnClickListener(this);
         bChangePassword.setOnClickListener(this);
         bChangeEmail.setOnClickListener(this);
+        bFeedback.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
-
     }
 
     @Override
@@ -52,6 +54,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.bEmail:
                 startActivity(new Intent(this, ChangeEmail.class));
+                break;
+            case R.id.bFeedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","ravtrixdev@gmail.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 break;
             default:
                 break;

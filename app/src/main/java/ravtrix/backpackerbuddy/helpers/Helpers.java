@@ -130,14 +130,27 @@ public class Helpers {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
             for (Address address : addresses) {
                 if (address != null) {
-
+                    String location = "";
                     String city = address.getLocality();
+                    System.out.println("CITY: " + city);
+                    String country = address.getCountryName();
+                    System.out.println("COUNTRY: " + country);
+
                     if (city != null && !city.equals("")) {
-                        return city;
+                        location = city;
                     }
+                    if (country != null && !country.equals("")) {
+                        location += ", " + country;
+                    }
+
+                    System.out.println("RETURNED: " + location);
+
+                    return location;
                 }
             }
         } catch (IOException e) {
+            System.out.println("FAIL LOL ");
+
             System.out.println(e.getMessage());
         }
         return null;

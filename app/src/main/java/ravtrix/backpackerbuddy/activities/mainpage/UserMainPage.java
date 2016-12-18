@@ -1,9 +1,9 @@
 package ravtrix.backpackerbuddy.activities.mainpage;
 
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -67,19 +67,15 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
-    private BroadcastReceiver broadcastReceiver;
     private CountryTabFragment countryTabFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //LeakCanary.install(getApplication());
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
 
-        //Check for Google Play Services APK
-        //checkRuntimePermissionAvail();
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
@@ -137,10 +133,13 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 currentPos = 3;
                 setTitle("Manage Destination");
                 break;
+            case R.id.navGeneral:
+                currentPos = 6;
+                setTitle("General Room");
+                break;
             default:
         }
         changeFragment(this.currentPos);
-
         return true;
     }
 
@@ -180,6 +179,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new ManageDestinationTabFragment());
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DestinationFragment());
+        fragmentList.add(new UserProfileFragment());
     }
 
     // Start up state
@@ -197,7 +197,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 fragmentList.get(currentPos)).commit();
         // Delay to avoid lag when changing between option in navigation drawer
-        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -206,7 +205,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                         fragmentList.get(currentPos)).commit();
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
-        }, 150);*/
+        }, 250);
     }
 
     // Listens to when drawer navigation is opened or closed.
@@ -239,9 +238,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
     private void setNavigationDrawerIcons() {
         navigationView.getMenu().getItem(0).setIcon(R.drawable.ic_record_voice_over_black_24dp);
-        navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
-        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_chat_bubble_black_24dp);
-        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_assignment_black_24dp);
+        navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_flight_takeoff_black_24dp);
+        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
+        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_chat_bubble_black_24dp);
+        navigationView.getMenu().getItem(4).setIcon(R.drawable.ic_assignment_black_24dp);
     }
 
     private void resetNavigationDrawer() {
@@ -250,45 +250,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().getItem(i).setChecked(false);
         }
     }
-
-    /*
-    private void checkRuntimePermissionAvail() {
-        // Check for user's SDK Version. SDK version >= Marshmallow need permission access
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                            PackageManager.PERMISSION_GRANTED) {
-
-                requestPermissions(new String[] {
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.INTERNET
-                }, 1);
-            }
-        } else {
-            startService();
-        }
-    }
-
-
-    // Case for users with grant access needed. Location access granted.
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startService();
-                }
-                break;
-        }
-    }
-
-
-    // User with granted access can access the location now. Start the location background service
-    private void startService() {
-        Intent intent = new Intent(getApplicationContext(), LocationService.class);
-        startService(intent);
-    }*/
 
     public List<Fragment> getFragList() {
         return this.fragmentList;
@@ -321,7 +282,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
-
         refreshProfilePic = !userHitHome;
 
         if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
