@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/relative1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileimage_discussion"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/backpack"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tvTime_discussion"
+            android:text="2h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <LinearLayout
+            android:id="@+id/linearlayout2"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/profileimage_discussion">
+
+            <TextView
+                android:text="Username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvUsername_discussion" />
+
+            <TextView
+                android:text="Country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvCountry_discussion" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relative1"
+        >
+
+        <TextView
+            android:text="This is where the user comment goes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvText_discussion" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative2"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+            android:id="@+id/imageButtonLove" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_not_interested_black_24dp"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/imageButtonReport" />
+
+        <ImageButton
+            android:id="@+id/imageButtonComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/imageButtonLove" />
+    </RelativeLayout>
+</RelativeLayout>

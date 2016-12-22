@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.findbuddy;
+package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,28 +17,27 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
+import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 /**
- * Created by Ravinder on 9/16/16.
+ * Created by Ravinder on 12/18/16.
  */
-public class CustomGridView extends BaseAdapter {
 
+public class CustomGridViewOnline extends BaseAdapter {
     private Context context;
     private List<UserLocationInfo> nearbyUserInfo;
     private View view;
     private Counter counter;
     private OnFinishedImageLoading onFinishedImageLoading;
 
-    public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
-                          FragActivityProgressBarInterface fragActivityProgressBarInterface,
+    public CustomGridViewOnline(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
                           OnFinishedImageLoading onFinishedImageLoading) {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
         this.view = view;
         this.onFinishedImageLoading = onFinishedImageLoading;
-        counter = new Counter(-1);
+        counter = new Counter(0);
     }
 
     @Override
@@ -65,14 +64,16 @@ public class CustomGridView extends BaseAdapter {
 
         if (convertView == null) {
             gridView = new View(context);
-            gridView = inflater.inflate(R.layout.item_gridview, parent, false);
-            profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImage1);
+            gridView = inflater.inflate(R.layout.item_gridview_online, parent, false);
+            profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImageOnline);
 
             Picasso.with(context)
                     .load(nearbyUserInfo.get(position).getUserpic())
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .placeholder(R.drawable.ic_placeholder)
+                    .fit()
+                    .centerCrop()
                     .into(profileImage, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {

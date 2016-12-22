@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    android:fitsSystemWindows="true">
+
+<RelativeLayout
+    android:id="@+id/relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent" />
+        android:layout_width="match_parent" />
 
     <RelativeLayout
         android:id="@+id/layoutTop"
@@ -19,6 +26,27 @@
         android:layout_below="@+id/toolbar_main"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:border_color="#323944"
+            app:border_width="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="11dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_rotate_right_black_24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="24dp"
+            android:id="@+id/imgRotate"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -36,19 +64,13 @@
             android:contentDescription="@string/editPhotoDes"
             android:background="@android:drawable/ic_menu_camera"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/userImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_above="@id/layoutBottom"
-        android:layout_centerHorizontal="true"
-        android:src="@android:drawable/sym_def_app_icon"
-        app:border_color="#323944"
-        app:border_width="8dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
 
 
+</android.support.design.widget.CoordinatorLayout>

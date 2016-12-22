@@ -45,7 +45,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         ButterKnife.bind(this);
 
         Helpers.setToolbar(this, toolbar);
-        setTitle("Sign Up Part 3");
+        setTitle("Sign Up Part 2");
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
         signUpPart3Presenter = new SignUpPart3Presenter(this);
@@ -110,8 +110,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         String username = "";
         String password = "";
         String email = "";
-        String firstname = "";
-        String lastname = "";
         Double longitude = 0.0;
         Double latitude = 0.0;
 
@@ -132,13 +130,9 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             email = signUp1Info.getString("email");
             longitude = signUp1Info.getDouble("longitude");
             latitude = signUp1Info.getDouble("latitude");
-            firstname = signUp1Info.getString("firstname");
-            lastname = signUp1Info.getString("lastname");
         }
 
         HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("firstname", firstname);
-        userInfo.put("lastname", lastname);
         userInfo.put("email", email);
         userInfo.put("username", username);
         userInfo.put("password", password);
@@ -148,6 +142,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         long currentTime = System.currentTimeMillis();
         userInfo.put("time", Long.toString(currentTime));
         userInfo.put("token", getFCMToken());
+        userInfo.put("country", Helpers.getCountry(Double.toString(latitude), Double.toString(longitude)));
 
         // Make Retrofit call to communicate with the server
         signUpPart3Presenter.retrofitStoreUser(userInfo);

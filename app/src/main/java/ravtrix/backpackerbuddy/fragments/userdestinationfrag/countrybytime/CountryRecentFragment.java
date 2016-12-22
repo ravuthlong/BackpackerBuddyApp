@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime;
+package ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
-import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.createdestination.DestinationFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -84,8 +84,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         userLocalStore = new UserLocalStore(getActivity());
         feedItems = new ArrayList<>();
         feedTen = new ArrayList<>();
-        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
-        //refWatcher.watch(this);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
         waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
@@ -126,10 +124,8 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
             case R.id.tbRecentPosts:
                 this.waveSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 this.tvNoResult.setVisibility(View.INVISIBLE);
-                // Refresh recycler view for recent posts
-                //feedListAdapter.resetAll();
-                //retrieveUserCountryPostsRetrofit();
                 startActivity(new Intent(getContext(), UserMainPage.class));
+                getActivity().finish();
 
                 return true;
             default:

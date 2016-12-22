@@ -19,7 +19,7 @@ class UserProfilePresenter implements  IUserProfilePresenter {
 
             @Override
             public void onError() {
-                System.out.println("ERROR FETCHING USER INFO");
+                System.out.println("ERROR");
             }
 
             @Override

@@ -15,7 +15,7 @@ import retrofit2.Response;
 class FindBuddyNearInteractor implements IFindBuddyNearInteractor {
 
     @Override
-    public void fetchNearbyUsersRetrofit(int userID, int distance, final OnFindBuddyNearListener onFindBuddyNearListener) {
+    public void fetchNearbyUsersRetrofit(final int userID, int distance, final OnFindBuddyNearListener onFindBuddyNearListener) {
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo ()
                 .getNearbyUsers()
                 .getNearbyUsers(userID, distance);

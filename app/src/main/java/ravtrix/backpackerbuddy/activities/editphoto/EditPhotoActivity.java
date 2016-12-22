@@ -3,9 +3,9 @@ package ravtrix.backpackerbuddy.activities.editphoto;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,11 +16,15 @@ import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -41,24 +45,25 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.imgRotate) protected ImageView imgRotate;
     private static final int RESULT_LOAD_IMAGE = 1;
     private boolean isNewPhotoSet = false;
     private boolean isNewPhotoSetAlias = false;
     private UserLocalStore userLocalStore;
     private ProgressDialog progressDialog;
-
+    private Bitmap bitmapImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_photo);
 
         ButterKnife.bind(this);
-        userLocalStore = new UserLocalStore(this);
-
-        checkProfileImage();
         Helpers.setToolbar(this, toolbar);
         setTitle("Set Photo");
+        userLocalStore = new UserLocalStore(this);
+        setProfileImage();
         bEditImage.setOnClickListener(this);
+        imgRotate.setOnClickListener(this);
     }
 
     @Override
@@ -68,6 +73,10 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 // Get the image from gallery
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                break;
+            case R.id.imgRotate:
+                bitmapImage = rotateBitmap(bitmapImage);
+                circleImageView.setImageBitmap(bitmapImage);
                 break;
             default:
         }
@@ -79,32 +88,65 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri selectedImage = data.getData();
+            bitmapImage = null;
 
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            String picturePath = null;
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                picturePath = cursor.getString(columnIndex);
-                cursor.close();
+            try {
+                bitmapImage = decodeBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
 
-            circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            circleImageView.setImageBitmap(bitmapImage);
+            imgRotate.setVisibility(View.VISIBLE);
             isNewPhotoSet = true; // User selected a new image
             isNewPhotoSetAlias = true;
         }
     }
+
+    /**
+     * Scale image
+     * @param selectedImage     the image selected by user
+     * @return                  scaled version of bitmap
+     * @throws FileNotFoundException
+     */
+    public  Bitmap decodeBitmap(Uri selectedImage) throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
+
+        final int REQUIRED_SIZE = 300;
+
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+    }
+
+
+    private Bitmap rotateBitmap(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+        return Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+    }
+
 
     @Override
     public void onBackPressed() {
         if (isNewPhotoSet) {
             showAlertDialog();
         } else {
-            System.out.println("SEND DATA " +  isNewPhotoSetAlias);
             Intent intent = new Intent();
             intent.putExtra("refresh", isNewPhotoSetAlias);
             setResult(RESULT_OK, intent);
@@ -168,6 +210,11 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                     // After uploaded
                     isNewPhotoSet = false;
                     Helpers.hideProgressDialog(progressDialog);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("refresh", isNewPhotoSetAlias);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
             @Override
@@ -177,13 +224,40 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         });
     }
 
-    private void checkProfileImage() {
+    private void setProfileImage() {
+
+        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Loading...");
         if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
                 (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(circleImageView);
+            Picasso.with(this)
+                    .load("http://i.imgur.com/268p4E0.jpg")
+                    .noFade()
+                    .fit()
+                    .centerCrop()
+                    .into(circleImageView);
         } else {
-            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(circleImageView);
+            Picasso.with(this)
+                    .load("http://backpackerbuddy.net23.net/profile_pic/" +
+                    userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                    .noFade()
+                    .fit()
+                    .centerCrop()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .into(circleImageView, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            bEditImage.setVisibility(View.VISIBLE);
+                            Helpers.hideProgressDialog(progressDialog);
+                        }
+
+                        @Override
+                        public void onError() {
+                            Helpers.hideProgressDialog(progressDialog);
+                            Toast.makeText(EditPhotoActivity.this, "Error loading", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
         }
     }
 

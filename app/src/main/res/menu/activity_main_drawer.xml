@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navGeneral"
+            android:id="@+id/navDiscussion"
             android:title="@string/generalChat" />
         <item
             android:id="@+id/navActivity"

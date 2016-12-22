@@ -68,5 +68,14 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp" />
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/bFacebookLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone" />
+
+
     </LinearLayout>
 </RelativeLayout>

@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.WelcomeActivity;
-import ravtrix.backpackerbuddy.activities.signup2.SignUpPart2Activity;
+import ravtrix.backpackerbuddy.activities.signup3.SignUpPart3Activity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
@@ -73,15 +73,14 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
     @Override
     public void startSignUpPart2Activity(final String email, final String username, final String password) {
-        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
+        progressDialog = Helpers.showProgressDialog(this, "Signing Up. Please wait...");
 
         userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(double latitude, double longitude) {
-                System.out.println("RECEIVED");
                 Helpers.hideProgressDialog(progressDialog);
 
-                Intent intent = new Intent(SignUpPart1Activity.this, SignUpPart2Activity.class);
+                Intent intent = new Intent(SignUpPart1Activity.this, SignUpPart3Activity.class);
                 intent.putExtra("email", email);
                 intent.putExtra("username", username);
                 intent.putExtra("password", password);

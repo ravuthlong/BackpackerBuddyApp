@@ -36,7 +36,7 @@ import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
@@ -432,7 +432,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     private void initProfileImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {
         Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
                 currentPos.getUserID() + ".JPG")
-                .resize(400, 400)
+                .fit()
                 .centerCrop()
                 .placeholder(R.drawable.default_photo)
                 .into(((ViewHolder) holder).profileImage);

@@ -79,7 +79,7 @@ public class FeedListAdapterUserFav extends RecyclerView.Adapter<FeedListAdapter
 
         Picasso.with(fragment.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
                 currentPos.getUserID() + ".JPG")
-                .resize(400, 400)
+                .fit()
                 .centerCrop()
                 .placeholder(R.drawable.default_photo)
                 .into(holder.profileImage);

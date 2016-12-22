@@ -23,12 +23,6 @@ public class FeedItem {
     @SerializedName("until")
     @Expose
     private String toDate;
-    @SerializedName("firstname")
-    @Expose
-    private String firstname;
-    @SerializedName("lastname")
-    @Expose
-    private String lastname;
     @SerializedName("username")
     @Expose
     private String username;
@@ -64,26 +58,10 @@ public class FeedItem {
         isFavorite = favorite;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public FeedItem() {
     }
 
-    public FeedItem(int userID, int id, String firstname, String lastname,
+    public FeedItem(int userID, int id,
                     String username, String country, String fromDate, String toDate) {
         this.id = id;
         this.country = country;
@@ -91,8 +69,6 @@ public class FeedItem {
         this.toDate = toDate;
         this.userID = userID;
         this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
 
     }
 

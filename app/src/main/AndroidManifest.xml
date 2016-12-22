@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ravtrix.backpackerbuddy"
-    >
+    package="ravtrix.backpackerbuddy">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,9 +12,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".activities.WelcomeActivity"
             android:label="@string/app_name"
@@ -23,10 +22,14 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.signup1.SignUpPart1Activity"
             android:label="Sign Up Activity1"
@@ -34,9 +37,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".activities.signup2.SignUpPart2Activity"
+            android:name=".activities.signup3.SignUpPart3Activity"
             android:label="Sign Up Activity2"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
@@ -83,8 +85,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <activity android:name=".activities.signup3.SignUpPart3Activity" />
         <activity
             android:name=".activities.chat.ConversationActivity"
             android:screenOrientation="portrait"

@@ -77,6 +77,8 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
                 currentItem.getUserID() + ".JPG")
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
+                .fit()
+                .centerCrop()
                 .into(holder.profileImage, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {

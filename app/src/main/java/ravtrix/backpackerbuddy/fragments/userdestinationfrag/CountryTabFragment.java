@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.mainfrag;
+package ravtrix.backpackerbuddy.fragments.userdestinationfrag;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,8 +17,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.mainfrag.countrybyfilter.CountryFilterFragment;
-import ravtrix.backpackerbuddy.fragments.mainfrag.countrybytime.CountryRecentFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybyfilter.CountryFilterFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 
 /**
  * Created by Ravinder on 10/9/16.

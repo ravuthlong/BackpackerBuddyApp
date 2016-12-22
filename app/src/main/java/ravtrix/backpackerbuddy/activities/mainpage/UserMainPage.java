@@ -30,9 +30,10 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
-import ravtrix.backpackerbuddy.fragments.destination.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.createdestination.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
-import ravtrix.backpackerbuddy.fragments.mainfrag.CountryTabFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
@@ -72,25 +73,16 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
-
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
 
-        if ((userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-            Picasso.with(this)
-                    .load("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
-                    .noFade()
-                    .into(profilePic);
-        } else {
-            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
-        }
-
+        setProfilepicture();
         // If bundle is not null. The filter fragment sent a bundle to update main
         this.countryTabFragment = new CountryTabFragment();
 
@@ -116,10 +108,14 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.navDiscussion:
+                currentPos = 6;
+                setTitle("Discussion Room");
+                break;
             case R.id.navActivity:
                 navigationView.getMenu().getItem(0).setChecked(true);
                 currentPos = 0;
-                setTitle("Activity");
+                setTitle("Travel Posts");
                 break;
             case R.id.navFindBuddy:
                 currentPos = 1;
@@ -132,10 +128,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             case R.id.navDestination:
                 currentPos = 3;
                 setTitle("Manage Destination");
-                break;
-            case R.id.navGeneral:
-                currentPos = 6;
-                setTitle("General Room");
                 break;
             default:
         }
@@ -179,15 +171,15 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new ManageDestinationTabFragment());
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DestinationFragment());
-        fragmentList.add(new UserProfileFragment());
+        fragmentList.add(new DiscussionRoomFragment());
     }
 
     // Start up state
     //Title Idex, with closed navigation drawer and default fragment 1
     private void screenStartUpState() {
-        setTitle("Activity");
+        setTitle("Discussion Room");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(0)).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(6)).addToBackStack(null).commit();
     }
 
     private void changeFragment(final int currentPos) {
@@ -259,6 +251,17 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         return this.drawerLayout;
     }
 
+    private void setProfilepicture() {
+        if ((userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+            Picasso.with(this)
+                    .load("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
+                    .noFade()
+                    .into(profilePic);
+        } else {
+            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
+                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
+        }
+    }
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = Helpers.showAlertDialogWithTwoOptions(UserMainPage.this, "Backpacker Buddy",
@@ -294,11 +297,15 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                                 userLocalStore.getLoggedInUser().getUserID() + ".JPG")
                         .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .fit()
+                        .centerCrop()
                         .into(profilePic);
             } else {
                 Picasso.with(this)
                         .load("http://backpackerbuddy.net23.net/profile_pic/" +
                                 userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                        .fit()
+                        .centerCrop()
                         .into(profilePic);
             }
         }

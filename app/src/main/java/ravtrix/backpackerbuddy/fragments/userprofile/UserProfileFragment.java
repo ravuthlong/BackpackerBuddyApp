@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -83,6 +85,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private UserProfilePresenter presenter;
     private ProgressDialog progressDialog;
     private int travelStatus;
+    private boolean refreshPage = false;
 
     @Override
     public void onAttach(Context context) {
@@ -95,9 +98,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.frag_user_profile, container, false);
-        v.setVisibility(View.GONE);
-        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
-        //refWatcher.watch(this);
+        v.setVisibility(View.INVISIBLE);
         fragActivityProgressBarInterface.setProgressBarVisible();
         ButterKnife.bind(this, v);
 
@@ -113,20 +114,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
 
-        travelStatus = userLocalStore.getLoggedInUser().getTraveling();
-        if (travelStatus == 0) { // not traveling
-            imgNotTravel.setVisibility(View.VISIBLE);
-            txtNotTravel.setVisibility(View.VISIBLE);
-        } else {
-            imgTravel.setVisibility(View.VISIBLE);
-            txtTravel.setVisibility(View.VISIBLE);
-        }
-
+        setTravelingStatus();
         return v;
-    }
-
-    private void setUserLocation(double latitude, double longitude) {
-        tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
     }
 
     @Override
@@ -200,6 +189,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private void setUserLocation(double latitude, double longitude) {
+        try {
+            tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
+        } catch (IOException e) {
+            // When the device failed to retrieve city and country information using Geocoder,
+            // run google location API directly
+            RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
+                    userLocalStore.getLoggedInUser().getLongitude().toString());
+            retrieveFeedTask.execute();
+        }
+    }
+
     // Pass title and hint to edit info activity based on edit selection type
     private void setIntentEditInto(String title, String detail, String detailType) {
         Intent intent = new Intent(getActivity(), EditInfoActivity.class);
@@ -239,6 +240,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                             userLocalStore.getLoggedInUser().getUserID() + ".JPG")
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .fit()
+                    .centerCrop()
                     .into(profilePic);
             v.setVisibility(View.VISIBLE);
 
@@ -246,8 +249,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             fragActivityUpdateProfilePic.onUpdateProfilePic();
         } else if (requestCode == 3) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            UserProfileFragment fragment = new UserProfileFragment();
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                    new UserProfileFragment()).commit();
+                    fragment).commit();
+            fragment.refreshPage = true;
         }
     }
 
@@ -275,6 +280,17 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         if (Helpers.timeDifInMinutes(currentTime,
                 userLocalStore.getLoggedInUser().getTime()) > 5) {
             Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
+        }
+    }
+
+    private void setTravelingStatus() {
+        travelStatus = userLocalStore.getLoggedInUser().getTraveling();
+        if (travelStatus == 0) { // not traveling
+            imgNotTravel.setVisibility(View.VISIBLE);
+            txtNotTravel.setVisibility(View.VISIBLE);
+        } else {
+            imgTravel.setVisibility(View.VISIBLE);
+            txtTravel.setVisibility(View.VISIBLE);
         }
     }
 
@@ -316,18 +332,42 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
     @Override
     public void setProfilePic(String pic) {
-        Picasso.with(getContext()).load(pic).noFade().into(profilePic, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                hideProgressBar();
-                setViewVisible();
-            }
 
-            @Override
-            public void onError() {
+        // Refresh imageview without cache after edit information
+        if  (refreshPage) {
+            Picasso.with(getContext())
+                    .load(pic)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .fit()
+                    .centerCrop()
+                    .into(profilePic, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            setViewVisible();
+                            hideProgressBar();
+                        }
 
-            }
-        });
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+            refreshPage = false;
+        } else {
+            Picasso.with(getContext())
+                    .load(pic)
+                    .into(profilePic, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            hideProgressBar();
+                            setViewVisible();
+                        }
+                        @Override
+                        public void onError() {
+                        }
+                    });
+        }
     }
     @Override
     public void hideProgressBar() {
@@ -373,5 +413,28 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
+    }
+
+    /**
+     * Retrieve city and country location information from google location API
+     */
+    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
+        String latitude;
+        String longitude;
+
+        RetrieveCityCountryTask(String latitude, String longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return (Helpers.getLocationInfo(latitude, longitude));
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            tvLocation.setText(s);
+        }
     }
 }

@@ -16,4 +16,6 @@ interface IFindBuddyNearView {
     void setViewVisible();
     void setViewInvisible();
     void hideProgressbar();
+    void setNoNearbyVisible();
+    void hideNoNearby();
 }

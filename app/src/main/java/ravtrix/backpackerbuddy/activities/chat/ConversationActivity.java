@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.fcm.model.Message;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -63,7 +64,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-
+        FirebaseMessagingService.cancelNotification(this, 0);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
 
@@ -155,6 +156,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     } else {
                         Picasso.with(ConversationActivity.this)
                                 .load(model.getPhotoUrl())
+                                .fit()
+                                .centerCrop()
                                 .into(viewHolder.messengerImageView2);
                     }
 
@@ -191,6 +194,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     } else {
                         Picasso.with(ConversationActivity.this)
                                 .load(model.getPhotoUrl())
+                                .fit()
+                                .centerCrop()
                                 .into(viewHolder.messengerImageView1);
                     }
                 }
@@ -359,7 +364,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (textMessage.getText().toString().equals("")) {
+                if (textMessage.getText().toString().trim().equals("")) {
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
                     sendMessage();

@@ -15,8 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
 import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
+import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.adapter.CustomGridViewOnline;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -37,7 +37,7 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private int currentSelectedDropdown;
-    private CustomGridView customGridViewAdapter;
+    private CustomGridViewOnline customGridViewAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -64,7 +64,6 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
 
     private void fetchRecentlyOnlineUsers() {
-        //view.setVisibility(View.INVISIBLE);
         fragActivityProgressBarInterface.setProgressBarVisible();
 
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
@@ -75,8 +74,8 @@ public class RecentlyOnlineUsersFragment extends Fragment {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
-                customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                        view, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
+                customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList,
+                        view, new OnFinishedImageLoading() {
                     @Override
                     public void onFinishedImageLoading() {
                         hideProgressbar();

@@ -25,7 +25,14 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
 
             @Override
             public void onSuccess(List<UserLocationInfo> userList) {
-                view.setCustomGridView(userList);
+                view.setViewVisible();
+
+                if (userList.get(0).getSuccess() == 0) {
+                    view.setNoNearbyVisible();
+                } else {
+                    view.hideNoNearby();
+                    view.setCustomGridView(userList);
+                }
                 view.setCityText();
             }
 

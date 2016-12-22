@@ -24,12 +24,6 @@ public class FeedItemAUserCountry {
     @SerializedName("until")
     @Expose
     private String toDate;
-    @SerializedName("firstname")
-    @Expose
-    private String firstname;
-    @SerializedName("lastname")
-    @Expose
-    private String lastname;
     @SerializedName("username")
     @Expose
     private String username;
@@ -45,26 +39,11 @@ public class FeedItemAUserCountry {
     public void setSuccess(int success) {
         this.success = success;
     }
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
     public FeedItemAUserCountry() {
     }
 
-    public FeedItemAUserCountry(int userID, int id, String firstname, String lastname,
+    public FeedItemAUserCountry(int userID, int id,
                     String username, String country, String fromDate, String toDate) {
         this.id = id;
         this.country = country;
@@ -72,8 +51,6 @@ public class FeedItemAUserCountry {
         this.toDate = toDate;
         this.userID = userID;
         this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
 
     }
 

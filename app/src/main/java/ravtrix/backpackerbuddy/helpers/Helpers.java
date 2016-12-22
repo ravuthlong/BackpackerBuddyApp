@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -117,41 +127,179 @@ public class Helpers {
     }
 
     /**
+     * Fetch the country and city of the user
+     * @param latitude      the latitude of location
+     * @param longitude     the longitude of location
+     * @return              string of country/city of user
+     */
+    public static String getLocationInfo(String latitude, String longitude) {
+        URL url;
+        HttpURLConnection urlConnection = null;
+        JSONObject jsonObject;
+        String city = "";
+        String country = "";
+        String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+        try {
+            url = new URL(urlAddress);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            int responseCode = urlConnection.getResponseCode();
+
+            if(responseCode == HttpURLConnection.HTTP_OK) {
+                try {
+                    jsonObject = new JSONObject(readStream(urlConnection.getInputStream()));
+
+                    JSONArray address_components = jsonObject.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+                    for (int i = 0; i < address_components.length(); i++) {
+                        JSONObject component = address_components.getJSONObject(i);
+
+                        String long_name = component.getString("long_name");
+                        JSONArray typeArray = component.getJSONArray("types");
+                        String addressType = typeArray.getString(0);
+
+                        if (null != long_name && long_name.length() > 0) {
+                            switch (addressType) {
+                                case "locality":
+                                    city += long_name + ", ";
+                                    break;
+                                case "country":
+                                    country += long_name;
+                                    break;
+                                default:
+                                break;
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (city + country);
+    }
+
+    /**
+     * Get country of the user
+     * @param latitude          the latitude of location
+     * @param longitude         the longitude of location
+     * @return                  the country
+     */
+    public static String getCountry(String latitude, String longitude) {
+        URL url;
+        HttpURLConnection urlConnection = null;
+        JSONObject jsonObject;
+        String country = "";
+        String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+        try {
+            url = new URL(urlAddress);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            int responseCode = urlConnection.getResponseCode();
+
+            if(responseCode == HttpURLConnection.HTTP_OK) {
+                try {
+                    jsonObject = new JSONObject(readStream(urlConnection.getInputStream()));
+
+                    JSONArray address_components = jsonObject.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+                    for (int i = 0; i < address_components.length(); i++) {
+                        JSONObject component = address_components.getJSONObject(i);
+
+                        String long_name = component.getString("long_name");
+                        JSONArray typeArray = component.getJSONArray("types");
+                        String addressType = typeArray.getString(0);
+
+                        if (null != long_name && long_name.length() > 0) {
+                            switch (addressType) {
+                                case "country":
+                                    country += long_name;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return country;
+    }
+
+    private static String getCountryGeocoder(Context context, double latitude, double longitude) throws IOException {
+
+        Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+        List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+        for (Address address : addresses) {
+            if (address != null) {
+                String country = "";
+                country = address.getCountryName();
+                return country;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Read the input stream into a String object
+     * @param in        the input stream
+     * @return          the string of information
+     */
+    private static String readStream(InputStream in) {
+        BufferedReader reader = null;
+        StringBuilder response = new StringBuilder();
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response.toString();
+    }
+
+    /**
      * Find the city name, given the latitude and longitude
      * @param context       the context of the class
      * @param latitude      the latitude of the location
      * @param longitude     the longitude of the location
      * @return              the city name
      */
-    public static String cityGeocoder(Context context, double latitude, double longitude) {
+    public static String cityGeocoder(Context context, double latitude, double longitude) throws IOException {
+        /**
+         * AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI
+         */
 
         Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-        try {
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            for (Address address : addresses) {
-                if (address != null) {
-                    String location = "";
-                    String city = address.getLocality();
-                    System.out.println("CITY: " + city);
-                    String country = address.getCountryName();
-                    System.out.println("COUNTRY: " + country);
+        List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+        for (Address address : addresses) {
+            if (address != null) {
+                String location = "";
+                String city = address.getLocality();
+                String country = address.getCountryName();
 
-                    if (city != null && !city.equals("")) {
-                        location = city;
-                    }
-                    if (country != null && !country.equals("")) {
-                        location += ", " + country;
-                    }
-
-                    System.out.println("RETURNED: " + location);
-
-                    return location;
+                if (city != null && !city.equals("")) {
+                    location = city;
                 }
+                if (country != null && !country.equals("")) {
+                    location += ", " + country;
+                }
+                return location;
             }
-        } catch (IOException e) {
-            System.out.println("FAIL LOL ");
-
-            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -172,38 +320,52 @@ public class Helpers {
      * @param userLocalStore    the local information about the user
      * @param currentTime       the current time
      */
-    public static void updateLocationAndTime(Context context, final UserLocalStore userLocalStore, final long currentTime) {
+    public static void updateLocationAndTime(final Context context, final UserLocalStore userLocalStore, final long currentTime) {
 
         UserLocation userLocation = new UserLocation((Activity) context);
         userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(final double latitude, final double longitude) {
-                HashMap<String, String> locationHash = new HashMap<>();
+                final HashMap<String, String> locationHash = new HashMap<>();
                 locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                 locationHash.put("longitude", Double.toString(longitude));
                 locationHash.put("latitude", Double.toString(latitude));
                 locationHash.put("time", Long.toString(currentTime));
+                try {
+                    locationHash.put("country", getCountryGeocoder(context, latitude, longitude));
+                    retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                } catch (IOException e) {
+                    new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
+                        @Override
+                        public void onCountryRetrieved(String country) {
+                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                        }
+                    });
+                }
+            }
+        });
+    }
 
-                Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
-                jsonObjectCall.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+    private static void retrofitUpdateLocation(final UserLocalStore userLocalStore, final long currentTime,
+                                          HashMap<String, String> locationHash, final double latitude, final double longitude) {
+        Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
+        jsonObjectCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                        // Reset local storage of user also after server-side update
-                        LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
-                                userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                                userLocalStore.getLoggedInUser().getUserImageURL(), userLocalStore.getLoggedInUser().getTraveling(),
-                                latitude, longitude,
-                                currentTime);
-                        userLocalStore.clearUserData();
-                        userLocalStore.storeUserData(loggedInUser);
-                    }
+                // Reset local storage of user also after server-side update
+                LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
+                        userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
+                        userLocalStore.getLoggedInUser().getUserImageURL(), userLocalStore.getLoggedInUser().getTraveling(),
+                        latitude, longitude,
+                        currentTime);
+                userLocalStore.clearUserData();
+                userLocalStore.storeUserData(loggedInUser);
+            }
 
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
 
-                    }
-                });
             }
         });
     }
@@ -282,5 +444,27 @@ public class Helpers {
             return false;
         }
         return true;
+    }
+
+    private static class RetrieveCountryTask extends AsyncTask<Void, Void, String> {
+        String latitude;
+        String longitude;
+        OnCountryRetrievedListener onCountryRetrievedListener;
+
+        RetrieveCountryTask(String latitude, String longitude, OnCountryRetrievedListener onCountryRetrievedListener) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.onCountryRetrievedListener = onCountryRetrievedListener;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return (Helpers.getCountry(latitude, longitude));
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            onCountryRetrievedListener.onCountryRetrieved(s);
+        }
     }
 }

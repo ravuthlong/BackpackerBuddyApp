@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,16 +15,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.findbuddy.CustomGridView;
 import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
+import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.adapter.CustomGridView;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -38,6 +41,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
+    @BindView(R.id.layout_noNearby) protected LinearLayout layout_noNearby;
     private View fragView;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
@@ -158,7 +162,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void setCustomGridView(List<UserLocationInfo> userList) {
         CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                profileImageGridView, fragActivityProgressBarInterface, new OnFinishedImageLoading() {
+                profileImageGridView, new OnFinishedImageLoading() {
             @Override
             public void onFinishedImageLoading() {
                 hideProgressbar();
@@ -170,8 +174,17 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @Override
     public void setCityText() {
-        city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
-                userLocalStore.getLoggedInUser().getLongitude()));
+        try {
+            city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
+                    userLocalStore.getLoggedInUser().getLongitude()));
+        } catch (IOException e) {
+            // When the device failed to retrieve city and country information using Geocoder,
+            // run google location API directly
+            RetrieveCityCountryTask retrieveFeedTask =
+                    new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
+                    userLocalStore.getLoggedInUser().getLongitude().toString());
+            retrieveFeedTask.execute();
+        }
     }
 
     @Override
@@ -187,7 +200,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        findBuddyPresenter.onDestroy();
     }
 
     @Override
@@ -198,5 +210,38 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void setViewVisible() {
         fragView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setNoNearbyVisible() {
+        this.layout_noNearby.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoNearby() {
+        this.layout_noNearby.setVisibility(View.GONE);
+    }
+
+    /**
+     * Retrieve city and country location information from google location API
+     */
+    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
+        String latitude;
+        String longitude;
+
+        RetrieveCityCountryTask(String latitude, String longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return (Helpers.getLocationInfo(latitude, longitude));
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            city.setText(s);
+        }
     }
 }

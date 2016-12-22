@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.mainfrag.countrybyfilter;
+package ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybyfilter;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +34,6 @@ public class CountryFilterFragment extends Fragment {
 
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        //setRetainInstance(true);
 
         ArrayAdapter spinnerAdapterCountry = ArrayAdapter.createFromResource(getContext(),
                 R.array.countries,
@@ -67,13 +66,6 @@ public class CountryFilterFragment extends Fragment {
 
                 // Query info provided by the user based on selected spinner item
                 this.queryBundle = new Bundle();
-
-                /*
-                queryBundle.putString("country", spinnerCountry.getSelectedItem().toString());
-                queryBundle.putString("month", spinnerMonth.getSelectedItem().toString());
-                queryBundle.putString("distance", spinnerDistance.getSelectedItem().toString());
-                //onSendBundleToRecentFragment.onSendBundleToRecentFragment(queryBundle);
-                */
 
                 int month;
 
@@ -120,11 +112,11 @@ public class CountryFilterFragment extends Fragment {
                 }
 
                 Intent intent = new Intent(getContext(), UserMainPage.class);
+                //intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("country", spinnerCountry.getSelectedItem().toString());
                 intent.putExtra("month", month);
                 startActivity(intent);
-
-
+                getActivity().finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

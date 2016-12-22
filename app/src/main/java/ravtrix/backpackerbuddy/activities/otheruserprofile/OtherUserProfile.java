@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.activities.otheruserprofile;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,13 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 
 public class OtherUserProfile extends AppCompatActivity implements IOtherUserProfileView,
@@ -143,8 +146,15 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
 
     @Override
     public void setUserLocation(String latitude, String longitude) {
-        tvLocation.setText(Helpers.cityGeocoder(getApplicationContext(),
-                Double.parseDouble(latitude), Double.parseDouble(longitude)));
+        try {
+            tvLocation.setText(Helpers.cityGeocoder(getApplicationContext(),
+                    Double.parseDouble(latitude), Double.parseDouble(longitude)));
+        } catch (IOException e) {
+            // When the device failed to retrieve city and country information using Geocoder,
+            // run google location API directly
+            RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(latitude, longitude);
+            retrieveFeedTask.execute();
+        }
     }
 
     @Override
@@ -153,6 +163,8 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
                 .load(imageURL)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
+                .fit()
+                .centerCrop()
                 .into(profileImage, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
@@ -210,5 +222,29 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     public void hideTxtNotTravel() {
         this.txtNotTravel.setVisibility(View.GONE);
+    }
+
+
+    /**
+     * Retrieve city and country location information from google location API
+     */
+    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
+        String latitude;
+        String longitude;
+
+        RetrieveCityCountryTask(String latitude, String longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return (Helpers.getLocationInfo(latitude, longitude));
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            tvLocation.setText(s);
+        }
     }
 }

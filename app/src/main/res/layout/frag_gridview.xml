@@ -5,9 +5,13 @@ android:id="@+id/grid_linearLayout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
-android:background="@color/greenBackground">
+android:background="@color/greenBackground"
+    android:layout_centerHorizontal="false"
+    android:layout_centerInParent="false"
+    android:layout_centerVertical="false">
 
-<RelativeLayout
+
+    <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -42,7 +46,25 @@ android:background="@color/greenBackground">
         android:layout_marginLeft="5dp" />
 </RelativeLayout>
 
-<GridView
+    <LinearLayout
+        android:id="@+id/layout_noNearby"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvNoInfo_FragInbox"
+            android:text="@string/noNearby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <GridView
     android:id="@+id/grid_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
