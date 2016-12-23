@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greenBackground"
+        android:weightSum="5"
+        android:orientation="vertical">
+
+
+        <include android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etDiscussion"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:layout_weight="1"
+                android:gravity="top|left"
+                android:scrollbars="vertical"
+                android:hint="Write your message "
+                android:padding="15dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -83,13 +83,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
 
         setProfilepicture();
-        // If bundle is not null. The filter fragment sent a bundle to update main
-        this.countryTabFragment = new CountryTabFragment();
-
-        if (!Helpers.isBundleNull(this)) {
-            // Pass bundle onto the tab fragment
-            this.countryTabFragment.setHasBundle(getIntent().getExtras());
-        }
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -113,7 +106,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 setTitle("Discussion Room");
                 break;
             case R.id.navActivity:
-                navigationView.getMenu().getItem(0).setChecked(true);
                 currentPos = 0;
                 setTitle("Travel Posts");
                 break;
@@ -165,7 +157,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     // Set up the fragments
     private void setUpFragments() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(this.countryTabFragment);
+        fragmentList.add(new CountryTabFragment());
         fragmentList.add(new FindBuddyTabFragment());
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new ManageDestinationTabFragment());

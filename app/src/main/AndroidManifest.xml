@@ -14,7 +14,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".activities.WelcomeActivity"
             android:label="@string/app_name"
@@ -22,13 +25,13 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name=".activities.signup1.SignUpPart1Activity"
@@ -44,7 +47,7 @@
         <activity
             android:name=".activities.mainpage.UserMainPage"
             android:label="User Main"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.login.LogInActivity"
             android:label="Log In Activity"
@@ -56,8 +59,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editinfo.EditInfoActivity"
-            android:screenOrientation="portrait"
             android:noHistory="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activities.otheruserprofile.OtherUserProfile"
@@ -85,14 +88,21 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".activities.chat.ConversationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".activities.ChangeEmail"
+        <activity
+            android:name=".activities.ChangeEmail"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ChangePassword"
+        <activity
+            android:name=".activities.ChangePassword"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.DiscussionPostActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+        />
     </application>
 
 </manifest>

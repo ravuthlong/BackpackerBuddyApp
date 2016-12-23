@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybyfilter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,7 @@ import android.widget.Spinner;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 
 /**
  * Created by Ravinder on 10/9/16.
@@ -111,12 +110,23 @@ public class CountryFilterFragment extends Fragment {
                         break;
                 }
 
+                /*
                 Intent intent = new Intent(getContext(), UserMainPage.class);
-                //intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("country", spinnerCountry.getSelectedItem().toString());
                 intent.putExtra("month", month);
                 startActivity(intent);
-                getActivity().finish();
+                getActivity().finish();*/
+                // refresh this fragment
+
+                Bundle bundle = new Bundle();
+                bundle.putString("country", spinnerCountry.getSelectedItem().toString());
+                bundle.putInt("month", month);
+
+                CountryTabFragment countryTabFragment = new CountryTabFragment();
+                countryTabFragment.setHasBundle(bundle);
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, countryTabFragment).commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

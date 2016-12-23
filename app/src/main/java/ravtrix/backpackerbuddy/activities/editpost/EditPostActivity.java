@@ -21,7 +21,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerFrom;
@@ -38,6 +37,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
     @BindView(R.id.activity_travelSelection_tvDateLeave) protected TextView tvDateLeave;
     private static String[] fromDateArray, toDateArray;
     private String chosenDateFrom, chosenDateTo, chosenCountry;
+    private int postID;
     private UserLocalStore userLocalStore;
     private EditPostPresenter editPostPresenter;
 
@@ -116,7 +116,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
                 travelSpotHash.put("country", chosenCountry);
                 travelSpotHash.put("from", chosenDateFrom);
                 travelSpotHash.put("until", chosenDateTo);
-
+                travelSpotHash.put("postID", Integer.toString(postID));
                 editPostPresenter.editPost(travelSpotHash);
                 return true;
             default:
@@ -182,6 +182,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
         if (bundle != null) {
             String[] country_array = getResources().getStringArray(R.array.countries);
 
+
             for (int i = 0; i < country_array.length; i++) {
                 if (country_array[i].equals(bundle.getString("country"))) {
                     spinnerCountries.setSelection(i);
@@ -191,24 +192,19 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
             String toDate = bundle.getString("until");
 
             if (fromDate != null) {
-                this.chosenDateFrom = fromDate.replace("/", "-");
+                fromDateArray = fromDate.split("/");
+                this.chosenDateFrom = fromDateArray[2] + "-" + fromDateArray[0] + "-" + fromDateArray[1];
             }
             if (toDate != null) {
-                this.chosenDateTo = toDate.replace("/", "-");
+                toDateArray = toDate.split("/");
+                this.chosenDateTo = toDateArray[2] + "-" + toDateArray[0] + "-" + toDateArray[1];
             }
 
             this.chosenCountry = bundle.getString("country");
 
             tvDateLeave.setText(fromDate);
             tvDateArrival.setText(toDate);
-
-            // Split date by month[0], day[1], year[2]
-            if (fromDate != null) {
-                fromDateArray = fromDate.split("/");
-            }
-            if (toDate != null) {
-                toDateArray = toDate.split("/");
-            }
+            this.postID = bundle.getInt("postID");
         }
     }
 
@@ -234,7 +230,9 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
 
     @Override
     public void startMainPageActivity() {
-        startActivity(new Intent(EditPostActivity.this, UserMainPage.class));
+        Intent returnIntent = new Intent();
+        setResult(1, returnIntent);
+        finish();
     }
 
     @Override

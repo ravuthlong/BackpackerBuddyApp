@@ -23,7 +23,7 @@ class DestinationPresenter implements IDestinationPresenter {
             @Override
             public void onSuccess() {
                 view.hideProgressDialog();
-                view.startMainActivity();
+                view.startDestinationFrag();
             }
 
             @Override

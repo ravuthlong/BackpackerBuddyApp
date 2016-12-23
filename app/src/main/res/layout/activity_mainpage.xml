@@ -7,39 +7,7 @@
     android:background="#68a390">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="10dp">
-
-        <TextView
-            android:id="@+id/tvBackpacker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/backpacker"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/tvBuddy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/buddy"
-            android:layout_gravity="center_horizontal" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:contentDescription="@string/app_name"
-            android:layout_width="140dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal|top"
-            android:background="@drawable/backpack"
-            android:layout_marginTop="20dp" />
-    </LinearLayout>
-
-    <LinearLayout
+        android:id="@+id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -75,7 +43,58 @@
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:visibility="gone" />
-
-
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/tvBackpacker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/backpacker"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/tvBuddy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/buddy"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear2"
+        android:layout_below="@+id/linear1"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/imageView1"
+            android:contentDescription="@string/app_name"
+            android:background="@drawable/bp2"
+            android:layout_height="250dp"
+            android:layout_toLeftOf="@+id/imageView2"
+            android:layout_alignParentLeft="false"
+            android:layout_width="160dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:contentDescription="@string/app_name"
+            android:layout_height="260dp"
+            android:background="@drawable/bp1"
+            android:layout_width="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
 </RelativeLayout>

@@ -29,8 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.createdestination.DestinationFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -124,9 +124,11 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
             case R.id.tbRecentPosts:
                 this.waveSwipeRefreshLayout.setVisibility(View.VISIBLE);
                 this.tvNoResult.setVisibility(View.INVISIBLE);
-                startActivity(new Intent(getContext(), UserMainPage.class));
-                getActivity().finish();
 
+                // refresh this fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new CountryTabFragment()).commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -305,6 +307,17 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     // Set bundle received from filter fragment
     public void setReceivedQueryBundle(Bundle receivedQueryBundle) {
         this.receivedQueryBundle = receivedQueryBundle;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) { // refresh
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new CountryRecentFragment()).commit();
+            }
+        }
     }
 }
 

@@ -1,25 +1,34 @@
 package ravtrix.backpackerbuddy.activities.editpost;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+
 import java.util.HashMap;
+
+import ravtrix.backpackerbuddy.helpers.Helpers;
 
 /**
  * Created by Ravinder on 9/14/16.
  */
-public class EditPostPresenter implements IEditPostPresenter {
+class EditPostPresenter implements IEditPostPresenter {
 
     private IEditPostView editPostView;
     private EditPostInteractor editPostInteractor;
+    private ProgressDialog progressDialog;
 
-    public EditPostPresenter(IEditPostView editView) {
+    EditPostPresenter(IEditPostView editView) {
         this.editPostView = editView;
         this.editPostInteractor = new EditPostInteractor();
     }
 
     @Override
     public void editPost(HashMap<String, String> travelSpotHash) {
+
+        progressDialog = Helpers.showProgressDialog((Activity) editPostView, "Loading...");
         editPostInteractor.editPostRetrofit(travelSpotHash, new OnRetrofitEditPostListener() {
             @Override
             public void onSuccess() {
+                Helpers.hideProgressDialog(progressDialog);
                 editPostView.startMainPageActivity();
             }
 

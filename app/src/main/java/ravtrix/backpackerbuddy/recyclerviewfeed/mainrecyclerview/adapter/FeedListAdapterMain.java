@@ -36,6 +36,7 @@ import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
@@ -68,6 +69,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private boolean isMoreLoading = false;
     private int visibleThreshold = 1;
+    private AlertDialog dialog;
     private int firstVisibleItem, visibleItemCount, totalItemCount;
 
     public interface OnLoadMoreListener{
@@ -283,7 +285,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         LayoutInflater inflater = activity.getActivity().getLayoutInflater();
         View dialogLayout = inflater.inflate(R.layout.pop_up_managepost,
                 null);
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
         assert dialog.getWindow() != null;
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setSoftInputMode(
@@ -318,21 +320,28 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         bEditPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.hide();
                 Intent intent = new Intent(activity.getContext(), EditPostActivity.class);
                 intent.putExtra("country", currentItem.getCountry());
                 intent.putExtra("from", currentItem.getFromDate());
                 intent.putExtra("until", currentItem.getToDate());
-                activity.getActivity().startActivity(intent);
+                intent.putExtra("postID", currentItem.getId());
+                activity.startActivityForResult(intent, 1);
             }
         });
         bDeletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.hide();
                 Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry().removePost().removePost(postID);
                 jsonObjectCall.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        activity.getActivity().startActivity(new Intent(activity.getContext(), UserMainPage.class));
+                        // Go to Country Recent fragment after deletion
+                        activity.getActivity()
+                                .getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new CountryTabFragment()).commit();
                     }
 
                     @Override
@@ -346,7 +355,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     // Retrofit
-
     // Insert into favorite list in database
     public static void retrofitInsertToFavoriteList(int postID, final Context context, int loggedInUser) {
         HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID, loggedInUser);
@@ -441,16 +449,19 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     private void initBackgroundImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {
         // Set image background based on country name. Hash will return the correct background id
         if (backgroundImage.getBackgroundFromHash(currentPos.getCountry()) != 0) {
-            ((ViewHolder) holder).backgroundLayout.setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
+            ((ViewHolder) holder).backgroundLayout
+                    .setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
         }
     }
 
     private void initStarStatus(RecyclerView.ViewHolder holder, FeedItem currentPos) {
         if (currentPos.getClicked() == 1) {
-            ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
+            ((ViewHolder) holder).imageButtonStar
+                    .setImageResource(R.drawable.ic_star_border_yellow_36dp);
             currentPos.isFavorite();
         } else {
-            ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
+            ((ViewHolder) holder).imageButtonStar
+                    .setImageResource(R.drawable.ic_star_border_white_36dp);
         }
     }
 

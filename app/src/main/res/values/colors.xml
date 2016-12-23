@@ -5,9 +5,12 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="green">#4AA472</color>
     <color name="greenBackground">#88a990</color>
+    <color name="greenToolbar">#4a6b43</color>
     <color name="greenLighter">#9ab5a0</color>
     <color name="grayHint">#717070</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="lowWhite">#F1ECEC</color>
+
 </resources>

@@ -26,8 +26,8 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts.AUserCountryPostsFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
 import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
@@ -189,7 +189,8 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
                 jsonObjectCall.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        fragment.getActivity().startActivity(new Intent(fragment.getContext(), UserMainPage.class));
+                        android.support.v4.app.FragmentManager fragmentManager = fragment.getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new CountryRecentFragment()).commit();
                     }
 
                     @Override

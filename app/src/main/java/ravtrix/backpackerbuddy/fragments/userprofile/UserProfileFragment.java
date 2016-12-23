@@ -158,7 +158,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                         retrofit.enqueue(new Callback<JsonObject>() {
                             @Override
                             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                if (travelStatus == 0) {
+                                if (userLocalStore.getLoggedInUser().getTraveling() == 0) {
                                     // User is now traveling
                                     imgNotTravel.setVisibility(View.GONE);
                                     txtNotTravel.setVisibility(View.GONE);

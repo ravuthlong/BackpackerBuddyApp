@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/AppToolbar"
-        android:background="#4a6b43">
+        android:background="@color/greenToolbar">
 
     </android.support.v7.widget.Toolbar>
 </LinearLayout>

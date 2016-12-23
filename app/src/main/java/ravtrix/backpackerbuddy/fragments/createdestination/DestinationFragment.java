@@ -3,7 +3,6 @@ package ravtrix.backpackerbuddy.fragments.createdestination;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,8 +23,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
@@ -55,8 +54,6 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.frag_travelselection, container, false);
-        //RefWatcher refWatcher = UserMainPage.getRefWatcher(getActivity());
-        //refWatcher.watch(this);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
         getActivity().setTitle("Destination");
@@ -71,6 +68,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         userLocalStore = new UserLocalStore(getActivity());
         destinationPresenter = new DestinationPresenter(this);
         setDefaultDateFromAndTo();
+        setDefaultDateObjects();
 
         return v;
     }
@@ -136,6 +134,18 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
         thisYear = c.get(Calendar.YEAR);
         thisMonth = c.get(Calendar.MONTH);
         thisDay = c.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private void setDefaultDateObjects() {
+        dateTypeFrom = Calendar.getInstance();
+        dateTypeFrom.set(Calendar.DATE, thisDay);
+        dateTypeFrom.set(Calendar.MONTH, thisMonth);
+        dateTypeFrom.set(Calendar.YEAR, thisYear);
+
+        dateTypeUntil = Calendar.getInstance();
+        dateTypeUntil.set(Calendar.DATE, ++thisDay);
+        dateTypeUntil.set(Calendar.MONTH, ++thisMonth);
+        dateTypeUntil.set(Calendar.YEAR, ++thisYear);
     }
 
     private void setDefaultDateFromAndTo() {
@@ -218,8 +228,9 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     }
 
     @Override
-    public void startMainActivity() {
-        startActivity(new Intent(getActivity(), UserMainPage.class));
+    public void startDestinationFrag() {
+        android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new CountryRecentFragment()).commit();
     }
 
     @Override

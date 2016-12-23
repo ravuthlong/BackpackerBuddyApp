@@ -49,11 +49,12 @@ android:background="@color/greenBackground"
     <LinearLayout
         android:id="@+id/layout_noNearby"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tvNoInfo_FragInbox"
@@ -61,7 +62,8 @@ android:background="@color/greenBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
     <GridView

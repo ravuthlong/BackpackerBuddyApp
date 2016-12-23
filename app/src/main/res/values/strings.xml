@@ -50,6 +50,7 @@
     <string name="passwordHintNew">Enter your new password</string>
     <string name="passwordHintNewAgain">Enter your password again</string>
     <string name="personality">Describe your personality</string>
+    <string name="postToolbar">Post</string>
     <string name="profilePic">Profile Picture</string>
     <string name="random">Random</string>
     <string name="tbRecentPosts">Recent Posts</string>

@@ -56,7 +56,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onAttach(Context context) {
         super.onAttach(context);
         fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
     }
 
     @Nullable
@@ -67,6 +66,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         ButterKnife.bind(this, view);
         view.setVisibility(View.INVISIBLE);
 
+        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getContext());
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -88,8 +88,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.addItemDecoration(dividerDecorator);
     }
 
-
-    /*
+    /**
      * Fetch all the chats user is in from the database and their latest message,
      * latest time from Firebase cloud
      */
@@ -104,7 +103,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                 feedItemInbox = response.body(); // Retrofit returns back the user IDs you're chatting with
                                                     // and whether or not you are the creator of that chat
-
 
                 if (feedItemInbox.get(0).getSuccess() == 0) {
                     fragActivityProgressBarInterface.setProgressBarInvisible();

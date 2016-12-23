@@ -8,6 +8,6 @@ interface IDestinationView {
 
     void hideProgressDialog();
     void showProgressDialog();
-    void startMainActivity();
+    void startDestinationFrag();
     void showToastError();
 }

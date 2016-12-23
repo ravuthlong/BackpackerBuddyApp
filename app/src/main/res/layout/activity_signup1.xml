@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
     android:id="@+id/linearLayoutSignUp"
-    android:weightSum="5"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:weightSum="5">
 
     <include android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
@@ -85,3 +91,4 @@
 </LinearLayout>
 
 
+</android.support.design.widget.CoordinatorLayout>
