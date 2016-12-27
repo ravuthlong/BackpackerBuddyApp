@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -74,6 +75,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.txtTravel) protected TextView txtTravel;
     @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
     @BindView(R.id.imgTravelStatusEdit) protected ImageView imgTravelStatusEdit;
+    @BindView(R.id.relativeFragProfile) protected RelativeLayout relativeLayout;
     private UserLocalStore userLocalStore;
     private View v;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
@@ -105,6 +107,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         userLocalStore = new UserLocalStore(getActivity());
         presenter = new UserProfilePresenter(this);
 
+        setProfilePic();
+        Helpers.overrideFonts(getActivity(), relativeLayout);
         setViewListeners();
         checkLocationUpdate();
 
@@ -236,8 +240,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         if (requestCode == 1 && resultCode == RESULT_OK && data.getBooleanExtra("refresh", true)) { // only refresh if new photo set
             Picasso.with(getContext())
-                    .load("http://backpackerbuddy.net23.net/profile_pic/" +
-                            userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                    .load(userLocalStore.getLoggedInUser().getUserImageURL())
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .fit()
@@ -301,10 +304,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void setDetailOneText(String text) {
         detailOne.setText(text);
+        setViewVisible();
+        hideProgressBar();
     }
     @Override
     public void setDetailOneHint(String hint) {
         detailOne.setHint(hint);
+        setViewVisible();
+        hideProgressBar();
     }
     @Override
     public void setDetailTwoText(String text) {
@@ -330,44 +337,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void setDetailFourHint(String hint) {
         detailFour.setHint(hint);
     }
-    @Override
-    public void setProfilePic(String pic) {
 
+    public void setProfilePic() {
         // Refresh imageview without cache after edit information
-        if  (refreshPage) {
-            Picasso.with(getContext())
-                    .load(pic)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .fit()
-                    .centerCrop()
-                    .into(profilePic, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            setViewVisible();
-                            hideProgressBar();
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
-            refreshPage = false;
-        } else {
-            Picasso.with(getContext())
-                    .load(pic)
-                    .into(profilePic, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            hideProgressBar();
-                            setViewVisible();
-                        }
-                        @Override
-                        public void onError() {
-                        }
-                    });
-        }
+        Picasso.with(getContext())
+                .load(userLocalStore.getLoggedInUser().getUserImageURL())
+                .fit()
+                .centerCrop()
+                .into(profilePic);
     }
     @Override
     public void hideProgressBar() {
@@ -412,7 +389,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
     }
 
     /**
@@ -435,6 +411,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         @Override
         protected void onPostExecute(String s) {
             tvLocation.setText(s);
+            setViewVisible();
+            hideProgressBar();
         }
     }
 }

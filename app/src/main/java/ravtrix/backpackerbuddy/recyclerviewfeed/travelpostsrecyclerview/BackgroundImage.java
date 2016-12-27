@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview;
+package ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview;
 
 import java.util.HashMap;
 

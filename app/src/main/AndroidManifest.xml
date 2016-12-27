@@ -42,8 +42,7 @@
         <activity
             android:name=".activities.signup3.SignUpPart3Activity"
             android:label="Sign Up Activity2"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainpage.UserMainPage"
             android:label="User Main"
@@ -101,8 +100,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DiscussionPostActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
-        />
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".activities.DiscussionComments" />
+        <activity android:name=".activities.createdestination.DestinationActivity" />
+        <activity android:name=".activities.EditComment"></activity>
     </application>
 
 </manifest>

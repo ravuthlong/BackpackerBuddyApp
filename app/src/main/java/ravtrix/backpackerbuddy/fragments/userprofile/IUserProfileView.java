@@ -14,7 +14,6 @@ interface IUserProfileView {
     void setDetailThreeHint(String hint);
     void setDetailFourText(String text);
     void setDetailFourHint(String hint);
-    void setProfilePic(String pic);
     void hideProgressBar();
     void setViewVisible();
     void setDetailOneColor();

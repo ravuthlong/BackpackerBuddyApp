@@ -58,13 +58,6 @@ class UserProfileInteractor implements IUserProfileInteractor {
                 } else {
                     retrofitProfileListener.onError();
                 }
-
-                if ((userImageURL.equals("0"))) {
-                    retrofitProfileListener.onSetProfilePic("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png");
-                } else {
-                    retrofitProfileListener.onSetProfilePic("http://backpackerbuddy.net23.net/profile_pic/" +
-                            userID + ".JPG");
-                }
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {

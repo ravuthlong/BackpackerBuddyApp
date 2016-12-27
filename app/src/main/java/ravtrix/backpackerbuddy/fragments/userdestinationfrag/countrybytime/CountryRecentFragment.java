@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,8 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +26,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.createdestination.DestinationFragment;
+import ravtrix.backpackerbuddy.activities.createdestination.DestinationActivity;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter.FeedListAdapterMain;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.adapter.FeedListAdapterMain;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.data.FeedItem;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,13 +48,10 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @BindView(R.id.main_swipe)protected WaveSwipeRefreshLayout waveSwipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
     @BindView(R.id.tvNoInfo_FragUserCountries) protected TextView tvNoResult;
-    private static final String TAG = CountryRecentFragment.class.getSimpleName();
     private List<FeedItem> feedItems;
     private List<FeedItem> feedTen;
     private FeedListAdapterMain feedListAdapter;
-    private FloatingActionButton postWidget;
     private UserLocalStore userLocalStore;
-    private FragActivityResetDrawer fragActivityResetDrawer;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private Bundle receivedQueryBundle;
@@ -67,7 +60,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.fragActivityResetDrawer = (FragActivityResetDrawer) context;
         this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
     }
 
@@ -86,6 +78,8 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         feedTen = new ArrayList<>();
 
         fragActivityProgressBarInterface.setProgressBarVisible();
+        Helpers.overrideFonts(getContext(), tvNoResult);
+
         waveSwipeRefreshLayout.setWaveColor(Color.GRAY);
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
@@ -93,12 +87,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         this.linearLayoutManager = new LinearLayoutManager(getActivity());
         floatingActionButton.setOnClickListener(this);
 
-        long currentTime = System.currentTimeMillis();
-        // If it's been 5 minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 5) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
+        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
         if (receivedQueryBundle != null) {
             // Retrieve with filter
@@ -139,10 +128,10 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bFloatingActionButton:
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        new DestinationFragment()).commit();
-                fragActivityResetDrawer.onResetDrawer();
+
+                CountryTabFragment parentTab = (CountryTabFragment) getParentFragment();
+                // Request code = 1 for editing
+                parentTab.startActivityForResult(new Intent(getContext(), DestinationActivity.class), 1);
                 break;
             default:
         }
@@ -252,22 +241,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         recyclerView.setLayoutManager(this.linearLayoutManager);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        //this.feedListAdapter
-
-        // Remove cache from Picasso so next time the page reloads the image and not use cache
-        // Cache was used for recycler view scrolling only.
-        if (feedItems != null) {
-            for (int i = 0; i < feedItems.size(); i++) {
-                Picasso.with(getContext()).invalidate("http://backpackerbuddy.net23.net/profile_pic/" +
-                        feedItems.get(i).getUserID() + ".JPG");
-            }
-        }
-    }
-
     private void setRefreshListener() {
         // Listens for refresh
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
@@ -276,6 +249,11 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
                 retrieveUserCountryPostsRetrofit();
             }
         });
+    }
+
+    public void refreshPage() {
+        feedListAdapter.resetAll();
+        retrieveUserCountryPostsRetrofit();
     }
 
     @Override

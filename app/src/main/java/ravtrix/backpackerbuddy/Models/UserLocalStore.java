@@ -34,6 +34,12 @@ public class UserLocalStore {
         spEditor.apply();
     }
 
+    public void changeImageURL(String newImage) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putString("userImageURL", newImage);
+        spEditor.apply();
+    }
+
     public void changeTravelStat(int status) {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
         spEditor.putInt("traveling", status);

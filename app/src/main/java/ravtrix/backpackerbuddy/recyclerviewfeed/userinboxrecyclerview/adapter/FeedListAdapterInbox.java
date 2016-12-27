@@ -57,7 +57,6 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         this.messagesFragment = messagesFragment;
         this.userLocalStore = new UserLocalStore(context);
         this.itemViews = new ArrayList<>();
-
         counter = new Counter();
     }
 
@@ -70,11 +69,10 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Typeface fontType = Typeface.createFromAsset(context.getAssets(), "Text.ttf");
 
         FeedItemInbox currentItem = feedItemInbox.get(position);
-
-        Picasso.with(context).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                currentItem.getUserID() + ".JPG")
+        Picasso.with(context).load(currentItem.getUserpic())
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
                 .fit()
@@ -92,6 +90,11 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
                     }
                 });
+
+        holder.username.setTypeface(fontType);
+        holder.date.setTypeface(fontType);
+        holder.latestMessage.setTypeface(fontType);
+
         holder.username.setText(currentItem.getUsername());
         holder.date.setText(currentItem.getLatestDate());
         holder.latestMessage.setText(currentItem.getLatestMessage());

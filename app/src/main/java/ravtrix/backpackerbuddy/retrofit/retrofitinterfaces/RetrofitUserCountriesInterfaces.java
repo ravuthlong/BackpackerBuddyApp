@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.data.FeedItem;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -34,11 +34,6 @@ public class RetrofitUserCountriesInterfaces {
     public interface GetAUserCountryPosts {
         @GET("/fetchAUserPosts.php?userID=[userID]")
         Call<List<FeedItemAUserCountry>> getAUserCountryPosts(@Query("userID") int userID);
-    }
-
-    public interface GetAUserFavPosts {
-        @GET("/fetchAUserFavPosts.php?userID=[userID]")
-        Call<List<FeedItem>> getAUserFavPosts(@Query("userID") int userID);
     }
 
     public interface InsertTravelSpot {

@@ -1,6 +1,5 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.adapter;
+package ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -32,17 +31,16 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
-import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.BackgroundImage;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.data.FeedItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,9 +106,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             initTextInfo(holder, currentPos);
             initProfileImage(holder, currentPos);
             initBackgroundImage(holder, currentPos);
-            initStarStatus(holder, currentPos);
-            initStarButtonListener(holder, currentPos);
-            initMessageButtonListener(holder, currentPos);
             initEditPostListener(holder, currentPos);
         }
     }
@@ -148,7 +143,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
-        private ImageButton imageButtonStar, imageButtonMail, imgEditPost;
+        private ImageButton imgEditPost;
         private CircleImageView profileImage;
         private static final int NAVIGATION_ITEM = 4;
 
@@ -159,12 +154,10 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             tvToDate = (TextView) itemView.findViewById(R.id.tvToDate);
             tvArrow = (TextView) itemView.findViewById(R.id.tvArrow);
             backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
-            imageButtonStar = (ImageButton) itemView.findViewById(R.id.imageButtonStar);
-            imageButtonMail = (ImageButton) itemView.findViewById(R.id.imageButtonMail);
             imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
             profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
-            backgroundLayout.setOnClickListener(new View.OnClickListener() {
+            profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -263,9 +256,9 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                 fragActivityResetDrawer.onResetDrawer();
 
                 // Perform fragment replacement
-                fragmentManager = activity.getParentFragment().getFragmentManager();
+                fragmentManager = activity.getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        ((UserMainPage) activity.getActivity()).getFragList().get(navigationItem)).commit();
+                        new UserProfileFragment()).commit();
                 ((UserMainPage) activity.getActivity()).getDrawerLayout().closeDrawer(GravityCompat.START);
             }
         }, 150);
@@ -326,6 +319,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                 intent.putExtra("from", currentItem.getFromDate());
                 intent.putExtra("until", currentItem.getToDate());
                 intent.putExtra("postID", currentItem.getId());
+                intent.putExtra("returnActivity", 0); // 0 = back to main activity posts
                 activity.startActivityForResult(intent, 1);
             }
         });
@@ -337,11 +331,9 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
                 jsonObjectCall.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        // Go to Country Recent fragment after deletion
-                        activity.getActivity()
-                                .getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container, new CountryTabFragment()).commit();
+                        // Go to Country Recent fragment and refresh after deletion
+                        CountryTabFragment parentTab = (CountryTabFragment) activity.getParentFragment();
+                        parentTab.refreshAUserCountryTab();
                     }
 
                     @Override
@@ -353,70 +345,17 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-
-    // Retrofit
-    // Insert into favorite list in database
-    public static void retrofitInsertToFavoriteList(int postID, final Context context, int loggedInUser) {
-        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID, loggedInUser);
-
-        Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton
-                .getRetrofitUserCountry()
-                .insertFavoritePost()
-                .insertFavorite(favoriteInfoHashMap);
-        jsonObjectCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.body().get("status").getAsInt() == 1) {
-                    // Success message from server
-                    Helpers.displayToast(context, "Added to watch list");
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
-    }
-
-    // Remove from favorite list in database
-    public static void retrofitRemoveFromFavoriteList(int postID, final Context context, int loggedInUser) {
-        HashMap<String, String> favoriteInfoHashMap = getHashMapWithInfo(postID, loggedInUser);
-
-        Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton
-                .getRetrofitUserCountry()
-                .removeFavoritePost()
-                .removeFavorite(favoriteInfoHashMap);
-
-        jsonObjectCall.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.body().get("status").getAsInt() == 1) {
-                    // Success message from server
-                    Helpers.displayToast(context, "Removed from watch list");
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(context, "Problem removing");
-            }
-        });
-    }
-
     private void initVisibilityItems(RecyclerView.ViewHolder holder, FeedItem currentPos) {
         if (loggedInUser == currentPos.getUserID()) {
-            ((ViewHolder) holder).imageButtonMail.setVisibility(View.GONE);
-            ((ViewHolder) holder).imageButtonStar.setVisibility(View.GONE);
             ((ViewHolder) holder).imgEditPost.setVisibility(View.VISIBLE);
         } else {
-            ((ViewHolder) holder).imageButtonMail.setVisibility(View.VISIBLE);
-            ((ViewHolder) holder).imageButtonStar.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).imgEditPost.setVisibility(View.GONE);
         }
     }
 
     private void initTypeface(RecyclerView.ViewHolder holder) {
         // Initialize fonts
-        Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Trench.otf");
+        Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Monu.otf");
         Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
 
         ((ViewHolder) holder).tvCountry.setTypeface(countryFont);
@@ -438,8 +377,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void initProfileImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {
-        Picasso.with(activity.getContext()).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                currentPos.getUserID() + ".JPG")
+        Picasso.with(activity.getContext()).load(currentPos.getUserpic())
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.default_photo)
@@ -452,57 +390,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).backgroundLayout
                     .setBackgroundResource(backgroundImage.getBackgroundFromHash(currentPos.getCountry()));
         }
-    }
-
-    private void initStarStatus(RecyclerView.ViewHolder holder, FeedItem currentPos) {
-        if (currentPos.getClicked() == 1) {
-            ((ViewHolder) holder).imageButtonStar
-                    .setImageResource(R.drawable.ic_star_border_yellow_36dp);
-            currentPos.isFavorite();
-        } else {
-            ((ViewHolder) holder).imageButtonStar
-                    .setImageResource(R.drawable.ic_star_border_white_36dp);
-        }
-    }
-
-    private void initStarButtonListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {
-        ((ViewHolder) holder).imageButtonStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (loggedInUser == currentPos.getUserID()) {
-                    Helpers.displayToast(activity.getContext(), "Can't bookmark yourself...");
-                } else {
-                    if (currentPos.getClicked() == 1) {
-                        // Cancel from favorite list - database/local model
-                        retrofitRemoveFromFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
-                        currentPos.setClicked(0);
-                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_white_36dp);
-                    } else {
-                        // Insert to favorite list - database/ local model
-                        retrofitInsertToFavoriteList(currentPos.getId(), activity.getContext(), loggedInUser);
-                        currentPos.setClicked(1);
-                        ((ViewHolder) holder).imageButtonStar.setImageResource(R.drawable.ic_star_border_yellow_36dp);
-                    }
-                }
-            }
-        });
-    }
-
-    private void initMessageButtonListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {
-        ((ViewHolder) holder).imageButtonMail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (loggedInUser == currentPos.getUserID()) {
-                    Helpers.displayToast(activity.getContext(), "Can't message yourself...");
-                } else {
-                    Intent convoIntent = new Intent(activity.getContext(), ConversationActivity.class);
-                    convoIntent.putExtra("otherUserID", Integer.toString(currentPos.getUserID()));
-                    activity.startActivity(convoIntent);
-                }
-            }
-        });
     }
 
     private void initEditPostListener(final RecyclerView.ViewHolder holder, final FeedItem currentPos) {

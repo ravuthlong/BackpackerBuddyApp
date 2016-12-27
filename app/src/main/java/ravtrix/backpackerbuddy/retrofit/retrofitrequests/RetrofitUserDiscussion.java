@@ -19,7 +19,40 @@ public class RetrofitUserDiscussion {
         return retrofit.create(RetrofitUserDiscussionInterfaces.InsertDiscussion.class);
     }
 
+    public RetrofitUserDiscussionInterfaces.InsertAndUpdateLove insertAndUpdateLove() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.InsertAndUpdateLove.class);
+    }
+
+
+    public RetrofitUserDiscussionInterfaces.RemoveAndUpdateLove removeAndUpdateLove() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.RemoveAndUpdateLove.class);
+    }
+
     public RetrofitUserDiscussionInterfaces.GetDiscussions getDiscussions() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.GetDiscussions.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.GetAUserDiscussions getAUserDiscussions() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.GetAUserDiscussions.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.GetDiscussionComments getDiscussionComments() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.GetDiscussionComments.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.IncrementCommentCount incrementCommentCount() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.IncrementCommentCount.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.RemoveCommentAndDecrement removeCommentAndDecrement() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.RemoveCommentAndDecrement.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.InsertComment insertComment() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.InsertComment.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.UpdateComment updateComment() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.UpdateComment.class);
     }
 }

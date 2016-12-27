@@ -1,18 +1,19 @@
-package ravtrix.backpackerbuddy.fragments.createdestination;
+package ravtrix.backpackerbuddy.activities.createdestination;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,20 +24,23 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseFragment;
-import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
+import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerFrom;
+import ravtrix.backpackerbuddy.interfacescom.DatePickerListenerTo;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 /**
  * Created by Ravinder on 7/29/16.
  */
-public class DestinationFragment extends OptionMenuSendBaseFragment implements AdapterView.OnItemSelectedListener,
-        View.OnClickListener, IDestinationView {
+public class DestinationActivity extends OptionMenuSaveBaseActivity implements AdapterView.OnItemSelectedListener,
+        View.OnClickListener, IDestinationView, DatePickerListenerFrom, DatePickerListenerTo {
 
     @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
-    protected static TextView tvDateArrival;
-    protected static TextView tvDateLeave;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.layout_travelSelection) protected LinearLayout layout_travSelection;
+    private TextView tvDateArrival;
+    private TextView tvDateLeave;
     protected String selectedCountry;
     private static final int DIALOG_ID = 0;
     private static int thisYear;
@@ -50,34 +54,34 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     private Calendar c = Calendar.getInstance();
     protected static Calendar dateTypeFrom, dateTypeUntil;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.frag_travelselection, container, false);
-        setHasOptionsMenu(true);
-        ButterKnife.bind(this, v);
-        getActivity().setTitle("Destination");
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_travelselection);
+        ButterKnife.bind(this);
+        Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, layout_travSelection);
+        setTitle("Destination");
+
         setTodayDate();
-        tvDateArrival = (TextView) v.findViewById(R.id.tvDateArrival);
-        tvDateLeave = (TextView) v.findViewById(R.id.tvDateLeave);
+        tvDateArrival = (TextView) findViewById(R.id.tvDateArrival);
+        tvDateLeave = (TextView) findViewById(R.id.tvDateLeave);
 
         setCountrySpinnerDropdown();
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
-        userLocalStore = new UserLocalStore(getActivity());
+        userLocalStore = new UserLocalStore(this);
         destinationPresenter = new DestinationPresenter(this);
         setDefaultDateFromAndTo();
         setDefaultDateObjects();
-
-        return v;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.submitSend:
+            case R.id.submitSave:
                 // Submit destination
 
                 if (destinationPresenter.isDateValid(dateTypeFrom, dateTypeUntil)) {
@@ -92,7 +96,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
                     // call retrofit to insert travel spot
                     destinationPresenter.insertTravelRetrofit(travelSpot);
                 } else {
-                    Toast.makeText(getContext(), "Date from must be before Date until", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Date from must be before Date until", Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
@@ -119,12 +123,13 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvDateArrival:
-                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
-                dateFragArrival.show(getActivity().getSupportFragmentManager(), "datePicker");
+
+                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
+                dateFragLeave.show(getSupportFragmentManager(), "datePicker");
                 break;
             case R.id.tvDateLeave:
-                android.support.v4.app.DialogFragment dateFragLeave = new DatePickerFragmentTo();
-                dateFragLeave.show(getActivity().getSupportFragmentManager(), "datePicker");
+                android.support.v4.app.DialogFragment dateFragArrival = new DatePickerFragmentFrom();
+                dateFragArrival.show(getSupportFragmentManager(), "datePicker");
                 break;
         }
     }
@@ -144,13 +149,13 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
         dateTypeUntil = Calendar.getInstance();
         dateTypeUntil.set(Calendar.DATE, ++thisDay);
-        dateTypeUntil.set(Calendar.MONTH, ++thisMonth);
-        dateTypeUntil.set(Calendar.YEAR, ++thisYear);
+        dateTypeUntil.set(Calendar.MONTH, thisMonth);
+        dateTypeUntil.set(Calendar.YEAR, thisYear);
     }
 
     private void setDefaultDateFromAndTo() {
-        tvDateArrival.setText((thisMonth + 1) + "/" + thisDay + "/" + thisYear);
-        tvDateLeave.setText((thisMonth + 1) + "/" + (thisDay + 1) + "/" + thisYear);
+        tvDateLeave.setText((thisMonth + 1) + "/" + thisDay + "/" + thisYear);
+        tvDateArrival.setText((thisMonth + 1) + "/" + (thisDay + 1) + "/" + thisYear);
 
         dateFrom = thisYear + "-" + (thisMonth + 1) + "-" + thisDay;
         dateTo = thisYear + "-" + (thisMonth + 1) + "-" + (thisDay + 1);
@@ -158,7 +163,7 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
     private void setCountrySpinnerDropdown() {
         // Each item
-        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(getActivity(),
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(this,
                 R.array.countries, android.R.layout.simple_spinner_item);
         // Drop down
         countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -167,59 +172,43 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
     public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
             implements DatePickerDialog.OnDateSetListener {
+        private DatePickerListenerFrom datePickerListenerFrom;
 
         @Override
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
+            datePickerListenerFrom = (DatePickerListenerFrom) getActivity();
+
+            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay - 1);
         }
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            tvDateArrival.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
-            monthOfYear += 1;
-            String yearString = Integer.toString(year);
-            String monthString = Integer.toString(monthOfYear);
-            String dayString = Integer.toString(dayOfMonth);
 
-            dateTypeFrom = Calendar.getInstance();
-            dateTypeFrom.set(Calendar.DATE, Integer.valueOf(dayString));
-            dateTypeFrom.set(Calendar.MONTH, Integer.valueOf(monthString));
-            dateTypeFrom.set(Calendar.YEAR, Integer.valueOf(yearString));
-
-            dateFrom = yearString + "-" + monthString + "-" + dayString;
+            datePickerListenerFrom.returnDateFrom(year, monthOfYear, dayOfMonth);
         }
     }
 
     public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
             implements DatePickerDialog.OnDateSetListener {
+        private DatePickerListenerTo datePickerListenerTo;
 
         @Override
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            datePickerListenerTo = (DatePickerListenerTo) getActivity();
             return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
         }
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            tvDateLeave.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
-            monthOfYear += 1;
-            String yearString = Integer.toString(year);
-            String monthString = Integer.toString(monthOfYear);
-            String dayString = Integer.toString(dayOfMonth);
-
-            dateTypeUntil = Calendar.getInstance();
-            dateTypeUntil.set(Calendar.DATE, Integer.valueOf(dayString));
-            dateTypeUntil.set(Calendar.MONTH, Integer.valueOf(monthString));
-            dateTypeUntil.set(Calendar.YEAR, Integer.valueOf(yearString));
-
-            dateTo = yearString + "-" + monthString + "-" + dayString;
+            datePickerListenerTo.returnDateTo(year, monthOfYear, dayOfMonth);
         }
     }
 
     @Override
     public void showProgressDialog() {
-        this.progressDialog = Helpers.showProgressDialog(getActivity(), "Posting...");
+        this.progressDialog = Helpers.showProgressDialog(this, "Posting...");
     }
 
     @Override
@@ -229,18 +218,47 @@ public class DestinationFragment extends OptionMenuSendBaseFragment implements A
 
     @Override
     public void startDestinationFrag() {
-        android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, new CountryRecentFragment()).commit();
+        Intent returnIntent = new Intent();
+        setResult(1, returnIntent); // pass result intent to main destination fragment tab
+        finish();
     }
 
     @Override
     public void showToastError() {
-        Helpers.displayToast(getActivity(), "Error");
+        Helpers.displayToast(this, "Error");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         destinationPresenter.onDestroy();
+    }
+
+    @Override
+    public void returnDateFrom(int year, int month, int day) {
+        tvDateLeave.setText((month + 1) + "/" + day + "/" + year);
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+
+        dateTypeFrom = Calendar.getInstance();
+        dateTypeFrom.set(Calendar.DATE, Integer.valueOf(dayString));
+        dateTypeFrom.set(Calendar.MONTH, Integer.valueOf(monthString));
+        dateTypeFrom.set(Calendar.YEAR, Integer.valueOf(yearString));
+        dateFrom = yearString + "-" + monthString + "-" + dayString;
+    }
+
+    @Override
+    public void returnDateTo(int year, int month, int day) {
+        tvDateArrival.setText((month + 1) + "/" + day + "/" + year);
+        String yearString = Integer.toString(year);
+        String monthString = Integer.toString(month + 1);
+        String dayString = Integer.toString(day);
+
+        dateTypeUntil = Calendar.getInstance();
+        dateTypeUntil.set(Calendar.DATE, Integer.valueOf(dayString));
+        dateTypeUntil.set(Calendar.MONTH, Integer.valueOf(monthString));
+        dateTypeUntil.set(Calendar.YEAR, Integer.valueOf(yearString));
+        dateTo = yearString + "-" + monthString + "-" + dayString;
     }
 }

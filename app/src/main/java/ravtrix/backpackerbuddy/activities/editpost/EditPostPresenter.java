@@ -22,14 +22,19 @@ class EditPostPresenter implements IEditPostPresenter {
     }
 
     @Override
-    public void editPost(HashMap<String, String> travelSpotHash) {
+    public void editPost(HashMap<String, String> travelSpotHash, final int returnActivity) {
 
         progressDialog = Helpers.showProgressDialog((Activity) editPostView, "Loading...");
         editPostInteractor.editPostRetrofit(travelSpotHash, new OnRetrofitEditPostListener() {
             @Override
             public void onSuccess() {
                 Helpers.hideProgressDialog(progressDialog);
-                editPostView.startMainPageActivity();
+
+                if (returnActivity == 1) {
+                    editPostView.startMainPageActivity();
+                } else {
+                    editPostView.startMainPageActivity();
+                }
             }
 
             @Override

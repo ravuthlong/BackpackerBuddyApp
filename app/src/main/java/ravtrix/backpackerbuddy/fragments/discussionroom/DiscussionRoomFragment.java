@@ -21,12 +21,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.DiscussionPostActivity;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.DiscussionModel;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +45,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     private View view;
     private DiscussionAdapter discussionAdapter;
     private List<DiscussionModel> discussionModels;
-    private RecyclerView.ItemDecoration dividerDecorator;
     private UserLocalStore userLocalStore;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
 
@@ -62,11 +62,14 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         ButterKnife.bind(this, view);
         view.setVisibility(View.INVISIBLE);
 
-        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
+        recyclerViewDiscussion.addItemDecoration(dividerDecorator);
+
         userLocalStore = new UserLocalStore(getContext());
         swipeRefreshLayout.setOnRefreshListener(this);
         addPostButton.setOnClickListener(this);
 
+        Helpers.checkLocationUpdate(getContext(), userLocalStore);
         fragActivityProgressBarInterface.setProgressBarVisible();
         fetchDiscussionPosts();
 
@@ -87,11 +90,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     @Override
     public void onRefresh() {
         // refresh fragment
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new DiscussionRoomFragment()).commit();
-        swipeRefreshLayout.setRefreshing(false);
-
+        fetchDiscussionPostsRefresh();
     }
 
     private void fetchDiscussionPosts() {
@@ -106,8 +105,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
                 discussionModels = response.body(); // GSON convert json into models
 
                 discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels,
-                        view, fragActivityProgressBarInterface);
-                recyclerViewDiscussion.addItemDecoration(dividerDecorator);
+                        view, fragActivityProgressBarInterface, userLocalStore, swipeRefreshLayout);
                 recyclerViewDiscussion.setAdapter(discussionAdapter);
                 recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
             }
@@ -119,4 +117,25 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
             }
         });
     }
+
+    private void fetchDiscussionPostsRefresh() {
+        Call<List <DiscussionModel>> retrofitCall = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .getDiscussions()
+                .getDiscussions(userLocalStore.getLoggedInUser().getUserID());
+
+        retrofitCall.enqueue(new Callback<List<DiscussionModel>>() {
+            @Override
+            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
+
+                List<DiscussionModel> newModels = response.body(); // GSON convert json into models
+                discussionAdapter.swap(newModels);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            @Override
+            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
+                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

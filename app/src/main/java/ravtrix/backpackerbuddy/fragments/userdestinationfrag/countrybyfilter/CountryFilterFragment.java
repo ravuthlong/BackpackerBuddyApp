@@ -10,12 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 
 /**
  * Created by Ravinder on 10/9/16.
@@ -24,7 +26,7 @@ import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 public class CountryFilterFragment extends Fragment {
     @BindView(R.id.frag_filter_spinnerCountry) protected Spinner spinnerCountry;
     @BindView(R.id.frag_filter_spinnerMonth) protected Spinner spinnerMonth;
-    private Bundle queryBundle;
+    @BindView(R.id.layout_filter) protected LinearLayout layoutFilter;
 
     @Nullable
     @Override
@@ -33,19 +35,9 @@ public class CountryFilterFragment extends Fragment {
 
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        Helpers.overrideFonts(getContext(), layoutFilter);
 
-        ArrayAdapter spinnerAdapterCountry = ArrayAdapter.createFromResource(getContext(),
-                R.array.countries,
-                android.R.layout.simple_spinner_item);
-        spinnerAdapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCountry.setAdapter(spinnerAdapterCountry);
-
-        ArrayAdapter spinnerAdapterMonth = ArrayAdapter.createFromResource(getContext(),
-                R.array.month_DropDown,
-                android.R.layout.simple_spinner_item);
-        spinnerAdapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMonth.setAdapter(spinnerAdapterMonth);
-
+        setArrayAdapterDropdowns();
         return view;
     }
 
@@ -62,9 +54,6 @@ public class CountryFilterFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.submit_filter:
-
-                // Query info provided by the user based on selected spinner item
-                this.queryBundle = new Bundle();
 
                 int month;
 
@@ -110,14 +99,7 @@ public class CountryFilterFragment extends Fragment {
                         break;
                 }
 
-                /*
-                Intent intent = new Intent(getContext(), UserMainPage.class);
-                intent.putExtra("country", spinnerCountry.getSelectedItem().toString());
-                intent.putExtra("month", month);
-                startActivity(intent);
-                getActivity().finish();*/
                 // refresh this fragment
-
                 Bundle bundle = new Bundle();
                 bundle.putString("country", spinnerCountry.getSelectedItem().toString());
                 bundle.putInt("month", month);
@@ -131,5 +113,22 @@ public class CountryFilterFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Set the drop down data
+     */
+    private void setArrayAdapterDropdowns() {
+        ArrayAdapter spinnerAdapterCountry = ArrayAdapter.createFromResource(getContext(),
+                R.array.countries,
+                android.R.layout.simple_spinner_item);
+        spinnerAdapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountry.setAdapter(spinnerAdapterCountry);
+
+        ArrayAdapter spinnerAdapterMonth = ArrayAdapter.createFromResource(getContext(),
+                R.array.month_DropDown,
+                android.R.layout.simple_spinner_item);
+        spinnerAdapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMonth.setAdapter(spinnerAdapterMonth);
     }
 }

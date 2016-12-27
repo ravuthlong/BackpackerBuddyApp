@@ -7,5 +7,4 @@ public interface IEditPostView {
 
     void startMainPageActivity();
     void displayTryAgainToast();
-
 }

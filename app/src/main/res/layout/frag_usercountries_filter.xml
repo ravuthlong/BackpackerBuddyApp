@@ -13,7 +13,8 @@
             android:layout_height="match_parent"
             android:background="@color/greenLighter"
             android:layout_margin="15dp"
-            android:padding="25dp">
+            android:padding="25dp"
+            android:id="@+id/layout_filter">
 
             <TextView
                 android:id="@+id/textView5"

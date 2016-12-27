@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <RelativeLayout
+    android:id="@+id/relativeFragProfile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".fragments.userprofile.UserProfileFragment"
@@ -71,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/details"
+                android:textColor="@color/white"
                 android:layout_marginTop="10dp" />
 
             <TextView
@@ -115,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/sixThings"
+                android:textColor="@color/white"
                 android:layout_marginTop="15dp" />
 
             <TextView
@@ -160,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/personality"
+                android:textColor="@color/white"
                 android:layout_marginTop="15dp" />
 
             <TextView
@@ -204,6 +208,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/idealDay"
+                android:textColor="@color/white"
                 android:layout_marginTop="15dp" />
 
             <TextView

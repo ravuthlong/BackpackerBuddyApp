@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,58 +33,43 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
  */
 public class EditPostActivity extends OptionMenuSaveBaseActivity implements AdapterView.OnItemSelectedListener,
         View.OnClickListener, DatePickerListenerFrom, DatePickerListenerTo, IEditPostView {
-    @BindView(R.id.activity_travelSelection_spinnerCountries) protected Spinner spinnerCountries;
-    @BindView(R.id.activity_travelSelection_tvDateArrival) protected TextView tvDateArrival;
-    @BindView(R.id.activity_travelSelection_tvDateLeave) protected TextView tvDateLeave;
+    @BindView(R.id.spinnerCountries) protected Spinner spinnerCountries;
+    @BindView(R.id.tvDateArrival) protected TextView tvDateArrival;
+    @BindView(R.id.tvDateLeave) protected TextView tvDateLeave;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.layout_travelSelection) protected LinearLayout layout_travSelection;
     private static String[] fromDateArray, toDateArray;
     private String chosenDateFrom, chosenDateTo, chosenCountry;
-    private int postID;
+    private int postID, returnActivity;
     private UserLocalStore userLocalStore;
     private EditPostPresenter editPostPresenter;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travelselection);
         ButterKnife.bind(this);
+        Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, layout_travSelection);
+        setTitle("Edit Info");
 
         setCountryAdapter();
         setSelectedCountryAndDate();
         editPostPresenter = new EditPostPresenter(this);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
-        if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
-
         spinnerCountries.setOnItemSelectedListener(this);
         tvDateArrival.setOnClickListener(this);
         tvDateLeave.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.activity_travelSelection_tvDateLeave:
+            case R.id.tvDateLeave:
                 DialogFragment dateFragLeave = new DatePickerFragmentFrom();
                 dateFragLeave.show(getSupportFragmentManager(), "datePicker");
                 break;
-            case R.id.activity_travelSelection_tvDateArrival:
+            case R.id.tvDateArrival:
                 DialogFragment dateFragTo = new DatePickerFragmentTo();
                 dateFragTo.show(getSupportFragmentManager(), "datePicker");
                 break;
@@ -93,9 +79,8 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
         switch (parent.getId()) {
-            case R.id.activity_travelSelection_spinnerCountries:
+            case R.id.spinnerCountries:
                 chosenCountry = parent.getItemAtPosition(position).toString();
                 break;
         }
@@ -117,7 +102,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
                 travelSpotHash.put("from", chosenDateFrom);
                 travelSpotHash.put("until", chosenDateTo);
                 travelSpotHash.put("postID", Integer.toString(postID));
-                editPostPresenter.editPost(travelSpotHash);
+                editPostPresenter.editPost(travelSpotHash, returnActivity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -205,6 +190,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
             tvDateLeave.setText(fromDate);
             tvDateArrival.setText(toDate);
             this.postID = bundle.getInt("postID");
+            this.returnActivity = bundle.getInt("returnActivity");
         }
     }
 

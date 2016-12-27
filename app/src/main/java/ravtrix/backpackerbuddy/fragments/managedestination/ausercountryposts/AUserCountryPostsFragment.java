@@ -16,12 +16,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.adapter.FeedListAdapterAUserPosts;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +57,7 @@ public class AUserCountryPostsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
+        Helpers.overrideFonts(getContext(), noInfoTv);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
         recyclerView.addItemDecoration(dividerDecorator);
@@ -64,6 +66,10 @@ public class AUserCountryPostsFragment extends Fragment {
         retrieveAUserCountryPostsRetrofit();
 
         return view;
+    }
+
+    public void refresh() {
+        retrieveAUserCountryPostsRetrofit();
     }
 
     private void retrieveAUserCountryPostsRetrofit() {

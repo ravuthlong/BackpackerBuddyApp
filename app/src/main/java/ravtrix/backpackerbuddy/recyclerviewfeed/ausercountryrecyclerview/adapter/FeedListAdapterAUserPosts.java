@@ -26,11 +26,11 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editpost.EditPostActivity;
+import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts.AUserCountryPostsFragment;
-import ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime.CountryRecentFragment;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.BackgroundImage;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.BackgroundImage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +48,7 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private BackgroundImage backgroundImage;
     private Button bEditPost, bDeletePost;
+    private AlertDialog dialog;
 
     public FeedListAdapterAUserPosts(AUserCountryPostsFragment fragment,
                                      List<FeedItemAUserCountry> feedItems) {
@@ -94,14 +95,12 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
         }
 
         // Hide the mail and star buttons and profile image
-        holder.imageButtonMail.setVisibility(View.GONE);
-        holder.imageButtonStar.setVisibility(View.GONE);
         holder.profileImage.setVisibility(View.GONE);
 
         holder.imgEditPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopUp(currentPos.getUserID());
+                showPopUp();
                 setPopUpDialogItemListener(currentPos.getId(), currentPos);
             }
         });
@@ -117,7 +116,7 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
 
         private TextView tvCountry, tvFromDate, tvToDate, tvArrow;
         private LinearLayout backgroundLayout;
-        private ImageButton imageButtonStar, imageButtonMail, imgEditPost;
+        private ImageButton imgEditPost;
         private CircleImageView profileImage;
 
         ViewHolder(View itemView) {
@@ -127,8 +126,6 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
             tvToDate = (TextView) itemView.findViewById(R.id.tvToDate);
             tvArrow = (TextView) itemView.findViewById(R.id.tvArrow);
             backgroundLayout = (LinearLayout) itemView.findViewById(R.id.backgroundLayout);
-            imageButtonStar = (ImageButton) itemView.findViewById(R.id.imageButtonStar);
-            imageButtonMail = (ImageButton) itemView.findViewById(R.id.imageButtonMail);
             imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
             profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
@@ -136,12 +133,12 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
     }
 
     // Displaying the pop up to manage posts
-    private void showPopUp(int postUserID) {
+    private void showPopUp() {
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
         LayoutInflater inflater = fragment.getActivity().getLayoutInflater();
         View dialogLayout = inflater.inflate(R.layout.pop_up_managepost,
                 null);
-        final AlertDialog dialog = builder.create();
+        dialog = builder.create();
         assert dialog.getWindow() != null;
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setSoftInputMode(
@@ -171,26 +168,31 @@ public class FeedListAdapterAUserPosts extends RecyclerView.Adapter<FeedListAdap
 
     // Pop up dialog to manage posts
     private void setPopUpDialogItemListener(final int postID, final FeedItemAUserCountry currentItem) {
-
         bEditPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.hide();
                 Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
                 intent.putExtra("country", currentItem.getCountry());
                 intent.putExtra("from", currentItem.getFromDate());
                 intent.putExtra("until", currentItem.getToDate());
-                fragment.getActivity().startActivity(intent);
+                intent.putExtra("postID", currentItem.getId());
+                intent.putExtra("returnActivity", 1); // 1 = back to manage
+
+                ManageDestinationTabFragment parentTab = (ManageDestinationTabFragment) fragment.getParentFragment();
+                parentTab.startActivityForResult(intent, 1);
             }
         });
         bDeletePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.hide();
                 Call<JsonObject> jsonObjectCall = RetrofitUserCountrySingleton.getRetrofitUserCountry().removePost().removePost(postID);
                 jsonObjectCall.enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        android.support.v4.app.FragmentManager fragmentManager = fragment.getActivity().getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new CountryRecentFragment()).commit();
+                        ManageDestinationTabFragment parentTab = (ManageDestinationTabFragment) fragment.getParentFragment();
+                        parentTab.refreshAUserCountryTab();
                     }
 
                     @Override

@@ -7,6 +7,6 @@ import java.util.HashMap;
  */
 public interface IEditPostPresenter {
 
-    void editPost(HashMap<String, String> travelSpotHash);
+    void editPost(HashMap<String, String> travelSpotHash, int returnActivity);
     void onDestroy();
 }

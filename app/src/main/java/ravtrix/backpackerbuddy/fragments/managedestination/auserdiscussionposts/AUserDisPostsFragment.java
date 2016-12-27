@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.managedestination.auserfavoriteposts;
+package ravtrix.backpackerbuddy.fragments.managedestination.auserdiscussionposts;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,12 +16,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
+import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.recyclerviewfeed.auserfavrecyclerview.adapter.FeedListAdapterUserFav;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data.FeedItem;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.DiscussionAdapter;
+import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.DiscussionModel;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,12 +31,12 @@ import retrofit2.Response;
  * Created by Ravinder on 12/13/16.
  */
 
-public class AUserFavPostsFragment extends Fragment {
+public class AUserDisPostsFragment extends Fragment {
     @BindView(R.id.recyclerView_userFav) protected RecyclerView recyclerView;
     @BindView(R.id.tvNoInfo_FragUserFav) protected TextView noInfoTv;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
-    private List<FeedItem> feedItemAUserFavs;
-    private FeedListAdapterUserFav feedListAdapterUserFav;
+    private List<DiscussionModel> discussionModels;
+    private DiscussionAdapter discussionAdapter;
     private UserLocalStore userLocalStore;
     private View v;
 
@@ -50,23 +51,54 @@ public class AUserFavPostsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        v = inflater.inflate(R.layout.frag_user_favorites, container, false);
+        v = inflater.inflate(R.layout.frag_user_discussions, container, false);
         v.setVisibility(View.GONE);
 
         ButterKnife.bind(this, v);
         fragActivityProgressBarInterface.setProgressBarVisible();
-        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
+        Helpers.overrideFonts(getContext(), noInfoTv);
+
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerView.addItemDecoration(dividerDecorator);
 
         userLocalStore = new UserLocalStore(getContext());
-        retrieveAUserFavPostsRetrofit();
+        retrieveAUserDisPostsRetrofit();
         return v;
     }
 
     /**
      * Fetch for favorite posts
      */
-    private void retrieveAUserFavPostsRetrofit() {
+    private void retrieveAUserDisPostsRetrofit() {
+
+        Call<List<DiscussionModel>> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .getAUserDiscussions()
+                .getAUserDiscussions(userLocalStore.getLoggedInUser().getUserID());
+
+        retrofit.enqueue(new Callback<List<DiscussionModel>>() {
+            @Override
+            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
+                v.setVisibility(View.VISIBLE);
+
+                if (response.body().get(0).getSuccess() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    noInfoTv.setVisibility(View.VISIBLE);
+                } else {
+                    discussionModels = response.body();
+                    discussionAdapter = new DiscussionAdapter(AUserDisPostsFragment.this, discussionModels,
+                            v, fragActivityProgressBarInterface, userLocalStore, null);
+                    setRecyclerView(discussionAdapter);
+                }
+                fragActivityProgressBarInterface.setProgressBarInvisible();
+            }
+
+            @Override
+            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
+                fragActivityProgressBarInterface.setProgressBarInvisible();
+            }
+        });
+
+        /*
         Call<List<FeedItem>> retrofitCall = RetrofitUserCountrySingleton.getRetrofitUserCountry()
                 .getAUserFavPosts()
                 .getAUserFavPosts(userLocalStore.getLoggedInUser().getUserID());
@@ -82,7 +114,7 @@ public class AUserFavPostsFragment extends Fragment {
 
                 } else {
                     feedItemAUserFavs = response.body();
-                    feedListAdapterUserFav = new FeedListAdapterUserFav(AUserFavPostsFragment.this,
+                    feedListAdapterUserFav = new FeedListAdapterUserDis(AUserDisPostsFragment.this,
                             feedItemAUserFavs, userLocalStore.getLoggedInUser().getUserID());
                     setRecyclerView(feedListAdapterUserFav);
                 }
@@ -93,10 +125,10 @@ public class AUserFavPostsFragment extends Fragment {
             public void onFailure(Call<List<FeedItem>> call, Throwable t) {
                 System.out.println(t.getMessage());
             }
-        });
+        });*/
     }
 
-    private void setRecyclerView(FeedListAdapterUserFav feedListAdapterUserFav) {
+    private void setRecyclerView(DiscussionAdapter feedListAdapterUserFav) {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapterUserFav);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

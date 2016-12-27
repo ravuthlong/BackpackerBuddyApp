@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator;
+package ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator;
 
 import android.content.Context;
 import android.graphics.Canvas;

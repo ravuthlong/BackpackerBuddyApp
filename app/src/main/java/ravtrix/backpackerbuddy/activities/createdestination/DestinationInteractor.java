@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.createdestination;
+package ravtrix.backpackerbuddy.activities.createdestination;
 
 import com.google.gson.JsonObject;
 

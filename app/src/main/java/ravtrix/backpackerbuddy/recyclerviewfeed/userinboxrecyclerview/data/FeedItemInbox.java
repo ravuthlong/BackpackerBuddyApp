@@ -13,6 +13,9 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("userpic")
+    @Expose
+    private String userpic;
     @SerializedName("latestDate")
     @Expose
     private String latestDate;
@@ -33,6 +36,14 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
     private int lastMessageUserID;
     private long timeMilli;
     private transient DataSnapshot snapshot;
+
+    public String getUserpic() {
+        return userpic;
+    }
+
+    public void setUserpic(String userpic) {
+        this.userpic = userpic;
+    }
 
     public int getSuccess() {
         return success;

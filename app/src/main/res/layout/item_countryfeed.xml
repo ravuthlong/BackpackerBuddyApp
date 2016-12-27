@@ -28,29 +28,8 @@
                 android:layout_height="2dp"
                 android:background="#ffffff"
                 android:layout_gravity="center"
-                android:layout_alignTop="@+id/imageButtonStar"
                 android:layout_toLeftOf="@+id/tvFromDate"
                 android:layout_toStartOf="@+id/tvFromDate" />
-
-            <ImageButton
-                android:id="@+id/imageButtonStar"
-                android:layout_width="60dp"
-                android:background="@drawable/button_green"
-                android:src="@drawable/ic_star_border_white_36dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_height="74dp" />
-
-            <ImageButton
-                android:id="@+id/imageButtonMail"
-                android:layout_width="60dp"
-                android:background="@drawable/button_green"
-                android:src="@drawable/ic_mail_outline_white_36dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_height="74dp" />
 
             <TextView
                 android:id="@+id/tvCountry"
@@ -60,10 +39,6 @@
                 android:gravity="center"
                 android:textSize="45sp"
                 android:textColor="#3990A1"
-                android:shadowColor = "#000000"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="4"
                 android:maxLines="1"
                 android:layout_below="@+id/tvFromDate"
                 android:layout_alignParentRight="true"
@@ -71,14 +46,15 @@
                 android:layout_toRightOf="@+id/verticleLine"
                 android:layout_toEndOf="@+id/verticleLine"
                 android:layout_marginTop="-5dp"
-                android:background="#59FFFFFF" />
+                android:background="#FFFFFFFF"
+                android:padding="4dp" />
 
             <TextView
                 android:id="@+id/tvFromDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
                 android:shadowDx="3"
@@ -87,8 +63,6 @@
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/imageButtonMail"
-                android:layout_toEndOf="@+id/imageButtonMail"
                 android:layout_marginTop="4dp" />
 
             <TextView
@@ -96,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
                 android:shadowDx="3"
@@ -139,7 +113,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tvCountry"
-                android:layout_toEndOf="@+id/imageButtonStar"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_alignParentTop="false">
 

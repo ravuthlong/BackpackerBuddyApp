@@ -2,6 +2,7 @@ package ravtrix.backpackerbuddy.activities.mainpage;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,12 +33,13 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
-import ravtrix.backpackerbuddy.fragments.createdestination.DestinationFragment;
+import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
+import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
 import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
-import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
+import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -43,6 +47,8 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
+
+import static ravtrix.backpackerbuddy.R.id.settingsButton;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -61,14 +67,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     protected Toolbar toolbar;
     @BindView(R.id.nav_view)
     protected NavigationView navigationView;
-    private ImageButton settingsButton;
     private CircleImageView profilePic;
     @BindView(R.id.spinner_main)
     protected ProgressBar progressBar;
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
-    private CountryTabFragment countryTabFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +83,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         userLocalStore = new UserLocalStore(this);
 
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+        ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+        changeTypeface(navigationView);
 
         setProfilepicture();
 
@@ -101,10 +106,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.navDiscussion:
-                currentPos = 6;
-                setTitle("Discussion Room");
-                break;
             case R.id.navActivity:
                 currentPos = 0;
                 setTitle("Travel Posts");
@@ -119,7 +120,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navDestination:
                 currentPos = 3;
-                setTitle("Manage Destination");
+                setTitle("Manage Posts");
+                break;
+            case R.id.navDiscussion:
+                navigationView.getMenu().getItem(0).setChecked(true);
+                currentPos = 5;
+                setTitle("Discussion Room");
                 break;
             default:
         }
@@ -131,7 +137,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.settingsButton:
+            case settingsButton:
                 startActivityForResult(new Intent(this, SettingsActivity.class), 2);
                 break;
             case R.id.profile_image:
@@ -162,7 +168,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new MessagesFragment());
         fragmentList.add(new ManageDestinationTabFragment());
         fragmentList.add(new UserProfileFragment());
-        fragmentList.add(new DestinationFragment());
         fragmentList.add(new DiscussionRoomFragment());
     }
 
@@ -171,7 +176,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private void screenStartUpState() {
         setTitle("Discussion Room");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(6)).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragmentList.get(5)).addToBackStack(null).commit();
     }
 
     private void changeFragment(final int currentPos) {
@@ -250,8 +255,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                     .noFade()
                     .into(profilePic);
         } else {
-            Picasso.with(this).load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    userLocalStore.getLoggedInUser().getUserID() + ".JPG").noFade().into(profilePic);
+            Picasso.with(this).load(userLocalStore.getLoggedInUser().getUserImageURL()).noFade().into(profilePic);
         }
     }
     @Override
@@ -285,8 +289,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         } else {
             if (refreshProfilePic) {
                 Picasso.with(this)
-                        .load("http://backpackerbuddy.net23.net/profile_pic/" +
-                                userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                        .load(userLocalStore.getLoggedInUser().getUserImageURL())
                         .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .networkPolicy(NetworkPolicy.NO_CACHE)
                         .fit()
@@ -294,8 +297,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                         .into(profilePic);
             } else {
                 Picasso.with(this)
-                        .load("http://backpackerbuddy.net23.net/profile_pic/" +
-                                userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                        .load(userLocalStore.getLoggedInUser().getUserImageURL())
                         .fit()
                         .centerCrop()
                         .into(profilePic);
@@ -331,6 +333,36 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         // Invoked to set new profile picture
         this.userHitHome = false;
     }
+
+    private void applyFontToItem(MenuItem item, Typeface font) {
+        SpannableString mNewTitle = new SpannableString(item.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font, 20), 0 ,
+                mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        item.setTitle(mNewTitle);
+    }
+
+    private void changeTypeface(NavigationView navigationView){
+        FontTypeface fontTypeface = new FontTypeface(this);
+        Typeface typeface = fontTypeface.getTypefaceAndroid();
+
+        MenuItem item;
+
+        item = navigationView.getMenu().findItem(R.id.navDiscussion);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navActivity);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navFindBuddy);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navInbox);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navDestination);
+        applyFontToItem(item, typeface);
+    }
+
 
 }
 

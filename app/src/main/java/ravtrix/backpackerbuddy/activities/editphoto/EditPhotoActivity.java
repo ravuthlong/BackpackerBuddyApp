@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -52,6 +48,9 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     private UserLocalStore userLocalStore;
     private ProgressDialog progressDialog;
     private Bitmap bitmapImage;
+    private long uploadedTime;
+    private String newImageURL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +74,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
             case R.id.imgRotate:
-                bitmapImage = rotateBitmap(bitmapImage);
+                bitmapImage = Helpers.rotateBitmap(bitmapImage);
                 circleImageView.setImageBitmap(bitmapImage);
                 break;
             default:
@@ -91,7 +90,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             bitmapImage = null;
 
             try {
-                bitmapImage = decodeBitmap(selectedImage);
+                bitmapImage = Helpers.decodeBitmap(this, selectedImage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -102,45 +101,6 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             isNewPhotoSetAlias = true;
         }
     }
-
-    /**
-     * Scale image
-     * @param selectedImage     the image selected by user
-     * @return                  scaled version of bitmap
-     * @throws FileNotFoundException
-     */
-    public  Bitmap decodeBitmap(Uri selectedImage) throws FileNotFoundException {
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
-
-        final int REQUIRED_SIZE = 300;
-
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
-            }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
-    }
-
-
-    private Bitmap rotateBitmap(Bitmap bitmap) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-        return Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -174,12 +134,41 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
 
         switch (item.getItemId()) {
             case R.id.submitSave:
+                uploadedTime = System.currentTimeMillis();
                 retrofitUploadProfileImg();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void retrofitDeleteProfileImg() {
+        String oldtime;
+        HashMap<String, String> profileImageInfo = new HashMap<>();
+
+        // the old time in link. used to delete the old profile image file
+        if (userLocalStore.getLoggedInUser().getUserImageURL().contains("+")) {
+            String[] split = userLocalStore.getLoggedInUser().getUserImageURL().split("\\+");
+            String[] split2 = split[1].split("\\.");
+            oldtime = split2[0];
+            profileImageInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+            profileImageInfo.put("oldTime", oldtime);
+
+            Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                    .deleteProfilePic()
+                    .deleteProfilePic(profileImageInfo);
+
+            retrofit.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                }
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                }
+            });
+        }
+    }
+
 
     private void retrofitUploadProfileImg() {
 
@@ -197,6 +186,10 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         HashMap<String, String> profileImageInfo = new HashMap<>();
         profileImageInfo.put("image", encodedImage);
         profileImageInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+        profileImageInfo.put("time", Long.toString(uploadedTime));
+
+        newImageURL = "http://backpackerbuddy.net23.net/profile_pic/" + Integer.toString(userLocalStore.getLoggedInUser().getUserID())
+                 + "+" + Long.toString(uploadedTime) + ".JPG";
 
         Call<JsonObject> jsonObjectCall = RetrofitUserInfoSingleton
                 .getRetrofitUserInfo()
@@ -206,6 +199,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.body().get("status").getAsInt() == 1) {
+                    retrofitDeleteProfileImg(); // delete old photo
 
                     // After uploaded
                     isNewPhotoSet = false;
@@ -214,12 +208,15 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                     Intent intent = new Intent();
                     intent.putExtra("refresh", isNewPhotoSetAlias);
                     setResult(RESULT_OK, intent);
+
+                    userLocalStore.changeImageURL(newImageURL);
                     finish();
                 }
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 Helpers.displayToast(EditPhotoActivity.this, "Upload Error");
+                Helpers.hideProgressDialog(progressDialog);
             }
         });
     }
@@ -237,13 +234,10 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                     .into(circleImageView);
         } else {
             Picasso.with(this)
-                    .load("http://backpackerbuddy.net23.net/profile_pic/" +
-                    userLocalStore.getLoggedInUser().getUserID() + ".JPG")
+                    .load(userLocalStore.getLoggedInUser().getUserImageURL())
                     .noFade()
                     .fit()
                     .centerCrop()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(circleImageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {

@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.userdestinationfrag;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -109,6 +110,22 @@ public class CountryTabFragment extends Fragment {
         void changeTitle() {
             adapter.mFragmentTitleList.set(0, "Filtered Posts");
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) { // refresh from edit post
+                Fragment fragment = adapter.getItem(0);
+                ((CountryRecentFragment) fragment).refreshPage();
+            }
+        }
+    }
+
+    // Refresh is called directly to fragment
+    public void refreshAUserCountryTab() {
+        Fragment fragment = adapter.getItem(0);
+        ((CountryRecentFragment) fragment).refreshPage();
     }
 
 }

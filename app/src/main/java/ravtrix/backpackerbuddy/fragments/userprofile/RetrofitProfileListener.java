@@ -15,7 +15,6 @@ interface RetrofitProfileListener {
     void onSetDetailThreeHint(String hint);
     void onSetDetailFourText(String text);
     void onSetDetailFourHint(String hint);
-    void onSetProfilePic(String pic);
     void onSetDetailOneColor();
     void onSetDetailTwoColor();
     void onSetDetailThreeColor();

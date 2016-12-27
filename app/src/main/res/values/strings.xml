@@ -5,6 +5,7 @@
     <string name="app_name">Backpacker Buddy</string>
     <string name="backpacker">Backpacker </string>
     <string name="buddy">Buddy </string>
+    <string name="comment">Comment</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="country">Country</string>
     <string name="dash">-</string>
@@ -25,18 +26,18 @@
     <string name="email">Email Address</string>
     <string name="facebook_app_id">1309489189123664</string>
     <string name="filterBy">Filter By</string>
-    <string name="findBud">Find Buddy</string>
+    <string name="findBud">FIND BUDDY</string>
     <string name="firstName">First Name</string>
     <string name="from">From</string>
-    <string name="generalChat">Discussion Room</string>
+    <string name="generalChat">DISCUSSION ROOM</string>
     <string name="hntMessage">Type message here</string>
     <string name="idealDay">Your ideal backpacking day</string>
-    <string name="inbox">Inbox</string>
+    <string name="inbox">INBOX</string>
     <string name="info">Info</string>
     <string name="lastName">Last Name</string>
     <string name="location">Location</string>
     <string name="login">Log In</string>
-    <string name="manageDes">Manage Destination</string>
+    <string name="manageDes">MANAGE DESTINATION</string>
     <string name="month">Month</string>
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
@@ -59,18 +60,20 @@
     <string name="signUp">Sign Up</string>
     <string name="statusTravel">Traveling</string>
     <string name="statusNotTravel">Not Traveling</string>
+    <string name="stringPost">Post</string>
     <string name="sixThings">The six must haves in your backpack</string>
     <string name="submitFilter">Submit Filter</string>
     <string name="submitSignup1">submitSignUp1</string>
     <string name="submitSignup2">submitSignup2</string>
     <string name="title_activity_travel_selection">TravelSelection</string>
-    <string name="travelPost">Travel Posts</string>
+    <string name="travelPost">TRAVEL POSTS</string>
     <string name="txtAbout">About</string>
     <string name="txtFeedback">Send feedback</string>
     <string name="txtNotification">Notification</string>
     <string name="txtSignOut">Sign Out</string>
     <string name="until">Until</string>
     <string name="username">Username</string>
+    <string name="writeComment">Write a comment...</string>
 
     <string-array name="distance_DropDown">
         <item>25 miles</item>

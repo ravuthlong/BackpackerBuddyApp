@@ -29,8 +29,7 @@ class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
                 view.setUserDetailFour(otherUserJSON.get("detailFour").getAsString());
                 view.setUserLocation(otherUserJSON.get("latitude").getAsString().trim(),
                        otherUserJSON.get("longitude").getAsString().trim());
-                view.loadProfileImage("http://backpackerbuddy.net23.net/profile_pic/" +
-                        userID + ".JPG");
+                view.loadProfileImage(otherUserJSON.get("userpic").getAsString());
 
                 if (otherUserJSON.get("traveling").getAsInt() == 0) {
                     // User is not traveling

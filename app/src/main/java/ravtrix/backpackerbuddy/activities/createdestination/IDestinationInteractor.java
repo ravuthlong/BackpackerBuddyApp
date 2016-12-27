@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.createdestination;
+package ravtrix.backpackerbuddy.activities.createdestination;
 
 import java.util.Calendar;
 import java.util.HashMap;

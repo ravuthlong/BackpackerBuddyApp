@@ -47,6 +47,13 @@ public class RetrofitUserInfoInterfaces {
         @POST("/updateProfilePhoto.php")
         Call<JsonObject> updateProfilePic(@FieldMap HashMap<String, String> userDetail);
     }
+
+    public interface DeleteProfilePic {
+        @FormUrlEncoded
+        @POST("/deletePhotoFile.php")
+        Call<JsonObject> deleteProfilePic(@FieldMap HashMap<String, String> userDetail);
+    }
+
     public interface UpdateLocation {
         @FormUrlEncoded
         @POST("/updateUserLocation.php")

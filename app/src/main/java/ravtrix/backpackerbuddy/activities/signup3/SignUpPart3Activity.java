@@ -2,11 +2,10 @@ package ravtrix.backpackerbuddy.activities.signup3;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +18,8 @@ import android.widget.ImageView;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -34,9 +35,12 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     @BindView(R.id.userImage) protected CircleImageView circleImageView;
     @BindView(R.id.bEditImage) protected ImageView bEditImage;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.imgRotate) protected ImageView imgRotate;
     private static final int RESULT_LOAD_IMAGE = 1;
     private SignUpPart3Presenter signUpPart3Presenter;
     private ProgressDialog progressDialog;
+    private long currentTime;
+    private Bitmap bitmapImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,9 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         setTitle("Sign Up Part 2");
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
+        imgRotate.setOnClickListener(this);
+
+        currentTime = System.currentTimeMillis();
         signUpPart3Presenter = new SignUpPart3Presenter(this);
     }
 
@@ -59,6 +66,10 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
+            case R.id.imgRotate:
+                bitmapImage = Helpers.rotateBitmap(bitmapImage);
+                circleImageView.setImageBitmap(bitmapImage);
+                break;
             default:
                 break;
         }
@@ -68,23 +79,19 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri selectedImage = data.getData();
+            bitmapImage = null;
 
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            String picturePath = null;
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                picturePath = cursor.getString(columnIndex);
-                cursor.close();
+            try {
+                bitmapImage = Helpers.decodeBitmap(this, selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
 
-            circleImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            circleImageView.setImageBitmap(bitmapImage);
+            imgRotate.setVisibility(View.VISIBLE);
         }
     }
 
@@ -112,6 +119,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         String email = "";
         Double longitude = 0.0;
         Double latitude = 0.0;
+        String country = "Unknown";
 
         // Turn image into base 64 encoded string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -132,20 +140,35 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             latitude = signUp1Info.getDouble("latitude");
         }
 
-        HashMap<String, String> userInfo = new HashMap<>();
+        final HashMap<String, String> userInfo = new HashMap<>();
         userInfo.put("email", email);
         userInfo.put("username", username);
         userInfo.put("password", password);
         userInfo.put("latitude", Double.toString(latitude));
         userInfo.put("longitude", Double.toString(longitude));
         userInfo.put("userpic", encodedImage);
-        long currentTime = System.currentTimeMillis();
         userInfo.put("time", Long.toString(currentTime));
         userInfo.put("token", getFCMToken());
-        userInfo.put("country", Helpers.getCountry(Double.toString(latitude), Double.toString(longitude)));
+        try {
+            Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
+                @Override
+                public void onCountryReceived(String country) {
+                    userInfo.put("country", country);
+                    // Make Retrofit call to communicate with the server
+                    signUpPart3Presenter.retrofitStoreUser(userInfo);
+                }
+            });
+        } catch (IOException e) {
 
-        // Make Retrofit call to communicate with the server
-        signUpPart3Presenter.retrofitStoreUser(userInfo);
+            new RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
+                @Override
+                public void onCountryReceived(String country) {
+                    userInfo.put("country", country);
+                    // Make Retrofit call to communicate with the server
+                    signUpPart3Presenter.retrofitStoreUser(userInfo);
+                }
+            }).execute();
+        }
     }
 
     /**
@@ -174,5 +197,30 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     @Override
     public void hideProgressBar() {
         Helpers.hideProgressDialog(progressDialog);
+    }
+
+
+    /**
+     * Retrieve city and country location information from google location API
+     */
+    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
+        private String latitude, longitude;
+        private OnCountryReceived onCountryReceived;
+
+        RetrieveCityCountryTask(String latitude, String longitude, OnCountryReceived onCountryReceived) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.onCountryReceived = onCountryReceived;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            return (Helpers.getLocationInfo(latitude, longitude));
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            onCountryReceived.onCountryReceived(s);
+        }
     }
 }

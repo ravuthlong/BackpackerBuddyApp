@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -69,8 +67,6 @@ public class CustomGridView extends BaseAdapter {
 
             Picasso.with(context)
                     .load(nearbyUserInfo.get(position).getUserpic())
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
                     .placeholder(R.drawable.ic_placeholder)
                     .fit()
                     .centerCrop()

@@ -12,131 +12,104 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" />
 
+
+
     <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/greenBackground">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/greenBackground">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/greenLighter"
+        android:layout_margin="30dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:id="@+id/layout_travelSelection">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/greenLighter"
-            android:layout_margin="30dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvCountry"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/country"
+                android:textSize="22sp"
+                android:typeface="sans" />
+
+            <Spinner
+                android:id="@+id/spinnerCountries"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
 
                 <TextView
-                    android:id="@+id/activity_travelSelection_tvCountry"
+                    android:id="@+id/tvArrival"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/country"
-                    android:textSize="22sp"
-                    android:typeface="sans" />
+                    android:text="@string/from"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="20sp" />
 
-                <Spinner
-                    android:id="@+id/activity_travelSelection_spinnerCountries"
-                    android:layout_width="150dp"
+                <TextView
+                    android:id="@+id/tvDateLeave"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:spinnerMode="dialog"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/dateOfArrival"
+                    android:background="#ffffff"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/until"
+                    android:textSize="20sp"
+                    android:layout_marginTop="25dp"
                     android:layout_gravity="center_horizontal" />
 
+                <TextView
+                    android:id="@+id/tvDateArrival"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/dateOfLeave"
+                    android:background="#ffffff"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp" />
             </LinearLayout>
 
-            <TableLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/activity_travelSelection_tvArrival"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/from"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/activity_travelSelection_tvDateLeave"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/dateOfLeave"
-                        android:background="#ffffff"
-                        android:layout_marginTop="45dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_column="4"
-                        android:layout_marginLeft="10dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/activity_travelSelection_textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/until"
-                        android:textSize="20sp"
-                        android:layout_gravity="center_horizontal" />
-
-                    <TextView
-                        android:id="@+id/activity_travelSelection_tvDateArrival"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/dateOfArrival"
-                        android:background="#ffffff"
-                        android:layout_column="4"
-                        android:layout_marginLeft="20dp" />
-                </TableRow>
-
-            </TableLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="40dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp">
-
-                    <EditText
-                        android:id="@+id/activity_travelSelection_editText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="textMultiLine"
-                        android:hint="@string/additionInfo"
-                        android:background="@drawable/edit_text_border"
-                        android:layout_gravity="left|top"
-                        android:maxLength="250"
-                        android:padding="10dp" />
-                </FrameLayout>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
 </LinearLayout>

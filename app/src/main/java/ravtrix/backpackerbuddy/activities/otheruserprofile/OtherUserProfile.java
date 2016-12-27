@@ -46,6 +46,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.imgNotTravel) protected ImageView imgNotTravel;
     @BindView(R.id.txtTravel) protected TextView txtTravel;
     @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
+    @BindView(R.id.linearOtherProfile) protected LinearLayout linearLayout;
     private OtherUserProfilePresenter otherUserProfilePresenter;
     private int otherUserID;
 
@@ -55,6 +56,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         setContentView(R.layout.activity_other_user_profile);
 
         ButterKnife.bind(this);
+        Helpers.overrideFonts(this, linearLayout);
         otherUserProfilePresenter = new OtherUserProfilePresenter(this);
         messageButton.setOnClickListener(this);
         relativeLayout.setVisibility(View.INVISIBLE);

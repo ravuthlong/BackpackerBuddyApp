@@ -30,7 +30,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import ravtrix.backpackerbuddy.recyclerviewfeed.userinboxrecyclerview.adapter.FeedListAdapterInbox;
 import ravtrix.backpackerbuddy.recyclerviewfeed.userinboxrecyclerview.data.FeedItemInbox;
 import retrofit2.Call;

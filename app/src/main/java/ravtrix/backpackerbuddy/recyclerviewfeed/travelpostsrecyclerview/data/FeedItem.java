@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.mainrecyclerview.data;
+package ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,12 +8,22 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class FeedItem {
-    @SerializedName("travelID")
+
+    @SerializedName("success")
     @Expose
-    private int id;
+    private int success;
     @SerializedName("userID")
     @Expose
     private int userID;
+    @SerializedName("username")
+    @Expose
+    private String username;
+    @SerializedName("userpic")
+    @Expose
+    private String userpic;
+    @SerializedName("travelID")
+    @Expose
+    private int id;
     @SerializedName("country")
     @Expose
     private String country;
@@ -23,16 +33,10 @@ public class FeedItem {
     @SerializedName("until")
     @Expose
     private String toDate;
-    @SerializedName("username")
-    @Expose
-    private String username;
     @SerializedName("clicked")
     @Expose
     private int clicked;
     private boolean isFavorite;
-    @SerializedName("success")
-    @Expose
-    private int success;
 
     public int isSuccess() {
         return success;
@@ -61,15 +65,16 @@ public class FeedItem {
     public FeedItem() {
     }
 
-    public FeedItem(int userID, int id,
-                    String username, String country, String fromDate, String toDate) {
-        this.id = id;
-        this.country = country;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        this.userID = userID;
-        this.username = username;
+    public int getSuccess() {
+        return success;
+    }
 
+    public String getUserpic() {
+        return userpic;
+    }
+
+    public void setUserpic(String userpic) {
+        this.userpic = userpic;
     }
 
     public void setUsername(String username) { this.username = username; }

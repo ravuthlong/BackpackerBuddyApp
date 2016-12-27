@@ -65,7 +65,7 @@
             android:background="@android:drawable/ic_menu_camera"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
 
     </RelativeLayout>

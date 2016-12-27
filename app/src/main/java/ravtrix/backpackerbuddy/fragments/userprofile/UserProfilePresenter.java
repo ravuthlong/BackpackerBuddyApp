@@ -68,11 +68,6 @@ class UserProfilePresenter implements  IUserProfilePresenter {
             }
 
             @Override
-            public void onSetProfilePic(String pic) {
-                view.setProfilePic(pic);
-            }
-
-            @Override
             public void onSetDetailOneColor() {
                 view.setDetailOneColor();
             }

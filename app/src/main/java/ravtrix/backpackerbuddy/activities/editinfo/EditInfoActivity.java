@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -23,6 +24,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.editTitle) protected TextView editTitle;
     @BindView(R.id.editHint) protected EditText editText;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.relativeEditInfo) protected RelativeLayout relativeLayout;
     private EditInfoPresenter presenter;
 
     @Override
@@ -30,6 +32,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_info);
         ButterKnife.bind(this);
+        Helpers.overrideFonts(this, relativeLayout);
         setEditText();
         setToolbar();
         presenter = new EditInfoPresenter(this);

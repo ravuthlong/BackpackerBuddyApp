@@ -33,6 +33,7 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 import static ravtrix.backpackerbuddy.R.id.spinner;
+import static ravtrix.backpackerbuddy.helpers.Helpers.checkLocationUpdate;
 
 /**
  * Created by Ravinder on 9/12/16.
@@ -64,11 +65,12 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         ButterKnife.bind(this, fragView);
         setHasOptionsMenu(true);
 
+        Helpers.overrideFonts(getActivity(), layout_noNearby);
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
         findBuddyPresenter = new FindBuddyPresenter(this);
 
-        checkLocationUpdate();
+        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
         findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), 25);
         return fragView;
     }
@@ -144,19 +146,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     public void setCurrentSelectedDropdown(int currentSelectedDropdown) {
         this.currentSelectedDropdown = currentSelectedDropdown;
-    }
-
-    /*
-     * Check if location update is needed. If needed, update local store and server
-     */
-    private void checkLocationUpdate() {
-        long currentTime = System.currentTimeMillis();
-
-        // If it's been 5 minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 5) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
     }
 
     @Override
@@ -236,7 +225,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
         @Override
         protected String doInBackground(Void... voids) {
-            return (Helpers.getLocationInfo(latitude, longitude));
+            return (Helpers.getCountry(latitude, longitude));
         }
 
         @Override

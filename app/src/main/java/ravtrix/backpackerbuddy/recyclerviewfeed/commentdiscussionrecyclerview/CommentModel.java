@@ -1,13 +1,13 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview;
+package ravtrix.backpackerbuddy.recyclerviewfeed.commentdiscussionrecyclerview;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Ravinder on 12/21/16.
+ * Created by Ravinder on 12/24/16.
  */
 
-public class DiscussionModel {
+public class CommentModel {
 
     @SerializedName("success")
     @Expose
@@ -24,24 +24,32 @@ public class DiscussionModel {
     @SerializedName("country")
     @Expose
     private String country;
+    @SerializedName("commentID")
+    @Expose
+    private int commentID;
     @SerializedName("discussionID")
     @Expose
     private int discussionID;
-    @SerializedName("post")
+    @SerializedName("comment")
     @Expose
-    private String post;
+    private String comment;
     @SerializedName("time")
     @Expose
     private long time;
     @SerializedName("loveNum")
     @Expose
     private int loveNum;
-    @SerializedName("commentNum")
-    @Expose
-    private int commentNum;
     @SerializedName("isClicked")
     @Expose
     private int isClicked = 0;
+
+    public String getUserpic() {
+        return userpic;
+    }
+
+    public void setUserpic(String userpic) {
+        this.userpic = userpic;
+    }
 
     public int getIsClicked() {
         return isClicked;
@@ -50,6 +58,7 @@ public class DiscussionModel {
     public void setIsClicked(int isClicked) {
         this.isClicked = isClicked;
     }
+
 
     public String getUsername() {
         return username;
@@ -67,28 +76,28 @@ public class DiscussionModel {
         this.loveNum = loveNum;
     }
 
-    public int getCommentNum() {
-        return commentNum;
-    }
-
-    public void setCommentNum(int commentNum) {
-        this.commentNum = commentNum;
-    }
-
     public long getTime() {
         return time;
+    }
+
+    public int getCommentID() {
+        return commentID;
+    }
+
+    public void setCommentID(int commentID) {
+        this.commentID = commentID;
     }
 
     public void setTime(long time) {
         this.time = time;
     }
 
-    public String getPost() {
-        return post;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPost(String text) {
-        this.post = post;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getCountry() {
@@ -121,13 +130,5 @@ public class DiscussionModel {
 
     public void setSuccess(int success) {
         this.success = success;
-    }
-
-    public String getUserpic() {
-        return userpic;
-    }
-
-    public void setUserpic(String userpic) {
-        this.userpic = userpic;
     }
 }

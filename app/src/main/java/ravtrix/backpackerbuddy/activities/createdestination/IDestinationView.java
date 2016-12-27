@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.fragments.createdestination;
+package ravtrix.backpackerbuddy.activities.createdestination;
 
 /**
  * Created by Ravinder on 10/4/16.

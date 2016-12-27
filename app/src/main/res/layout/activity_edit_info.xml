@@ -19,13 +19,14 @@
 <ScrollView
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:fillViewport="false">
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/greenLighter"
-        tools:context=".activities.editinfo.EditInfoActivity">
+        tools:context=".activities.editinfo.EditInfoActivity"
+        android:id="@+id/relativeEditInfo">
 
         <FrameLayout
             android:id="@+id/frameLayout2"
@@ -51,8 +52,8 @@
             android:layout_alignLeft="@+id/frameLayout2"
             android:layout_alignStart="@+id/frameLayout2"
             android:layout_below="@+id/frameLayout2"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="#32FFFFFF"
             android:gravity="top|left"
             android:inputType="textMultiLine|textCapSentences"
