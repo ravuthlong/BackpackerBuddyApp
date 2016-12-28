@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.managedestination.auserdiscussionposts;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -66,6 +68,15 @@ public class AUserDisPostsFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) { // refresh
+                refresh();
+            }
+        }
+    }
+
     /**
      * Fetch for favorite posts
      */
@@ -97,35 +108,36 @@ public class AUserDisPostsFragment extends Fragment {
                 fragActivityProgressBarInterface.setProgressBarInvisible();
             }
         });
+    }
 
-        /*
-        Call<List<FeedItem>> retrofitCall = RetrofitUserCountrySingleton.getRetrofitUserCountry()
-                .getAUserFavPosts()
-                .getAUserFavPosts(userLocalStore.getLoggedInUser().getUserID());
+    public void refresh() {
+        retrieveAUserDisPostsRetrofitRefresh();
+    }
 
-        retrofitCall.enqueue(new Callback<List<FeedItem>>() {
+    private void retrieveAUserDisPostsRetrofitRefresh() {
+
+        Call<List<DiscussionModel>> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .getAUserDiscussions()
+                .getAUserDiscussions(userLocalStore.getLoggedInUser().getUserID());
+
+        retrofit.enqueue(new Callback<List<DiscussionModel>>() {
             @Override
-            public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
-                v.setVisibility(View.VISIBLE);
+            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
 
-                if (response.body().get(0).isSuccess() == 0) {
+                if (response.body().get(0).getSuccess() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     noInfoTv.setVisibility(View.VISIBLE);
-
                 } else {
-                    feedItemAUserFavs = response.body();
-                    feedListAdapterUserFav = new FeedListAdapterUserDis(AUserDisPostsFragment.this,
-                            feedItemAUserFavs, userLocalStore.getLoggedInUser().getUserID());
-                    setRecyclerView(feedListAdapterUserFav);
+                    discussionModels = response.body();
+                    discussionAdapter.swap(discussionModels);
                 }
-                fragActivityProgressBarInterface.setProgressBarInvisible();
             }
 
             @Override
-            public void onFailure(Call<List<FeedItem>> call, Throwable t) {
-                System.out.println(t.getMessage());
+            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
+                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 
     private void setRecyclerView(DiscussionAdapter feedListAdapterUserFav) {

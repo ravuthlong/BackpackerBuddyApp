@@ -18,6 +18,7 @@
     <string name="detailOne">User did not fill details out. Ask them.</string>
     <string name="detailThree">User doesn\'t seem to have a personality. Ask them.</string>
     <string name="detailTwo">No information about their must haves.</string>
+    <string name="discussion">Discussion Post</string>
     <string name="drawerClosed">Closed</string>
     <string name="drawerOpened">Opened</string>
     <string name="edit">Edit</string>
@@ -41,11 +42,11 @@
     <string name="month">Month</string>
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
+    <string name="noDiscussion">Write a discussion</string>
     <string name="noInbox">No message inbox :(</string>
     <string name="noNearby">No nearby user</string>
     <string name="noPost">No post matching search</string>
     <string name="noPostUser">Post your first destination</string>
-    <string name="noWatch">Nothing on watch list</string>
     <string name="password">Password</string>
     <string name="passwordHint">Enter your password</string>
     <string name="passwordHintNew">Enter your new password</string>
@@ -74,6 +75,7 @@
     <string name="until">Until</string>
     <string name="username">Username</string>
     <string name="writeComment">Write a comment...</string>
+    <string name="writePost">Write your post</string>
 
     <string-array name="distance_DropDown">
         <item>25 miles</item>

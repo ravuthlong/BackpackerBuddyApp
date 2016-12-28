@@ -103,7 +103,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activities.DiscussionComments" />
         <activity android:name=".activities.createdestination.DestinationActivity" />
-        <activity android:name=".activities.EditComment"></activity>
+        <activity android:name=".activities.EditComment" />
+        <activity android:name=".activities.EditDiscussionActivity"></activity>
     </application>
 
 </manifest>

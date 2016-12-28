@@ -19,6 +19,10 @@ public class RetrofitUserDiscussion {
         return retrofit.create(RetrofitUserDiscussionInterfaces.InsertDiscussion.class);
     }
 
+    public RetrofitUserDiscussionInterfaces.DeleteDiscussion deleteDiscussion() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.DeleteDiscussion.class);
+    }
+
     public RetrofitUserDiscussionInterfaces.InsertAndUpdateLove insertAndUpdateLove() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.InsertAndUpdateLove.class);
     }
@@ -54,5 +58,9 @@ public class RetrofitUserDiscussion {
 
     public RetrofitUserDiscussionInterfaces.UpdateComment updateComment() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.UpdateComment.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.UpdateDiscussion updateDiscussion() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.UpdateDiscussion.class);
     }
 }

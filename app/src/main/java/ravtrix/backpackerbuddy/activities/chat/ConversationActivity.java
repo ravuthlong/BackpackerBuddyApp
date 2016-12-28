@@ -83,11 +83,10 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView1, messageTextView2;
-        TextView timeTextView;
-        CircleImageView messengerImageView1, messengerImageView2;
-        LinearLayout layoutMessage1;
-        RelativeLayout layoutMessage2;
+        private TextView messageTextView1, messageTextView2, timeTextView;
+        private CircleImageView messengerImageView1, messengerImageView2;
+        private LinearLayout layoutMessage1;
+        private RelativeLayout layoutMessage2;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -95,10 +94,12 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
             timeTextView = (TextView) itemView.findViewById(R.id.item_time);
             messengerImageView1 = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
             layoutMessage1 = (LinearLayout) itemView.findViewById(R.id.layout_message);
-
             messageTextView2 = (TextView) itemView.findViewById(R.id.item_message_message2);
             messengerImageView2 = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage2);
             layoutMessage2 = (RelativeLayout) itemView.findViewById(R.id.layout_message2);
+
+           // Helpers.overrideFonts(getApplicationContext(), messageTextView1);
+            //Helpers.overrideFonts(getApplicationContext(), messageTextView2);
         }
     }
 

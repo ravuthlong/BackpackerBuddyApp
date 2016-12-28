@@ -28,8 +28,11 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.EditDiscussionActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
+import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
+import ravtrix.backpackerbuddy.fragments.managedestination.auserdiscussionposts.AUserDisPostsFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
@@ -212,7 +215,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                     DiscussionModel clickedItem = discussionModels.get(position);
 
                     if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                        showDialogOwner();
+                        showDialogOwner(clickedItem.getDiscussionID(), clickedItem.getPost());
                     } else {
                         showDialogNormal();
                     }
@@ -296,7 +299,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     /**
      * Owner pop up dialog includes options to edit and delete their discussion post
      */
-    private void showDialogOwner() {
+    private void showDialogOwner(final int discussionID, final String post) {
         CharSequence options[] = new CharSequence[] {"Edit", "Delete"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity());
@@ -306,10 +309,38 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 // the user clicked on colors[which]
                 switch(which) {
                     case 0:
-                        Toast.makeText(fragment.getActivity(), "Edit", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(fragment.getContext(), EditDiscussionActivity.class);
+                        intent.putExtra("discussionID", discussionID);
+                        intent.putExtra("post", post);
+                        fragment.startActivityForResult(intent, 1);
                         break;
                     case 1:
-                        Toast.makeText(fragment.getActivity(), "Delete", Toast.LENGTH_SHORT).show();
+                        Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                                .deleteDiscussion()
+                                .deleteDiscussion(discussionID);
+
+                        retrofit.enqueue(new Callback<JsonObject>() {
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                                if (response.body().get("status").getAsInt() == 1) {
+
+                                    if (fragment instanceof DiscussionRoomFragment) {
+                                        DiscussionRoomFragment discussionRoomFragment = (DiscussionRoomFragment) fragment;
+                                        discussionRoomFragment.refresh();
+                                    } else if (fragment instanceof AUserDisPostsFragment) {
+                                        AUserDisPostsFragment aUserDisPostsFragment = (AUserDisPostsFragment) fragment;
+                                        aUserDisPostsFragment.refresh();
+                                    }
+                                } else {
+                                    Helpers.displayToast(fragment.getActivity(), "Error");
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t) {
+                                Helpers.displayToast(fragment.getActivity(), "Error");
+                            }
+                        });
                         break;
                     default:
                         break;

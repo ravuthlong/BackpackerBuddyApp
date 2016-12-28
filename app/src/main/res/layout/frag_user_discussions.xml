@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/tvNoInfo_FragUserFav"
-        android:text="@string/noWatch"
+        android:text="@string/noDiscussion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

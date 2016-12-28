@@ -12,16 +12,15 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -44,6 +43,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
     private FeedListAdapterInbox.ViewHolder viewHolder;
     private ArrayList<View> itemViews;
     private int i = 0;
+    private int sizeToCompare;
     //private DatabaseReference mFirebaseDatabaseReference;
     //private String chatName;
 
@@ -57,6 +57,25 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         this.messagesFragment = messagesFragment;
         this.userLocalStore = new UserLocalStore(context);
         this.itemViews = new ArrayList<>();
+
+        switch(feedItemInbox.size()) {
+            case 0:
+                sizeToCompare = 0;
+                break;
+            case 1:
+                sizeToCompare = 1;
+                break;
+            case 2:
+                sizeToCompare = 2;
+                break;
+            case 3:
+                sizeToCompare = 3;
+                break;
+            default:
+                sizeToCompare = 3;
+                break;
+        }
+
         counter = new Counter();
     }
 
@@ -73,8 +92,6 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
         FeedItemInbox currentItem = feedItemInbox.get(position);
         Picasso.with(context).load(currentItem.getUserpic())
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
                 .fit()
                 .centerCrop()
                 .into(holder.profileImage, new com.squareup.picasso.Callback() {
@@ -109,7 +126,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
     }
 
     private void checkPicassoFinished() {
-        if (counter.getCount() == getItemCount()) {
+        if (counter.getCount() >= sizeToCompare - 1) {
             fragActivityProgressBarInterface.setProgressBarInvisible();
             view.setVisibility(View.VISIBLE);
         }
@@ -136,7 +153,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
             username = (TextView) itemView.findViewById(R.id.item_inboxFeed_username);
             latestMessage = (TextView) itemView.findViewById(R.id.item_inboxFeed_lastMessage);
             date = (TextView) itemView.findViewById(R.id.item_inboxFeed_time);
-            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.item_inboxFeed_relativeLayout);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.item_inbox_relative);
 
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,6 +179,22 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
                     intent.putExtra("otherUserID", Integer.toString(clickedItem.getUserID()));
                     intent.putExtra("position", position);
                     messagesFragment.startActivityForResult(intent, 2);
+                }
+            });
+
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    FeedItemInbox clickedItem = feedItemInbox.get(position);
+
+                    if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
+                        //performFragTransaction(activity, NAVIGATION_ITEM);
+                    } else {
+                        Intent postInfo = new Intent(context, OtherUserProfile.class);
+                        postInfo.putExtra("userID", clickedItem.getUserID());
+                        context.startActivity(postInfo);
+                    }
                 }
             });
         }

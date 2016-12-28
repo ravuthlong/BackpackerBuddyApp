@@ -27,6 +27,12 @@ public class RetrofitUserDiscussionInterfaces {
         Call<JsonObject> insertDiscussion(@FieldMap HashMap<String, String> newDiscussion);
     }
 
+    public interface DeleteDiscussion {
+        @FormUrlEncoded
+        @POST("/deleteDiscussion.php")
+        Call<JsonObject> deleteDiscussion(@Field("discussionID") int discussionID);
+    }
+
     public interface InsertAndUpdateLove {
         @FormUrlEncoded
         @POST("/insertAndUpdateLove.php")
@@ -76,5 +82,11 @@ public class RetrofitUserDiscussionInterfaces {
         @FormUrlEncoded
         @POST("/updateComment.php")
         Call<JsonObject> updateComment(@Field("commentID") int commentID, @Field("comment") String comment);
+    }
+
+    public interface UpdateDiscussion {
+        @FormUrlEncoded
+        @POST("/updateDiscussion.php")
+        Call<JsonObject> updateDiscussion(@Field("discussionID") int discussionID, @Field("post") String post);
     }
 }

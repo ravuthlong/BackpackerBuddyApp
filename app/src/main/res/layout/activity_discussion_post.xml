@@ -13,7 +13,6 @@
         android:weightSum="5"
         android:orientation="vertical">
 
-
         <include android:id="@+id/toolbar_main"
             layout="@layout/frag_toolbar"
             android:layout_height="wrap_content"
@@ -22,24 +21,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/linear_newDiscussion">
 
             <EditText
                 android:id="@+id/etDiscussion"
                 android:background="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textCapSentences"
                 android:ems="10"
                 android:layout_weight="1"
                 android:gravity="top|left"
                 android:scrollbars="vertical"
-                android:hint="Write your message "
+                android:hint="@string/writePost"
                 android:padding="15dp" />
-
         </LinearLayout>
-
-
     </LinearLayout>
-
 </android.support.design.widget.CoordinatorLayout>

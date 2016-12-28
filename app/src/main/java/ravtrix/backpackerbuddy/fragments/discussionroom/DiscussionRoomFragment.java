@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -93,6 +94,19 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         fetchDiscussionPostsRefresh();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) { // refresh
+                refresh();
+            }
+        }
+    }
+
+    public void refresh() {
+        fetchDiscussionPostsRefresh();
+    }
+
     private void fetchDiscussionPosts() {
 
         Call<List <DiscussionModel>> retrofitCall = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
@@ -102,14 +116,20 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         retrofitCall.enqueue(new Callback<List<DiscussionModel>>() {
             @Override
             public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
-                discussionModels = response.body(); // GSON convert json into models
+
+                if (response.body().get(0).getSuccess() == 1) {
+                    discussionModels = response.body(); // GSON convert json into models
+                } else {
+                    fragActivityProgressBarInterface.setProgressBarInvisible();
+                    view.setVisibility(View.VISIBLE);
+                    discussionModels = new ArrayList<>(); //empty
+                }
 
                 discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels,
                         view, fragActivityProgressBarInterface, userLocalStore, swipeRefreshLayout);
                 recyclerViewDiscussion.setAdapter(discussionAdapter);
                 recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
             }
-
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
                 fragActivityProgressBarInterface.setProgressBarInvisible();
@@ -127,8 +147,12 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
             @Override
             public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
 
-                List<DiscussionModel> newModels = response.body(); // GSON convert json into models
-                discussionAdapter.swap(newModels);
+                if (response.body().get(0).getSuccess() == 1) {
+                    discussionModels = response.body(); // GSON convert json into models
+                } else {
+                    discussionModels = new ArrayList<>(); //empty
+                }
+                discussionAdapter.swap(discussionModels);
                 swipeRefreshLayout.setRefreshing(false);
             }
             @Override
