@@ -7,6 +7,8 @@ package ravtrix.backpackerbuddy.activities.signup1;
 public interface OnRetrofitSignUp1 {
 
     void onUsernameTaken();
-    void onUsernameNotTaken();
+    void onEmailTaken();
+    void onUsernameAndEmailTaken();
+    void onUsernameAndEmailNotTaken();
     void onError();
 }

@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,8 +32,7 @@ import retrofit2.Response;
 
 public class RecentlyOnlineUsersFragment extends Fragment {
     @BindView(R.id.grid_viewOnline) protected GridView profileImageGridView;
-    @BindView(R.id.frag_gridview_nearTxtOnline) protected TextView nearTxt;
-    @BindView(R.id.frag_gridview_cityOnline) protected TextView city;
+    @BindView(R.id.frag_gridview_recentlyOnline) protected TextView onlineTxt;
     private View view;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
@@ -51,10 +51,7 @@ public class RecentlyOnlineUsersFragment extends Fragment {
         view = inflater.inflate(R.layout.frag_gridview_online, container, false);
 
         ButterKnife.bind(this, view);
-
-        nearTxt.setText("Recently");
-        city.setText("Online");
-
+        setTypeface();
         userLocalStore = new UserLocalStore(getActivity());
         fetchRecentlyOnlineUsers();
 
@@ -62,7 +59,9 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     }
 
 
-
+    /**
+     * Fetch recently online user through retrofit
+     */
     private void fetchRecentlyOnlineUsers() {
         fragActivityProgressBarInterface.setProgressBarVisible();
 
@@ -90,6 +89,11 @@ public class RecentlyOnlineUsersFragment extends Fragment {
                 view.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void setTypeface() {
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "Text.ttf");
+        onlineTxt.setTypeface(font);
     }
 
     public void setCurrentSelectedDropdown(int currentSelectedDropdown) {

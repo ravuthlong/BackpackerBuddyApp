@@ -15,7 +15,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.WelcomeActivity;
+import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -111,7 +111,9 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
     @Override
     public void userCanLogIn() {
-        startActivity(new Intent(LogInActivity.this, UserMainPage.class));
+        Intent intent = new Intent(LogInActivity.this, UserMainPage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override

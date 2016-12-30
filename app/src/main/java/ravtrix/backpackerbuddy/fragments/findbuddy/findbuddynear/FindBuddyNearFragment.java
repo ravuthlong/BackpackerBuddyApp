@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,7 +34,6 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 import static ravtrix.backpackerbuddy.R.id.spinner;
-import static ravtrix.backpackerbuddy.helpers.Helpers.checkLocationUpdate;
 
 /**
  * Created by Ravinder on 9/12/16.
@@ -43,6 +43,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
     @BindView(R.id.layout_noNearby) protected LinearLayout layout_noNearby;
+    @BindView(R.id.grid_relativeLayout) protected RelativeLayout nearbyRelative;
     private View fragView;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
@@ -65,7 +66,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         ButterKnife.bind(this, fragView);
         setHasOptionsMenu(true);
 
-        Helpers.overrideFonts(getActivity(), layout_noNearby);
+        Helpers.overrideFonts(getActivity(), nearbyRelative);
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getActivity());
         findBuddyPresenter = new FindBuddyPresenter(this);

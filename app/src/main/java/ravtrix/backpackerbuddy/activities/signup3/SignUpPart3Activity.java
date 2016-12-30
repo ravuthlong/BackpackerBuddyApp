@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -41,6 +43,13 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private ProgressDialog progressDialog;
     private long currentTime;
     private Bitmap bitmapImage;
+    private long mLastClickTime = 0;
+    private String username = "";
+    private String password = "";
+    private String email = "";
+    private Double longitude = 0.0;
+    private Double latitude = 0.0;
+    private String gender = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +59,8 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
         Helpers.setToolbar(this, toolbar);
         setTitle("Sign Up Part 2");
+        setBundle();
+
         circleImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_photo));
         bEditImage.setOnClickListener(this);
         imgRotate.setOnClickListener(this);
@@ -98,6 +109,11 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Prevents double clicking
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
         switch (item.getItemId()) {
             case R.id.submitSend:
                 signUserUp();
@@ -108,18 +124,34 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     }
 
 
+    private void setBundle() {
+        Bundle signUp1Info = getIntent().getExtras();
+        if (signUp1Info != null) {
+            this.username = signUp1Info.getString("username");
+            password = signUp1Info.getString("password");
+            email = signUp1Info.getString("email");
+            longitude = signUp1Info.getDouble("longitude");
+            latitude = signUp1Info.getDouble("latitude");
+
+            // Only Facebook sign up has the below information
+            if (null != signUp1Info.getString("imageURL")) {
+                Picasso.with(this).load(signUp1Info.getString("imageURL"))
+                        .fit()
+                        .centerCrop()
+                        .into(circleImageView);
+            }
+            if (null != signUp1Info.getString("gender")) {
+                gender = signUp1Info.getString("gender");
+            }
+        }
+    }
+
     /**
      * Sign user up with information provided by the user during the sign up process
      */
     private void signUserUp() {
 
         showProgressBar();
-        String username = "";
-        String password = "";
-        String email = "";
-        Double longitude = 0.0;
-        Double latitude = 0.0;
-        String country = "Unknown";
 
         // Turn image into base 64 encoded string
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -131,15 +163,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                         .JPEG, 15, byteArrayOutputStream);
         final String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 
-        Bundle signUp1Info = getIntent().getExtras();
-        if (signUp1Info != null) {
-            username = signUp1Info.getString("username");
-            password = signUp1Info.getString("password");
-            email = signUp1Info.getString("email");
-            longitude = signUp1Info.getDouble("longitude");
-            latitude = signUp1Info.getDouble("latitude");
-        }
-
         final HashMap<String, String> userInfo = new HashMap<>();
         userInfo.put("email", email);
         userInfo.put("username", username);
@@ -149,11 +172,17 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("userpic", encodedImage);
         userInfo.put("time", Long.toString(currentTime));
         userInfo.put("token", getFCMToken());
+        userInfo.put("gender", gender);
+
         try {
             Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
                 @Override
                 public void onCountryReceived(String country) {
-                    userInfo.put("country", country);
+                    if (country.isEmpty()) {
+                        userInfo.put("Unknown", country);
+                    } else {
+                        userInfo.put("country", country);
+                    }
                     // Make Retrofit call to communicate with the server
                     signUpPart3Presenter.retrofitStoreUser(userInfo);
                 }
@@ -163,7 +192,11 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             new RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
                 @Override
                 public void onCountryReceived(String country) {
-                    userInfo.put("country", country);
+                    if (country.isEmpty()) {
+                        userInfo.put("Unknown", country);
+                    } else {
+                        userInfo.put("country", country);
+                    }
                     // Make Retrofit call to communicate with the server
                     signUpPart3Presenter.retrofitStoreUser(userInfo);
                 }
@@ -181,7 +214,9 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @Override
     public void startUserMainPage() {
-        startActivity(new Intent(SignUpPart3Activity.this, UserMainPage.class));
+        Intent intent = new Intent(SignUpPart3Activity.this, UserMainPage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override

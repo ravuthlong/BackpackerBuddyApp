@@ -6,5 +6,5 @@ package ravtrix.backpackerbuddy.activities.signup1;
 
 public interface ISignUpPart1Interactor {
 
-    void isUsernameTaken(String username, OnRetrofitSignUp1 onRetrofitSignUp1);
+    void isUsernameTaken(String username, String email, OnRetrofitSignUp1 onRetrofitSignUp1);
 }

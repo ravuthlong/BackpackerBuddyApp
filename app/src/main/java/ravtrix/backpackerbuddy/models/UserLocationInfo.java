@@ -29,6 +29,17 @@ public class UserLocationInfo {
     @SerializedName("userpic")
     @Expose
     private String userpic;
+    @SerializedName("country")
+    @Expose
+    private String country;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     public int getSuccess() {
         return success;

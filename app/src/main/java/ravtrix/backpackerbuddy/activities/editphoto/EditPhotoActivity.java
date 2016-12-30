@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     private Bitmap bitmapImage;
     private long uploadedTime;
     private String newImageURL;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,13 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
 
     @Override
     public void onClick(View v) {
+
+        // Prevents double clicking
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            return;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+
         switch(v.getId()) {
             case R.id.bEditImage:
                 // Get the image from gallery

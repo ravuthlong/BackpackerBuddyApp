@@ -8,6 +8,7 @@ import java.util.List;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 import retrofit2.Call;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -24,6 +25,12 @@ public class RetrofitUserInfoInterfaces {
         @FormUrlEncoded
         @POST("/login.php")
         Call<LoggedInUser> userInfo(@FieldMap HashMap<String, String> user);
+    }
+
+    public interface LogUserInFacebook {
+        @FormUrlEncoded
+        @POST("/loginfacebook.php")
+        Call<LoggedInUser> logUserInFacebook(@Field("email") String email, @Field("token") String token);
     }
 
     public interface SignUserUpPart1 {
@@ -81,6 +88,11 @@ public class RetrofitUserInfoInterfaces {
         Call<JsonObject> isUsernameTaken(@Query("username") String username);
     }
 
+    public interface IsUsernameOrEmailTaken {
+        @GET("/checkUsernameEmailTaken.php?username=[username]&email=[email]")
+        Call<JsonObject> isUsernameOrEmailTaken(@Query("username") String username, @Query("email") String email);
+    }
+
     public interface ChangePassword {
         @FormUrlEncoded
         @POST("/changePassword.php")
@@ -93,11 +105,7 @@ public class RetrofitUserInfoInterfaces {
         Call<JsonObject> changeEmail(@FieldMap HashMap<String, String> user);
     }
 
-    public interface InsertNotificationToken {
-        @FormUrlEncoded
-        @POST("/insertNotificationToken.php")
-        Call<JsonObject> insertToken(@FieldMap HashMap<String, String> user);
-    }
+
 }
 
 

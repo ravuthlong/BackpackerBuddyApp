@@ -24,7 +24,26 @@ public class UserLocalStore {
         spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
         spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
         spEditor.putLong("time", loggedInUser.getTime());
+        spEditor.putString("gender", loggedInUser.getGender());
 
+        spEditor.apply();
+    }
+
+    public void changelatitude(double latitude) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putLong("latitude", Double.doubleToRawLongBits(latitude));
+        spEditor.apply();
+    }
+
+    public void changeLongitude(double longitude) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putLong("longitude", Double.doubleToRawLongBits(longitude));
+        spEditor.apply();
+    }
+
+    public void changeTime(Long newTime) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putLong("time", newTime);
         spEditor.apply();
     }
 
@@ -53,11 +72,12 @@ public class UserLocalStore {
         String email = userLocalDataStore.getString("email", "");
         String username = userLocalDataStore.getString("username", "");
         String userImageURL = userLocalDataStore.getString("userImageURL", "");
+        String gender = userLocalDataStore.getString("gender", "");
         double latitude = Double.longBitsToDouble(userLocalDataStore.getLong("latitude", 0));
         double longitude = Double.longBitsToDouble(userLocalDataStore.getLong("longitude", 0));
         long time = userLocalDataStore.getLong("time", 0);
 
-        storedUser = new LoggedInUser(userID, email, username, userImageURL, traveling, latitude, longitude, time);
+        storedUser = new LoggedInUser(userID, email, username, userImageURL, gender, traveling, latitude, longitude, time);
         return storedUser;
     }
 

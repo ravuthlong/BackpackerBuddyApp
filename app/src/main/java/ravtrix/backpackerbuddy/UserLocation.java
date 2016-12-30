@@ -100,7 +100,9 @@ public class UserLocation {
 
     private void stopListener() {
         try {
+            // Turn off location listeners after successful location retrieval
             locationManager.removeUpdates(locationListener);
+            locationManager = null;
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
         }

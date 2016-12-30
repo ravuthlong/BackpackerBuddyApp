@@ -23,24 +23,16 @@
             android:src="@drawable/ic_location_on_white_24dp" />
 
         <TextView
-            android:id="@+id/frag_gridview_nearTxtOnline"
+            android:id="@+id/frag_gridview_recentlyOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/near"
+            android:text="Recently Online"
             android:layout_gravity="center_horizontal|top"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/grid_locationImageOnline"
             android:layout_toEndOf="@+id/grid_locationImageOnline" />
-
-        <TextView
-            android:id="@+id/frag_gridview_cityOnline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/frag_gridview_nearTxtOnline"
-            android:layout_toEndOf="@+id/frag_gridview_nearTxtOnline"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp" />
     </RelativeLayout>
+
 
     <GridView
         android:id="@+id/grid_viewOnline"

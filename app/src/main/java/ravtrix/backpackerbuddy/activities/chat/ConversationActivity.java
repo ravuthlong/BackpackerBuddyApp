@@ -83,10 +83,11 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView messageTextView1, messageTextView2, timeTextView;
-        private CircleImageView messengerImageView1, messengerImageView2;
-        private LinearLayout layoutMessage1;
-        private RelativeLayout layoutMessage2;
+        TextView messageTextView1, messageTextView2;
+        TextView timeTextView;
+        CircleImageView messengerImageView1, messengerImageView2;
+        LinearLayout layoutMessage1;
+        RelativeLayout layoutMessage2;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -94,12 +95,10 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
             timeTextView = (TextView) itemView.findViewById(R.id.item_time);
             messengerImageView1 = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
             layoutMessage1 = (LinearLayout) itemView.findViewById(R.id.layout_message);
+
             messageTextView2 = (TextView) itemView.findViewById(R.id.item_message_message2);
             messengerImageView2 = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage2);
             layoutMessage2 = (RelativeLayout) itemView.findViewById(R.id.layout_message2);
-
-           // Helpers.overrideFonts(getApplicationContext(), messageTextView1);
-            //Helpers.overrideFonts(getApplicationContext(), messageTextView2);
         }
     }
 
@@ -241,8 +240,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 if (dataSnapshot.child(chatRoomName).exists()) {
                     Message message = new
                             Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                            "http://backpackerbuddy.net23.net/profile_pic/" +
-                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG",
+                            userLocalStore.getLoggedInUser().getUserImageURL(),
                             time, 0);
                     mFirebaseDatabaseReference.child(chatRoomName)
                             .push().setValue(message);
@@ -253,8 +251,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 } else if (dataSnapshot.child(chatRoomName2).exists()) {
                     Message message = new
                             Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                            "http://backpackerbuddy.net23.net/profile_pic/" +
-                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG",
+                            userLocalStore.getLoggedInUser().getUserImageURL(),
                             time, 0);
                     mFirebaseDatabaseReference.child(chatRoomName2)
                             .push().setValue(message);
@@ -281,8 +278,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
                     Map<String, Object> userData = new HashMap<>();
                     userData.put("photoUrl",
-                            "http://backpackerbuddy.net23.net/profile_pic/" +
-                                    userLocalStore.getLoggedInUser().getUserID() + ".JPG");
+                            userLocalStore.getLoggedInUser().getUserImageURL());
                     userData.put("text", userMessage);
                     userData.put("time", time);
                     userData.put("userID", userLocalStore.getLoggedInUser().getUserID());

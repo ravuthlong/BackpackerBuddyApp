@@ -44,7 +44,6 @@ import java.util.regex.Pattern;
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.signup3.OnCountryReceived;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
-import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -372,13 +371,9 @@ public class Helpers {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                 // Reset local storage of user also after server-side update
-                LoggedInUser loggedInUser = new LoggedInUser(userLocalStore.getLoggedInUser().getUserID(),
-                        userLocalStore.getLoggedInUser().getEmail(), userLocalStore.getLoggedInUser().getUsername(),
-                        userLocalStore.getLoggedInUser().getUserImageURL(), userLocalStore.getLoggedInUser().getTraveling(),
-                        latitude, longitude,
-                        currentTime);
-                userLocalStore.clearUserData();
-                userLocalStore.storeUserData(loggedInUser);
+                userLocalStore.changelatitude(latitude);
+                userLocalStore.changeLongitude(longitude);
+                userLocalStore.changeTime(currentTime);
             }
 
             @Override

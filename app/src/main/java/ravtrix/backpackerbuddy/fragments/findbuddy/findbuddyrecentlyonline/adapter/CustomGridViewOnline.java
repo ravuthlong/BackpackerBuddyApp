@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -16,6 +18,7 @@ import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 /**
@@ -59,12 +62,25 @@ public class CustomGridViewOnline extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView;
         CircleImageView profileImage;
+        TextView country;
+        RelativeLayout relativeLayout;
 
         if (convertView == null) {
             gridView = new View(context);
             gridView = inflater.inflate(R.layout.item_gridview_online, parent, false);
             profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImageOnline);
+            country = (TextView) gridView.findViewById(R.id.tvCountry_online);
+            relativeLayout = (RelativeLayout) gridView.findViewById(R.id.item_gridLayoutOnline);
 
+            Helpers.overrideFonts(context, relativeLayout);
+
+            String userCountry = nearbyUserInfo.get(position).getCountry();
+            if (!userCountry.isEmpty()) {
+                country.setText(userCountry);
+            } else {
+                //empty country
+                country.setText("Unknown");
+            }
             Picasso.with(context)
                     .load(nearbyUserInfo.get(position).getUserpic())
                     .placeholder(R.drawable.ic_placeholder)

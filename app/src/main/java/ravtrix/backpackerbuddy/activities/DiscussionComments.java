@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
     private UserLocalStore userLocalStore;
     private CommentDiscussionAdapter commentDiscussionAdapter;
     private List<CommentModel> commentModels;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +68,16 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
+
+        // Prevents double clicking
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            return;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+
         switch(view.getId()) {
             case R.id.submitButton:
-
+                mLastClickTime = SystemClock.elapsedRealtime();
                 if (etComment.getText().toString().isEmpty()) {
                     Toast.makeText(this, "Empty comment...", Toast.LENGTH_SHORT).show();
                 } else {

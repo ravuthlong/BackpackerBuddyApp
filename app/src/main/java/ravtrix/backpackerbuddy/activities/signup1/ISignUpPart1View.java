@@ -7,6 +7,9 @@ package ravtrix.backpackerbuddy.activities.signup1;
 interface ISignUpPart1View {
 
     void startSignUpPart2Activity(String email, String username, String password);
-    void displayUserTakenDialog();
+    void startSignUpPart2ActivityFacebook(FacebookUser facebookUser);
+    void displayUsernameTakenDialog();
+    void displayEmailTakenDialog();
+    void displayUsernameAndEmailTakenDialog();
     void displayErrorToast();
 }

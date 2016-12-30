@@ -2,6 +2,7 @@ package ravtrix.backpackerbuddy.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity {
     @BindView(R.id.etDiscussion) protected EditText etDiscussion;
     @BindView(R.id.linear_newDiscussion) protected LinearLayout linearNewDis;
     private UserLocalStore userLocalStore;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,12 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity {
 
         switch (item.getItemId()) {
             case R.id.submitPost:
+
+                // Prevents double clicking
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    return false;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
 
                 if (etDiscussion.getText().toString().trim().length() < 10) {
                     Helpers.displayToast(this, "Post is too short...");

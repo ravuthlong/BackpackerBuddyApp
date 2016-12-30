@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,7 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
     private DestinationPresenter destinationPresenter;
     private Calendar c = Calendar.getInstance();
     protected static Calendar dateTypeFrom, dateTypeUntil;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +81,12 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Prevents double clicking
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
 
         switch (item.getItemId()) {
             case R.id.submitSave:

@@ -18,6 +18,10 @@ public class RetrofitUserInfo {
         return this.retrofit.create(RetrofitUserInfoInterfaces.LogUserIn.class);
     }
 
+    public RetrofitUserInfoInterfaces.LogUserInFacebook logUserInFacebook() {
+        return this.retrofit.create(RetrofitUserInfoInterfaces.LogUserInFacebook.class);
+    }
+
     public RetrofitUserInfoInterfaces.SignUserUpPart1 signUserUpPart1() {
         return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpPart1.class);
     }
@@ -58,6 +62,10 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameTaken.class);
     }
 
+    public RetrofitUserInfoInterfaces.IsUsernameOrEmailTaken isUsernameOrEmailTaken() {
+        return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameOrEmailTaken.class);
+    }
+
     public RetrofitUserInfoInterfaces.ChangePassword changePassword() {
         return retrofit.create(RetrofitUserInfoInterfaces.ChangePassword.class);
     }
@@ -66,7 +74,4 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.ChangeEmail.class);
     }
 
-    public RetrofitUserInfoInterfaces.InsertNotificationToken insertNotificationToken() {
-        return retrofit.create(RetrofitUserInfoInterfaces.InsertNotificationToken.class);
-    }
 }
