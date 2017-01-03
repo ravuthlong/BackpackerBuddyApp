@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.discussion;
 
 import android.content.Intent;
 import android.os.Bundle;

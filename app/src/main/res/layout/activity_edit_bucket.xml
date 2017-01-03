@@ -2,15 +2,12 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/greenLighter"
-    tools:context=".activities.editinfo.EditInfoActivity">
+    android:background="@color/greenLighter">
 
     <include
-        android:id="@+id/toolbar_main"
         layout="@layout/frag_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
@@ -22,10 +19,10 @@
         android:fillViewport="false">
 
         <RelativeLayout
+            android:id="@+id/activity_edit_bucket_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/greenLighter"
-            android:id="@+id/relativeEditDiscussion">
+            android:background="@color/greenLighter">
 
             <FrameLayout
                 android:id="@+id/frameLayout2"
@@ -36,16 +33,16 @@
                 android:layout_marginTop="20dp">
 
                 <TextView
-                    android:id="@+id/tvDiscussion"
+                    android:id="@+id/activity_edit_bucket_tvBucket"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|top"
-                    android:text="@string/discussion"
+                    android:text="@string/bucketPost"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </FrameLayout>
 
             <EditText
-                android:id="@+id/etEditDiscussion"
+                android:id="@+id/activity_edit_bucket_etBucket"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/frameLayout2"
@@ -58,7 +55,7 @@
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="10"
                 android:scrollbars="vertical"
-                android:hint="@string/discussion"
+                android:hint="@string/bucketPost"
                 android:padding="5dp" />
         </RelativeLayout>
     </ScrollView>

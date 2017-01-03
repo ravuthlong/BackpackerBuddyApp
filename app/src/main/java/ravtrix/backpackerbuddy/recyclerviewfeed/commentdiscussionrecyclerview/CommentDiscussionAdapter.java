@@ -25,8 +25,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.DiscussionComments;
-import ravtrix.backpackerbuddy.activities.EditComment;
+import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.discussion.EditComment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;

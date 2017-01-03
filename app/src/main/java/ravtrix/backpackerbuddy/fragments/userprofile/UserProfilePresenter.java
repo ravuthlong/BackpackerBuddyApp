@@ -1,5 +1,9 @@
 package ravtrix.backpackerbuddy.fragments.userprofile;
 
+import java.util.HashMap;
+
+import ravtrix.backpackerbuddy.models.UserLocalStore;
+
 /**
  * Created by Ravinder on 9/14/16.
  */
@@ -14,6 +18,39 @@ class UserProfilePresenter implements  IUserProfilePresenter {
     }
 
     @Override
+    public void updateTravelStatus(HashMap<String, String> userInfo, UserLocalStore userLocalStore) {
+        userProfileInteractor.updateTravelStatus(userInfo, userLocalStore, new RetrofitTravelListener() {
+            @Override
+            public void onTravel() {
+                // User is now traveling
+                view.hideImageNotTravel();
+                view.hideTextNotTravel();
+                view.showImageTravel();
+                view.showTextTravel();
+            }
+
+            @Override
+            public void onNotTravel() {
+                // User is not traveling
+                view.showImageNotTravel();
+                view.showTextNotTravel();
+                view.hideImageTravel();
+                view.hideTextTravel();
+            }
+
+            @Override
+            public void onError() {
+                view.displayError();
+            }
+
+            @Override
+            public void onHideProgressDialog() {
+                view.hideProgressDialog();
+            }
+        });
+    }
+
+    @Override
     public void getUserInfo(int userID, String userImgURL) {
         userProfileInteractor.getUserIntoRetrofit(userID, userImgURL, new RetrofitProfileListener() {
 
@@ -25,6 +62,7 @@ class UserProfilePresenter implements  IUserProfilePresenter {
             @Override
             public void onSetUsername(String username) {
                 view.setUsername(username);
+
             }
 
             @Override

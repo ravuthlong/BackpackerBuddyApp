@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview;
+package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,8 +27,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.DiscussionComments;
-import ravtrix.backpackerbuddy.activities.EditDiscussionActivity;
+import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.discussion.EditDiscussionActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
@@ -39,6 +39,7 @@ import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

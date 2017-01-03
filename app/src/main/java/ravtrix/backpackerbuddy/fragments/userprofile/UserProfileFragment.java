@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -35,13 +34,9 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
 import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -155,36 +150,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                         final HashMap<String, String> userInfo = new HashMap<>();
                         userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
 
-                        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
-                                .updateTravelingStatus()
-                                .updateTravelStatus(userInfo);
-
-                        retrofit.enqueue(new Callback<JsonObject>() {
-                            @Override
-                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                if (userLocalStore.getLoggedInUser().getTraveling() == 0) {
-                                    // User is now traveling
-                                    imgNotTravel.setVisibility(View.GONE);
-                                    txtNotTravel.setVisibility(View.GONE);
-                                    imgTravel.setVisibility(View.VISIBLE);
-                                    txtTravel.setVisibility(View.VISIBLE);
-                                } else {
-                                    // User no longer travels
-                                    imgTravel.setVisibility(View.GONE);
-                                    txtTravel.setVisibility(View.GONE);
-                                    imgNotTravel.setVisibility(View.VISIBLE);
-                                    txtNotTravel.setVisibility(View.VISIBLE);
-                                }
-                                // Change local store value for travel status
-                                int newStatus = userLocalStore.getLoggedInUser().getTraveling() == 1 ? 0 : 1;
-                                userLocalStore.changeTravelStat(newStatus);
-                                Helpers.hideProgressDialog(progressDialog);
-                            }
-                            @Override
-                            public void onFailure(Call<JsonObject> call, Throwable t) {
-                                Helpers.displayToast(getContext(), "Error");
-                            }
-                        });
+                        presenter.updateTravelStatus(userInfo, userLocalStore);
                     }
                 });
                 alertDialog.show();
@@ -389,6 +355,56 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void displayError() {
+        Helpers.displayToast(getContext(), "Error");
+    }
+
+    @Override
+    public void hideImageTravel() {
+        imgTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showImageTravel() {
+        imgTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideImageNotTravel() {
+        imgNotTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showImageNotTravel() {
+        imgNotTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showTextTravel() {
+        txtTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideTextTravel() {
+        txtTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showTextNotTravel() {
+        txtNotTravel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideTextNotTravel() {
+        txtNotTravel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        Helpers.hideProgressDialog(progressDialog);
     }
 
     /**

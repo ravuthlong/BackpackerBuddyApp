@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities;
+package ravtrix.backpackerbuddy.activities.userinfoedit;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;

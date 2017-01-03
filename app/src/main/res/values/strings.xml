@@ -4,6 +4,8 @@
     <string name="action_settings">Settings</string>
     <string name="app_name">Backpacker Buddy</string>
     <string name="backpacker">Backpacker </string>
+    <string name="bucketList">MY BUCKET LIST</string>
+    <string name="bucketPost">Bucket Item</string>
     <string name="buddy">Buddy </string>
     <string name="comment">Comment</string>
     <string name="confirmPassword">Confirm Password</string>
@@ -38,10 +40,11 @@
     <string name="lastName">Last Name</string>
     <string name="location">Location</string>
     <string name="login">Log In</string>
-    <string name="manageDes">MANAGE DESTINATION</string>
+    <string name="manageDes">MANAGE POSTS</string>
     <string name="month">Month</string>
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
+    <string name="noBucket">Add to your bucket list!</string>
     <string name="noDiscussion">Write a discussion</string>
     <string name="noInbox">No message inbox :(</string>
     <string name="noNearby">No nearby user</string>
@@ -74,6 +77,7 @@
     <string name="txtSignOut">Sign Out</string>
     <string name="until">Until</string>
     <string name="username">Username</string>
+    <string name="writeBucket">Write your goal</string>
     <string name="writeComment">Write a comment...</string>
     <string name="writePost">Write your post</string>
 

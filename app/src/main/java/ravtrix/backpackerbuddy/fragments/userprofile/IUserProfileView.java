@@ -24,5 +24,15 @@ interface IUserProfileView {
     void isDetailTwoAHint(boolean hint);
     void isDetailThreeAHint(boolean hint);
     void isDetailFourAHint(boolean hint);
-
+    void displayError();
+    void hideImageTravel();
+    void showImageTravel();
+    void hideImageNotTravel();
+    void showImageNotTravel();
+    void showTextTravel();
+    void hideTextTravel();
+    void showTextNotTravel();
+    void hideTextNotTravel();
+    void hideProgressDialog();
 }
+

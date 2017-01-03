@@ -30,7 +30,7 @@
             android:id="@+id/frag_userinbox_recyclerView"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:background="#88a990"
+            android:background="@color/greenBackground"
             android:choiceMode="singleChoice"
             android:layout_gravity='start'
             />

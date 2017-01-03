@@ -11,6 +11,7 @@
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="lowWhite">#F8F5F5</color>
-
+    <color name="lowWhite">#FAF7F7</color>
+    <color name="maleBlue">#2E64FE</color>
+    <color name="femalePink">#B23D88</color>
 </resources>

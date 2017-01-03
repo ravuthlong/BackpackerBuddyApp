@@ -20,8 +20,8 @@
 
         <activity
             android:name=".activities.startingpage.WelcomeActivity"
-            android:launchMode="singleTask"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,41 +35,46 @@
             android:label="@string/app_name" />
         <activity
             android:name=".activities.signup1.SignUpPart1Activity"
-            android:label="Sign Up Activity1"
+            android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.signup3.SignUpPart3Activity"
-            android:label="Sign Up Activity2"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.mainpage.UserMainPage"
-            android:label="User Main"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.login.LogInActivity"
-            android:label="Log In Activity"
+            android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.SettingsActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editinfo.EditInfoActivity"
+            android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activities.otheruserprofile.OtherUserProfile"
+            android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editphoto.EditPhotoActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.editpost.EditPostActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
@@ -90,21 +95,36 @@
 
         <activity
             android:name=".activities.chat.ConversationActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".activities.ChangeEmail"
+            android:name=".activities.userinfoedit.ChangeEmail"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ChangePassword"
+            android:name=".activities.userinfoedit.ChangePassword"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.DiscussionPostActivity"
+            android:name=".activities.discussion.DiscussionPostActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activities.DiscussionComments" />
-        <activity android:name=".activities.createdestination.DestinationActivity" />
-        <activity android:name=".activities.EditComment" />
-        <activity android:name=".activities.EditDiscussionActivity"></activity>
+        <activity
+            android:name=".activities.discussion.DiscussionComments"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.createdestination.DestinationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.discussion.EditComment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.discussion.EditDiscussionActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.bucketlist.BucketPostActivity" />
+        <activity android:name=".activities.bucketlist.EditBucketActivity"></activity>
     </application>
 
 </manifest>

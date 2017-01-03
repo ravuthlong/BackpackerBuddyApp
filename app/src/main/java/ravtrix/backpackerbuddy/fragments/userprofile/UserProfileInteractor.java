@@ -2,7 +2,10 @@ package ravtrix.backpackerbuddy.fragments.userprofile;
 
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
+
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,5 +67,37 @@ class UserProfileInteractor implements IUserProfileInteractor {
                 retrofitProfileListener.onError();
             }
         });
+    }
+
+
+    @Override
+    public void updateTravelStatus(HashMap<String, String> userInfo, final UserLocalStore userLocalStore,
+                                   final RetrofitTravelListener retrofitTravelListener) {
+
+        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .updateTravelingStatus()
+                .updateTravelStatus(userInfo);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (userLocalStore.getLoggedInUser().getTraveling() == 0) {
+                    // User is now traveling
+                    retrofitTravelListener.onTravel();
+                } else {
+                    // User no longer travels
+                    retrofitTravelListener.onNotTravel();
+                }
+                // Change local store value for travel status
+                int newStatus = userLocalStore.getLoggedInUser().getTraveling() == 1 ? 0 : 1;
+                userLocalStore.changeTravelStat(newStatus);
+                retrofitTravelListener.onHideProgressDialog();
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                retrofitTravelListener.onError();
+            }
+        });
+
     }
 }

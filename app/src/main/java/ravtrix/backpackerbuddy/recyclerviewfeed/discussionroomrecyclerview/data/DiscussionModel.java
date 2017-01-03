@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview;
+package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

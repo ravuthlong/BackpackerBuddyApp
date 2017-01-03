@@ -35,6 +35,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
+import ravtrix.backpackerbuddy.fragments.bucketlist.BucketListFrag;
 import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
@@ -127,6 +128,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 currentPos = 5;
                 setTitle("Discussion Room");
                 break;
+            case R.id.navBucketList:
+                currentPos = 6;
+                setTitle("My Bucket List");
+                break;
             default:
         }
         changeFragment(this.currentPos);
@@ -169,6 +174,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new ManageDestinationTabFragment());
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DiscussionRoomFragment());
+        fragmentList.add(new BucketListFrag());
     }
 
     // Start up state
@@ -230,7 +236,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_flight_takeoff_black_24dp);
         navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
         navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_chat_bubble_black_24dp);
-        navigationView.getMenu().getItem(4).setIcon(R.drawable.ic_assignment_black_24dp);
+        navigationView.getMenu().getItem(4).setIcon(R.drawable.ic_edit_black_24dp);
+        navigationView.getMenu().getItem(5).setIcon(R.drawable.ic_assignment_black_24dp);
+
     }
 
     private void resetNavigationDrawer() {
@@ -360,6 +368,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         applyFontToItem(item, typeface);
 
         item = navigationView.getMenu().findItem(R.id.navDestination);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navBucketList);
         applyFontToItem(item, typeface);
     }
 

@@ -137,7 +137,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onFailure(Call<List<FeedItemInbox>> call, Throwable t) {
                 fragActivityProgressBarInterface.setProgressBarInvisible();
-                System.out.println(t.getMessage());
             }
         });
     }

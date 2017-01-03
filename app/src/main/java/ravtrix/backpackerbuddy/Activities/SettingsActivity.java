@@ -16,6 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
+import ravtrix.backpackerbuddy.activities.userinfoedit.ChangeEmail;
+import ravtrix.backpackerbuddy.activities.userinfoedit.ChangePassword;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
