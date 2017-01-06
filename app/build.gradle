@@ -13,8 +13,8 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 16
-        versionName "1.3.2"
+        versionCode 18
+        versionName "1.3.4"
     }
     buildTypes {
         release {

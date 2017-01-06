@@ -8,7 +8,7 @@
         android:id="@+id/item_inboxFeed_relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/greenLighter"
+        android:background="@color/lowWhite"
         android:padding="12dp">
 
         <de.hdodenhof.circleimageview.CircleImageView

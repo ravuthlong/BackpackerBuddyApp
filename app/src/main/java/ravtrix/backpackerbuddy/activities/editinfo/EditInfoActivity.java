@@ -67,7 +67,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void displayErrorToast() {
-        Helpers.displayToast(EditInfoActivity.this, "Error");
+        Helpers.displayErrorToast(this);
     }
 
     @Override

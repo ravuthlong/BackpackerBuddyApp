@@ -53,14 +53,12 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     private List<DiscussionModel> discussionModels;
     private LayoutInflater inflater;
     private Fragment fragment;
-    private Counter counter;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private UserLocalStore userLocalStore;
     private FragmentManager fragmentManager;
     private FragActivityResetDrawer fragActivityResetDrawer;
     private SwipeRefreshLayout refreshLayout;
-    private int sizeToCompare; //for when view can be visible
 
     public DiscussionAdapter(Fragment fragment, List<DiscussionModel> discussionModels,
                              View view, FragActivityProgressBarInterface fragActivityProgressBarInterface,
@@ -73,25 +71,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         this.userLocalStore = userLocalStore;
         this.refreshLayout = refreshLayout;
         inflater = LayoutInflater.from(fragment.getContext());
-        counter = new Counter(1);
-
-        switch(discussionModels.size()) {
-            case 0:
-                sizeToCompare = 0;
-                break;
-            case 1:
-                sizeToCompare = 1;
-                break;
-            case 2:
-                sizeToCompare = 2;
-                break;
-            case 3:
-                sizeToCompare = 3;
-                break;
-            default:
-                sizeToCompare = 3;
-                break;
-        }
     }
 
     @Override
@@ -108,16 +87,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.default_photo)
-                .into(holder.profileImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        counter.addCount();
-                        // Display layout only when all images has been loaded
-                        checkPicassoFinished();
-                    }
-                    @Override
-                    public void onError() {}
-                });
+                .into(holder.profileImage);
 
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -128,7 +98,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
 
         holder.tvUsername.setText(currentItem.getUsername());
         holder.tvCountry.setText(currentItem.getCountry());
-        holder.tvText.setText(currentItem.getPost());
+        holder.tvText.setText(currentItem.getPost().replace("\\", "")); // remove extra /
         holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
         holder.tvCommentNum.setText(Integer.toString(currentItem.getCommentNum()));
 
@@ -138,26 +108,28 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
             holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
         }
 
-        holder.layoutLove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+            holder.layoutLove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (currentItem.getIsClicked() == 0) {
-                    // If the user clicks love, add to their love list and increment total love
-                    insertAndUpdateLoveRetrofit(currentItem.getDiscussionID());
-                    currentItem.setIsClicked(1);
-                    currentItem.setLoveNum(currentItem.getLoveNum() + 1);
-                    holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_red_24dp);
-                } else {
-                    // If the user clicks love, remove from their love list and decrement total love
-                    removeAndUpdateLoveRetrofit(currentItem.getDiscussionID());
-                    currentItem.setIsClicked(0);
-                    holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
-                    currentItem.setLoveNum(currentItem.getLoveNum() - 1);
+                    if (currentItem.getIsClicked() == 0) {
+                        // If the user clicks love, add to their love list and increment total love
+                        insertAndUpdateLoveRetrofit(currentItem.getDiscussionID());
+                        currentItem.setIsClicked(1);
+                        currentItem.setLoveNum(currentItem.getLoveNum() + 1);
+                        holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_red_24dp);
+                    } else {
+                        // If the user clicks love, remove from their love list and decrement total love
+                        removeAndUpdateLoveRetrofit(currentItem.getDiscussionID());
+                        currentItem.setIsClicked(0);
+                        holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
+                        currentItem.setLoveNum(currentItem.getLoveNum() - 1);
+                    }
+                    holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
                 }
-                holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -232,6 +204,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
 
                     Intent intent = new Intent(fragment.getActivity(), DiscussionComments.class);
                     intent.putExtra("discussionID", clickedItem.getDiscussionID());
+                    intent.putExtra("ownerID", clickedItem.getUserID());
                     fragment.getActivity().startActivity(intent);
                 }
             });
@@ -373,21 +346,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         this.notifyDataSetChanged();
     }
 
-    private void checkPicassoFinished() {
-
-        if (counter.getCount() >= sizeToCompare) {
-            // stop progress bar
-            fragActivityProgressBarInterface.setProgressBarInvisible();
-            view.setVisibility(View.VISIBLE);
-
-            // stop refreshing layout is it is running
-            if (refreshLayout != null && refreshLayout.isRefreshing()) {
-                refreshLayout.setRefreshing(false);
-                System.out.println("STOP REFRESH");
-            }
-        }
-    }
-
     private void performFragTransaction(final Fragment activity) {
         // Delay to avoid lag when changing between option in navigation drawer
         new Handler().postDelayed(new Runnable() {
@@ -403,21 +361,5 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 ((UserMainPage) activity.getActivity()).getDrawerLayout().closeDrawer(GravityCompat.START);
             }
         }, 150);
-    }
-
-    // Keeps track how many picasso images have been loaded onto grid view
-    private class Counter {
-        private int count = 0;
-
-        Counter(int count) {
-            this.count = count;
-        }
-        void addCount() {
-            count++;
-        }
-
-        int getCount() {
-            return count;
-        }
     }
 }

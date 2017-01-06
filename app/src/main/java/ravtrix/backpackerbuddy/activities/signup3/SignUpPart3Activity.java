@@ -221,7 +221,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @Override
     public void showAlertDialogError() {
-        Helpers.showAlertDialog(SignUpPart3Activity.this, "Error. Try again...");
+        Helpers.displayErrorToast(this);
     }
 
     @Override

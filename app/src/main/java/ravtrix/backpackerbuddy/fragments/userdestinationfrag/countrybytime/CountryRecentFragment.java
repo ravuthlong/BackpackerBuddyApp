@@ -129,9 +129,13 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         switch (v.getId()) {
             case R.id.bFloatingActionButton:
 
-                CountryTabFragment parentTab = (CountryTabFragment) getParentFragment();
-                // Request code = 1 for editing
-                parentTab.startActivityForResult(new Intent(getContext(), DestinationActivity.class), 1);
+                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+                    CountryTabFragment parentTab = (CountryTabFragment) getParentFragment();
+                    // Request code = 1 for editing
+                    parentTab.startActivityForResult(new Intent(getContext(), DestinationActivity.class), 1);
+                } else {
+                    Helpers.displayToast(getContext(), "Become a member to add a destination");
+                }
                 break;
             default:
         }
@@ -159,14 +163,16 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
 
     // Make retrofit to retrieve user country posts with filter option to populate recycler view
     private void retrieveUserCountryFilteredPostsRetrofit(int month, String country) {
+
         Call<List<FeedItem>> filterRetrofit = RetrofitUserCountrySingleton.getRetrofitUserCountry()
                 .getFilteredPosts()
-                .getFilterdPosts(month, userLocalStore.getLoggedInUser().getUserID(), country);
+                .getFilterdPosts(month, country);
 
         filterRetrofit.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {
                 setRespondFeed(response);
+
             }
             @Override
             public void onFailure(Call<List<FeedItem>> call, Throwable t) {
@@ -204,7 +210,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         if (feedItems == null) {
             this.waveSwipeRefreshLayout.setVisibility(View.INVISIBLE);
             this.tvNoResult.setVisibility(View.VISIBLE);
-            //System.out.println(" NULL FEED ");
         } else if (feedItems.size() < 11) {
             loop = feedItems.size();
         } else {
@@ -229,8 +234,8 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     }
 
     private void showErrorMessage() {
-        Helpers.displayToast(getContext(), "Error");
         fragActivityProgressBarInterface.setProgressBarInvisible();
+        Helpers.displayErrorToast(getContext());
         view.setVisibility(View.VISIBLE);
         waveSwipeRefreshLayout.setRefreshing(false);
     }

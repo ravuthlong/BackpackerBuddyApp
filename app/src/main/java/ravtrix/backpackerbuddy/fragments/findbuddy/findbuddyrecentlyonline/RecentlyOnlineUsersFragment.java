@@ -16,7 +16,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.adapter.CustomGridViewOnline;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -73,20 +72,14 @@ public class RecentlyOnlineUsersFragment extends Fragment {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
                 List<UserLocationInfo> userList = response.body();
-                customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList,
-                        view, new OnFinishedImageLoading() {
-                    @Override
-                    public void onFinishedImageLoading() {
-                        hideProgressbar();
-                    }
-                });
+                customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList);
                 profileImageGridView.setAdapter(customGridViewAdapter);
+                hideProgressbar();
             }
 
             @Override
             public void onFailure(Call<List<UserLocationInfo>> call, Throwable t) {
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                view.setVisibility(View.VISIBLE);
+                hideProgressbar();
             }
         });
     }

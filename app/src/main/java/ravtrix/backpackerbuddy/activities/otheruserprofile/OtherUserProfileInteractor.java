@@ -18,7 +18,10 @@ class OtherUserProfileInteractor implements IOtherUserProfileInteractor {
     @Override
     public void fetchOtherUserInfoRetrofit(int userID, final OnRFOtherUserProfileListener otherUserProfileListener) {
 
-        Call<JsonObject> returnedInfo = RetrofitUserInfoSingleton.getRetrofitUserInfo().getUserDetails().getUserDetails(userID);
+        Call<JsonObject> returnedInfo = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .getUserDetails()
+                .getUserDetails(userID);
+
         returnedInfo.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

@@ -43,40 +43,16 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
     private List<CommentModel> commentModels;
     private LayoutInflater inflater;
     private Context context;
-    private Counter counter;
-    private RecyclerView recyclerView;
-    private int sizeToCompare; //for when view can be visible
     private UserLocalStore userLocalStore;
-    private LinearLayout linearPro;
 
-    public CommentDiscussionAdapter(Context context, RecyclerView recyclerView, List<CommentModel> commentModels,
-                                    UserLocalStore userLocalStore, LinearLayout linearProg) {
+    public CommentDiscussionAdapter(Context context, List<CommentModel> commentModels,
+                                    UserLocalStore userLocalStore) {
         this.commentModels = commentModels;
         this.context = context;
-        this.recyclerView = recyclerView;
         this.userLocalStore = userLocalStore;
-        this.linearPro = linearProg;
         inflater = LayoutInflater.from(context);
-        counter = new Counter(1);
-
-        switch(commentModels.size()) {
-            case 0:
-                sizeToCompare = 0;
-                break;
-            case 1:
-                sizeToCompare = 1;
-                break;
-            case 2:
-                sizeToCompare = 2;
-                break;
-            case 3:
-                sizeToCompare = 3;
-                break;
-            default:
-                sizeToCompare = 3;
-                break;
-        }
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_discussion_room, parent, false);
@@ -90,20 +66,11 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
         Picasso.with(context).load(currentItem.getUserpic())
                 .fit()
                 .centerCrop()
-                .into(holder.profileImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        counter.addCount();
-                        // Display layout only when all images has been loaded
-                        checkPicassoFinished();
-                    }
-                    @Override
-                    public void onError() {}
-                });
+                .into(holder.profileImage);
 
         holder.tvUsername.setText(currentItem.getUsername());
         holder.tvCountry.setText(currentItem.getCountry());
-        holder.tvText.setText(currentItem.getComment());
+        holder.tvText.setText(currentItem.getComment().replace("\\", ""));
 
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -239,28 +206,5 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
             }
         });
         builder.show();
-    }
-
-    private void checkPicassoFinished() {
-        if (counter.getCount() >= sizeToCompare) {
-            linearPro.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    // Keeps track how many picasso images have been loaded onto grid view
-    private class Counter {
-        private int count = 0;
-
-        Counter(int count) {
-            this.count = count;
-        }
-        void addCount() {
-            count++;
-        }
-
-        int getCount() {
-            return count;
-        }
     }
 }

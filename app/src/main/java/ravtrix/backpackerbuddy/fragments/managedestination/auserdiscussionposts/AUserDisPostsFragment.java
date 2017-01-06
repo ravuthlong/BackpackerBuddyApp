@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -106,6 +105,7 @@ public class AUserDisPostsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
                 fragActivityProgressBarInterface.setProgressBarInvisible();
+                Helpers.displayErrorToast(getContext());
             }
         });
     }
@@ -135,7 +135,7 @@ public class AUserDisPostsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                Helpers.displayErrorToast(getContext());
             }
         });
     }

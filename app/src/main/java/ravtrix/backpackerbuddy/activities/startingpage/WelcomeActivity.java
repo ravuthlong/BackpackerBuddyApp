@@ -2,6 +2,7 @@ package ravtrix.backpackerbuddy.activities.startingpage;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.imgbSignUp) protected ImageButton imgbSignUp;
     @BindView(R.id.imgbLogIn) protected ImageView imgbLogIn;
     @BindView(R.id.bFacebookLogin) protected LoginButton loginButton;
+    @BindView(R.id.activity_main_tvGuest) protected TextView tvGuestLogin;
     private UserLocalStore userLocalStore;
     private CallbackManager callbackManager;
     private ProgressDialog progressDialog;
@@ -60,18 +62,20 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
         setContentView(R.layout.activity_mainpage);
         ButterKnife.bind(this);
-
-        checkIsUserLoggedIn();
         setFontStyle();
+        //setUnderline();
+
         imgbSignUp.setOnClickListener(this);
         imgbLogIn.setOnClickListener(this);
+        tvGuestLogin.setOnClickListener(this);
 
-
+        userLocalStore = new UserLocalStore(this);
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
@@ -95,9 +99,38 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(getApplicationContext(), error.getCause().toString(), Toast.LENGTH_LONG).show();
-
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgbSignUp:
+                startActivity(new Intent(this, SignUpPart1Activity.class));
+                break;
+            case R.id.imgbLogIn:
+                startActivity(new Intent(this, LogInActivity.class));
+                break;
+            case R.id.activity_main_tvGuest:
+                System.out.println("clicked on tv guest!!");
+                Intent intent = new Intent(this, UserMainPage.class);
+                intent.putExtra("isGuest", true);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public void graphRequest(final AccessToken token) {
@@ -149,7 +182,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                                 startActivity(signUpIntent);
                             }
                         }
-
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
                             if (progressDialog != null) {
@@ -157,7 +189,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }
                     });
-
                 } catch (JSONException e) {
                     Helpers.displayToast(WelcomeActivity.this, "Error");
                 }
@@ -168,30 +199,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         bundle.putString("fields", "gender, email, picture.type(large)");
         request.setParameters(bundle);
         request.executeAsync(); // which will invoke onCompleted
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.imgbSignUp:
-                startActivity(new Intent(this, SignUpPart1Activity.class));
-                break;
-            case R.id.imgbLogIn:
-                startActivity(new Intent(this, LogInActivity.class));
-                break;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     private void logInFacebookRetrofit(String email, String token) {
@@ -220,24 +227,17 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    private void setUnderline() {
+        this.tvGuestLogin.setPaintFlags(tvGuestLogin.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+    }
+
     private void setFontStyle() {
         Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
-
         tvBackpacker.setTypeface(monuFont);
         tvBackpacker.setTextSize(85);
         tvBuddy.setTypeface(monuFont);
         tvBuddy.setTextSize(80);
-    }
 
-    /**
-     * Check to see if the user is already logged in. If so, go straight to main user page
-     */
-    private void checkIsUserLoggedIn() {
-        userLocalStore = new UserLocalStore(this);
-        if (!userLocalStore.getLoggedInUser().getUsername().equals("")) {
-            Intent intent = new Intent(WelcomeActivity.this, UserMainPage.class);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+        Helpers.overrideFonts(this, this.tvGuestLogin);
     }
 }

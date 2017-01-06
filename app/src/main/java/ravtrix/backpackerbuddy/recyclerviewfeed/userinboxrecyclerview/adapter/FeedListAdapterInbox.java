@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
@@ -49,34 +50,14 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
     public FeedListAdapterInbox(MessagesFragment messagesFragment, Context context, List<FeedItemInbox> feedItemInbox, View view,
                                 FragActivityProgressBarInterface fragActivityProgressBarInterface) {
-        this.inflater = LayoutInflater.from(context);
         this.context = context;
+        this.inflater = LayoutInflater.from(context);
         this.feedItemInbox = feedItemInbox;
         this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
         this.view = view;
         this.messagesFragment = messagesFragment;
         this.userLocalStore = new UserLocalStore(context);
         this.itemViews = new ArrayList<>();
-
-        switch(feedItemInbox.size()) {
-            case 0:
-                sizeToCompare = 0;
-                break;
-            case 1:
-                sizeToCompare = 1;
-                break;
-            case 2:
-                sizeToCompare = 2;
-                break;
-            case 3:
-                sizeToCompare = 3;
-                break;
-            default:
-                sizeToCompare = 3;
-                break;
-        }
-
-        counter = new Counter();
     }
 
     @Override
@@ -94,19 +75,8 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         Picasso.with(context).load(currentItem.getUserpic())
                 .fit()
                 .centerCrop()
-                .into(holder.profileImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        counter.addCount();
-                        // Display layout only when all images has been loaded
-                        checkPicassoFinished();
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
+                .placeholder(R.drawable.default_photo)
+                .into(holder.profileImage);
 
         holder.username.setTypeface(fontType);
         holder.date.setTypeface(fontType);
@@ -120,17 +90,8 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
                 (currentItem.getIsOtherUserClicked() == 0)) {
                 holder.latestMessage.setTypeface(null, Typeface.BOLD);
         }
-
-        // Display layout only when all images has been loaded
-        checkPicassoFinished();
     }
 
-    private void checkPicassoFinished() {
-        if (counter.getCount() >= sizeToCompare - 1) {
-            fragActivityProgressBarInterface.setProgressBarInvisible();
-            view.setVisibility(View.VISIBLE);
-        }
-    }
 
     @Override
     public int getItemCount() {
@@ -228,16 +189,4 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         return this.viewHolder;
     }
 
-    // Keeps track how many picasso images have been loaded onto grid view
-    private class Counter {
-        private int count = 0;
-
-        void addCount() {
-            count++;
-        }
-
-        int getCount() {
-            return count;
-        }
-    }
 }

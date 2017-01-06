@@ -73,6 +73,12 @@ public class RetrofitUserInfoInterfaces {
         Call<JsonObject> updateTravelStatus(@FieldMap HashMap<String, String> userStatusInfo);
     }
 
+    public interface UpdateBucketVisibility {
+        @FormUrlEncoded
+        @POST("/updateBucketVisibility.php")
+        Call<JsonObject> updateBucketVisibility(@Field("userID") int userID, @Field("status") int status);
+    }
+
     public interface GetNearbyUsers {
         @GET("/fetchNearbyUsers.php?userID=[userID]&radius=[radius]")
         Call<List<UserLocationInfo>> getNearbyUsers(@Query("userID") int userID, @Query("radius") int radius);

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
@@ -85,7 +86,7 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(ChangePassword.this, "Problem changing password");
+                Helpers.displayErrorToast(ChangePassword.this);
             }
         });
     }

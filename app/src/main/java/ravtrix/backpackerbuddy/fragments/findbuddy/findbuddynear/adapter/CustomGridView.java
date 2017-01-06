@@ -12,10 +12,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 /**
@@ -25,17 +23,10 @@ public class CustomGridView extends BaseAdapter {
 
     private Context context;
     private List<UserLocationInfo> nearbyUserInfo;
-    private View view;
-    private Counter counter;
-    private OnFinishedImageLoading onFinishedImageLoading;
 
-    public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
-                          OnFinishedImageLoading onFinishedImageLoading) {
+    public CustomGridView(Context context, List<UserLocationInfo> nearbyUserInfo) {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
-        this.view = view;
-        this.onFinishedImageLoading = onFinishedImageLoading;
-        counter = new Counter(0);
     }
 
     @Override
@@ -63,46 +54,30 @@ public class CustomGridView extends BaseAdapter {
         if (convertView == null) {
             gridView = new View(context);
             gridView = inflater.inflate(R.layout.item_gridview_nearby, parent, false);
-            profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImage1);
-
-            Picasso.with(context)
-                    .load(nearbyUserInfo.get(position).getUserpic())
-                    .placeholder(R.drawable.ic_placeholder)
-                    .fit()
-                    .centerCrop()
-                    .into(profileImage, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            counter.addCount();
-                            checkPicassoFinished();
-                        }
-
-                        @Override
-                        public void onError() {
-                        }
-                    });
-
-            // Clicking on any nearby user brings you to their profile page
-            profileImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent userProfileIntent = new Intent(context, OtherUserProfile.class);
-                    userProfileIntent.putExtra("userID", nearbyUserInfo.get(position).getUserID());
-                    context.startActivity(userProfileIntent);
-                }
-            });
         } else {
             gridView = (View) convertView;
         }
 
-        // Display layout only when all images has been loaded
-        checkPicassoFinished();
-        return gridView;
-    }
+        profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImage1);
 
-    private void checkPicassoFinished() {
-        if (counter.getCount() == getCount()) {
-            onFinishedImageLoading.onFinishedImageLoading();
-        }
+        Picasso.with(context)
+                .load(nearbyUserInfo.get(position).getUserpic())
+                .placeholder(R.drawable.default_photo)
+                .fit()
+                .centerCrop()
+                .into(profileImage);
+
+        // Clicking on any nearby user brings you to their profile page
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userProfileIntent = new Intent(context, OtherUserProfile.class);
+                userProfileIntent.putExtra("userID", nearbyUserInfo.get(position).getUserID());
+                context.startActivity(userProfileIntent);
+            }
+        });
+
+        // Display layout only when all images has been loaded
+        return gridView;
     }
 }

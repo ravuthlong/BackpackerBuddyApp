@@ -89,4 +89,11 @@ public class RetrofitUserDiscussionInterfaces {
         @POST("/updateDiscussion.php")
         Call<JsonObject> updateDiscussion(@Field("discussionID") int discussionID, @Field("post") String post);
     }
+
+    public interface SendNotification {
+        @FormUrlEncoded
+        @POST("/sendNotificationComment.php")
+        Call<JsonObject> sendNotification(@Field("userID") int userID, @Field("message") String message,
+                                          @Field("discussionID") int discussionID);
+    }
 }

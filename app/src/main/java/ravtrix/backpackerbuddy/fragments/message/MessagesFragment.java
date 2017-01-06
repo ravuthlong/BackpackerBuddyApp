@@ -21,12 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -67,6 +67,8 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         view.setVisibility(View.INVISIBLE);
 
         dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
+        recyclerView.addItemDecoration(dividerDecorator);
+
         fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getContext());
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -85,7 +87,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapterInbox);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(dividerDecorator);
     }
 
     /**
@@ -114,7 +115,11 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                     String chatName;
 
+                    /**
+                     * Setting up chat room names for each chat feed items, before accessing the FCM
+                     */
                     for (int i = 0; i < feedItemInbox.size(); i++) {
+                        // Status 0 means you made this chat, status 1 means you didn't make this chat
                         if (feedItemInbox.get(i).getStatus() == 0) {
                             // You made this chat room. your userID is the first of chat room name (Firebase chat name)
                              chatName = userLocalStore.getLoggedInUser().getUserID() +
@@ -129,74 +134,96 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                     }
 
                     firebaseListener(); // Call listener to fill inbox recyclerview data
-                    feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
-                            view, fragActivityProgressBarInterface);
                 }
 
             }
             @Override
             public void onFailure(Call<List<FeedItemInbox>> call, Throwable t) {
                 fragActivityProgressBarInterface.setProgressBarInvisible();
+                Helpers.displayErrorToast(getContext());
             }
         });
     }
 
     private void firebaseListener() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot snapshot = null;
 
                 for (int i = 0; i < feedItemInbox.size(); i++) {
+
+                    final PassValue passValue = new PassValue(i);
                     String chatName = feedItemInbox.get(i).getChatRoom();
-                    Iterator<DataSnapshot> iterator = dataSnapshot.child(chatName).getChildren().iterator();
+                    //Iterator<DataSnapshot> iterator = dataSnapshot.child(chatName).getChildren().iterator();
 
                     // Iterate to the last child of the chatroom to get latest snapshot for latest message
                     if (dataSnapshot.child(chatName).exists()) {
-                        // access last message
-                        long count = dataSnapshot.child(chatName).getChildrenCount(); // Number of children
 
-                        for (int x = 0; x < (int) count; x++) {
-                            // Loop to get last child message
-                            snapshot = iterator.next();
-                        }
+                        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().child(chatName);
+                        mFirebaseDatabaseReference.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.exists()) {
+                                    DataSnapshot snapshot;
+                                    // access last message
+                                    snapshot = dataSnapshot.getChildren().iterator().next();
+
+                                    /*
+                                     * Set the components of each inbox message by getting its child from the database through key vale pair
+                                     */
+                                    if (snapshot != null) {
+                                        String time = snapshot.child("time").getValue().toString();
+                                        String latestMessage = snapshot.child("text").getValue().toString();
+
+                                        if (countLines(latestMessage) > 4) {
+                                            latestMessage = getFirstFourLines(latestMessage);
+                                        }
+
+                                        feedItemInbox.get(passValue.getI()).setLatestMessage(latestMessage);
+
+                                        // Converting timestamp into x ago format
+                                        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                                                Long.parseLong(time),
+                                                System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+                                        feedItemInbox.get(passValue.getI()).setLatestDate((String) timeAgo);
+                                        feedItemInbox.get(passValue.getI()).setTimeMilli(Long.parseLong(time));
+
+                                        if (snapshot.child("isOtherUserClicked").exists()) {
+                                            feedItemInbox.get(passValue.getI()).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
+                                        } else {
+                                            feedItemInbox.get(passValue.getI()).setIsOtherUserClicked(1);
+                                        }
+                                        if (snapshot.child("userID").exists()) {
+                                            feedItemInbox.get(passValue.getI()).setLastMessageUserID(Integer.parseInt(snapshot.child("userID").getValue().toString()));
+                                        }
+                                    }
+                                    feedItemInbox.get(passValue.getI()).setSnapshot(snapshot);
+                                }
+
+                                // completion
+                                if (passValue.getI() == feedItemInbox.size() - 1) {
+                                    // Sort chat rooms in order based on time
+                                    Collections.sort(feedItemInbox);
+                                    feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
+                                            view, fragActivityProgressBarInterface);
+                                    setRecyclerView(feedListAdapterInbox);
+
+                                    fragActivityProgressBarInterface.setProgressBarInvisible();
+                                    view.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
-                    /*
-                     * Set the components of each inbox message by getting its child from the database through key vale pair
-                     */
-                    if (snapshot != null) {
-                        String time = snapshot.child("time").getValue().toString();
-                        String latestMessage = snapshot.child("text").getValue().toString();
-
-                        if (countLines(latestMessage) > 4) {
-                            latestMessage = getFirstFourLines(latestMessage);
-                        }
-
-                        feedItemInbox.get(i).setLatestMessage(latestMessage);
-
-                        // Converting timestamp into x ago format
-                        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                                Long.parseLong(time),
-                                System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
-                        feedItemInbox.get(i).setLatestDate((String) timeAgo);
-                        feedItemInbox.get(i).setTimeMilli(Long.parseLong(time));
-
-                        if (snapshot.child("isOtherUserClicked").exists()) {
-                            feedItemInbox.get(i).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
-                        } else {
-                            feedItemInbox.get(i).setIsOtherUserClicked(1);
-                        }
-                        if (snapshot.child("userID").exists()) {
-                            feedItemInbox.get(i).setLastMessageUserID(Integer.parseInt(snapshot.child("userID").getValue().toString()));
-                        }
-                    }
-                    feedItemInbox.get(i).setSnapshot(snapshot);
                 }
-                // Sort chat rooms in order based on time
-                Collections.sort(feedItemInbox);
-                setRecyclerView(feedListAdapterInbox);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -234,5 +261,19 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     private static String getFirstFourLines(String str) {
         String[] lines = str.split("\r\n|\r|\n");
         return lines[0] + "\n" + lines[1] + "\n" + lines[2] + "\n" + lines[3] + "...";
+    }
+
+    private class PassValue {
+        int i;
+
+        PassValue(int i) {
+            this.i = i;
+        }
+        void setI(int i) {
+            this.i = i;
+        }
+        int getI() {
+            return i;
+        }
     }
 }

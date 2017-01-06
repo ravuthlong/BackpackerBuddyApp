@@ -23,4 +23,6 @@ interface IOtherUserProfileView {
     void hideImgNotTravel();
     void hideTxtTravel();
     void hideTxtNotTravel();
+    void showFloatingButtonBucket();
+    void showFloatingButtonMessage();
 }

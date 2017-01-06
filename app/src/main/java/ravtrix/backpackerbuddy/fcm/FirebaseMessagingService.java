@@ -13,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
+import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
 
 /**
  * Created by Ravinder on 9/21/16.
@@ -35,7 +36,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             sendNotification(remoteMessage.getNotification().getBody(), "0");
         } else {
             // From server php
-            sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"));
+
+            if (remoteMessage.getData().get("type").equals("0")) {
+                sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"));
+            } else {
+                sendNotificationComment(remoteMessage.getData().get("message"),
+                        Integer.parseInt(remoteMessage.getData().get("discussionID")),
+                        Integer.parseInt(remoteMessage.getData().get("ownerID")));
+            }
         }
     }
 
@@ -67,5 +75,31 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
         nMgr.cancel(notifyId);
+    }
+
+    private void sendNotificationComment(String body, int discussionID, int ownerID) {
+        Intent intent = new Intent(this, DiscussionComments.class);
+        intent.putExtra("discussionID", discussionID);
+        intent.putExtra("ownerID", ownerID);
+        intent.putExtra("backpressExit", 0);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // 1 is request code
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        // Set notification sound
+        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("New Comment")
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(notificationSound)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notifBuilder.build()); // 1 id of notification
+
     }
 }

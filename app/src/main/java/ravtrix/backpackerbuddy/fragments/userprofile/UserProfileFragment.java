@@ -359,7 +359,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void displayError() {
-        Helpers.displayToast(getContext(), "Error");
+        Helpers.displayErrorToast(getContext());
     }
 
     @Override

@@ -14,10 +14,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
-import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
@@ -28,17 +26,10 @@ import ravtrix.backpackerbuddy.models.UserLocationInfo;
 public class CustomGridViewOnline extends BaseAdapter {
     private Context context;
     private List<UserLocationInfo> nearbyUserInfo;
-    private View view;
-    private Counter counter;
-    private OnFinishedImageLoading onFinishedImageLoading;
 
-    public CustomGridViewOnline(Context context, List<UserLocationInfo> nearbyUserInfo, View view,
-                          OnFinishedImageLoading onFinishedImageLoading) {
+    public CustomGridViewOnline(Context context, List<UserLocationInfo> nearbyUserInfo) {
         this.context = context;
         this.nearbyUserInfo = nearbyUserInfo;
-        this.view = view;
-        this.onFinishedImageLoading = onFinishedImageLoading;
-        counter = new Counter(0);
     }
 
     @Override
@@ -68,57 +59,39 @@ public class CustomGridViewOnline extends BaseAdapter {
         if (convertView == null) {
             gridView = new View(context);
             gridView = inflater.inflate(R.layout.item_gridview_online, parent, false);
-            profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImageOnline);
-            country = (TextView) gridView.findViewById(R.id.tvCountry_online);
-            relativeLayout = (RelativeLayout) gridView.findViewById(R.id.item_gridLayoutOnline);
-
-            Helpers.overrideFonts(context, relativeLayout);
-
-            String userCountry = nearbyUserInfo.get(position).getCountry();
-            if (!userCountry.isEmpty()) {
-                country.setText(userCountry);
-            } else {
-                //empty country
-                country.setText("Unknown");
-            }
-            Picasso.with(context)
-                    .load(nearbyUserInfo.get(position).getUserpic())
-                    .placeholder(R.drawable.ic_placeholder)
-                    .fit()
-                    .centerCrop()
-                    .into(profileImage, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            counter.addCount();
-                            checkPicassoFinished();
-                        }
-
-                        @Override
-                        public void onError() {
-                        }
-                    });
-
-            // Clicking on any nearby user brings you to their profile page
-            profileImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent userProfileIntent = new Intent(context, OtherUserProfile.class);
-                    userProfileIntent.putExtra("userID", nearbyUserInfo.get(position).getUserID());
-                    context.startActivity(userProfileIntent);
-                }
-            });
         } else {
             gridView = (View) convertView;
         }
+        profileImage = (CircleImageView) gridView.findViewById(R.id.grid_userImageOnline);
+        country = (TextView) gridView.findViewById(R.id.tvCountry_online);
+        relativeLayout = (RelativeLayout) gridView.findViewById(R.id.item_gridLayoutOnline);
 
-        // Display layout only when all images has been loaded
-        checkPicassoFinished();
-        return gridView;
-    }
+        Helpers.overrideFonts(context, relativeLayout);
 
-    private void checkPicassoFinished() {
-        if (counter.getCount() == getCount()) {
-            onFinishedImageLoading.onFinishedImageLoading();
+        String userCountry = nearbyUserInfo.get(position).getCountry();
+        if (!userCountry.isEmpty()) {
+            country.setText(userCountry);
+        } else {
+            //empty country
+            country.setText("Unknown");
         }
+        Picasso.with(context)
+                .load(nearbyUserInfo.get(position).getUserpic())
+                .placeholder(R.drawable.default_photo)
+                .fit()
+                .centerCrop()
+                .into(profileImage);
+
+        // Clicking on any nearby user brings you to their profile page
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userProfileIntent = new Intent(context, OtherUserProfile.class);
+                userProfileIntent.putExtra("userID", nearbyUserInfo.get(position).getUserID());
+                context.startActivity(userProfileIntent);
+            }
+        });
+
+        return gridView;
     }
 }

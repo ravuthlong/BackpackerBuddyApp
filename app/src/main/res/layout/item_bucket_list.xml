@@ -25,7 +25,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This is what i mean when i say that i like to be all by myself without any disturbance from the outside world. Life is like a poem."
                 android:paddingRight="10dp"
                 android:paddingLeft="0dp"
                 android:id="@+id/item_tv_bucket"
@@ -33,7 +32,6 @@
 
             <TextView
                 android:id="@+id/item_tvBucket_time"
-                android:text="12/12/2017"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#A4A4A4"

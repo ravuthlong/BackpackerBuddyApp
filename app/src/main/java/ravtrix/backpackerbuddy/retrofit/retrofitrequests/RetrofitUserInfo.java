@@ -50,6 +50,10 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.UpdateTravelingStatus.class);
     }
 
+    public RetrofitUserInfoInterfaces.UpdateBucketVisibility updateBucketVisibility() {
+        return retrofit.create(RetrofitUserInfoInterfaces.UpdateBucketVisibility.class);
+    }
+
     public RetrofitUserInfoInterfaces.GetNearbyUsers getNearbyUsers() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsers.class);
     }
@@ -58,9 +62,6 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers.class);
     }
 
-    public RetrofitUserInfoInterfaces.IsUsernameTaken isUsernameTaken() {
-        return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameTaken.class);
-    }
 
     public RetrofitUserInfoInterfaces.IsUsernameOrEmailTaken isUsernameOrEmailTaken() {
         return retrofit.create(RetrofitUserInfoInterfaces.IsUsernameOrEmailTaken.class);

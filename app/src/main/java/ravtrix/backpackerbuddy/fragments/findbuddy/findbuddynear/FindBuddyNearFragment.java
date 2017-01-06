@@ -26,7 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fragments.findbuddy.OnFinishedImageLoading;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.adapter.CustomGridView;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -151,14 +150,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @Override
     public void setCustomGridView(List<UserLocationInfo> userList) {
-        CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList,
-                profileImageGridView, new OnFinishedImageLoading() {
-            @Override
-            public void onFinishedImageLoading() {
-                hideProgressbar();
-                setViewVisible();
-            }
-        });
+        CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList);
         profileImageGridView.setAdapter(customGridViewAdapter);
     }
 
@@ -179,7 +171,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @Override
     public void showErrorToast() {
-        Helpers.displayToast(getContext(), "Error");
+        Helpers.displayErrorToast(getContext());
     }
 
     @Override

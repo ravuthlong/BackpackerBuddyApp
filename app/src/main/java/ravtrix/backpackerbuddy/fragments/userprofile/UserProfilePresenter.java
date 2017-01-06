@@ -40,6 +40,7 @@ class UserProfilePresenter implements  IUserProfilePresenter {
 
             @Override
             public void onError() {
+                view.hideProgressDialog();
                 view.displayError();
             }
 

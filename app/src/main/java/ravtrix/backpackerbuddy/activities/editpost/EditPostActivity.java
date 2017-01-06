@@ -223,7 +223,7 @@ public class EditPostActivity extends OptionMenuSaveBaseActivity implements Adap
 
     @Override
     public void displayTryAgainToast() {
-        Helpers.displayToast(EditPostActivity.this, "Try again...");
+        Helpers.displayErrorToast(this);
     }
 }
 

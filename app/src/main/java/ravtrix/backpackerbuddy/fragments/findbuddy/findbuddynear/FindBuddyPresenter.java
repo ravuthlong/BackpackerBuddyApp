@@ -33,6 +33,8 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
                     view.setCustomGridView(userList);
                 }
                 view.setCityText();
+                view.setViewVisible();
+                view.hideProgressbar();
             }
 
             @Override

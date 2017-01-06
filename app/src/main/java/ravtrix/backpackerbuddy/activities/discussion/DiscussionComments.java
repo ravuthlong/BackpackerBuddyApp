@@ -24,6 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -41,11 +42,12 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
     @BindView(R.id.recyclerView_comment) protected RecyclerView recyclerView;
     @BindView(R.id.linearRecycler) protected LinearLayout linearLayout;
     @BindView(R.id.linearProgressbar) protected LinearLayout linearProg;
-    private int discussionID;
+    private int discussionID, ownerID;
     private UserLocalStore userLocalStore;
     private CommentDiscussionAdapter commentDiscussionAdapter;
     private List<CommentModel> commentModels;
     private long mLastClickTime = 0;
+    private int backPressExit = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +80,20 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         switch(view.getId()) {
             case R.id.submitButton:
                 mLastClickTime = SystemClock.elapsedRealtime();
-                if (etComment.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Empty comment...", Toast.LENGTH_SHORT).show();
+
+                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+                    if (etComment.getText().toString().isEmpty()) {
+                        Toast.makeText(this, "Empty comment...", Toast.LENGTH_SHORT).show();
+                    } else {
+                        HashMap<String, String> discussionHash = new HashMap<>();
+                        discussionHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                        discussionHash.put("discussionID", Integer.toString(discussionID));
+                        discussionHash.put("comment", etComment.getText().toString().trim());
+                        discussionHash.put("time", Long.toString(System.currentTimeMillis()));
+                        insertCommentRetrofit(discussionHash);
+                    }
                 } else {
-                    HashMap<String, String> discussionHash = new HashMap<>();
-                    discussionHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                    discussionHash.put("discussionID", Integer.toString(discussionID));
-                    discussionHash.put("comment", etComment.getText().toString().trim());
-                    discussionHash.put("time", Long.toString(System.currentTimeMillis()));
-                    insertCommentRetrofit(discussionHash);
+                    Helpers.displayToast(this, "Become a member to comment");
                 }
                 break;
             default:
@@ -94,7 +101,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void insertCommentRetrofit(HashMap<String, String> discussionHash) {
+    private void insertCommentRetrofit(final HashMap<String, String> discussionHash) {
         Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
                 .insertComment()
                 .insertComment(discussionHash);
@@ -117,6 +124,10 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                     incrementTotalComment(discussionID);
                     if (commentDiscussionAdapter != null) {
                         commentDiscussionAdapter.clearData();
+                    }
+                    // Don't notify if user comments on their own post..
+                    if (userLocalStore.getLoggedInUser().getUserID() != ownerID) {
+                        notifyTheOwner(ownerID, discussionHash.get("comment"), discussionID);
                     }
                     fetchDiscussionComments();
                 }
@@ -145,8 +156,8 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                     commentModels = new ArrayList<>(); // empty list
                     linearProg.setVisibility(View.GONE);
                 }
-                commentDiscussionAdapter = new CommentDiscussionAdapter(DiscussionComments.this, recyclerView,
-                        commentModels, userLocalStore, linearProg);
+                commentDiscussionAdapter = new CommentDiscussionAdapter(DiscussionComments.this,
+                        commentModels, userLocalStore);
                 recyclerView.setAdapter(commentDiscussionAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(DiscussionComments.this));
 
@@ -155,11 +166,13 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                 final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DiscussionComments.this);
                 linearLayoutManager.scrollToPosition(commentModels.size() - 1);
                 recyclerView.setLayoutManager(linearLayoutManager);
+                displayAfterLoading();
 
             }
 
             @Override
             public void onFailure(Call<List<CommentModel>> call, Throwable t) {
+                displayAfterLoading();
 
             }
         });
@@ -187,7 +200,24 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onFailure(Call<List<CommentModel>> call, Throwable t) {
+                Helpers.displayErrorToast(DiscussionComments.this);
+            }
+        });
+    }
 
+    private void notifyTheOwner(int userID, String comment, int discussionID) {
+
+        Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .sendNotification()
+                .sendNotification(userID, comment, discussionID);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // status 0 = error, status 1 = ok
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
             }
         });
     }
@@ -218,6 +248,26 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         Bundle discussionBundle = getIntent().getExtras();
         if (discussionBundle != null) {
             discussionID = discussionBundle.getInt("discussionID");
+            ownerID = discussionBundle.getInt("ownerID");
+
+            if (discussionBundle.containsKey("backpressExit")) {
+                backPressExit = discussionBundle.getInt("backpressExit");
+            }
+        }
+    }
+
+    private void displayAfterLoading() {
+        linearProg.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (backPressExit == 0) {
+            startActivity(new Intent(this, UserMainPage.class));
+        } else {
+            super.onBackPressed();
         }
     }
 }

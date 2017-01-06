@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -22,8 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.OtherUserBucketListActivity;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 public class OtherUserProfile extends AppCompatActivity implements IOtherUserProfileView,
         View.OnClickListener {
@@ -38,6 +38,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.activity_other_profileImage) protected CircleImageView profileImage;
     @BindView(R.id.activity_other_tvLocation) protected TextView tvLocation;
     @BindView(R.id.activity_other_user_bFloatingButton) protected FloatingActionButton messageButton;
+    @BindView(R.id.activity_other_user_bFloatingBucket) protected FloatingActionButton bucketButton;
     @BindView(R.id.activity_other_noDetails) protected TextView noDetails;
     @BindView(R.id.activity_other_noSix) protected TextView noSix;
     @BindView(R.id.activity_other_noPersonality) protected TextView noPersonality;
@@ -49,6 +50,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.linearOtherProfile) protected LinearLayout linearLayout;
     private OtherUserProfilePresenter otherUserProfilePresenter;
     private int otherUserID;
+    private UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +59,15 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
 
         ButterKnife.bind(this);
         Helpers.overrideFonts(this, linearLayout);
+        this.setTitle("User Profile");
+        relativeLayout.setVisibility(View.INVISIBLE);
+
+        userLocalStore = new UserLocalStore(this);
         otherUserProfilePresenter = new OtherUserProfilePresenter(this);
         messageButton.setOnClickListener(this);
-        relativeLayout.setVisibility(View.INVISIBLE);
+        bucketButton.setOnClickListener(this);
+
         setToolbar();
-        this.setTitle("User Profile");
         showProgressbar();
         fetchOtherUserProfile();
     }
@@ -75,9 +81,20 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_other_user_bFloatingButton:
-                Intent convoIntent = new Intent(this, ConversationActivity.class);
-                convoIntent.putExtra("otherUserID", Integer.toString(otherUserID));
-                startActivity(convoIntent);
+
+                System.out.println("USER ID: " + userLocalStore.getLoggedInUser().getUserID());
+                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+                    Intent convoIntent = new Intent(this, ConversationActivity.class);
+                    convoIntent.putExtra("otherUserID", Integer.toString(otherUserID));
+                    startActivity(convoIntent);
+                } else {
+                    Helpers.displayToast(this, "Become a member to chat");
+                }
+                break;
+            case R.id.activity_other_user_bFloatingBucket:
+                Intent bucketIntent = new Intent(this, OtherUserBucketListActivity.class);
+                bucketIntent.putExtra("otherUserID", Integer.toString(otherUserID));
+                startActivity(bucketIntent);
                 break;
             default:
                 break;
@@ -163,8 +180,6 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     public void loadProfileImage(String imageURL) {
         Picasso.with(getApplicationContext())
                 .load(imageURL)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
                 .fit()
                 .centerCrop()
                 .into(profileImage, new com.squareup.picasso.Callback() {
@@ -183,7 +198,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
 
     @Override
     public void displayErrorToast() {
-        Helpers.displayToast(OtherUserProfile.this, "Error");
+        Helpers.displayErrorToast(this);
     }
 
     @Override
@@ -226,6 +241,15 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         this.txtNotTravel.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showFloatingButtonBucket() {
+        bucketButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showFloatingButtonMessage() {
+        messageButton.setVisibility(View.VISIBLE);
+    }
 
     /**
      * Retrieve city and country location information from google location API

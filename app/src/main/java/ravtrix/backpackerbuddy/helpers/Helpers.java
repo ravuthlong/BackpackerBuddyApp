@@ -9,6 +9,8 @@ import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -333,34 +335,36 @@ public class Helpers {
      */
     public static void updateLocationAndTime(final Context context, final UserLocalStore userLocalStore, final long currentTime) {
 
-        UserLocation userLocation = new UserLocation((Activity) context);
-        userLocation.startLocationService(new UserLocationInterface() {
-            @Override
-            public void onReceivedLocation(final double latitude, final double longitude) {
-                final HashMap<String, String> locationHash = new HashMap<>();
-                locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                locationHash.put("longitude", Double.toString(longitude));
-                locationHash.put("latitude", Double.toString(latitude));
-                locationHash.put("time", Long.toString(currentTime));
-                try {
-                    getCountryGeocoder(context, latitude, longitude, new OnCountryReceived() {
-                        @Override
-                        public void onCountryReceived(String country) {
-                            locationHash.put("country", country);
-                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
-                        }
-                    });
-                } catch (IOException e) {
-                    new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
-                        @Override
-                        public void onCountryRetrieved(String country) {
-                            locationHash.put("country", country);
-                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
-                        }
-                    });
+        if (isConnectedToInternet(context)) {
+            UserLocation userLocation = new UserLocation((Activity) context);
+            userLocation.startLocationService(new UserLocationInterface() {
+                @Override
+                public void onReceivedLocation(final double latitude, final double longitude) {
+                    final HashMap<String, String> locationHash = new HashMap<>();
+                    locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+                    locationHash.put("longitude", Double.toString(longitude));
+                    locationHash.put("latitude", Double.toString(latitude));
+                    locationHash.put("time", Long.toString(currentTime));
+                    try {
+                        getCountryGeocoder(context, latitude, longitude, new OnCountryReceived() {
+                            @Override
+                            public void onCountryReceived(String country) {
+                                locationHash.put("country", country);
+                                retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                            }
+                        });
+                    } catch (IOException e) {
+                        new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
+                            @Override
+                            public void onCountryRetrieved(String country) {
+                                locationHash.put("country", country);
+                                retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private static void retrofitUpdateLocation(final UserLocalStore userLocalStore, final long currentTime,
@@ -514,6 +518,28 @@ public class Helpers {
 
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
         return Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+    }
+
+
+    /**
+     * Check network connection
+     * @param context       the context of network check
+     * @return              true is the user is connected to the internet, false otherwise
+     */
+    public static boolean isConnectedToInternet(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null;
+    }
+
+    public static void displayErrorToast(Context context) {
+        if (!isConnectedToInternet(context)) {
+            Helpers.displayToast(context, "Not connected to the internet");
+        } else {
+            Helpers.displayToast(context, "Error");
+        }
     }
 
     private static class RetrieveCountryTask extends AsyncTask<Void, Void, String> {

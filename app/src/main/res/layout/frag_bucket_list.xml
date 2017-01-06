@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/frag_bucket_relative"
+
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/greenBackground"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
-        android:id="@+id/frag_bucket_linearAddBucket"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp">
+        android:id="@+id/frag_bucket_relative"
+        android:background="@color/greenBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:id="@+id/frag_bucket_linearAddBucket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/frag_bucket_txAddBucket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/frag_bucket_imgAdd"
+                android:text="Add To Bucket List"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/selector_color"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/frag_bucket_imgAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_add_black_24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/frag_bucket_txAddBucket"
+            android:id="@+id/frag_bucket_noBucket"
+            android:text="@string/noBucket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/frag_bucket_imgAdd"
-            android:text="Add To Bucket List"
-            android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/selector_color"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/frag_bucket_imgAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_add_black_24dp"
+            android:visibility="gone"
+            android:textSize="18sp"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
+            android:layout_centerHorizontal="true" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/frag_bucket_RecyclerView"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/frag_bucket_linearAddBucket"
+            android:layout_gravity='start' />
+
+        <ProgressBar
+            android:id="@+id/frag_bucket_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyle"
+            android:indeterminate="false"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/frag_bucket_noBucket"
-        android:text="@string/noBucket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:textSize="18sp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/frag_bucket_RecyclerView"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/frag_bucket_linearAddBucket"
-        android:layout_gravity='start' />
-
-    <ProgressBar
-        android:id="@+id/frag_bucket_progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyle"
-        android:indeterminate="false"
-        android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" />
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

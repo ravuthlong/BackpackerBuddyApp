@@ -4,9 +4,9 @@
     <color name="colorPrimaryDark">#416150</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="green">#4AA472</color>
-    <color name="greenBackground">#88a990</color>
+    <color name="greenBackground">#9FBFA7</color>
     <color name="greenToolbar">#4a6b43</color>
-    <color name="greenLighter">#9ab5a0</color>
+    <color name="greenLighter">#A7C0AE</color>
     <color name="grayHint">#717070</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>

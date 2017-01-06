@@ -1,99 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#68a390">
-
-    <LinearLayout
-        android:id="@+id/linear2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:background="#79b19e"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <ImageButton
-            android:id="@+id/imgbLogIn"
-            android:contentDescription="@string/login"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/login"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp" />
-
-        <ImageButton
-            android:id="@+id/imgbSignUp"
-            android:contentDescription="@string/signUp"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/signup"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp" />
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/bFacebookLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:id="@+id/tvBackpacker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/backpacker"
-            android:layout_gravity="center" />
-        <TextView
-            android:id="@+id/tvBuddy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/buddy"
-            android:layout_gravity="center" />
-    </LinearLayout>
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
-        android:id="@+id/relative1"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linear2"
-        android:layout_below="@+id/linear1"
-        android:gravity="center">
-        <ImageView
-            android:id="@+id/imageView1"
-            android:contentDescription="@string/app_name"
-            android:background="@drawable/bp2"
-            android:layout_height="250dp"
-            android:layout_toLeftOf="@+id/imageView2"
-            android:layout_alignParentLeft="false"
-            android:layout_width="160dp" />
+        android:layout_height="match_parent"
+        android:background="#68a390">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:contentDescription="@string/app_name"
-            android:layout_height="260dp"
-            android:background="@drawable/bp1"
-            android:layout_width="150dp"
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:background="#79b19e"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <ImageButton
+                android:id="@+id/imgbLogIn"
+                android:contentDescription="@string/login"
+                android:layout_width="200dp"
+                android:background="@drawable/login"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_height="45dp" />
+
+            <ImageButton
+                android:id="@+id/imgbSignUp"
+                android:contentDescription="@string/signUp"
+                android:layout_width="200dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/signup"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_height="45dp" />
+
+            <TextView
+                android:id="@+id/activity_main_tvGuest"
+                android:text="Or continue as Guest..."
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="20dp" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/bFacebookLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tvBackpacker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/backpacker"
+                android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/tvBuddy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/buddy"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linear2"
+            android:layout_below="@+id/linear1"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/imageView1"
+                android:contentDescription="@string/app_name"
+                android:background="@drawable/bp2"
+                android:layout_height="250dp"
+                android:layout_toLeftOf="@+id/imageView2"
+                android:layout_alignParentLeft="false"
+                android:layout_width="160dp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:contentDescription="@string/app_name"
+                android:layout_height="260dp"
+                android:background="@drawable/bp1"
+                android:layout_width="150dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
     </RelativeLayout>
-
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

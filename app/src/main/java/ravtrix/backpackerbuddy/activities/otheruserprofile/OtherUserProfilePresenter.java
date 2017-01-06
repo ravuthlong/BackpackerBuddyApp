@@ -40,6 +40,12 @@ class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
                     view.showImgTravel();
                     view.showTxtTravel();
                 }
+
+                // Show bucket floating button if the other user set it to public
+                if(otherUserJSON.get("bucketStatus").getAsInt() == 1) {
+                    view.showFloatingButtonBucket();
+                }
+                view.showFloatingButtonMessage();
             }
 
             @Override

@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -33,6 +35,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
+import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
 import ravtrix.backpackerbuddy.fragments.bucketlist.BucketListFrag;
@@ -49,6 +52,8 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static ravtrix.backpackerbuddy.R.id.settingsButton;
 
 /**
@@ -74,31 +79,78 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
+    private boolean isUserAGuest = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
         userLocalStore = new UserLocalStore(this);
 
-        View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
-        profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
-        changeTypeface(navigationView);
 
-        setProfilepicture();
+        System.out.println("USERID: " + userLocalStore.getLoggedInUser().getUserID());
+        Bundle bundle = getIntent().getExtras();
+        // First check if they want a guest access, from Welcome Page
+        if (bundle != null) {
+            System.out.println("BUNDLE CONTENT");
 
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
-        profilePic.setOnClickListener(this);
-        settingsButton.setOnClickListener(this);
-        setSupportActionBar(toolbar);
-        setUpFragments();
-        screenStartUpState();
-        setNavigationDrawerIcons();
-        toggleListener();
+            this.isUserAGuest = bundle.getBoolean("isGuest");
+            if (isUserAGuest) {
+                System.out.println("SETTING CONTENT");
+                setContentView(R.layout.activity_main);
+                ButterKnife.bind(this);
+
+                View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+                ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+                profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+                changeTypeface(navigationView);
+
+                settingsButton.setVisibility(View.GONE);
+                setProfilepicture();
+
+                navigationView.setNavigationItemSelectedListener(this);
+                navigationView.getMenu().getItem(0).setChecked(true);
+
+                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+                    profilePic.setOnClickListener(this);
+                }
+                settingsButton.setOnClickListener(this);
+                setSupportActionBar(toolbar);
+                setUpFragments();
+                screenStartUpState();
+                setNavigationDrawerIcons();
+                toggleListener();
+            }
+
+        } else if (checkIsUserNotLoggedIn()) {
+            // Non logged in user goes to logged in page
+            Intent intent = new Intent(UserMainPage.this, WelcomeActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            setContentView(R.layout.activity_main);
+            ButterKnife.bind(this);
+
+            View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+            profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+            changeTypeface(navigationView);
+
+            setProfilepicture();
+
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getMenu().getItem(0).setChecked(true);
+            profilePic.setOnClickListener(this);
+            settingsButton.setOnClickListener(this);
+            setSupportActionBar(toolbar);
+            setUpFragments();
+            screenStartUpState();
+            setNavigationDrawerIcons();
+            toggleListener();
+        }
     }
 
     @Override
@@ -108,18 +160,22 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.navActivity:
+                navigationView.getMenu().getItem(1).setChecked(true);
                 currentPos = 0;
                 setTitle("Travel Posts");
                 break;
             case R.id.navFindBuddy:
+                navigationView.getMenu().getItem(2).setChecked(true);
                 currentPos = 1;
                 setTitle("Find Buddy");
                 break;
             case R.id.navInbox:
+                navigationView.getMenu().getItem(3).setChecked(true);
                 currentPos = 2;
                 setTitle("Inbox");
                 break;
             case R.id.navDestination:
+                navigationView.getMenu().getItem(4).setChecked(true);
                 currentPos = 3;
                 setTitle("Manage Posts");
                 break;
@@ -129,6 +185,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 setTitle("Discussion Room");
                 break;
             case R.id.navBucketList:
+                navigationView.getMenu().getItem(5).setChecked(true);
                 currentPos = 6;
                 setTitle("My Bucket List");
                 break;
@@ -228,7 +285,10 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync it based on if navigation drawer is selected or not.
-        actionBarDrawerToggle.syncState();
+
+        if (actionBarDrawerToggle != null) {
+            actionBarDrawerToggle.syncState();
+        }
     }
 
     private void setNavigationDrawerIcons() {
@@ -248,16 +308,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public List<Fragment> getFragList() {
-        return this.fragmentList;
-    }
-
     public DrawerLayout getDrawerLayout() {
         return this.drawerLayout;
     }
 
     private void setProfilepicture() {
-        if ((userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+        if ((userLocalStore.getLoggedInUser().getUserID() == 0)) {
             Picasso.with(this)
                     .load("http://s3.amazonaws.com/37assets/svn/765-default-avatar.png")
                     .noFade()
@@ -291,24 +347,26 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         super.onResume();
         refreshProfilePic = !userHitHome;
 
-        if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
-                (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
-            Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
-        } else {
-            if (refreshProfilePic) {
-                Picasso.with(this)
-                        .load(userLocalStore.getLoggedInUser().getUserImageURL())
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .fit()
-                        .centerCrop()
-                        .into(profilePic);
+        if (!checkIsUserNotLoggedIn()) {
+            if ((userLocalStore.getLoggedInUser().getUserImageURL() == null) ||
+                    (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
+                Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
             } else {
-                Picasso.with(this)
-                        .load(userLocalStore.getLoggedInUser().getUserImageURL())
-                        .fit()
-                        .centerCrop()
-                        .into(profilePic);
+                if (refreshProfilePic) {
+                    Picasso.with(this)
+                            .load(userLocalStore.getLoggedInUser().getUserImageURL())
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .networkPolicy(NetworkPolicy.NO_CACHE)
+                            .fit()
+                            .centerCrop()
+                            .into(profilePic);
+                } else {
+                    Picasso.with(this)
+                            .load(userLocalStore.getLoggedInUser().getUserImageURL())
+                            .fit()
+                            .centerCrop()
+                            .into(profilePic);
+                }
             }
         }
     }
@@ -374,6 +432,11 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         applyFontToItem(item, typeface);
     }
 
-
+    /**
+     * Check to see if the user is already logged in. If not, go to log in page
+     */
+    private boolean checkIsUserNotLoggedIn() {
+        return (userLocalStore.getLoggedInUser().getUserID() == 0);
+    }
 }
 

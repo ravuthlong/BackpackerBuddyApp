@@ -27,14 +27,6 @@ public class RetrofitUserCountries {
         return retrofit.create(RetrofitUserCountriesInterfaces.InsertTravelSpot.class);
     }
 
-    public RetrofitUserCountriesInterfaces.InsertFavorite insertFavoritePost() {
-        return retrofit.create(RetrofitUserCountriesInterfaces.InsertFavorite.class);
-    }
-
-    public RetrofitUserCountriesInterfaces.RemoveFavorite removeFavoritePost() {
-        return retrofit.create(RetrofitUserCountriesInterfaces.RemoveFavorite.class);
-    }
-
     public RetrofitUserCountriesInterfaces.RemovePost removePost() {
         return retrofit.create(RetrofitUserCountriesInterfaces.RemovePost.class);
     }

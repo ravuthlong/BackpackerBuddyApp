@@ -224,7 +224,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(EditPhotoActivity.this, "Upload Error");
+                Helpers.displayErrorToast(EditPhotoActivity.this);
                 Helpers.hideProgressDialog(progressDialog);
             }
         });

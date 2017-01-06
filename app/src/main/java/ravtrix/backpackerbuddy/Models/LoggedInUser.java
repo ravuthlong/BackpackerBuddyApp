@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoggedInUser {
 
+    @SerializedName("status")
+    @Expose
+    private int status;
     @SerializedName("userID")
     @Expose
     private int userID;
@@ -18,41 +21,51 @@ public class LoggedInUser {
     @SerializedName("username")
     @Expose
     private String username;
-    @SerializedName("status")
-    @Expose
-    private int status;
     @SerializedName("userpic")
     @Expose
     private String userpic;
-    @SerializedName("longitude")
-    @Expose
-    private Double longitude;
-    @SerializedName("latitude")
-    @Expose
-    private Double latitude;
-    @SerializedName("time")
-    @Expose
-    private Long time;
-    @SerializedName("traveling")
-    @Expose
-    private int traveling;
     @SerializedName("gender")
     @Expose
     private String gender;
+    @SerializedName("traveling")
+    @Expose
+    private int traveling;
+    @SerializedName("bucketStatus")
+    @Expose
+    private int bucketStatus;
+    @SerializedName("latitude")
+    @Expose
+    private Double latitude;
+    @SerializedName("longitude")
+    @Expose
+    private Double longitude;
+    @SerializedName("time")
+    @Expose
+    private Long time;
+
 
     public LoggedInUser() {}
 
     public LoggedInUser(int userID, String email, String username, String userImageURL, String gender, int traveling,
-                        double latitude, double longitude, long currentTime) {
+                        int bucketStatus, double latitude, double longitude, long currentTime) {
         this.userID = userID;
         this.email = email;
         this.username = username;
         this.userpic = userImageURL;
         this.gender = gender;
         this.traveling = traveling;
+        this.bucketStatus = bucketStatus;
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = currentTime;
+    }
+
+    public int getBucketStatus() {
+        return bucketStatus;
+    }
+
+    public void setBucketStatus(int bucketStatus) {
+        this.bucketStatus = bucketStatus;
     }
 
     public String getGender() {

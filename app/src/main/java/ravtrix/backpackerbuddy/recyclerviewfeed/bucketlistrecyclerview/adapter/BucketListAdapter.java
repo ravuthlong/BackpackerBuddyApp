@@ -94,35 +94,42 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
             Helpers.overrideFonts(context, bucketRelative);
 
-            bucketRelative.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
 
-                    int position = getAdapterPosition();
-                    BucketListModel clickedItem = bucketListModels.get(position);
+            // If it is null, a null argument was passed, which mean it was used in the OtherUserBucketListActivity
+            // so it doesn't need listeners.
+            if (bucketListFrag != null) {
+                bucketRelative.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
 
-                    showManageDialog(clickedItem.getBucketID(), clickedItem.getPost());
-                    return true;
-                }
-            });
+                        int position = getAdapterPosition();
+                        BucketListModel clickedItem = bucketListModels.get(position);
 
-            imgStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    BucketListModel clickedItem = bucketListModels.get(position);
-
-                    if (clickedItem.getStatus() == 0) {
-                        // status not complete
-                        showStatusDialogBucketStatus("Goal has been completed?", clickedItem.getBucketID(),
-                                clickedItem.getStatus());
-                    } else {
-                        // status complete
-                        showStatusDialogBucketStatus("Goal not yet completed?", clickedItem.getBucketID(),
-                                clickedItem.getStatus());
+                        showManageDialog(clickedItem.getBucketID(), clickedItem.getPost());
+                        return true;
                     }
-                }
-            });
+                });
+            }
+
+            if (bucketListFrag != null) {
+                imgStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = getAdapterPosition();
+                        BucketListModel clickedItem = bucketListModels.get(position);
+
+                        if (clickedItem.getStatus() == 0) {
+                            // status not complete
+                            showStatusDialogBucketStatus("Goal has been completed?", clickedItem.getBucketID(),
+                                    clickedItem.getStatus());
+                        } else {
+                            // status complete
+                            showStatusDialogBucketStatus("Goal not yet completed?", clickedItem.getBucketID(),
+                                    clickedItem.getStatus());
+                        }
+                    }
+                });
+            }
         }
     }
 

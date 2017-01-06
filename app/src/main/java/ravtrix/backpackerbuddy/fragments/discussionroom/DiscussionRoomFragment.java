@@ -12,8 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +65,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerViewDiscussion.addItemDecoration(dividerDecorator);
+        handleFloatingButtonScroll(addPostButton);
 
         userLocalStore = new UserLocalStore(getContext());
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -81,7 +82,11 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bFloatingActionButtonDiscussion:
-                startActivity(new Intent(getContext(), DiscussionPostActivity.class));
+                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+                    startActivity(new Intent(getContext(), DiscussionPostActivity.class));
+                } else {
+                    Helpers.displayToast(getContext(), "Become a member to start a discussion");
+                }
                 break;
             default:
                 break;
@@ -129,11 +134,12 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
                         view, fragActivityProgressBarInterface, userLocalStore, swipeRefreshLayout);
                 recyclerViewDiscussion.setAdapter(discussionAdapter);
                 recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
+                displayAfterLoading();
             }
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
-                fragActivityProgressBarInterface.setProgressBarInvisible();
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                displayAfterLoading();
+                Helpers.displayErrorToast(getContext());
             }
         });
     }
@@ -153,11 +159,43 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
                     discussionModels = new ArrayList<>(); //empty
                 }
                 discussionAdapter.swap(discussionModels);
-                swipeRefreshLayout.setRefreshing(false);
+                displayAfterLoading();
             }
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                Helpers.displayErrorToast(getContext());
+                displayAfterLoading();
+            }
+        });
+    }
+
+    private void displayAfterLoading() {
+        // stop progress bar
+        fragActivityProgressBarInterface.setProgressBarInvisible();
+        view.setVisibility(View.VISIBLE);
+
+        // stop refreshing layout is it is running
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    // Hide floating action button on scroll down and show on scroll up
+    private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {
+        this.recyclerViewDiscussion.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if ((dy > 0 || dy < 0) && floatingActionButton.isShown()) {
+                    floatingActionButton.hide();
+                }
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
+                    floatingActionButton.show();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
     }

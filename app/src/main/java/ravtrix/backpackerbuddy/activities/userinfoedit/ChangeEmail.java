@@ -85,7 +85,7 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(ChangeEmail.this, "Problem changing email");
+                Helpers.displayErrorToast(ChangeEmail.this);
             }
         });
     }

@@ -13,6 +13,7 @@ public class UserLocalStore {
 
     public UserLocalStore(Context context) {
         userLocalDataStore = context.getSharedPreferences(SP_NAME, 0);
+
     }
     public void storeUserData(LoggedInUser loggedInUser) {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
@@ -20,6 +21,7 @@ public class UserLocalStore {
         spEditor.putString("email", loggedInUser.getEmail());
         spEditor.putString("username", loggedInUser.getUsername());
         spEditor.putInt("traveling", loggedInUser.getTraveling());
+        spEditor.putInt("bucketStatus", loggedInUser.getBucketStatus());
         spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
         spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
         spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
@@ -65,10 +67,17 @@ public class UserLocalStore {
         spEditor.apply();
     }
 
+    public void changeBucketStat(int status) {
+        SharedPreferences.Editor spEditor = userLocalDataStore.edit();
+        spEditor.putInt("bucketStatus", status);
+        spEditor.apply();
+    }
+
     // Return current logged in user if exist
     public LoggedInUser getLoggedInUser() {
         int userID = userLocalDataStore.getInt("userID", 0);
         int traveling = userLocalDataStore.getInt("traveling", 0);
+        int bucketStatus = userLocalDataStore.getInt("bucketStatus", 0);
         String email = userLocalDataStore.getString("email", "");
         String username = userLocalDataStore.getString("username", "");
         String userImageURL = userLocalDataStore.getString("userImageURL", "");
@@ -77,7 +86,8 @@ public class UserLocalStore {
         double longitude = Double.longBitsToDouble(userLocalDataStore.getLong("longitude", 0));
         long time = userLocalDataStore.getLong("time", 0);
 
-        storedUser = new LoggedInUser(userID, email, username, userImageURL, gender, traveling, latitude, longitude, time);
+        storedUser = new LoggedInUser(userID, email, username, userImageURL, gender, traveling, bucketStatus,
+                latitude, longitude, time);
         return storedUser;
     }
 

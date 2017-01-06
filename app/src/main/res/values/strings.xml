@@ -45,6 +45,7 @@
     <string name="near">Near</string>
     <string name="nearby">Nearby</string>
     <string name="noBucket">Add to your bucket list!</string>
+    <string name="noBucketOther">No goals on their bucket list. Ask them.</string>
     <string name="noDiscussion">Write a discussion</string>
     <string name="noInbox">No message inbox :(</string>
     <string name="noNearby">No nearby user</string>
