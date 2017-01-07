@@ -16,21 +16,19 @@
         android:layout_gravity="center_vertical"
         android:textSize="18sp" />
 
-    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
-        android:id="@+id/main_swipe"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_country"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/postRecyclerView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/greenBackground"
-        android:choiceMode="singleChoice"
-        android:layout_gravity='start' >
-
-    </android.support.v7.widget.RecyclerView>
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/postRecyclerView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/greenBackground"
+            android:choiceMode="singleChoice"
+            android:layout_gravity='start' />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/bFloatingActionButton"

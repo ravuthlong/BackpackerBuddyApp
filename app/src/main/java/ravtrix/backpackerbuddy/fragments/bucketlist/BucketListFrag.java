@@ -9,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -77,20 +77,20 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        System.out.println("USERID BUCKET: " + userLocalStore.getLoggedInUser().getUserID() );
         if (userLocalStore.getLoggedInUser().getUserID() != 0) {
             MenuInflater menuInflater = getActivity().getMenuInflater();
             menuInflater.inflate(R.menu.toolbar_switch, menu);
 
-            MenuItem menuItem = menu.findItem(R.id.myswitch);
-            View view = MenuItemCompat.getActionView(menuItem);
-            final Switch switchButton = (Switch) view.findViewById(R.id.switchButton);
-            switchButton.setTextOff("Private");
-            switchButton.setTextOn("Public");
+            final MenuItem menuItemPrivatePublic = menu.findItem(R.id.tvPrivatePublic);
+            MenuItem menuItemSwitch = menu.findItem(R.id.myswitch);
+            View view = MenuItemCompat.getActionView(menuItemSwitch);
+            final SwitchCompat switchButton = (SwitchCompat) view.findViewById(R.id.switchButton);
 
-            if (userLocalStore.getLoggedInUser().getBucketStatus() == 1) {
+            if (userLocalStore.getLoggedInUser().getBucketStatus() == 1) { // Public
                 switchButton.setChecked(true);
+                menuItemPrivatePublic.setTitle("Public");
             } else {
+                // Private
                 switchButton.setChecked(false);
             }
 
@@ -114,6 +114,7 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
                             dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    menuItemPrivatePublic.setTitle("Public");
                                     updateBucketVisibility(userLocalStore.getLoggedInUser().getUserID(), 1);
                                 }
                             });
@@ -136,6 +137,7 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
                             dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    menuItemPrivatePublic.setTitle("Private");
                                     updateBucketVisibility(userLocalStore.getLoggedInUser().getUserID(), 0);
                                 }
                             });

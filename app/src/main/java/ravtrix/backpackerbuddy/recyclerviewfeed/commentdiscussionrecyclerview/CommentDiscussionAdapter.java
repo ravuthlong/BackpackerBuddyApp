@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
 import ravtrix.backpackerbuddy.activities.discussion.EditComment;
+import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -121,6 +122,20 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
                         showDialogNormal();
                     }
                     return true;
+                }
+            });
+
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    CommentModel clickedItem = commentModels.get(position);
+
+                    if (clickedItem.getUserID() != userLocalStore.getLoggedInUser().getUserID()) {
+                        Intent postInfo = new Intent(context, OtherUserProfile.class);
+                        postInfo.putExtra("userID", clickedItem.getUserID());
+                        context.startActivity(postInfo);
+                    }
                 }
             });
         }

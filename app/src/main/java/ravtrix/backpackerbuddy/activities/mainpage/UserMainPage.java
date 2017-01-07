@@ -35,6 +35,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
+import ravtrix.backpackerbuddy.activities.login.LogInActivity;
+import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
@@ -54,7 +56,6 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static ravtrix.backpackerbuddy.R.id.settingsButton;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -63,66 +64,42 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
         FragActivityResetDrawer, FragActivityUpdateProfilePic {
 
+    @BindView(R.id.drawer_layout) protected DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.nav_view) protected NavigationView navigationView;
+    @BindView(R.id.spinner_main) protected ProgressBar progressBar;
+    @BindView(R.id.navigation_drawer_bottom) NavigationView navigationView_Footer;
     private FragmentManager fragmentManager;
     private List<Fragment> fragmentList;
     private int currentPos;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    @BindView(R.id.drawer_layout)
-    protected DrawerLayout drawerLayout;
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
-    @BindView(R.id.nav_view)
-    protected NavigationView navigationView;
     private CircleImageView profilePic;
-    @BindView(R.id.spinner_main)
-    protected ProgressBar progressBar;
     private UserLocalStore userLocalStore;
     private boolean refreshProfilePic = true;
     private boolean userHitHome = false;
     private boolean isUserAGuest = false;
+    private ImageButton settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
+
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
 
-
-        System.out.println("USERID: " + userLocalStore.getLoggedInUser().getUserID());
         Bundle bundle = getIntent().getExtras();
         // First check if they want a guest access, from Welcome Page
-        if (bundle != null) {
-            System.out.println("BUNDLE CONTENT");
-
+        if (bundle != null && bundle.containsKey("isGuest")) {
             this.isUserAGuest = bundle.getBoolean("isGuest");
             if (isUserAGuest) {
-                System.out.println("SETTING CONTENT");
-                setContentView(R.layout.activity_main);
-                ButterKnife.bind(this);
-
-                View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-                ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
-                profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
-                changeTypeface(navigationView);
-
+                setUpView();
                 settingsButton.setVisibility(View.GONE);
-                setProfilepicture();
-
-                navigationView.setNavigationItemSelectedListener(this);
-                navigationView.getMenu().getItem(0).setChecked(true);
-
-                if (userLocalStore.getLoggedInUser().getUserID() != 0) {
-                    profilePic.setOnClickListener(this);
-                }
-                settingsButton.setOnClickListener(this);
-                setSupportActionBar(toolbar);
-                setUpFragments();
-                screenStartUpState();
-                setNavigationDrawerIcons();
-                toggleListener();
+                navigationView_Footer.setNavigationItemSelectedListener(this);
+                changeTypeFaceFooter(navigationView_Footer);
             }
 
         } else if (checkIsUserNotLoggedIn()) {
@@ -131,25 +108,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
-            setContentView(R.layout.activity_main);
-            ButterKnife.bind(this);
-
-            View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-            ImageButton settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
-            profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
-            changeTypeface(navigationView);
-
-            setProfilepicture();
-
-            navigationView.setNavigationItemSelectedListener(this);
-            navigationView.getMenu().getItem(0).setChecked(true);
-            profilePic.setOnClickListener(this);
-            settingsButton.setOnClickListener(this);
-            setSupportActionBar(toolbar);
-            setUpFragments();
-            screenStartUpState();
-            setNavigationDrawerIcons();
-            toggleListener();
+            setUpView();
+            navigationView_Footer.setVisibility(View.GONE);
         }
     }
 
@@ -189,6 +149,14 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 currentPos = 6;
                 setTitle("My Bucket List");
                 break;
+            case R.id.navLogIn:
+                startActivity(new Intent(this, LogInActivity.class));
+                finish();
+                break;
+            case R.id.navSignUp:
+                startActivity(new Intent(this, SignUpPart1Activity.class));
+                finish();
+                break;
             default:
         }
         changeFragment(this.currentPos);
@@ -199,7 +167,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case settingsButton:
+            case R.id.settingsButton:
                 startActivityForResult(new Intent(this, SettingsActivity.class), 2);
                 break;
             case R.id.profile_image:
@@ -235,7 +203,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     }
 
     // Start up state
-    //Title Idex, with closed navigation drawer and default fragment 1
+    //Title Index, with closed navigation drawer and default fragment 1
     private void screenStartUpState() {
         setTitle("Discussion Room");
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -432,6 +400,41 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         applyFontToItem(item, typeface);
     }
 
+    private void changeTypeFaceFooter(NavigationView navigationView) {
+        FontTypeface fontTypeface = new FontTypeface(this);
+        Typeface typeface = fontTypeface.getTypefaceAndroid();
+
+        MenuItem item;
+
+        item = navigationView.getMenu().findItem(R.id.navLogIn);
+        applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navSignUp);
+        applyFontToItem(item, typeface);
+    }
+
+    private void setUpView() {
+
+        View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
+        profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
+        changeTypeface(navigationView);
+
+        setProfilepicture();
+
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
+
+        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+            profilePic.setOnClickListener(this);
+        }
+        settingsButton.setOnClickListener(this);
+        setSupportActionBar(toolbar);
+        setUpFragments();
+        screenStartUpState();
+        setNavigationDrawerIcons();
+        toggleListener();
+    }
     /**
      * Check to see if the user is already logged in. If not, go to log in page
      */

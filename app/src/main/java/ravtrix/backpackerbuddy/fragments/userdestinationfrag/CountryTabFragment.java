@@ -47,6 +47,7 @@ public class CountryTabFragment extends Fragment {
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
+        // called for when user use filter fragment
         if (this.bundle != null) {
             this.countryRecentFragment.setReceivedQueryBundle(bundle);
             adapter.changeTitle();

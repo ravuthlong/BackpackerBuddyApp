@@ -96,7 +96,7 @@ public class AUserDisPostsFragment extends Fragment {
                 } else {
                     discussionModels = response.body();
                     discussionAdapter = new DiscussionAdapter(AUserDisPostsFragment.this, discussionModels,
-                            v, fragActivityProgressBarInterface, userLocalStore, null);
+                            userLocalStore);
                     setRecyclerView(discussionAdapter);
                 }
                 fragActivityProgressBarInterface.setProgressBarInvisible();

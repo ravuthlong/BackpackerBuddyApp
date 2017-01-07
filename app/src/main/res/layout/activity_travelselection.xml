@@ -1,115 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include
-        android:id="@+id/toolbar_main"
-        layout="@layout/frag_toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent" />
-
-
-
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/greenBackground">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/greenLighter"
-        android:layout_margin="30dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:id="@+id/layout_travelSelection">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <include
+            android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_width="fill_parent" />
 
-            <TextView
-                android:id="@+id/tvCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/country"
-                android:textSize="22sp"
-                android:typeface="sans" />
-
-            <Spinner
-                android:id="@+id/spinnerCountries"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
-                android:layout_marginTop="15dp"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-                <TextView
-                    android:id="@+id/tvArrival"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/from"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tvDateLeave"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/dateOfArrival"
-                    android:background="#ffffff"
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp">
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/until"
-                    android:textSize="20sp"
-                    android:layout_marginTop="25dp"
-                    android:layout_gravity="center_horizontal" />
+            android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/greenBackground">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/lowWhite"
+            android:layout_margin="30dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:id="@+id/layout_travelSelection">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
 
                 <TextView
-                    android:id="@+id/tvDateArrival"
+                    android:id="@+id/tvCountry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/dateOfLeave"
-                    android:background="#ffffff"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/country"
+                    android:textSize="18sp"
+                    android:typeface="sans"
+                    android:layout_gravity="center" />
+
+                <Spinner
+                    android:id="@+id/spinnerCountries"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dialog"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/button"
+                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                    <TextView
+                        android:id="@+id/tvArrival"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/from"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tvDateLeave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/dateOfArrival"
+                        android:background="@drawable/button"
+                        android:layout_marginTop="20dp"
+                        android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp">
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/until"
+                        android:textSize="20sp"
+                        android:layout_marginTop="25dp"
+                        android:layout_gravity="center_horizontal" />
+
+                    <TextView
+                        android:id="@+id/tvDateArrival"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/dateOfLeave"
+                        android:background="@drawable/button"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

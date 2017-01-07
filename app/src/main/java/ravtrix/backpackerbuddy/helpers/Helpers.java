@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.signup3.OnCountryReceived;
+import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.OnLocationReceivedGuest;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
@@ -367,6 +368,20 @@ public class Helpers {
         }
     }
 
+
+    public static void fetchLatAndLong(final Context context, final OnLocationReceivedGuest onLocationReceivedGuest) {
+
+        if (isConnectedToInternet(context)) {
+            UserLocation userLocation = new UserLocation((Activity) context);
+            userLocation.startLocationService(new UserLocationInterface() {
+                @Override
+                public void onReceivedLocation(final double latitude, final double longitude) {
+                    onLocationReceivedGuest.onLocationReceivedGuest(Double.toString(longitude), Double.toString(latitude));
+                }
+            });
+        }
+    }
+
     private static void retrofitUpdateLocation(final UserLocalStore userLocalStore, final long currentTime,
                                           HashMap<String, String> locationHash, final double latitude, final double longitude) {
         Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
@@ -476,6 +491,7 @@ public class Helpers {
                 ((TextView) v).setTypeface(Typeface.createFromAsset(context.getAssets(), "Text.ttf"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -526,11 +542,9 @@ public class Helpers {
      * @param context       the context of network check
      * @return              true is the user is connected to the internet, false otherwise
      */
-    public static boolean isConnectedToInternet(Context context) {
-
+    private static boolean isConnectedToInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
         return activeNetwork != null;
     }
 

@@ -20,7 +20,6 @@
             android:title="@string/manageDes" />
         <item
             android:id="@+id/navBucketList"
-            android:title="@string/bucketList"
-            />
+            android:title="@string/bucketList" />
     </group>
 </menu>

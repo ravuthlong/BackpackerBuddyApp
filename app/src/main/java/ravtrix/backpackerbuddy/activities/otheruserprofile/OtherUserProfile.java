@@ -82,7 +82,6 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         switch (v.getId()) {
             case R.id.activity_other_user_bFloatingButton:
 
-                System.out.println("USER ID: " + userLocalStore.getLoggedInUser().getUserID());
                 if (userLocalStore.getLoggedInUser().getUserID() != 0) {
                     Intent convoIntent = new Intent(this, ConversationActivity.class);
                     convoIntent.putExtra("otherUserID", Integer.toString(otherUserID));

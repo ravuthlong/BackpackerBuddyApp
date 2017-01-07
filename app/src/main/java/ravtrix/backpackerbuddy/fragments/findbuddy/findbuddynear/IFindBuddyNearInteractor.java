@@ -7,4 +7,5 @@ package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 interface IFindBuddyNearInteractor {
 
     void fetchNearbyUsersRetrofit(int userID, int distance, OnFindBuddyNearListener onFindBuddyNearListener);
+    void fetchNearbyUsersGuestRetrofit(String latitude, String longitude, int radius, OnFindBuddyNearListener onFindBuddyNearListener);
 }

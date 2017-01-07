@@ -113,8 +113,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(this, LogInActivity.class));
                 break;
             case R.id.activity_main_tvGuest:
-                System.out.println("clicked on tv guest!!");
                 Intent intent = new Intent(this, UserMainPage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("isGuest", true);
                 startActivity(intent);
                 break;

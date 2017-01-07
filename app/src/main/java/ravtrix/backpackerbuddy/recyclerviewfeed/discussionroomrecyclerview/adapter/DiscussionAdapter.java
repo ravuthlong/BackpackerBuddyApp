@@ -2,11 +2,7 @@ package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adap
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -29,15 +25,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
 import ravtrix.backpackerbuddy.activities.discussion.EditDiscussionActivity;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.auserdiscussionposts.AUserDisPostsFragment;
-import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import retrofit2.Call;
@@ -53,23 +45,13 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     private List<DiscussionModel> discussionModels;
     private LayoutInflater inflater;
     private Fragment fragment;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
-    private View view;
     private UserLocalStore userLocalStore;
-    private FragmentManager fragmentManager;
-    private FragActivityResetDrawer fragActivityResetDrawer;
-    private SwipeRefreshLayout refreshLayout;
 
     public DiscussionAdapter(Fragment fragment, List<DiscussionModel> discussionModels,
-                             View view, FragActivityProgressBarInterface fragActivityProgressBarInterface,
-                             UserLocalStore userLocalStore, SwipeRefreshLayout refreshLayout) {
+                             UserLocalStore userLocalStore) {
         this.discussionModels = discussionModels;
         this.fragment = fragment;
-        this.view = view;
-        this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
-        this.fragActivityResetDrawer = (FragActivityResetDrawer) fragment.getActivity();
         this.userLocalStore = userLocalStore;
-        this.refreshLayout = refreshLayout;
         inflater = LayoutInflater.from(fragment.getContext());
     }
 
@@ -102,7 +84,9 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
         holder.tvCommentNum.setText(Integer.toString(currentItem.getCommentNum()));
 
-        if (currentItem.getIsClicked() == 1) {
+        if (userLocalStore.getLoggedInUser().getUserID() == 0) {
+            holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
+        } else if (currentItem.getIsClicked() == 1) {
             holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_red_24dp);
         } else {
             holder.imageButtonLove.setBackgroundResource(R.drawable.ic_favorite_border_black_24dp);
@@ -169,11 +153,8 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                     int position = getAdapterPosition();
                     DiscussionModel clickedItem = discussionModels.get(position);
 
-                    if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                        performFragTransaction(fragment);
-                    } else {
+                    if (clickedItem.getUserID() != userLocalStore.getLoggedInUser().getUserID()) {
                         Intent postInfo = new Intent(fragment.getActivity(), OtherUserProfile.class);
-                        postInfo.putExtra("postID", clickedItem.getPost());
                         postInfo.putExtra("userID", clickedItem.getUserID());
                         fragment.startActivity(postInfo);
                     }
@@ -344,22 +325,5 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         discussionModels.clear();
         discussionModels.addAll(models);
         this.notifyDataSetChanged();
-    }
-
-    private void performFragTransaction(final Fragment activity) {
-        // Delay to avoid lag when changing between option in navigation drawer
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Reset navigation drawer selected items. Clear all
-                fragActivityResetDrawer.onResetDrawer();
-
-                // Perform fragment replacement
-                fragmentManager = activity.getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        new UserProfileFragment()).commit();
-                ((UserMainPage) activity.getActivity()).getDrawerLayout().closeDrawer(GravityCompat.START);
-            }
-        }, 150);
     }
 }

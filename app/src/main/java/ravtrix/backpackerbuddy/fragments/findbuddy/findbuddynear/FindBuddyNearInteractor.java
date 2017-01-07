@@ -22,9 +22,28 @@ class FindBuddyNearInteractor implements IFindBuddyNearInteractor {
         retrofitCall.enqueue(new Callback<List<UserLocationInfo>>() {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
-                List<UserLocationInfo> userList = response.body();
                 // Pass userList back to the presenter
-                onFindBuddyNearListener.onSuccess(userList);
+                onFindBuddyNearListener.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<UserLocationInfo>> call, Throwable t) {
+                onFindBuddyNearListener.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void fetchNearbyUsersGuestRetrofit(String latitude, String longitude, int radius, final OnFindBuddyNearListener onFindBuddyNearListener) {
+
+        Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .getNearbyUsersGuest()
+                .getNearbyUsersGuest(latitude, longitude, radius);
+
+        retrofitCall.enqueue(new Callback<List<UserLocationInfo>>() {
+            @Override
+            public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
+                onFindBuddyNearListener.onSuccess(response.body());
             }
 
             @Override

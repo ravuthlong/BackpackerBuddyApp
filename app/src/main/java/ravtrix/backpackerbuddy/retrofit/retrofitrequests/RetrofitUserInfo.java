@@ -58,6 +58,10 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsers.class);
     }
 
+    public RetrofitUserInfoInterfaces.GetNearbyUsersGuest getNearbyUsersGuest() {
+        return retrofit.create(RetrofitUserInfoInterfaces.GetNearbyUsersGuest.class);
+    }
+
     public RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers getRecentlyOnlineUsers() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetRecentlyOnlineUsers.class);
     }

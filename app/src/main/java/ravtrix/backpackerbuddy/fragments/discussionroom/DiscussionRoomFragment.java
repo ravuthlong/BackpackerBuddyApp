@@ -130,8 +130,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
                     discussionModels = new ArrayList<>(); //empty
                 }
 
-                discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels,
-                        view, fragActivityProgressBarInterface, userLocalStore, swipeRefreshLayout);
+                discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels, userLocalStore);
                 recyclerViewDiscussion.setAdapter(discussionAdapter);
                 recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
                 displayAfterLoading();

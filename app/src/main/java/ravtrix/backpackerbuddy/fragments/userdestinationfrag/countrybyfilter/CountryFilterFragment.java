@@ -19,6 +19,8 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 
+import static ravtrix.backpackerbuddy.R.string.month;
+
 /**
  * Created by Ravinder on 10/9/16.
  */
@@ -55,54 +57,10 @@ public class CountryFilterFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.submit_filter:
 
-                int month;
-
-                switch (spinnerMonth.getSelectedItem().toString()) {
-                    case "January":
-                        month = 1;
-                        break;
-                    case "February":
-                        month = 2;
-                        break;
-                    case "March":
-                        month = 3;
-                        break;
-                    case "April":
-                        month = 4;
-                        break;
-                    case "May":
-                        month = 5;
-                        break;
-                    case "June":
-                        month = 6;
-                        break;
-                    case "July":
-                        month = 7;
-                        break;
-                    case "August":
-                        month = 8;
-                        break;
-                    case "September":
-                        month = 9;
-                        break;
-                    case "October":
-                        month = 10;
-                        break;
-                    case "November":
-                        month = 11;
-                        break;
-                    case "December":
-                        month = 12;
-                        break;
-                    default:
-                        month = 1;
-                        break;
-                }
-
                 // refresh this fragment
                 Bundle bundle = new Bundle();
                 bundle.putString("country", spinnerCountry.getSelectedItem().toString());
-                bundle.putInt("month", month);
+                bundle.putInt("month", getMonth());
 
                 CountryTabFragment countryTabFragment = new CountryTabFragment();
                 countryTabFragment.setHasBundle(bundle);
@@ -130,5 +88,53 @@ public class CountryFilterFragment extends Fragment {
                 android.R.layout.simple_spinner_item);
         spinnerAdapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMonth.setAdapter(spinnerAdapterMonth);
+    }
+
+    private int getMonth() {
+
+        int month;
+
+        switch (spinnerMonth.getSelectedItem().toString()) {
+            case "January":
+                month = 1;
+                break;
+            case "February":
+                month = 2;
+                break;
+            case "March":
+                month = 3;
+                break;
+            case "April":
+                month = 4;
+                break;
+            case "May":
+                month = 5;
+                break;
+            case "June":
+                month = 6;
+                break;
+            case "July":
+                month = 7;
+                break;
+            case "August":
+                month = 8;
+                break;
+            case "September":
+                month = 9;
+                break;
+            case "October":
+                month = 10;
+                break;
+            case "November":
+                month = 11;
+                break;
+            case "December":
+                month = 12;
+                break;
+            default:
+                month = 1;
+                break;
+        }
+        return month;
     }
 }

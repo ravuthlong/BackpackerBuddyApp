@@ -40,6 +40,7 @@
     <string name="lastName">Last Name</string>
     <string name="location">Location</string>
     <string name="login">Log In</string>
+    <string name="loginBold">LOG IN</string>
     <string name="manageDes">MANAGE POSTS</string>
     <string name="month">Month</string>
     <string name="near">Near</string>
@@ -58,11 +59,13 @@
     <string name="personality">Describe your personality</string>
     <string name="postToolbar">Post</string>
     <string name="profilePic">Profile Picture</string>
+    <string name="privateVisibility">Private</string>
     <string name="random">Random</string>
     <string name="tbRecentPosts">Recent Posts</string>
     <string name="report">Report</string>
     <string name="saveToolbar">Save</string>
     <string name="signUp">Sign Up</string>
+    <string name="signUpBold">SIGN UP</string>
     <string name="statusTravel">Traveling</string>
     <string name="statusNotTravel">Not Traveling</string>
     <string name="stringPost">Post</string>
@@ -83,10 +86,10 @@
     <string name="writePost">Write your post</string>
 
     <string-array name="distance_DropDown">
-        <item>25 miles</item>
-        <item>50 miles</item>
         <item>100 miles</item>
-        <item>200 miles</item>
+        <item>500 miles</item>
+        <item>1000 miles</item>
+        <item>5000 miles</item>
     </string-array>
 
     <string-array name="distance_sort_DropDown">
