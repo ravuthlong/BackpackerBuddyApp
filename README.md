@@ -21,7 +21,6 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 ![Alt text](http://i.imgur.com/xLaXDBk.png)
 ![Alt text](http://i.imgur.com/VjAQoBk.png)
 ![Alt text](http://i.imgur.com/sKuqpP2.png)
-![Alt text](http://i.imgur.com/sKuqpP2.png)
 ![Alt text](http://i.imgur.com/3vMaxAg.png)
 ![Alt text](http://i.imgur.com/p0L5oUv.png)
 
