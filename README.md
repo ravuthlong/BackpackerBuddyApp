@@ -15,14 +15,16 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 * ButterKnife for view injection </b>
 
 
-![Alt text](http://i.imgur.com/GOhWzZj.png)
-![Alt text](http://i.imgur.com/5wTCuTM.png)
-![Alt text](http://i.imgur.com/aVWfklf.png)
-![Alt text](http://i.imgur.com/SJeCDp7.png)
-![Alt text](http://i.imgur.com/TjkcMOV.png)
-![Alt text](http://i.imgur.com/lnTNK3k.png)
-![Alt text](http://i.imgur.com/SD4lgvr.png)
-![Alt text](http://i.imgur.com/mBwF6ZS.png)
+![Alt text](http://i.imgur.com/llBgwan.png)
+![Alt text](http://i.imgur.com/23AlhoP.png)
+![Alt text](http://i.imgur.com/YKbfE2S.png)
+![Alt text](http://i.imgur.com/W5l2htI.png)
+![Alt text](http://i.imgur.com/xLaXDBk.png)
+![Alt text](http://i.imgur.com/VjAQoBk.png)
+![Alt text](http://i.imgur.com/bGBJPb1.png)
+![Alt text](http://i.imgur.com/sKuqpP2.png)
+![Alt text](http://i.imgur.com/3vMaxAg.png)
+![Alt text](http://i.imgur.com/p0L5oUv.png)
 
 ![Alt text](http://i.imgur.com/SQtmBDh.png)<br>
 https://play.google.com/store/apps/details?id=ravtrix.backpackerbuddy
