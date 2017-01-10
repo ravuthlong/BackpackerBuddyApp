@@ -58,6 +58,7 @@ class UserProfileInteractor implements IUserProfileInteractor {
                         retrofitProfileListener.onSetDetailFourColor();
                         retrofitProfileListener.onSetDetailFourHint("Tell us how you would imagine your backpacking day to go.");
                     }
+                    retrofitProfileListener.onSetTravelStatus(responseJSON.get("traveling").getAsInt());
                 } else {
                     retrofitProfileListener.onError();
                 }
@@ -81,16 +82,13 @@ class UserProfileInteractor implements IUserProfileInteractor {
         retrofit.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (userLocalStore.getLoggedInUser().getTraveling() == 0) {
+                if (response.body().get("newStatus").getAsInt() == 1) {
                     // User is now traveling
                     retrofitTravelListener.onTravel();
                 } else {
                     // User no longer travels
                     retrofitTravelListener.onNotTravel();
                 }
-                // Change local store value for travel status
-                int newStatus = userLocalStore.getLoggedInUser().getTraveling() == 1 ? 0 : 1;
-                userLocalStore.changeTravelStat(newStatus);
                 retrofitTravelListener.onHideProgressDialog();
             }
             @Override

@@ -57,13 +57,11 @@ class UserProfilePresenter implements  IUserProfilePresenter {
 
             @Override
             public void onError() {
-                System.out.println("ERROR");
             }
 
             @Override
             public void onSetUsername(String username) {
                 view.setUsername(username);
-
             }
 
             @Override
@@ -145,6 +143,18 @@ class UserProfilePresenter implements  IUserProfilePresenter {
             public void onDetailFourAHint(boolean hint) {
                 view.isDetailFourAHint(hint);
             }
+
+            @Override
+            public void onSetTravelStatus(int status) {
+                if (status == 0) { // not traveling
+                    view.showImageNotTravel();
+                    view.showTextNotTravel();
+                } else {
+                    view.showImageTravel();
+                    view.showTextTravel();
+                }
+            }
+
         });
     }
 

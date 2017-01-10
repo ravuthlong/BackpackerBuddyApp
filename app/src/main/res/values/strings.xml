@@ -306,4 +306,26 @@
         <item>Zambia</item>
         <item>Zimbabwe</item>
     </string-array>
+
+    <string name="backpackerBuddyAbout">BACKPACKER BUDDY is a community where travellers, solo or not, can connect with one another,
+        discussion with each other and even plan a solo travelling trip together. We are all travelers,
+        so guess what? We all love to travel! This community lets you talk to other backpackers/travellers
+        who share the same common interest as you!\n\n<b>About the developer</b>\nThe idea of a backpacking
+        app came to me before I embark by solo trip to Eastern Europe in the Summer of 2016. It was not that long ago
+        and the memories are still fresh within me. I remember having a difficult time finding an actual solo-travelling
+        community aside from the solotravel sub-Reddit. Maybe I just wasn\'t good at finding the solo travelling community?
+        Who knows. What I do know is that I wanted to create a platform for us solo travellers to come together and share
+        our experiences through a mobile application.\nBeing a Software Engineering major, I developed a passion for
+        Android Development and there is no better way to practice my skill than to create this app for a community I
+        dearly care about.\n\nI chose to travel not because I was simply bored and no I am not doing it just to get
+        away from my family. I did it because travelling the world has always been on my bucket list. I know tomorrow
+        is not certain and if I were to wait to go with someone, that day can be 10 years from now? 30 years from now?
+        Or most likely, never. The world is so much bigger and greater than what we wake up to everyday, doing the same
+        routine. It is when we make a change in our lives and do things we have never done before is when we start
+        to see the things that make this world a beautiful place. It is when we are completely alone that we become
+        an observer, and we start to see life from a totally different perspective. I came back from my trip with unforgettable memories
+        that i still smile thinking about it every night before I go to bed.\n\nAt the time of writing this, I know this App has not yet reached its full potential in
+        terms of functionality and the number of users, but with your support, I will continue to work to work to bring
+        new updates to this App.\n\n\nThank you and safe travelling! :)
+    </string>
 </resources>

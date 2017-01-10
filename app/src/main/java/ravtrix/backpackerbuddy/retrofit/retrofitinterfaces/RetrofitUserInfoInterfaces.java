@@ -69,7 +69,7 @@ public class RetrofitUserInfoInterfaces {
 
     public interface UpdateTravelingStatus {
         @FormUrlEncoded
-        @POST("/updateTravelingStatus.php")
+        @POST("/updateTravelStatus1.4.php")
         Call<JsonObject> updateTravelStatus(@FieldMap HashMap<String, String> userStatusInfo);
     }
 

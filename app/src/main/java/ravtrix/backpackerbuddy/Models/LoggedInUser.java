@@ -24,12 +24,6 @@ public class LoggedInUser {
     @SerializedName("userpic")
     @Expose
     private String userpic;
-    @SerializedName("gender")
-    @Expose
-    private String gender;
-    @SerializedName("traveling")
-    @Expose
-    private int traveling;
     @SerializedName("bucketStatus")
     @Expose
     private int bucketStatus;
@@ -43,17 +37,14 @@ public class LoggedInUser {
     @Expose
     private Long time;
 
-
     public LoggedInUser() {}
 
-    public LoggedInUser(int userID, String email, String username, String userImageURL, String gender, int traveling,
+    public LoggedInUser(int userID, String email, String username, String userImageURL,
                         int bucketStatus, double latitude, double longitude, long currentTime) {
         this.userID = userID;
         this.email = email;
         this.username = username;
         this.userpic = userImageURL;
-        this.gender = gender;
-        this.traveling = traveling;
         this.bucketStatus = bucketStatus;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -66,22 +57,6 @@ public class LoggedInUser {
 
     public void setBucketStatus(int bucketStatus) {
         this.bucketStatus = bucketStatus;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getTraveling() {
-        return traveling;
-    }
-
-    public void setTraveling(int traveling) {
-        this.traveling = traveling;
     }
 
     public String getUserpic() {

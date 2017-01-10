@@ -44,7 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ravtrix.backpackerbuddy.UserLocation;
-import ravtrix.backpackerbuddy.activities.signup3.OnCountryReceived;
+import ravtrix.backpackerbuddy.activities.signup2.OnCountryReceived;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.OnLocationReceivedGuest;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;

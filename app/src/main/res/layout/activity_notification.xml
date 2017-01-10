@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lowWhite"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/activity_notif_llayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/greenBackground">
+
+        <include
+            android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/lowWhite"
+            android:layout_marginTop="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/activity_notif_tvNotif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message Notification"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="8dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/activity_notif_tvNotif"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/activity_notif_statusMessage"
+                    android:text="ON"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/activity_notif_sNotif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="Off"
+                    android:textOn="On"
+                    android:showText="true"
+                    android:gravity="center_vertical|end"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/lowWhite"
+        android:layout_marginTop="1dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+
+        <TextView
+            android:id="@+id/activity_notif_tvComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comment Notification"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/activity_notif_tvComment"
+            android:gravity="right">
+
+
+            <TextView
+                android:id="@+id/activity_notif_statusComment"
+                android:text="ON"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/activity_notif_sComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOff="Off"
+                android:textOn="On"
+                android:showText="true"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

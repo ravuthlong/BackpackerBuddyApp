@@ -6,6 +6,5 @@ package ravtrix.backpackerbuddy.activities.signup1;
 
 public interface ISignUpPart1Presenter {
     void inputValidation(String username, String password, String email, String etConfirmPassword);
-    void inputValidationFacebook(FacebookUser facebookUser);
 
 }

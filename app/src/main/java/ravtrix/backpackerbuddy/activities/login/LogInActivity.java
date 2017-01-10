@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.activities.login;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,8 +16,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
+import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
@@ -87,7 +88,12 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
     // Error if the user info is incorrect
     @Override
     public void showNoUserErrorMessage(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialogBuilder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
+        } else {
+            dialogBuilder = new AlertDialog.Builder(this);
+        }
         dialogBuilder.setMessage("Incorrect user details");
         dialogBuilder.setPositiveButton("Ok", null);
         dialogBuilder.show();

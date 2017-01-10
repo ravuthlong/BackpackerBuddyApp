@@ -23,5 +23,6 @@ interface RetrofitProfileListener {
     void onDetailTwoAHint(boolean hint);
     void onDetailThreeAHint(boolean hint);
     void onDetailFourAHint(boolean hint);
+    void onSetTravelStatus(int status);
 
 }

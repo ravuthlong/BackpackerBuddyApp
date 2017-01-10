@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
+import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fcm.model.Message;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -59,12 +59,12 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     private final UserChat userChat = new UserChat();
     private  String otherUserID;
     private ConversationPresentor conversationPresentor;
+    private int backPressExit = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-        FirebaseMessagingService.cancelNotification(this, 0);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
 
@@ -200,10 +200,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     }
                 }
             }
-            @Override
-            public int getItemCount() {
-                return super.getItemCount();
-            }
+
         };
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -323,7 +320,13 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         String myUserID;
         if (bundle != null) {
             otherUserID = bundle.getString("otherUserID"); // ID of the other user in chat
-            chatPosition = bundle.getInt("position");
+
+            if (bundle.containsKey("position")) {
+                chatPosition = bundle.getInt("position");
+            }
+            if (bundle.containsKey("backpressExit")) {
+                backPressExit = bundle.getInt("backpressExit");
+            }
         }
         myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
         // Create name combo. Only one of these two names exist for the convo between the two users.
@@ -398,6 +401,16 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+        System.out.println("BACKPRESS EXIT: " + backPressExit);
+        if (backPressExit == 0) {
+            Intent intent = new Intent(this, UserMainPage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+
+        }
     }
 }

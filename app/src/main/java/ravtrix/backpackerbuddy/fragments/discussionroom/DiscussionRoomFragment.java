@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.DiscussionPostActivity;
+import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -62,6 +63,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
         ButterKnife.bind(this, view);
         view.setVisibility(View.INVISIBLE);
+        FirebaseMessagingService.cancelNotification(getActivity(), 1);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerViewDiscussion.addItemDecoration(dividerDecorator);

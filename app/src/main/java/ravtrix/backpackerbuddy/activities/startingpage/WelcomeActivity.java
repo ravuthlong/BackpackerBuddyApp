@@ -33,6 +33,7 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.facebooksignup.FacebookSignUpActivity;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
@@ -69,13 +70,14 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_mainpage);
         ButterKnife.bind(this);
         setFontStyle();
-        //setUnderline();
+        setUnderline();
 
         imgbSignUp.setOnClickListener(this);
         imgbLogIn.setOnClickListener(this);
         tvGuestLogin.setOnClickListener(this);
 
         userLocalStore = new UserLocalStore(this);
+
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
@@ -101,6 +103,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(getApplicationContext(), error.getCause().toString(), Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     @Override
@@ -144,7 +147,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     final String email = object.get("email").toString();
                     final String imageURL = object.getJSONObject("picture").getJSONObject("data").get("url").toString();
-                    final String gender = object.get("gender").toString();
+                    final String firstName = object.get("last_name").toString();
+                    final String lastName = object.get("first_name").toString();
 
                     Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
                             .isUsernameOrEmailTaken()
@@ -162,23 +166,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                                 // Means the user exists, so log them in
                                 logInFacebookRetrofit(email, notificationToken);
                             } else {
-                                String userGender;
 
-                                switch (gender) {
-                                    case "male":
-                                        userGender = "M";
-                                        break;
-                                    case "female":
-                                        userGender = "F";
-                                        break;
-                                    default:
-                                        userGender = "N/A";
-                                        break;
-                                }
-                                Intent signUpIntent = new Intent(WelcomeActivity.this, SignUpPart1Activity.class);
+                                Intent signUpIntent = new Intent(WelcomeActivity.this, FacebookSignUpActivity.class);
                                 signUpIntent.putExtra("email", email);
                                 signUpIntent.putExtra("imageURL", imageURL);
-                                signUpIntent.putExtra("gender", userGender);
+                                signUpIntent.putExtra("firstName", firstName);
+                                signUpIntent.putExtra("lastName", lastName);
                                 startActivity(signUpIntent);
                             }
                         }
@@ -196,7 +189,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         Bundle bundle = new Bundle();
-        bundle.putString("fields", "gender, email, picture.type(large)");
+        bundle.putString("fields", "first_name,last_name, email, picture.type(large)");
         request.setParameters(bundle);
         request.executeAsync(); // which will invoke onCompleted
     }

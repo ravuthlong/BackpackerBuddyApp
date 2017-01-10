@@ -82,8 +82,10 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                 mLastClickTime = SystemClock.elapsedRealtime();
 
                 if (userLocalStore.getLoggedInUser().getUserID() != 0) {
-                    if (etComment.getText().toString().isEmpty()) {
+                    if (etComment.getText().toString().trim().isEmpty()) {
                         Toast.makeText(this, "Empty comment...", Toast.LENGTH_SHORT).show();
+                    } else if (etComment.getText().toString().trim().length() >= 500) {
+                        Toast.makeText(this, "Exceeded max character count (500)", Toast.LENGTH_SHORT).show();
                     } else {
                         HashMap<String, String> discussionHash = new HashMap<>();
                         discussionHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
@@ -162,7 +164,6 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                 recyclerView.setLayoutManager(new LinearLayoutManager(DiscussionComments.this));
 
                 // Bring recycler view to end of its scroll to see new comment
-
                 final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DiscussionComments.this);
                 linearLayoutManager.scrollToPosition(commentModels.size() - 1);
                 recyclerView.setLayoutManager(linearLayoutManager);
@@ -265,7 +266,10 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
     public void onBackPressed() {
 
         if (backPressExit == 0) {
-            startActivity(new Intent(this, UserMainPage.class));
+            Intent intent = new Intent(this, UserMainPage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         } else {
             super.onBackPressed();
         }

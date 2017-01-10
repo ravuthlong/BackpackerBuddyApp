@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities.signup3;
+package ravtrix.backpackerbuddy.activities.signup2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -49,7 +48,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private String email = "";
     private Double longitude = 0.0;
     private Double latitude = 0.0;
-    private String gender = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,17 +130,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             email = signUp1Info.getString("email");
             longitude = signUp1Info.getDouble("longitude");
             latitude = signUp1Info.getDouble("latitude");
-
-            // Only Facebook sign up has the below information
-            if (null != signUp1Info.getString("imageURL")) {
-                Picasso.with(this).load(signUp1Info.getString("imageURL"))
-                        .fit()
-                        .centerCrop()
-                        .into(circleImageView);
-            }
-            if (null != signUp1Info.getString("gender")) {
-                gender = signUp1Info.getString("gender");
-            }
         }
     }
 
@@ -172,7 +159,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("userpic", encodedImage);
         userInfo.put("time", Long.toString(currentTime));
         userInfo.put("token", getFCMToken());
-        userInfo.put("gender", gender);
 
         try {
             Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
@@ -208,7 +194,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
      * Get Notification token from fire base
      * @return the token
      */
-    String getFCMToken() {
+    private String getFCMToken() {
         return FirebaseInstanceId.getInstance().getToken();
     }
 

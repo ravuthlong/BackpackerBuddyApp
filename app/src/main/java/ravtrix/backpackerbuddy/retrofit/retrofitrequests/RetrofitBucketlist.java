@@ -34,4 +34,8 @@ public class RetrofitBucketList {
     public RetrofitBucketListInterfaces.FetchUserBucketList fetchUserBucketList() {
         return retrofit.create(RetrofitBucketListInterfaces.FetchUserBucketList.class);
     }
+
+    public RetrofitBucketListInterfaces.FetchUserBucketStatus fetchUserBucketStatus() {
+        return retrofit.create(RetrofitBucketListInterfaces.FetchUserBucketStatus.class);
+    }
 }

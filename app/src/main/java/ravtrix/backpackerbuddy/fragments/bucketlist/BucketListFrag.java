@@ -143,7 +143,6 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
                             });
                             dialogBuilder.show();
                         }
-
                     }
                     cancelState = false;
                 }

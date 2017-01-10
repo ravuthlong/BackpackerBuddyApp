@@ -112,8 +112,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 userLocalStore.getLoggedInUser().getLongitude());
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
-
-        setTravelingStatus();
         return v;
     }
 
@@ -148,8 +146,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                         progressDialog = Helpers.showProgressDialog(getContext(), "Updating...");
 
                         final HashMap<String, String> userInfo = new HashMap<>();
-                        userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
 
+                        userInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                         presenter.updateTravelStatus(userInfo, userLocalStore);
                     }
                 });
@@ -249,17 +247,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         if (Helpers.timeDifInMinutes(currentTime,
                 userLocalStore.getLoggedInUser().getTime()) > 5) {
             Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
-    }
-
-    private void setTravelingStatus() {
-        travelStatus = userLocalStore.getLoggedInUser().getTraveling();
-        if (travelStatus == 0) { // not traveling
-            imgNotTravel.setVisibility(View.VISIBLE);
-            txtNotTravel.setVisibility(View.VISIBLE);
-        } else {
-            imgTravel.setVisibility(View.VISIBLE);
-            txtTravel.setVisibility(View.VISIBLE);
         }
     }
 

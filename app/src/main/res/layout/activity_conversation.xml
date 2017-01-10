@@ -6,79 +6,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-<RelativeLayout
-    android:id="@+id/activity_conversation"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/greenLighter">
-
-    <include
-        android:id="@+id/toolbar_main"
-        layout="@layout/frag_toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
-    </include>
-
-    <ScrollView
-        android:id="@+id/scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
     <RelativeLayout
+        android:id="@+id/activity_conversation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/greenLighter">
 
-        <ImageView
-            android:id="@+id/sendMessageButton"
-            android:contentDescription="@string/txtFeedback"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@android:drawable/ic_menu_send"
-            android:layout_alignBottom="@+id/textMessage"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp" />
-
-        <EditText
-            android:id="@+id/textMessage"
-            android:layout_width="match_parent"
+        <include
+            android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hntMessage"
-            android:layout_marginLeft="10dp"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="5"
-            android:scrollbars="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/sendMessageButton"
-            android:layout_toStartOf="@+id/sendMessageButton" />
+            android:layout_width="match_parent" >
+        </include>
 
-    </RelativeLayout>
-    </ScrollView>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_main"
-        android:layout_above="@+id/scrollview"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
 
-    </android.support.v7.widget.RecyclerView>
+                <ImageView
+                    android:id="@+id/sendMessageButton"
+                    android:contentDescription="@string/txtFeedback"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@android:drawable/ic_menu_send"
+                    android:layout_alignBottom="@+id/textMessage"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10dp" />
 
-    <ProgressBar
-        android:id="@+id/activity_conversation_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyle"
-        android:indeterminate="true"
-        android:layout_centerInParent="true" />
-</RelativeLayout>
+                <EditText
+                    android:id="@+id/textMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/hntMessage"
+                    android:layout_marginLeft="10dp"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="5"
+                    android:scrollbars="vertical"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/sendMessageButton"
+                    android:layout_toStartOf="@+id/sendMessageButton" />
 
-    </android.support.design.widget.CoordinatorLayout>
+
+        <ProgressBar
+            android:id="@+id/activity_conversation_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyle"
+            android:indeterminate="true"
+            android:layout_centerInParent="true" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_main"
+            android:layout_above="@+id/textMessage"
+            android:layout_alignParentStart="true">
+
+        </android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

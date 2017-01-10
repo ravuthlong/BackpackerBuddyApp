@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities.signup3;
+package ravtrix.backpackerbuddy.activities.signup2;
 
 import com.google.gson.JsonObject;
 

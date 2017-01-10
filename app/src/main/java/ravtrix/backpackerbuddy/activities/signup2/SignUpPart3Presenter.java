@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities.signup3;
+package ravtrix.backpackerbuddy.activities.signup2;
 
 import android.app.Activity;
 
@@ -45,10 +45,6 @@ class SignUpPart3Presenter implements ISignUpPart3Presenter {
                 user.setLatitude(Double.valueOf(userInfo.get("latitude")));
                 user.setLongitude(Double.valueOf(userInfo.get("longitude")));
                 user.setTime(currentTime);
-                user.setBucketStatus(0);
-                if (null != userInfo.get("gender")) {
-                    user.setGender(userInfo.get("gender"));
-                }
                 userLocalStore.storeUserData(user);
                 iSignUpPart3View.startUserMainPage();
             }

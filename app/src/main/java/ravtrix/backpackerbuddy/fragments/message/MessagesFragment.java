@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
@@ -50,7 +51,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     private DatabaseReference mFirebaseDatabaseReference;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
-    private RecyclerView.ItemDecoration dividerDecorator;
 
     @Override
     public void onAttach(Context context) {
@@ -62,11 +62,14 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.frag_userinbox, container, false);
+        FirebaseMessagingService.cancelNotification(getActivity(), 0);
 
         ButterKnife.bind(this, view);
         view.setVisibility(View.INVISIBLE);
 
-        dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
+        Helpers.overrideFonts(getContext(), noInbox);
+
+        RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerView.addItemDecoration(dividerDecorator);
 
         fragActivityProgressBarInterface.setProgressBarVisible();
@@ -146,8 +149,9 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     private void firebaseListener() {
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        final PassValue counter = new PassValue(0);
 
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -165,6 +169,8 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                         mFirebaseDatabaseReference.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                counter.increment();
 
                                 if (dataSnapshot.exists()) {
                                     DataSnapshot snapshot;
@@ -204,7 +210,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                 }
 
                                 // completion
-                                if (passValue.getI() == feedItemInbox.size() - 1) {
+                                if (counter.getI() == feedItemInbox.size()) {
                                     // Sort chat rooms in order based on time
                                     Collections.sort(feedItemInbox);
                                     feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
@@ -275,5 +281,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         int getI() {
             return i;
         }
+        void increment() { i++; }
     }
 }

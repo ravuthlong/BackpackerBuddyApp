@@ -33,7 +33,6 @@ public class RetrofitBucketListInterfaces {
         Call<JsonObject> deleteBucket(@Field("bucketID") int bucketID);
     }
 
-
     public interface UpdateBucket {
         @FormUrlEncoded
         @POST("/updateBucketList.php")
@@ -49,5 +48,10 @@ public class RetrofitBucketListInterfaces {
     public interface FetchUserBucketList {
         @GET("/fetchBucketList.php?userID=[userID]")
         Call<List<BucketListModel>> fetchUserBucketList(@Query("userID") int userID);
+    }
+
+    public interface FetchUserBucketStatus {
+        @GET("/fetchBucketStatus.php?userID=[userID]")
+        Call<JsonObject> fetchUserBucketStatus(@Query("userID") int userID);
     }
 }

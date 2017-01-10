@@ -28,6 +28,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.bPassword) protected Button bChangePassword;
     @BindView(R.id.bEmail) protected Button bChangeEmail;
     @BindView(R.id.bFeedback) protected Button bFeedback;
+    @BindView(R.id.bNotification) protected Button bNotificaton;
+    @BindView(R.id.bAbout) protected Button bAbout;
     @BindView(R.id.relative_setting) protected RelativeLayout relativeLayout;
 
     private UserLocalStore userLocalStore;
@@ -46,6 +48,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         bChangePassword.setOnClickListener(this);
         bChangeEmail.setOnClickListener(this);
         bFeedback.setOnClickListener(this);
+        bAbout.setOnClickListener(this);
+        bNotificaton.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -53,12 +57,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.bSignOut:
-
                 // Log user out of facebook
                 if (AccessToken.getCurrentAccessToken() != null){
                     LoginManager.getInstance().logOut();
                 }
-
                 // Clear local storage because user has logged out
                 userLocalStore.clearUserData();
                 startActivity(new Intent(this, WelcomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -70,12 +72,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bEmail:
                 startActivity(new Intent(this, ChangeEmail.class));
                 break;
+            case R.id.bNotification:
+                startActivity(new Intent(this, NotificationActivity.class));
+                break;
             case R.id.bFeedback:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","ravtrixdev@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                break;
+            case R.id.bAbout:
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
             default:
                 break;

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ravtrix.backpackerbuddy.Counter;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
@@ -37,16 +36,11 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
     private Context context;
     private List<FeedItemInbox> feedItemInbox;
     private FragActivityProgressBarInterface fragActivityProgressBarInterface;
-    private Counter counter;
-    private View view;
     private UserLocalStore userLocalStore;
     private MessagesFragment messagesFragment;
     private FeedListAdapterInbox.ViewHolder viewHolder;
     private ArrayList<View> itemViews;
     private int i = 0;
-    private int sizeToCompare;
-    //private DatabaseReference mFirebaseDatabaseReference;
-    //private String chatName;
 
     public FeedListAdapterInbox(MessagesFragment messagesFragment, Context context, List<FeedItemInbox> feedItemInbox, View view,
                                 FragActivityProgressBarInterface fragActivityProgressBarInterface) {
@@ -54,7 +48,6 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
         this.inflater = LayoutInflater.from(context);
         this.feedItemInbox = feedItemInbox;
         this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
-        this.view = view;
         this.messagesFragment = messagesFragment;
         this.userLocalStore = new UserLocalStore(context);
         this.itemViews = new ArrayList<>();
@@ -149,9 +142,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
                     int position = getAdapterPosition();
                     FeedItemInbox clickedItem = feedItemInbox.get(position);
 
-                    if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                        //performFragTransaction(activity, NAVIGATION_ITEM);
-                    } else {
+                    if (clickedItem.getUserID() != userLocalStore.getLoggedInUser().getUserID()) {
                         Intent postInfo = new Intent(context, OtherUserProfile.class);
                         postInfo.putExtra("userID", clickedItem.getUserID());
                         context.startActivity(postInfo);

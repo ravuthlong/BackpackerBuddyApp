@@ -1,4 +1,4 @@
-package ravtrix.backpackerbuddy.activities.signup3;
+package ravtrix.backpackerbuddy.activities.signup2;
 
 /**
  * Created by Ravinder on 9/28/16.

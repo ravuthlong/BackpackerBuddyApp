@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:float="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayoutSignUp"
+        android:weightSum="5">
+
+        <include android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/greenBackground">
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                float:fletPadding="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="20dp">
+                <EditText
+                    android:id="@+id/etEmail_facebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:gravity="center"
+                    android:ems="10"
+                    android:hint="@string/email"
+                    android:maxLines="1"
+                    android:paddingBottom="10dp" />
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                float:fletPadding="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+                <EditText
+                    android:id="@+id/etUsername_facebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:maxLines="1"
+                    android:hint="@string/username"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userImage_facebook"
+                android:src="@android:drawable/sym_def_app_icon"
+                app:border_color="#323944"
+                app:border_width="5dp"
+                android:layout_marginBottom="11dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_rotate_right_black_24dp"
+                android:id="@+id/imgRotate_facebook"
+                android:layout_toRightOf="@id/userImage_facebook"
+                android:visibility="gone" />
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/bEditImage_facebook"
+                android:contentDescription="@string/editPhotoDes"
+                android:background="@android:drawable/ic_menu_camera"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible"
+                android:layout_height="50dp"
+                android:layout_width="50dp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

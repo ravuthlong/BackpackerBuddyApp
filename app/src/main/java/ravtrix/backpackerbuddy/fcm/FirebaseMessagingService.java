@@ -51,6 +51,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent intent = new Intent(this, ConversationActivity.class);
         intent.putExtra("otherUserID", senderID);
+        intent.putExtra("backpressExit", 0);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // 0 is request code

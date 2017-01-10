@@ -59,7 +59,9 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity {
 
                 if (etDiscussion.getText().toString().trim().length() < 10) {
                     Helpers.displayToast(this, "Post is too short...");
-                } else {
+                } else if (etDiscussion.getText().toString().trim().length() >= 500) {
+                    Toast.makeText(this, "Exceeded max character count (500)", Toast.LENGTH_SHORT).show();
+                }else {
                     HashMap<String, String> newDiscussion = new HashMap<>();
                     newDiscussion.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                     newDiscussion.put("post", etDiscussion.getText().toString());

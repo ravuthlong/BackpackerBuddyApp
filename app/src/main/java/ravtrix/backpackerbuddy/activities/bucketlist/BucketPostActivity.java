@@ -57,6 +57,8 @@ public class BucketPostActivity extends OptionMenuPostBaseActivity {
                     Toast toast = Toast.makeText(BucketPostActivity.this, "Goal too short...", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
+                } else if (etNewBucket.getText().toString().trim().length() >= 500) {
+                    Toast.makeText(this, "Exceeded max character count (500)", Toast.LENGTH_SHORT).show();
                 } else {
                     // Insert into database
                     HashMap<String, String> bucketHash = new HashMap<>();

@@ -33,11 +33,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ravtrix.backpackerbuddy.AppRater;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
+import ravtrix.backpackerbuddy.application.BaseApplication;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
 import ravtrix.backpackerbuddy.fragments.bucketlist.BucketListFrag;
@@ -86,6 +88,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
+        ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -96,6 +99,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         if (bundle != null && bundle.containsKey("isGuest")) {
             this.isUserAGuest = bundle.getBoolean("isGuest");
             if (isUserAGuest) {
+                AppRater.app_launched(this); // Check the need to show rate dialog
                 setUpView();
                 settingsButton.setVisibility(View.GONE);
                 navigationView_Footer.setNavigationItemSelectedListener(this);
@@ -108,9 +112,16 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
+            AppRater.app_launched(this); // Check the need to show rate dialog
             setUpView();
             navigationView_Footer.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
     }
 
     @Override

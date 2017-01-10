@@ -69,54 +69,6 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
     }
 
 
-    @Override
-    public void inputValidationFacebook(final FacebookUser facebookUser) {
-        String errorFields = validate(facebookUser.getUsername(),
-                facebookUser.getPassword(), facebookUser.getEmail(), facebookUser.getEtConfirmPassword());
-
-        if (errorFields.length() > 0) {
-            Toast toast= Toast.makeText((Activity) iSignUpPart1View,
-                    errorFields, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.show();
-        } else {
-
-            signUpPart1Interactor.isUsernameTaken(facebookUser.getUsername(), facebookUser.getEmail(), new OnRetrofitSignUp1() {
-
-                @Override
-                public void onUsernameAndEmailNotTaken() {
-                    // Email and username not taken. User can proceed.
-                    iSignUpPart1View.startSignUpPart2ActivityFacebook(facebookUser);
-                }
-
-                @Override
-                public void onUsernameTaken() {
-                    // Username already taken
-                    iSignUpPart1View.displayUsernameTakenDialog();
-                }
-
-                @Override
-                public void onEmailTaken() {
-                    // Email already taken
-                    iSignUpPart1View.displayEmailTakenDialog();
-                }
-
-                @Override
-                public void onUsernameAndEmailTaken() {
-                    // Both email and username taken
-                    iSignUpPart1View.displayUsernameAndEmailTakenDialog();
-                }
-
-                @Override
-                public void onError() {
-                    // Retrofit error
-                    iSignUpPart1View.displayErrorToast();
-                }
-            });
-        }
-    }
-
-
     private String validate(String username, String password, String email, String etConfirmPassword) {
         String errorFields = "";
 
