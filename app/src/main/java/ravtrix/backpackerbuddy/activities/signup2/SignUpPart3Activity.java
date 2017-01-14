@@ -48,6 +48,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private String email = "";
     private Double longitude = 0.0;
     private Double latitude = 0.0;
+    private boolean isPhotoUploaed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            this.isPhotoUploaed = true;
             Uri selectedImage = data.getData();
             bitmapImage = null;
 
@@ -114,7 +116,12 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         mLastClickTime = SystemClock.elapsedRealtime();
         switch (item.getItemId()) {
             case R.id.submitSend:
-                signUserUp();
+
+                if (isPhotoUploaed) {
+                    signUserUp();
+                } else {
+                    Helpers.displayToast(this, "You must upload a photo...");
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

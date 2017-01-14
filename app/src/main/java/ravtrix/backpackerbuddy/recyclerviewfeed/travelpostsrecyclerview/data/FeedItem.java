@@ -33,9 +33,6 @@ public class FeedItem {
     @SerializedName("until")
     @Expose
     private String toDate;
-    @SerializedName("clicked")
-    @Expose
-    private int clicked;
     private boolean isFavorite;
 
     public int isSuccess() {
@@ -44,14 +41,6 @@ public class FeedItem {
 
     public void setSuccess(int success) {
         this.success = success;
-    }
-
-    public int getClicked() {
-        return clicked;
-    }
-
-    public void setClicked(int clicked) {
-        this.clicked = clicked;
     }
 
     public boolean isFavorite() {

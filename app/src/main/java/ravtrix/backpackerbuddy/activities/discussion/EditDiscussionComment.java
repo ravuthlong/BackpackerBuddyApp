@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditComment extends OptionMenuSaveBaseActivity {
+public class EditDiscussionComment extends OptionMenuSaveBaseActivity {
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.etEditComment) protected EditText etEditComment;
     @BindView(R.id.relativeEditComment) protected RelativeLayout relativeLayout;
@@ -46,8 +46,12 @@ public class EditComment extends OptionMenuSaveBaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.submitSave:
-                // Update comment
-                updateCommentRetrofit(commentID, etEditComment.getText().toString().trim());
+                if (etEditComment.getText().toString().trim().length() == 0) {
+                    Helpers.displayToast(this, "Post is too short...");
+                } else {
+                    // Update comment
+                    updateCommentRetrofit(commentID, etEditComment.getText().toString().trim());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -73,12 +77,12 @@ public class EditComment extends OptionMenuSaveBaseActivity {
                     setResult(1); // result code 1
                     finish();
                 } else {
-                    Helpers.displayToast(EditComment.this, "Error");
+                    Helpers.displayToast(EditDiscussionComment.this, "Error");
                 }
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(EditComment.this, "Error");
+                Helpers.displayToast(EditDiscussionComment.this, "Error");
             }
         });
     }

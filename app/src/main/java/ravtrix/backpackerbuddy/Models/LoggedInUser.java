@@ -36,11 +36,15 @@ public class LoggedInUser {
     @SerializedName("time")
     @Expose
     private Long time;
+    @SerializedName("isFacebook")
+    @Expose
+    private int isFacebook;
 
     public LoggedInUser() {}
 
     public LoggedInUser(int userID, String email, String username, String userImageURL,
-                        int bucketStatus, double latitude, double longitude, long currentTime) {
+                        int bucketStatus, double latitude, double longitude, long currentTime,
+                        int isFacebook) {
         this.userID = userID;
         this.email = email;
         this.username = username;
@@ -49,6 +53,7 @@ public class LoggedInUser {
         this.latitude = latitude;
         this.longitude = longitude;
         this.time = currentTime;
+        this.isFacebook = isFacebook;
     }
 
     public int getBucketStatus() {
@@ -130,5 +135,13 @@ public class LoggedInUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getIsFacebook() {
+        return isFacebook;
+    }
+
+    public void setIsFacebook(int isFacebook) {
+        this.isFacebook = isFacebook;
     }
 }

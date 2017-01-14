@@ -21,13 +21,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
-        <TextView
-            android:id="@+id/tvTime_discussion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
-
         <LinearLayout
             android:id="@+id/linearlayout2"
             android:orientation="vertical"
@@ -53,6 +46,13 @@
                 android:id="@+id/tvCountry_discussion"
                 android:layout_marginLeft="5dp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvTime_discussion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
@@ -101,7 +101,6 @@
                 android:id="@+id/tvLoveNum"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="11"
                 android:gravity="center"
                 android:paddingRight="12dp"
                 android:paddingLeft="0dp" />
@@ -128,13 +127,27 @@
                 android:id="@+id/tvCommentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="11"
                 android:gravity="center"
                 android:paddingRight="12dp"
                 android:paddingLeft="0dp"
                  />
         </LinearLayout>
 
-
+        <LinearLayout
+            android:id="@+id/item_discussion_layoutMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="10dp">
+            <ImageView
+                android:id="@+id/item_discussion_imageButtonMore"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_more_horiz_black_24dp" />
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

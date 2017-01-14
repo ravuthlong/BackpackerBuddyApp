@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/greenLighter">
+
+        <include
+            android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
+        </include>
+
+        <RelativeLayout
+            android:id="@+id/activity_comment_photo_relativeMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/relativeComment"
+                android:gravity="center"
+                android:visibility="gone"
+                android:id="@+id/linearProgressbar">
+                <ProgressBar
+                    android:id="@+id/activity_comment_photo_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminate="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/activity_comment_photo_relativeComment"
+                android:layout_alignParentTop="true"
+                android:id="@+id/activity_comment_photo_linearRecycler">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_comment_photo_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/activity_comment_photo_relativeComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/edit_text_border">
+                <EditText
+                    android:id="@+id/activity_comment_photo_etComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:focusable="true"
+                    android:padding="5dp"
+                    android:layout_toLeftOf="@+id/activity_comment_photo_submitButton"
+                    android:background="@android:color/transparent"
+                    android:textSize="13sp"
+                    android:hint="@string/writeComment"/>
+
+                <Button
+                    android:id="@+id/activity_comment_photo_submitButton"
+                    android:text="@string/stringPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp"
+                    android:textSize="12sp"
+                    android:background="@drawable/edit_text_border"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/activity_change_email"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greenBackground">
+
+        <include
+            android:id="@+id/toolbar_main"
+            layout="@layout/frag_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
+        </include>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/activity_perfect_linear1"
+                android:layout_above="@+id/activity_perfect_linear2"
+                android:layout_alignParentTop="true">
+                <ImageView
+                    android:id="@+id/activity_post_perfect_imgImage"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_perfect_linear2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/edit_text_border">
+                <EditText
+                    android:id="@+id/activity_post_perfect_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:inputType="textPersonName|textMultiLine|textCapSentences"
+                    android:hint="Why is it so perfect?"
+                    android:ems="10"
+                    android:background="@android:color/transparent"
+                    android:textSize="13sp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:padding="5dp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

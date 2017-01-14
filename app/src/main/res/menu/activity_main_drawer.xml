@@ -6,6 +6,9 @@
             android:id="@+id/navDiscussion"
             android:title="@string/generalChat" />
         <item
+            android:id="@+id/navPerfectPhoto"
+            android:title="@string/perfectPhoto" />
+        <item
             android:id="@+id/navActivity"
             android:title="@string/travelPost" />
         <item
@@ -16,10 +19,10 @@
             android:id="@+id/navInbox"
             android:title="@string/inbox" />
         <item
-            android:id="@+id/navDestination"
-            android:title="@string/manageDes" />
-        <item
             android:id="@+id/navBucketList"
             android:title="@string/bucketList" />
+        <item
+            android:id="@+id/navDestination"
+            android:title="@string/manageDes" />
     </group>
 </menu>

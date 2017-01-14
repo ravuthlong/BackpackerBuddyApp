@@ -165,7 +165,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     public void setUserLocation(String latitude, String longitude) {
         try {
-            tvLocation.setText(Helpers.cityGeocoder(getApplicationContext(),
+            tvLocation.setText(Helpers.cityGeocoder(this,
                     Double.parseDouble(latitude), Double.parseDouble(longitude)));
         } catch (IOException e) {
             // When the device failed to retrieve city and country information using Geocoder,

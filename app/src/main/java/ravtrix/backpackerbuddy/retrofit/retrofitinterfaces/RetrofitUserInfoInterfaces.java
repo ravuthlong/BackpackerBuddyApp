@@ -27,6 +27,11 @@ public class RetrofitUserInfoInterfaces {
         Call<LoggedInUser> userInfo(@FieldMap HashMap<String, String> user);
     }
 
+    public interface UpdateLocalstore {
+        @GET("/userInfoLocalstore.php?userID=[userID]")
+        Call<LoggedInUser> updateLocalstore(@Query("userID") int userID);
+    }
+
     public interface LogUserInFacebook {
         @FormUrlEncoded
         @POST("/loginfacebook.php")
@@ -117,7 +122,17 @@ public class RetrofitUserInfoInterfaces {
         Call<JsonObject> changeEmail(@FieldMap HashMap<String, String> user);
     }
 
+    public interface ChangeUsername {
+        @FormUrlEncoded
+        @POST("/changeUsername.php")
+        Call<JsonObject> changeusername(@FieldMap HashMap<String, String> user);
+    }
 
+    public interface ChangeUsernameFacebook {
+        @FormUrlEncoded
+        @POST("/changeUsernameFacebook.php")
+        Call<JsonObject> changeusernameFacebook(@FieldMap HashMap<String, String> user);
+    }
 }
 
 

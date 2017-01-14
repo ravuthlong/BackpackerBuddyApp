@@ -38,9 +38,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".activities.signup1.SignUpPart1Activity"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
@@ -61,8 +64,7 @@
             android:name=".activities.editinfo.EditInfoActivity"
             android:label="@string/app_name"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.otheruserprofile.OtherUserProfile"
             android:label="@string/app_name"
@@ -117,7 +119,7 @@
             android:name=".activities.createdestination.DestinationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.discussion.EditComment"
+            android:name=".activities.discussion.EditDiscussionComment"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.discussion.EditDiscussionActivity"
@@ -131,13 +133,25 @@
         <activity
             android:name=".activities.OtherUserBucketListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.facebooksignup.FacebookSignUpActivity" />
+        <activity
+            android:name=".activities.facebooksignup.FacebookSignUpActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.NotificationActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.userinfoedit.ChangeUsername"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.perfectphoto.PostPerfectPhotoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activities.perfectphoto.CommentPerfectPhotoActivity" />
+        <activity android:name=".activities.perfectphoto.EditCommentPerfectPhoto" />
+        <activity android:name=".activities.perfectphoto.EditPhotoPostActivity"></activity>
     </application>
 
 </manifest>

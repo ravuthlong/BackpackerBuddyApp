@@ -25,9 +25,10 @@
             android:id="@+id/postRecyclerViewDiscussion"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greenBackground"
+            android:background="@color/lowWhite"
             android:choiceMode="singleChoice"
-            android:layout_gravity='start' >
+            android:paddingBottom="@dimen/fab_size_normal"
+            android:clipToPadding="false" >
 
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>

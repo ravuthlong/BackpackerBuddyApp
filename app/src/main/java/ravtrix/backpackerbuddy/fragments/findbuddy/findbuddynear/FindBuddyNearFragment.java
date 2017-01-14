@@ -172,8 +172,9 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     @Override
     public void setCityText() {
         try {
-            city.setText(Helpers.cityGeocoder(getContext(), userLocalStore.getLoggedInUser().getLatitude(),
+            city.setText(Helpers.cityGeocoder(getActivity(), userLocalStore.getLoggedInUser().getLatitude(),
                     userLocalStore.getLoggedInUser().getLongitude()));
+
         } catch (IOException e) {
             // When the device failed to retrieve city and country information using Geocoder,
             // run google location API directly
@@ -234,7 +235,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         }
         @Override
         protected String doInBackground(Void... voids) {
-            return (Helpers.getCountry(latitude, longitude));
+            return (Helpers.getLocationInfo(latitude, longitude));
         }
         @Override
         protected void onPostExecute(String s) {

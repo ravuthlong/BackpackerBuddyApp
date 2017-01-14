@@ -21,8 +21,8 @@ import retrofit2.http.Query;
 public class RetrofitUserCountriesInterfaces {
 
     public interface GetNotLoggedInCountryPosts {
-        @GET("/fetchActivities.php?userID=[userID]")
-        Call<List<FeedItem>> countryPosts(@Query("userID") int userID);
+        @GET("/fetchRecentCountryPosts.php")
+        Call<List<FeedItem>> countryPosts();
     }
 
     public interface GetFilteredPosts {

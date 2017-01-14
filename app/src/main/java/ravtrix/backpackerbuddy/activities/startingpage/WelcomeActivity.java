@@ -69,6 +69,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_mainpage);
         ButterKnife.bind(this);
+
         setFontStyle();
         setUnderline();
 
@@ -212,7 +213,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
-
             @Override
             public void onFailure(Call<LoggedInUser> call, Throwable t) {
                 Helpers.displayToast(WelcomeActivity.this, "Error logging in...");
@@ -227,10 +227,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private void setFontStyle() {
         Typeface monuFont = Typeface.createFromAsset(getAssets(), "Monu.otf");
         tvBackpacker.setTypeface(monuFont);
-        tvBackpacker.setTextSize(85);
         tvBuddy.setTypeface(monuFont);
-        tvBuddy.setTextSize(80);
-
         Helpers.overrideFonts(this, this.tvGuestLogin);
     }
 }

@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 
 public interface RetrofitAppInfoInterfaces {
 
-    public interface FetchMinVersion {
+    interface FetchMinVersion {
         @GET("/fetchVersionMin.php")
         Call<JsonObject> fetchMinVersion();
     }

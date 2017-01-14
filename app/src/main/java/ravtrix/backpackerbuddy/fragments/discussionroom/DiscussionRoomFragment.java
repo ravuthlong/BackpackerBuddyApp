@@ -73,7 +73,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         swipeRefreshLayout.setOnRefreshListener(this);
         addPostButton.setOnClickListener(this);
 
-        Helpers.checkLocationUpdate(getContext(), userLocalStore);
         fragActivityProgressBarInterface.setProgressBarVisible();
         fetchDiscussionPosts();
 

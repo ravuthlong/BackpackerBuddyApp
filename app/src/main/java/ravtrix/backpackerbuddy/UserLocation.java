@@ -48,7 +48,6 @@ public class UserLocation {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         // Check for user's SDK Version. SDK version >= Marshmallow need permission access
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) !=

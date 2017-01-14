@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lowWhite"
+    android:id="@+id/item_perfect">
+
+    <RelativeLayout
+        android:id="@+id/item_perfect_relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_perfect_imgProfile"
+            android:layout_alignParentStart="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <LinearLayout
+            android:id="@+id/linearlayout2"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/item_perfect_imgProfile">
+
+            <TextView
+                android:id="@+id/item_perfect_tvUsername"
+                android:text="Username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/greenToolbar"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp" />
+
+            <TextView
+                android:id="@+id/item_perfect_tvCountry"
+                android:text="Country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/item_perfect_tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/item_perfect_relative2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_perfect_relative1"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+        <ImageView
+            android:id="@+id/item_perfect_image"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/item_perfect_relative3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/item_perfect_relative2"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:text="This is where the user comment goes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_perfect_post"
+            android:padding="5dp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/item_perfect_relative4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_perfect_relative3"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:id="@+id/item_perfect_layoutLove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_marginRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="0dp"
+            >
+            <ImageView
+                android:id="@+id/item_perfect_imageButtonLove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+                />
+            <TextView
+                android:id="@+id/item_perfect_tvLoveNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11"
+                android:gravity="center"
+                android:paddingRight="12dp"
+                android:paddingLeft="0dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/item_perfect_layoutComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/item_perfect_layoutLove"
+            android:background="@drawable/button"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="0dp">
+            <ImageView
+                android:id="@+id/item_perfect_imageButtonComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_chat_bubble_outline_black_24dp" />
+            <TextView
+                android:id="@+id/item_perfect_tvCommentNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11"
+                android:gravity="center"
+                android:paddingRight="12dp"
+                android:paddingLeft="0dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_perfect_layoutMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="10dp">
+            <ImageView
+                android:id="@+id/item_perfect_imageButtonMore"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_more_horiz_black_24dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

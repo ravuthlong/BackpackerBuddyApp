@@ -209,8 +209,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
 
         Call<List<FeedItem>> returnedFeed = RetrofitUserCountrySingleton.getRetrofitUserCountry()
                                             .getNotLoggedInCountryPosts()
-                                            .countryPosts(
-                                                    userLocalStore.getLoggedInUser().getUserID());
+                                            .countryPosts();
         returnedFeed.enqueue(new Callback<List<FeedItem>>() {
             @Override
             public void onResponse(Call<List<FeedItem>> call, Response<List<FeedItem>> response) {

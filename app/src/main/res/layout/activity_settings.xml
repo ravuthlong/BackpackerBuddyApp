@@ -19,97 +19,119 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" />
 
-    <Button
-        android:id="@+id/bPassword"
-        android:text="@string/password"
-        android:textAllCaps="false"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@color/lowWhite"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:layout_below="@+id/bEmail"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:textSize="15sp" />
-
-    <Button
-        android:id="@+id/bNotification"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:background="@color/lowWhite"
-        android:text="@string/txtNotification"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:layout_below="@+id/bPassword"
-        android:layout_marginTop="52dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:textSize="15sp"
-        android:layout_marginBottom="1dp" />
-
-    <Button
-        android:id="@+id/bFeedback"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/txtFeedback"
-        android:textAllCaps="false"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:layout_below="@+id/bNotification"
-        android:background="@color/lowWhite"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:textSize="15sp" />
-
-    <Button
-        android:id="@+id/bSignOut"
+    <RelativeLayout
+        android:id="@+id/relative_setting_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/txtSignOut"
-        android:textAllCaps="false"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:background="@color/lowWhite"
-        android:layout_above="@+id/bAbout"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:textSize="15sp"
-        android:layout_marginBottom="30dp" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_main">
 
-    <Button
-        android:id="@+id/bAbout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="About"
-        android:textAllCaps="false"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:background="@color/lowWhite"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:textSize="15sp" />
+        <Button
+            android:id="@+id/bPassword"
+            android:text="@string/password"
+            android:textAllCaps="false"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/lowWhite"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="1dp" />
 
-    <Button
-        android:id="@+id/bEmail"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:text="@string/email"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/lowWhite"
-        android:textAlignment="textStart"
-        android:textAllCaps="false"
-        android:layout_gravity="start"
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/toolbar_main"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="15sp"
-        android:layout_marginBottom="1dp" />
+
+        <Button
+            android:id="@+id/bUsername"
+            android:text="Username"
+            android:textAllCaps="false"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@color/lowWhite"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp"
+            android:layout_below="@+id/bPassword"
+            android:layout_marginBottom="1dp" />
+
+        <Button
+            android:id="@+id/bEmail"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:text="@string/email"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/lowWhite"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:layout_gravity="start"
+            android:layout_below="@+id/bUsername"
+            android:textSize="15sp"/>
+
+        <Button
+            android:id="@+id/bNotification"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:background="@color/lowWhite"
+            android:text="@string/txtNotification"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_below="@+id/bEmail"
+            android:layout_marginTop="100dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="1dp" />
+
+        <Button
+            android:id="@+id/bFeedback"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtFeedback"
+            android:textAllCaps="false"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_below="@+id/bNotification"
+            android:background="@color/lowWhite"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/bSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtSignOut"
+            android:textAllCaps="false"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:background="@color/lowWhite"
+            android:layout_above="@+id/bAbout"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="30dp" />
+
+        <Button
+            android:id="@+id/bAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textAllCaps="false"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:background="@color/lowWhite"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>

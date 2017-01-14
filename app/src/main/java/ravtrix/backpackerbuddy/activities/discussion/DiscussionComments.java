@@ -79,20 +79,14 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
 
         switch(view.getId()) {
             case R.id.submitButton:
-                mLastClickTime = SystemClock.elapsedRealtime();
-
                 if (userLocalStore.getLoggedInUser().getUserID() != 0) {
                     if (etComment.getText().toString().trim().isEmpty()) {
                         Toast.makeText(this, "Empty comment...", Toast.LENGTH_SHORT).show();
                     } else if (etComment.getText().toString().trim().length() >= 500) {
                         Toast.makeText(this, "Exceeded max character count (500)", Toast.LENGTH_SHORT).show();
                     } else {
-                        HashMap<String, String> discussionHash = new HashMap<>();
-                        discussionHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-                        discussionHash.put("discussionID", Integer.toString(discussionID));
-                        discussionHash.put("comment", etComment.getText().toString().trim());
-                        discussionHash.put("time", Long.toString(System.currentTimeMillis()));
-                        insertCommentRetrofit(discussionHash);
+                        // Submit comment
+                        insertCommentRetrofit();
                     }
                 } else {
                     Helpers.displayToast(this, "Become a member to comment");
@@ -103,7 +97,23 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void insertCommentRetrofit(final HashMap<String, String> discussionHash) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == 1) { // refresh from edit comment
+                fetchDiscussionCommentsRefresh();
+            }
+        }
+    }
+
+    private void insertCommentRetrofit() {
+
+        final HashMap<String, String> discussionHash = new HashMap<>();
+        discussionHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+        discussionHash.put("discussionID", Integer.toString(discussionID));
+        discussionHash.put("comment", etComment.getText().toString().trim());
+        discussionHash.put("time", Long.toString(System.currentTimeMillis()));
+
         Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
                 .insertComment()
                 .insertComment(discussionHash);
@@ -223,15 +233,10 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == 1) { // refresh from edit comment
-                fetchDiscussionCommentsRefresh();
-            }
-        }
-    }
-
+    /**
+     * Increment total comment count after commenting
+     * @param discussionID              the discussionID to increment the discussion
+     */
     private void incrementTotalComment(int discussionID) {
         Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
                 .incrementCommentCount()
@@ -252,6 +257,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
             ownerID = discussionBundle.getInt("ownerID");
 
             if (discussionBundle.containsKey("backpressExit")) {
+                // Push notification send this key.
                 backPressExit = discussionBundle.getInt("backpressExit");
             }
         }
@@ -265,6 +271,9 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
     @Override
     public void onBackPressed() {
 
+        /**
+         * Backpressexit is 0 if the user hits DiscussionComments activity from a push notification
+         */
         if (backPressExit == 0) {
             Intent intent = new Intent(this, UserMainPage.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

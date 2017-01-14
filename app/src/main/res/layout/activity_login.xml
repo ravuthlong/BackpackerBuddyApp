@@ -26,8 +26,8 @@
             android:paddingRight="70dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/greenBackground">
+            android:background="@color/greenBackground"
+            android:layout_gravity="center_vertical">
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"

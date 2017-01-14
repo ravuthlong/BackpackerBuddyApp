@@ -18,6 +18,10 @@ public class RetrofitUserInfo {
         return this.retrofit.create(RetrofitUserInfoInterfaces.LogUserIn.class);
     }
 
+    public RetrofitUserInfoInterfaces.UpdateLocalstore updateLocalstore() {
+        return this.retrofit.create(RetrofitUserInfoInterfaces.UpdateLocalstore.class);
+    }
+
     public RetrofitUserInfoInterfaces.LogUserInFacebook logUserInFacebook() {
         return this.retrofit.create(RetrofitUserInfoInterfaces.LogUserInFacebook.class);
     }
@@ -77,6 +81,14 @@ public class RetrofitUserInfo {
 
     public RetrofitUserInfoInterfaces.ChangeEmail changeEmail() {
         return retrofit.create(RetrofitUserInfoInterfaces.ChangeEmail.class);
+    }
+
+    public RetrofitUserInfoInterfaces.ChangeUsername changeUsername() {
+        return retrofit.create(RetrofitUserInfoInterfaces.ChangeUsername.class);
+    }
+
+    public RetrofitUserInfoInterfaces.ChangeUsernameFacebook changeUsernameFacebook() {
+        return retrofit.create(RetrofitUserInfoInterfaces.ChangeUsernameFacebook.class);
     }
 
 }

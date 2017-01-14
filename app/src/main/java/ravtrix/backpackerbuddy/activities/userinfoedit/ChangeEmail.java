@@ -32,7 +32,7 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         setContentView(R.layout.activity_change_email);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
-        setToolbarTitle();
+        this.setTitle("Change email");
         userLocalStore = new UserLocalStore(this);
         newEmail.setText(userLocalStore.getLoggedInUser().getEmail());
     }
@@ -47,12 +47,35 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
                 } else if (!Helpers.isEmailValid(newEmail.getText().toString())) {
                     Helpers.displayToast(ChangeEmail.this, "Email not in valid format (aaa@aaa.aaa)");
                 } else {
-                    changeEmail(newEmail.getText().toString(), passwordConfirm.getText().toString());
+
+                    checkEmailTaken(newEmail.getText().toString());
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkEmailTaken(final String newEmail) {
+
+        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .isUsernameOrEmailTaken()
+                .isUsernameOrEmailTaken("", newEmail);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.body().get("emailtaken").getAsInt() == 1) {
+                    Helpers.displayToast(ChangeEmail.this, "Email taken. Try a different one.");
+                } else {
+                    changeEmail(newEmail, passwordConfirm.getText().toString());
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
@@ -74,13 +97,13 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         changeEmail.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
                 if (response.body().get("status").getAsInt() == 1) {
                     Helpers.displayToast(ChangeEmail.this, "Email changed successfully");
                     userLocalStore.changeEmail(email);
+                    finish();
                 }  else {
                     // Changed unsuccessfully
-                    Helpers.displayToast(ChangeEmail.this, "Problem changing email1");
+                    Helpers.displayToast(ChangeEmail.this, "Incorrect password");
                 }
             }
             @Override
@@ -104,7 +127,4 @@ public class ChangeEmail extends OptionMenuSaveBaseActivity {
         return missingInfo;
     }
 
-    private void setToolbarTitle() {
-        this.setTitle("Change email");
-    }
 }

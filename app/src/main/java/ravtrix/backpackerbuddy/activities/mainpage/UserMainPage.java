@@ -47,6 +47,7 @@ import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.findbuddy.FindBuddyTabFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.ManageDestinationTabFragment;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
+import ravtrix.backpackerbuddy.fragments.perfectphoto.PerfectPhotoFragment;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.fragments.userprofile.UserProfileFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -54,6 +55,7 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
@@ -64,7 +66,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  */
 public class UserMainPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, FragActivitySetDrawerInterface, FragActivityProgressBarInterface,
-        FragActivityResetDrawer, FragActivityUpdateProfilePic {
+        FragActivityResetDrawer, FragActivityUpdateProfilePic, IUserMainView {
 
     @BindView(R.id.drawer_layout) protected DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
@@ -81,6 +83,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private boolean userHitHome = false;
     private boolean isUserAGuest = false;
     private ImageButton settingsButton;
+    private UserMainPresenter userMainPresenter;
+    private static final int REQUEST_SELECT_PICTURE = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
+        userMainPresenter = new UserMainPresenter(this);
 
         Bundle bundle = getIntent().getExtras();
         // First check if they want a guest access, from Welcome Page
@@ -116,6 +121,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             setUpView();
             navigationView_Footer.setVisibility(View.GONE);
         }
+
+        if (!isUserAGuest && userLocalStore.getLoggedInUser().getUserID() != 0) {
+            // Update local store upon every opening. This is a way of syncing data
+            userMainPresenter.updateLocalstore(userLocalStore.getLoggedInUser().getUserID());
+        }
+
     }
 
     @Override
@@ -131,22 +142,22 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.navActivity:
-                navigationView.getMenu().getItem(1).setChecked(true);
+                navigationView.getMenu().getItem(2).setChecked(true);
                 currentPos = 0;
                 setTitle("Travel Posts");
                 break;
             case R.id.navFindBuddy:
-                navigationView.getMenu().getItem(2).setChecked(true);
+                navigationView.getMenu().getItem(3).setChecked(true);
                 currentPos = 1;
                 setTitle("Find Buddy");
                 break;
             case R.id.navInbox:
-                navigationView.getMenu().getItem(3).setChecked(true);
+                navigationView.getMenu().getItem(4).setChecked(true);
                 currentPos = 2;
                 setTitle("Inbox");
                 break;
             case R.id.navDestination:
-                navigationView.getMenu().getItem(4).setChecked(true);
+                navigationView.getMenu().getItem(6).setChecked(true);
                 currentPos = 3;
                 setTitle("Manage Posts");
                 break;
@@ -159,6 +170,11 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 navigationView.getMenu().getItem(5).setChecked(true);
                 currentPos = 6;
                 setTitle("My Bucket List");
+                break;
+            case R.id.navPerfectPhoto:
+                navigationView.getMenu().getItem(1).setChecked(true);
+                currentPos = 7;
+                setTitle("The Perfect Photo");
                 break;
             case R.id.navLogIn:
                 startActivity(new Intent(this, LogInActivity.class));
@@ -211,6 +227,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new UserProfileFragment());
         fragmentList.add(new DiscussionRoomFragment());
         fragmentList.add(new BucketListFrag());
+        fragmentList.add(new PerfectPhotoFragment());
     }
 
     // Start up state
@@ -272,11 +289,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
     private void setNavigationDrawerIcons() {
         navigationView.getMenu().getItem(0).setIcon(R.drawable.ic_record_voice_over_black_24dp);
-        navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_flight_takeoff_black_24dp);
-        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
-        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_chat_bubble_black_24dp);
-        navigationView.getMenu().getItem(4).setIcon(R.drawable.ic_edit_black_24dp);
+        navigationView.getMenu().getItem(1).setIcon(R.drawable.ic_monochrome_photos_black_24dp);
+        navigationView.getMenu().getItem(2).setIcon(R.drawable.ic_flight_takeoff_black_24dp);
+        navigationView.getMenu().getItem(3).setIcon(R.drawable.ic_person_pin_circle_black_24dp);
+        navigationView.getMenu().getItem(4).setIcon(R.drawable.ic_chat_bubble_black_24dp);
         navigationView.getMenu().getItem(5).setIcon(R.drawable.ic_assignment_black_24dp);
+        navigationView.getMenu().getItem(6).setIcon(R.drawable.ic_edit_black_24dp);
 
     }
 
@@ -409,6 +427,9 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         item = navigationView.getMenu().findItem(R.id.navBucketList);
         applyFontToItem(item, typeface);
+
+        item = navigationView.getMenu().findItem(R.id.navPerfectPhoto);
+        applyFontToItem(item, typeface);
     }
 
     private void changeTypeFaceFooter(NavigationView navigationView) {
@@ -451,6 +472,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
      */
     private boolean checkIsUserNotLoggedIn() {
         return (userLocalStore.getLoggedInUser().getUserID() == 0);
+    }
+
+    @Override
+    public void updateLocalstore(LoggedInUser updated) {
+        userLocalStore.clearUserData();
+        userLocalStore.storeUserData(updated);
     }
 }
 

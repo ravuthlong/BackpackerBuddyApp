@@ -12,7 +12,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
@@ -79,6 +78,7 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
 
                 if (response.body().get("status").getAsInt() == 1) {
                     Helpers.displayToast(ChangePassword.this, "Password changed successfully");
+                    finish();
                 }  else {
                     // Changed unsuccessfully
                     Helpers.displayToast(ChangePassword.this, "Problem changing password");

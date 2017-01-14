@@ -44,13 +44,15 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
     public FeedListAdapterInbox(MessagesFragment messagesFragment, Context context, List<FeedItemInbox> feedItemInbox, View view,
                                 FragActivityProgressBarInterface fragActivityProgressBarInterface) {
-        this.context = context;
-        this.inflater = LayoutInflater.from(context);
-        this.feedItemInbox = feedItemInbox;
-        this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
-        this.messagesFragment = messagesFragment;
-        this.userLocalStore = new UserLocalStore(context);
-        this.itemViews = new ArrayList<>();
+        if (context != null) {
+            this.context = context;
+            this.inflater = LayoutInflater.from(context);
+            this.feedItemInbox = feedItemInbox;
+            this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
+            this.messagesFragment = messagesFragment;
+            this.userLocalStore = new UserLocalStore(context);
+            this.itemViews = new ArrayList<>();
+        }
     }
 
     @Override

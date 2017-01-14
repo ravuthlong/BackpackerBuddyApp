@@ -2,11 +2,13 @@ package ravtrix.backpackerbuddy.activities.facebooksignup;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Gravity;
@@ -135,6 +137,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                                     public void onReceivedLocation(double latitude, double longitude) {
                                         final HashMap<String, String> userInfo = new HashMap<>();
                                         userInfo.put("email", email);
+                                        userInfo.put("isFacebook", "1");
                                         userInfo.put("username", etUsernameFB.getText().toString().trim());
                                         userInfo.put("latitude", Double.toString(latitude));
                                         userInfo.put("longitude", Double.toString(longitude));
@@ -249,6 +252,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                     user.setLatitude(Double.valueOf(userInfo.get("latitude")));
                     user.setLongitude(Double.valueOf(userInfo.get("longitude")));
                     user.setTime(currentTime);
+                    user.setIsFacebook(1); // facebook user true
                     userLocalStore.storeUserData(user);
                     Helpers.hideProgressDialog(progressDialog);
 
@@ -300,6 +304,18 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         @Override
         protected void onPostExecute(String s) {
             onCountryReceived.onCountryReceived(s);
+        }
+    }
+
+    // Case for users with grant access needed. Location access granted.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    userLocation.configureButton();
+                }
+                break;
         }
     }
 }

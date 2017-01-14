@@ -5,7 +5,5 @@ package ravtrix.backpackerbuddy.activities.mainpage;
  */
 
 public interface IUserMainPresenter {
-
-
-
+     void updateLocalstore(int userID);
 }

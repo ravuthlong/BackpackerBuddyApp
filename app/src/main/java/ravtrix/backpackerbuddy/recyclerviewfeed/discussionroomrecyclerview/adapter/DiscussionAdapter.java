@@ -127,7 +127,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvCommentNum;
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
-        private LinearLayout layoutLove, layoutComment;
+        private LinearLayout layoutLove, layoutComment, relativeMore;
         private ImageView imageButtonLove;
 
         ViewHolder(View itemView) {
@@ -138,6 +138,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
             tvText = (TextView) itemView.findViewById(R.id.tvText_discussion);
             profileImage = (CircleImageView) itemView.findViewById(R.id.profileimage_discussion);
             relativeDiscussion = (RelativeLayout) itemView.findViewById(R.id.relative_discussion);
+            relativeMore = (LinearLayout) itemView.findViewById(R.id.item_discussion_layoutMore);
             tvLoveNum = (TextView) itemView.findViewById(R.id.tvLoveNum);
             tvCommentNum = (TextView) itemView.findViewById(R.id.tvCommentNum);
             imageButtonLove = (ImageView) itemView.findViewById(R.id.imageButtonLove);
@@ -161,10 +162,9 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 }
             });
 
-            relativeDiscussion.setOnLongClickListener(new View.OnLongClickListener() {
+            relativeMore.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-
+                public void onClick(View view) {
                     int position = getAdapterPosition();
                     DiscussionModel clickedItem = discussionModels.get(position);
 
@@ -173,7 +173,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                     } else {
                         showDialogNormal();
                     }
-                    return true;
                 }
             });
 
@@ -322,8 +321,8 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     }
 
     public void swap(List<DiscussionModel> models){
-        discussionModels.clear();
-        discussionModels.addAll(models);
+        this.discussionModels.clear();
+        this.discussionModels.addAll(models);
         this.notifyDataSetChanged();
     }
 }

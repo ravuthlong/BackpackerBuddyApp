@@ -244,17 +244,19 @@ public class Helpers {
     public static String getCountryGeocoder(Context context, double latitude,
                                             double longitude, OnCountryReceived onCountryReceived) throws IOException {
 
-        Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-        List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-        for (Address address : addresses) {
-            if (address != null) {
-                String country = "";
-                country = address.getCountryName();
-                onCountryReceived.onCountryReceived(country);
-                return country;
+        if (context != null) {
+            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+            for (Address address : addresses) {
+                if (address != null) {
+                    String country = "";
+                    country = address.getCountryName();
+                    onCountryReceived.onCountryReceived(country);
+                    return country;
+                }
             }
+            onCountryReceived.onCountryReceived(null);
         }
-        onCountryReceived.onCountryReceived(null);
         return null;
     }
 
@@ -294,28 +296,28 @@ public class Helpers {
      * @return              the city name
      */
     public static String cityGeocoder(Context context, double latitude, double longitude) throws IOException {
-        /**
-         * AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI
-         */
 
-        Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-        List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-        for (Address address : addresses) {
-            if (address != null) {
-                String location = "";
-                String city = address.getLocality();
-                String country = address.getCountryName();
+        String location = "";
+        if (context != null) {
+            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+            for (Address address : addresses) {
+                if (address != null) {
+                    location = "";
+                    String city = address.getLocality();
+                    String country = address.getCountryName();
 
-                if (city != null && !city.equals("")) {
-                    location = city;
+                    if (city != null && !city.equals("")) {
+                        location = city;
+                    }
+                    if (country != null && !country.equals("")) {
+                        location += ", " + country;
+                    }
+                    return location;
                 }
-                if (country != null && !country.equals("")) {
-                    location += ", " + country;
-                }
-                return location;
             }
         }
-        return null;
+        return location;
     }
 
     /**
@@ -336,7 +338,8 @@ public class Helpers {
      */
     public static void updateLocationAndTime(final Context context, final UserLocalStore userLocalStore, final long currentTime) {
 
-        if (isConnectedToInternet(context)) {
+        if (context != null && isConnectedToInternet(context)) {
+
             UserLocation userLocation = new UserLocation((Activity) context);
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
@@ -350,6 +353,7 @@ public class Helpers {
                         getCountryGeocoder(context, latitude, longitude, new OnCountryReceived() {
                             @Override
                             public void onCountryReceived(String country) {
+                                System.out.println("UPDATING NOW VIA GEOCODER");
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
@@ -358,6 +362,7 @@ public class Helpers {
                         new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
                             @Override
                             public void onCountryRetrieved(String country) {
+                                System.out.println("UPDATING NOW VIA ASYC");
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
@@ -574,6 +579,8 @@ public class Helpers {
 
         @Override
         protected void onPostExecute(String s) {
+            System.out.println("RECEIVED NOW VIA ASYNCH");
+
             onCountryRetrievedListener.onCountryRetrieved(s);
         }
     }

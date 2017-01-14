@@ -26,7 +26,6 @@ public class RetrofitBucketListInterfaces {
         Call<JsonObject> insertBucket(@FieldMap HashMap<String, String> newBucket);
     }
 
-
     public interface DeleteBucket {
         @FormUrlEncoded
         @POST("/deleteBucketList.php")

@@ -189,7 +189,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
                 .getBitmap()
                 .compress(Bitmap
                         .CompressFormat
-                        .JPEG, 90, byteArrayOutputStream);
+                        .JPEG, 100, byteArrayOutputStream);
         String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 
         HashMap<String, String> profileImageInfo = new HashMap<>();

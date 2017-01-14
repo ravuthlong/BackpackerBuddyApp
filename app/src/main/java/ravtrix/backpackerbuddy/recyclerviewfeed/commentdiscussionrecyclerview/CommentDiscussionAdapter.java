@@ -26,7 +26,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
-import ravtrix.backpackerbuddy.activities.discussion.EditComment;
+import ravtrix.backpackerbuddy.activities.discussion.EditDiscussionComment;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
@@ -64,7 +64,8 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
     public void onBindViewHolder(ViewHolder holder, int position) {
         CommentModel currentItem = commentModels.get(position);
 
-        Picasso.with(context).load(currentItem.getUserpic())
+        Picasso.with(context)
+                .load(currentItem.getUserpic())
                 .fit()
                 .centerCrop()
                 .into(holder.profileImage);
@@ -165,39 +166,14 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
                 // the user clicked on colors[which]
                 switch(which) {
                     case 0:
-                        Intent intent = new Intent(context, EditComment.class);
+                        Intent intent = new Intent(context, EditDiscussionComment.class);
                         intent.putExtra("commentID", commentID);
                         intent.putExtra("comment", comment);
                         ((Activity) context).startActivityForResult(intent, 1); // request code 1
                         break;
                     case 1:
                         final ProgressDialog progressDialog = Helpers.showProgressDialog(context, "Deleting...");
-
-                        HashMap<String, String> commentInfo = new HashMap<>();
-                        commentInfo.put("commentID", Integer.toString(commentID));
-                        commentInfo.put("discussionID", Integer.toString(discussionID));
-
-                        Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
-                                .removeCommentAndDecrement()
-                                .removeCommentAndDecrement(commentInfo);
-
-                        retrofit.enqueue(new Callback<JsonObject>() {
-                            @Override
-                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                Helpers.hideProgressDialog(progressDialog);
-                                if (response.body().get("status").getAsInt() == 0) {
-                                    Helpers.displayToast(context, "Error");
-                                } else {
-                                    // refresh the comment page
-                                    ((DiscussionComments) context).fetchDiscussionCommentsRefresh();
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<JsonObject> call, Throwable t) {
-                                Helpers.hideProgressDialog(progressDialog);
-                                Helpers.displayToast(context, "Error");
-                            }
-                        });
+                        removeCommentRetrofit(commentID, discussionID, progressDialog);
                         break;
                     default:
                         break;
@@ -221,5 +197,33 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
             }
         });
         builder.show();
+    }
+
+    private void removeCommentRetrofit(int commentID, int discussionID, final ProgressDialog progressDialog) {
+        HashMap<String, String> commentInfo = new HashMap<>();
+        commentInfo.put("commentID", Integer.toString(commentID));
+        commentInfo.put("discussionID", Integer.toString(discussionID));
+
+        Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .removeCommentAndDecrement()
+                .removeCommentAndDecrement(commentInfo);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                Helpers.hideProgressDialog(progressDialog);
+                if (response.body().get("status").getAsInt() == 0) {
+                    Helpers.displayToast(context, "Error");
+                } else {
+                    // refresh the comment page
+                    ((DiscussionComments) context).fetchDiscussionCommentsRefresh();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Helpers.hideProgressDialog(progressDialog);
+                Helpers.displayToast(context, "Error");
+            }
+        });
     }
 }

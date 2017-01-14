@@ -61,7 +61,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="top|left"
-                android:background="@android:color/transparent"
                 android:inputType="textMultiLine|textCapSentences"
                 android:maxLines="10"
                 android:scrollbars="vertical"

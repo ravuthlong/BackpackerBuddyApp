@@ -18,19 +18,21 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.userinfoedit.ChangeEmail;
 import ravtrix.backpackerbuddy.activities.userinfoedit.ChangePassword;
+import ravtrix.backpackerbuddy.activities.userinfoedit.ChangeUsername;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.bSignOut) protected Button bSignOut;
-    @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.bPassword) protected Button bChangePassword;
     @BindView(R.id.bEmail) protected Button bChangeEmail;
+    @BindView(R.id.bUsername) protected Button bChangeUsername;
     @BindView(R.id.bFeedback) protected Button bFeedback;
     @BindView(R.id.bNotification) protected Button bNotificaton;
     @BindView(R.id.bAbout) protected Button bAbout;
-    @BindView(R.id.relative_setting) protected RelativeLayout relativeLayout;
+    @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.relative_setting_buttons) protected RelativeLayout relativeLayout;
 
     private UserLocalStore userLocalStore;
 
@@ -38,8 +40,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         ButterKnife.bind(this);
+
         Helpers.setToolbar(this, toolbar);
         Helpers.overrideFonts(this, relativeLayout);
         this.setTitle("Settings");
@@ -47,10 +49,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         bSignOut.setOnClickListener(this);
         bChangePassword.setOnClickListener(this);
         bChangeEmail.setOnClickListener(this);
+        bChangeUsername.setOnClickListener(this);
         bFeedback.setOnClickListener(this);
         bAbout.setOnClickListener(this);
         bNotificaton.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
+
+        if (userLocalStore.getLoggedInUser().getIsFacebook() == 1) {
+            bChangeEmail.setVisibility(View.GONE);
+            bChangePassword.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -68,6 +76,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.bPassword:
                 startActivity(new Intent(this, ChangePassword.class));
+                break;
+            case R.id.bUsername:
+                startActivity(new Intent(this, ChangeUsername.class));
                 break;
             case R.id.bEmail:
                 startActivity(new Intent(this, ChangeEmail.class));
@@ -89,5 +100,4 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
-
 }
