@@ -76,7 +76,8 @@ public class RetrofitPerfectPhotoInterfaces {
     public interface DeletePerfectPhoto {
         @FormUrlEncoded
         @POST("/deletePerfectPhoto1.5.php")
-        Call<JsonObject> deletePerfectPhoto(@Field("photoID") int photoID, @Field("path") String path);
+        Call<JsonObject> deletePerfectPhoto(@Field("photoID") int photoID, @Field("path") String path,
+                                            @Field("deletePath") String deletePath);
     }
 
     public interface UpdatePhotoPost {

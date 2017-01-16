@@ -29,6 +29,7 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
     @BindView(R.id.activity_edit_comment_etEditComment) protected EditText etComment;
     private String comment = "";
     private int commentID;
+    private static final int REQUEST_REFRESH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-                    setResult(1); // result code 1
+                    setResult(REQUEST_REFRESH); // result code 1
                     finish();
                 } else {
                     Helpers.displayErrorToast(EditCommentPerfectPhoto.this);

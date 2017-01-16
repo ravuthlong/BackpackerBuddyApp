@@ -36,7 +36,6 @@ public class FindBuddyTabFragment extends Fragment  {
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-
         new Handler().postDelayed(
                 new Runnable(){
                     @Override
@@ -123,6 +122,4 @@ public class FindBuddyTabFragment extends Fragment  {
         }
 
     }
-
-
 }

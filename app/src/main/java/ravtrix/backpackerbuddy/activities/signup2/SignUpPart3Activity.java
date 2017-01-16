@@ -30,6 +30,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.HelpersPermission;
 
 public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements View.OnClickListener, ISignUpPart3View {
 
@@ -167,33 +168,39 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         userInfo.put("time", Long.toString(currentTime));
         userInfo.put("token", getFCMToken());
 
-        try {
-            Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
-                @Override
-                public void onCountryReceived(String country) {
-                    if (country.isEmpty()) {
-                        userInfo.put("Unknown", country);
-                    } else {
-                        userInfo.put("country", country);
-                    }
-                    // Make Retrofit call to communicate with the server
-                    signUpPart3Presenter.retrofitStoreUser(userInfo);
-                }
-            });
-        } catch (IOException e) {
+        if (!HelpersPermission.hasLocationPermission(this)) {
+            userInfo.put("country", "Somewhere...");
+            // Make Retrofit call to communicate with the server
+            signUpPart3Presenter.retrofitStoreUser(userInfo);
+        } else {
 
-            new RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
-                @Override
-                public void onCountryReceived(String country) {
-                    if (country.isEmpty()) {
-                        userInfo.put("Unknown", country);
-                    } else {
-                        userInfo.put("country", country);
+            try {
+                Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
+                    @Override
+                    public void onCountryReceived(String country) {
+                        if (country.isEmpty()) {
+                            userInfo.put("country", "Somewhere...");
+                        } else {
+                            userInfo.put("country", country);
+                        }
+                        // Make Retrofit call to communicate with the server
+                        signUpPart3Presenter.retrofitStoreUser(userInfo);
                     }
-                    // Make Retrofit call to communicate with the server
-                    signUpPart3Presenter.retrofitStoreUser(userInfo);
-                }
-            }).execute();
+                });
+            } catch (IOException e) {
+                new RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
+                    @Override
+                    public void onCountryReceived(String country) {
+                        if (country.isEmpty()) {
+                            userInfo.put("country", "Somewhere...");
+                        } else {
+                            userInfo.put("country", country);
+                        }
+                        // Make Retrofit call to communicate with the server
+                        signUpPart3Presenter.retrofitStoreUser(userInfo);
+                    }
+                }).execute();
+            }
         }
     }
 

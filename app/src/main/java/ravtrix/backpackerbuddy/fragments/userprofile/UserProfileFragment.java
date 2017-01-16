@@ -24,7 +24,6 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -36,6 +35,7 @@ import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 import static android.app.Activity.RESULT_OK;
@@ -158,15 +158,26 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
 
     private void setUserLocation(double latitude, double longitude) {
-        try {
-            tvLocation.setText(Helpers.cityGeocoder(getContext(), latitude, longitude));
-        } catch (IOException e) {
-            // When the device failed to retrieve city and country information using Geocoder,
-            // run google location API directly
-            RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
-                    userLocalStore.getLoggedInUser().getLongitude().toString());
-            retrieveFeedTask.execute();
-        }
+
+        Helpers.cityGeocoder(getContext(), latitude, longitude, new OnGeocoderFinished() {
+            @Override
+            public void onFinished(String place) {
+
+                if (place == null || place.isEmpty()) {
+                    // When the device failed to retrieve city and country information using Geocoder,
+                    // run google location API directly
+                    RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
+                            userLocalStore.getLoggedInUser().getLongitude().toString());
+                    retrieveFeedTask.execute();
+                } else {
+                    tvLocation.setText(place);
+                    setViewVisible();
+                    hideProgressBar();
+                }
+            }
+        });
+
+
     }
 
     // Pass title and hint to edit info activity based on edit selection type
@@ -257,14 +268,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void setDetailOneText(String text) {
         detailOne.setText(text);
-        setViewVisible();
-        hideProgressBar();
     }
     @Override
     public void setDetailOneHint(String hint) {
         detailOne.setHint(hint);
-        setViewVisible();
-        hideProgressBar();
     }
     @Override
     public void setDetailTwoText(String text) {

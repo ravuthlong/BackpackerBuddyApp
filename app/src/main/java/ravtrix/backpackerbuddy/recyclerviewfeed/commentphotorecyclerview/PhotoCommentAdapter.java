@@ -11,6 +11,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +86,7 @@ public class PhotoCommentAdapter extends RecyclerView.Adapter<PhotoCommentAdapte
         private RelativeLayout mainRelative;
         private TextView tvUsername, tvCountry, tvTime, tvComment;
         private CircleImageView profilePic;
+        private LinearLayout layoutMore;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -95,6 +97,7 @@ public class PhotoCommentAdapter extends RecyclerView.Adapter<PhotoCommentAdapte
             tvTime = (TextView) itemView.findViewById(R.id.item_photo_comment_tvTime);
             tvComment = (TextView) itemView.findViewById(R.id.item_photo_comment_tvText);
             profilePic = (CircleImageView) itemView.findViewById(R.id.item_photo_comment_profileimage);
+            layoutMore = (LinearLayout) itemView.findViewById(R.id.item_photo_comment_layoutMore);
             Helpers.overrideFonts(context, mainRelative);
 
             profilePic.setOnClickListener(new View.OnClickListener() {
@@ -111,9 +114,9 @@ public class PhotoCommentAdapter extends RecyclerView.Adapter<PhotoCommentAdapte
                 }
             });
 
-            mainRelative.setOnLongClickListener(new View.OnLongClickListener() {
+            layoutMore.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public void onClick(View view) {
                     int position = getAdapterPosition();
                     PhotoCommentModel clickedItem = photoCommentModelList.get(position);
                     if (clickedItem.getUserID() == userID) {
@@ -121,7 +124,6 @@ public class PhotoCommentAdapter extends RecyclerView.Adapter<PhotoCommentAdapte
                     } else {
                         showDialogNormal();
                     }
-                    return true;
                 }
             });
 

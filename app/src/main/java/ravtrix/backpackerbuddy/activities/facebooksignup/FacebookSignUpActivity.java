@@ -60,6 +60,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
     private UserLocation userLocation;
     private UserLocalStore userLocalStore;
     private ProgressDialog progressDialog;
+    private boolean alreadySignedUp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,9 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
 
         bEditImageFB.setOnClickListener(this);
         currentTime = System.currentTimeMillis();
-        userLocation = new UserLocation(this);
         userLocalStore = new UserLocalStore(this);
+        userLocation = new UserLocation(this, userLocalStore.getLoggedInUser().getLatitude(),
+                userLocalStore.getLoggedInUser().getLongitude());
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -149,14 +151,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                                             Helpers.getCountryGeocoder(FacebookSignUpActivity.this, latitude, longitude, new OnCountryReceived() {
                                                 @Override
                                                 public void onCountryReceived(String country) {
-                                                    if (country.isEmpty()) {
-                                                        userInfo.put("Unknown", country);
-                                                    } else {
-                                                        userInfo.put("country", country);
-                                                    }
-                                                    // Make Retrofit call to communicate with the server
-                                                    //sign up
-                                                    signUserUp(userInfo);
+                                                   signUp(country, userInfo);
                                                 }
                                             });
                                         } catch (IOException e) {
@@ -164,14 +159,8 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                                             new FacebookSignUpActivity.RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
                                                 @Override
                                                 public void onCountryReceived(String country) {
-                                                    if (country.isEmpty()) {
-                                                        userInfo.put("Unknown", country);
-                                                    } else {
-                                                        userInfo.put("country", country);
-                                                    }
-                                                    // Make Retrofit call to communicate with the server
-                                                    //sign up
-                                                    signUserUp(userInfo);
+                                                    signUp(country, userInfo);
+
                                                 }
                                             }).execute();
                                         }
@@ -223,6 +212,20 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         // Log user out of facebook
         if (AccessToken.getCurrentAccessToken() != null){
             LoginManager.getInstance().logOut();
+        }
+    }
+
+    private void signUp(String country, HashMap<String, String> userInfo) {
+        if (country.isEmpty()) {
+            userInfo.put("Unknown", country);
+        } else {
+            userInfo.put("country", country);
+        }
+        // Make Retrofit call to communicate with the server
+        //sign up
+        if (!alreadySignedUp) {
+            signUserUp(userInfo);
+            alreadySignedUp = true;
         }
     }
 

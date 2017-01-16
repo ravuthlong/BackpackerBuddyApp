@@ -211,6 +211,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onFailure(Call<List<CommentModel>> call, Throwable t) {
+                linearProg.setVisibility(View.GONE);
                 Helpers.displayErrorToast(DiscussionComments.this);
             }
         });

@@ -1,10 +1,15 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,6 +32,8 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.adapter.CustomGridView;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.HelpersPermission;
+import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
@@ -40,6 +46,7 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @BindView(R.id.grid_view) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_city) protected TextView city;
+    @BindView(R.id.frag_grid_askLocation) protected TextView tvNoLocationPermission;
     @BindView(R.id.layout_noNearby) protected LinearLayout layout_noNearby;
     @BindView(R.id.grid_relativeLayout) protected RelativeLayout nearbyRelative;
     @BindView(R.id.frag_gridview_progressbar) protected ProgressBar progressBar;
@@ -63,15 +70,29 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         profileImageGridView.setVisibility(View.INVISIBLE);
 
         Helpers.overrideFonts(getActivity(), nearbyRelative);
+        Helpers.overrideFonts(getActivity(), tvNoLocationPermission);
+
         userLocalStore = new UserLocalStore(getActivity());
-        findBuddyPresenter = new FindBuddyPresenter(this, getContext());
+        findBuddyPresenter = new FindBuddyPresenter(this, getContext(), userLocalStore);
 
         Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
-        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
-            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), OPTION_ONE);
+        if (!HelpersPermission.hasLocationPermission(getContext())) {
+            if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Shown when the first time we need access and when user hit never show again
+                // This bypasses the never show again
+                showMessageOKCancel("You should allow access to location",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                HelpersPermission.showLocationRequestTab(FindBuddyNearFragment.this);
+                            }
+                        });
+            } else {
+                HelpersPermission.showLocationRequestTab(this);
+            }
         } else {
-            findBuddyPresenter.fetchBuddyNearGuestRetrofit(OPTION_ONE);
+            fetchInformation();
         }
         return fragView;
     }
@@ -91,6 +112,14 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         distanceSpinner.setAdapter(spinnerAdapter);
         distanceSpinner.setSelection(currentSelectedDropdown);
         setSpinnerListener();
+    }
+
+    private void fetchInformation() {
+        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+            findBuddyPresenter.fetchBuddyNearRetrofit(userLocalStore.getLoggedInUser().getUserID(), OPTION_ONE);
+        } else {
+            findBuddyPresenter.fetchBuddyNearGuestRetrofit(OPTION_ONE);
+        }
     }
 
     private void setSpinnerListener() {
@@ -171,18 +200,26 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
     @Override
     public void setCityText() {
-        try {
-            city.setText(Helpers.cityGeocoder(getActivity(), userLocalStore.getLoggedInUser().getLatitude(),
-                    userLocalStore.getLoggedInUser().getLongitude()));
+        Helpers.cityGeocoder(getActivity(), userLocalStore.getLoggedInUser().getLatitude(),
+                userLocalStore.getLoggedInUser().getLongitude(), new OnGeocoderFinished() {
+                    @Override
+                    public void onFinished(String place) {
 
-        } catch (IOException e) {
-            // When the device failed to retrieve city and country information using Geocoder,
-            // run google location API directly
-            RetrieveCityCountryTask retrieveFeedTask =
-                    new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
-                    userLocalStore.getLoggedInUser().getLongitude().toString());
-            retrieveFeedTask.execute();
-        }
+                        if (place == null || place.isEmpty()) {
+                            // When the device failed to retrieve city and country information using Geocoder,
+                            // run google location API directly
+                            RetrieveCityCountryTask retrieveFeedTask =
+                                    new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
+                                            userLocalStore.getLoggedInUser().getLongitude().toString());
+                            retrieveFeedTask.execute();
+                        } else {
+                            city.setText(place);
+                            setViewVisible();
+                            hideProgressbar();
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -240,6 +277,34 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
         @Override
         protected void onPostExecute(String s) {
             city.setText(s);
+            setViewVisible();
+            hideProgressbar();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == HelpersPermission.LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchInformation(); // Load page is user gives location permission
+            } else {
+                // No permission given
+                hideProgressbar();
+                tvNoLocationPermission.setVisibility(View.VISIBLE);
+                Helpers.showAlertDialog(getActivity(), "This page requires location service to work.");
+            }
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
     }
 }

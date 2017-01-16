@@ -2,9 +2,11 @@ package ravtrix.backpackerbuddy.activities.startingpage;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -38,6 +40,7 @@ import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.HelpersPermission;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -59,6 +62,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private UserLocalStore userLocalStore;
     private CallbackManager callbackManager;
     private ProgressDialog progressDialog;
+    private static final int LOCATION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
-
         setContentView(R.layout.activity_mainpage);
         ButterKnife.bind(this);
 
@@ -76,16 +79,18 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         imgbSignUp.setOnClickListener(this);
         imgbLogIn.setOnClickListener(this);
         tvGuestLogin.setOnClickListener(this);
-
         userLocalStore = new UserLocalStore(this);
 
-        callbackManager = CallbackManager.Factory.create();
+        if (!HelpersPermission.hasLocationPermission(this)) {
+            HelpersPermission.showLocationRequest(this);
+        }
 
+        callbackManager = CallbackManager.Factory.create();
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog = Helpers.showProgressDialog(WelcomeActivity.this, "Logging In...");
+                progressDialog = Helpers.showProgressDialog(WelcomeActivity.this, "Logging In. Please wait...");
             }
         });
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -96,7 +101,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onCancel() {
-
             }
 
             @Override
@@ -104,7 +108,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(getApplicationContext(), error.getCause().toString(), Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
@@ -135,6 +138,18 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Helpers.showAlertDialog(this, "Give this app permission in the future in order to take full advantage of the functionality.");
+            }
+        }
     }
 
     public void graphRequest(final AccessToken token) {
@@ -164,6 +179,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                             }
 
                             if (response.body().get("emailtaken").getAsInt() == 1) {
+
                                 // Means the user exists, so log them in
                                 logInFacebookRetrofit(email, notificationToken);
                             } else {

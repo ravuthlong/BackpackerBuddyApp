@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.signup2.OnCountryReceived;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.OnLocationReceivedGuest;
+import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
@@ -63,7 +64,7 @@ public class Helpers {
     private Helpers() {}
 
     public static final class ServerURL {
-        public static final String SERVER_URL = "http://backpackerbuddy.net23.net";
+        public static final String SERVER_URL = "http://backpackerbuddy.net";
     }
 
     /**
@@ -241,25 +242,6 @@ public class Helpers {
         return country;
     }
 
-    public static String getCountryGeocoder(Context context, double latitude,
-                                            double longitude, OnCountryReceived onCountryReceived) throws IOException {
-
-        if (context != null) {
-            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            for (Address address : addresses) {
-                if (address != null) {
-                    String country = "";
-                    country = address.getCountryName();
-                    onCountryReceived.onCountryReceived(country);
-                    return country;
-                }
-            }
-            onCountryReceived.onCountryReceived(null);
-        }
-        return null;
-    }
-
     /**
      * Read the input stream into a String object
      * @param in        the input stream
@@ -288,36 +270,82 @@ public class Helpers {
         return response.toString();
     }
 
-    /**
-     * Find the city name, given the latitude and longitude
-     * @param context       the context of the class
-     * @param latitude      the latitude of the location
-     * @param longitude     the longitude of the location
-     * @return              the city name
-     */
-    public static String cityGeocoder(Context context, double latitude, double longitude) throws IOException {
-
-        String location = "";
+    public static String getCountryGeocoder(Context context, double latitude,
+                                            double longitude, OnCountryReceived onCountryReceived) throws IOException {
         if (context != null) {
             Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
             for (Address address : addresses) {
                 if (address != null) {
-                    location = "";
-                    String city = address.getLocality();
-                    String country = address.getCountryName();
-
-                    if (city != null && !city.equals("")) {
-                        location = city;
-                    }
-                    if (country != null && !country.equals("")) {
-                        location += ", " + country;
-                    }
-                    return location;
+                    String country = "";
+                    country = address.getCountryName();
+                    onCountryReceived.onCountryReceived(country);
+                    return country;
                 }
             }
+            onCountryReceived.onCountryReceived(null);
         }
-        return location;
+        return null;
+    }
+
+    /**
+     * Find the city name, given the latitude and longitude
+     * @param context       the context of the class
+     * @param latitude      the latitude of the location
+     * @param longitude     the longitude of the location
+     */
+    public static void cityGeocoder(final Context context, final double latitude,
+                                    final double longitude, final OnGeocoderFinished onGeocoderFinished) {
+
+        if (context != null) {
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... voids) {
+                    String location = "";
+                    List<Address> addresses = null;
+
+                    Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+
+                    // Geocoder doesn't always find location on first try, try 3 times
+                    try {
+                        addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+                    } catch (IOException e) {
+                        return null;
+                    }
+
+                    if (addresses != null) {
+                        for (Address address : addresses) {
+                            if (address != null) {
+                                // Search for city and country
+                                location = "";
+                                String city = address.getLocality();
+                                String country = address.getCountryName();
+
+                                if (city != null && !city.equals("")) {
+                                    location = city;
+                                }
+                                if (country != null && !country.equals("")) {
+                                    location += ", " + country;
+                                }
+
+                                // Only return when there is some location result or loop max hit
+                                if (location.length() > 0) {
+                                    // Return if
+                                    return location;
+                                }
+                            }
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(String s) {
+                    onGeocoderFinished.onFinished(s);
+                }
+            }.execute();
+
+        }
     }
 
     /**
@@ -338,9 +366,10 @@ public class Helpers {
      */
     public static void updateLocationAndTime(final Context context, final UserLocalStore userLocalStore, final long currentTime) {
 
-        if (context != null && isConnectedToInternet(context)) {
+        if (context != null && isConnectedToInternet(context) && (userLocalStore.getLoggedInUser().getUserID() != 0)) {
 
-            UserLocation userLocation = new UserLocation((Activity) context);
+            UserLocation userLocation = new UserLocation((Activity) context, userLocalStore.getLoggedInUser().getLatitude(),
+                    userLocalStore.getLoggedInUser().getLongitude());
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
                 public void onReceivedLocation(final double latitude, final double longitude) {
@@ -353,7 +382,6 @@ public class Helpers {
                         getCountryGeocoder(context, latitude, longitude, new OnCountryReceived() {
                             @Override
                             public void onCountryReceived(String country) {
-                                System.out.println("UPDATING NOW VIA GEOCODER");
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
@@ -362,7 +390,6 @@ public class Helpers {
                         new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
                             @Override
                             public void onCountryRetrieved(String country) {
-                                System.out.println("UPDATING NOW VIA ASYC");
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
@@ -374,10 +401,11 @@ public class Helpers {
     }
 
 
-    public static void fetchLatAndLong(final Context context, final OnLocationReceivedGuest onLocationReceivedGuest) {
+    public static void fetchLatAndLong(final Context context, UserLocalStore userLocalStore, final OnLocationReceivedGuest onLocationReceivedGuest) {
 
         if (isConnectedToInternet(context)) {
-            UserLocation userLocation = new UserLocation((Activity) context);
+            UserLocation userLocation = new UserLocation((Activity) context, userLocalStore.getLoggedInUser().getLatitude(),
+                    userLocalStore.getLoggedInUser().getLongitude());
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
                 public void onReceivedLocation(final double latitude, final double longitude) {
@@ -579,8 +607,6 @@ public class Helpers {
 
         @Override
         protected void onPostExecute(String s) {
-            System.out.println("RECEIVED NOW VIA ASYNCH");
-
             onCountryRetrievedListener.onCountryRetrieved(s);
         }
     }

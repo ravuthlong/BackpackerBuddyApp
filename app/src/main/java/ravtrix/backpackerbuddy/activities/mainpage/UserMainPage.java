@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -121,7 +122,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
             setUpView();
             navigationView_Footer.setVisibility(View.GONE);
         }
-
         if (!isUserAGuest && userLocalStore.getLoggedInUser().getUserID() != 0) {
             // Update local store upon every opening. This is a way of syncing data
             userMainPresenter.updateLocalstore(userLocalStore.getLoggedInUser().getUserID());
@@ -214,6 +214,21 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
             refreshProfilePic = false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                // Permission requests calls on this main activity. To communicate with the fragment's
+                // onRequest, need to manually call it
+                if (fragment != null) {
+                    fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                }
+            }
         }
     }
 

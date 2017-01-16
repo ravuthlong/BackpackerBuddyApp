@@ -225,7 +225,7 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
         destinationFileName += ".jpg";
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)))
                 .withAspectRatio(1, 1)
-                .withMaxResultSize(900, 900);
+                .withMaxResultSize(500, 500);
         uCrop.start(getActivity(), this);
     }
 

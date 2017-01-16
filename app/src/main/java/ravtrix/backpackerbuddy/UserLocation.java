@@ -24,9 +24,14 @@ public class UserLocation {
     private LocationListener locationListener;
     private Activity context;
     private UserLocationInterface userLocationInterface;
+    private double userLongitude;
+    private double userLatitude;
+    private final static int DISTANCE_NO_UPDATE = 500; //500 meters
 
-    public UserLocation(Activity context) {
+    public UserLocation(Activity context, double userLatitude, double userLongitude) {
         this.context = context;
+        this.userLatitude = userLatitude;
+        this.userLongitude = userLongitude;
     }
 
     /**
@@ -35,10 +40,40 @@ public class UserLocation {
      */
     public void startLocationService(UserLocationInterface userLocationInterface) {
         this.userLocationInterface = userLocationInterface;
-        setLocationListener();
-        checkPermission();
+
+
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        /**
+         * Check if it is okay to use last known location
+         */
+        if (location != null && canUseLastKnownLocation(location)) {
+            final double longitude = location.getLongitude();
+            final double latitude = location.getLatitude();
+            userLocationInterface.onReceivedLocation(latitude, longitude);
+        } else {
+            setLocationListener();
+            checkPermission();
+        }
     }
 
+    /**
+     * Can use last known location if the difference between localstore and last known is < 500 meters
+     * @param location              - the last known location
+     * @return                      - true if can use, else false
+     */
+    private boolean canUseLastKnownLocation(Location location) {
+        Location locationA = new Location("A");
+        locationA.setLatitude(userLatitude);
+        locationA.setLongitude(userLongitude);
+
+        Location locationB = new Location("B");
+        locationB.setLatitude(location.getLatitude());
+        locationB.setLongitude(location.getLongitude());
+
+        return (locationA.distanceTo(locationB) < DISTANCE_NO_UPDATE);
+    }
 
     /**
      * Check if permission to use GPS is given, if not display option to enable
@@ -67,7 +102,7 @@ public class UserLocation {
 
 
     /**
-     * Listener for location
+     * Listener for location, listens for when location is changed
      */
     private void setLocationListener() {
         locationListener = new LocationListener() {
@@ -97,6 +132,18 @@ public class UserLocation {
         };
     }
 
+    /**
+     * Cause location listener to start listening
+     */
+    public void configureButton() {
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } catch (SecurityException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
     private void stopListener() {
         try {
             // Turn off location listeners after successful location retrieval
@@ -110,14 +157,4 @@ public class UserLocation {
         }
     }
 
-    /**
-     * Cause location listener to start listening
-     */
-    public void configureButton() {
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        } catch (SecurityException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }

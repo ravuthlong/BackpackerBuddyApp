@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 /**
@@ -16,10 +17,12 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
     private IFindBuddyNearView view;
     private FindBuddyNearInteractor findBuddyNearInteractor;
     private Context context;
+    private UserLocalStore userLocalStore;
 
-    FindBuddyPresenter(IFindBuddyNearView view, Context context) {
+    FindBuddyPresenter(IFindBuddyNearView view, Context context, UserLocalStore userLocalStore) {
         this.view = view;
         this.context = context;
+        this.userLocalStore = userLocalStore;
         findBuddyNearInteractor = new FindBuddyNearInteractor();
     }
 
@@ -38,8 +41,6 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
                     view.setCustomGridView(userList);
                 }
                 view.setCityText();
-                view.setViewVisible();
-                view.hideProgressbar();
             }
 
             @Override
@@ -55,7 +56,7 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
     public void fetchBuddyNearGuestRetrofit(final int radius) {
         view.setViewInvisible();
         // User is a guest. They don't have a longitude and latitude in localstore, fetch it
-        Helpers.fetchLatAndLong(context, new OnLocationReceivedGuest() {
+        Helpers.fetchLatAndLong(context, userLocalStore, new OnLocationReceivedGuest() {
             @Override
             public void onLocationReceivedGuest(String longitude, String latitude) {
                 findBuddyNearInteractor.fetchNearbyUsersGuestRetrofit(latitude, longitude, radius, new OnFindBuddyNearListener() {

@@ -21,25 +21,25 @@
         android:layout_gravity="start"
         android:weightSum="10">
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        app:itemTextColor="@color/colorAccent"
-        app:menu="@menu/activity_main_drawer"
-        android:layout_weight="10"
-        android:background="@color/navDrawer"/>
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:itemTextColor="@color/colorAccent"
+            app:menu="@menu/activity_main_drawer"
+            android:layout_weight="10"
+            android:background="@color/navDrawer"/>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navigation_drawer_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="0"
-        android:background="@color/navDrawerFooter"
-        android:fitsSystemWindows="true"
-        app:itemTextColor="@color/colorAccent"
-        app:menu="@menu/activity_main_drawer_footer" />
+        <android.support.design.widget.NavigationView
+            android:id="@+id/navigation_drawer_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:background="@color/navDrawerFooter"
+            android:fitsSystemWindows="true"
+            app:itemTextColor="@color/colorAccent"
+            app:menu="@menu/activity_main_drawer_footer" />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

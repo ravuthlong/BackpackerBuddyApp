@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.recyclerviewfeed.perfectphotorecyclerview;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.activities.perfectphoto.CommentPerfectPhotoActivity;
-import ravtrix.backpackerbuddy.activities.perfectphoto.EditCommentPerfectPhoto;
+import ravtrix.backpackerbuddy.activities.perfectphoto.EditPhotoPostActivity;
 import ravtrix.backpackerbuddy.fragments.perfectphoto.PerfectPhotoFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitPerfectPhotoSingleton;
@@ -216,7 +215,8 @@ public class PerfectPhotoAdapter extends RecyclerView.Adapter<PerfectPhotoAdapte
                     int position = getAdapterPosition();
                     PerfectPhotoModel clickedItem = perfectPhotoModels.get(position);
                     if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                        showDialogOwner(clickedItem.getPerfectPhotoID(), clickedItem.getPost(), clickedItem.getPath());
+                        showDialogOwner(clickedItem.getPerfectPhotoID(), clickedItem.getPost(), clickedItem.getPath(),
+                                clickedItem.getDeletePath());
                     } else {
                         showDialogNormal();
                     }
@@ -282,7 +282,7 @@ public class PerfectPhotoAdapter extends RecyclerView.Adapter<PerfectPhotoAdapte
     /**
      * Owner pop up dialog includes options to edit and delete their discussion post
      */
-    private void showDialogOwner(final int photoID, final String post, final String picPath) {
+    private void showDialogOwner(final int photoID, final String post, final String picPath, final String deletePath) {
         CharSequence options[] = new CharSequence[] {"Edit", "Delete"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -293,15 +293,15 @@ public class PerfectPhotoAdapter extends RecyclerView.Adapter<PerfectPhotoAdapte
                 switch(which) {
                     case 0:
                         // Edit
-                        Intent intent = new Intent(context, EditCommentPerfectPhoto.class);
+                        Intent intent = new Intent(context, EditPhotoPostActivity.class);
                         intent.putExtra("photoID", photoID);
-                        intent.putExtra("comment", post);
-                        ((Activity) context).startActivityForResult(intent, 1); // request code 1
+                        intent.putExtra("post", post);
+                        fragment.startActivityForResult(intent, 1); // request code 1
                         break;
                     case 1:
                         // Delete
                         final ProgressDialog progressDialog = Helpers.showProgressDialog(context, "Deleting...");
-                        removePerfectPhoto(photoID, picPath, progressDialog);
+                        removePerfectPhoto(photoID, picPath, deletePath, progressDialog);
                         break;
                     default:
                         break;
@@ -328,10 +328,10 @@ public class PerfectPhotoAdapter extends RecyclerView.Adapter<PerfectPhotoAdapte
         builder.show();
     }
 
-    private void removePerfectPhoto(int photoID, String picPath, final ProgressDialog progressDialog) {
+    private void removePerfectPhoto(int photoID, String picPath, String deletePath, final ProgressDialog progressDialog) {
         Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
                 .deletePerfectPhoto()
-                .deletePerfectPhoto(photoID, picPath);
+                .deletePerfectPhoto(photoID, picPath, deletePath);
         retrofit.enqueue(new retrofit2.Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

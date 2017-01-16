@@ -52,8 +52,8 @@ public class RecentlyOnlineUsersFragment extends Fragment {
         ButterKnife.bind(this, view);
         setTypeface();
         userLocalStore = new UserLocalStore(getActivity());
-        fetchRecentlyOnlineUsers();
 
+        fetchRecentlyOnlineUsers();
         return view;
     }
 

@@ -91,7 +91,7 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
         private LinearLayout layoutLove, layoutComment;
-        private ImageView imageButtonLove;
+        private ImageView imageButtonLove, imageButtonMore;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -103,6 +103,7 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
             relativeDiscussion = (RelativeLayout) itemView.findViewById(R.id.relative_discussion);
             tvLoveNum = (TextView) itemView.findViewById(R.id.tvLoveNum);
             imageButtonLove = (ImageView) itemView.findViewById(R.id.imageButtonLove);
+            imageButtonMore = (ImageView) itemView.findViewById(R.id.item_discussion_imageButtonMore);
             layoutLove = (LinearLayout) itemView.findViewById(R.id.layoutLove);
             layoutComment = (LinearLayout) itemView.findViewById(R.id.layoutComment);
             layoutComment.setVisibility(View.GONE);
@@ -110,10 +111,9 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
             // Change font for all text view fields
             Helpers.overrideFonts(context, relativeDiscussion);
 
-            relativeDiscussion.setOnLongClickListener(new View.OnLongClickListener() {
+            imageButtonMore.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-
+                public void onClick(View view) {
                     int position = getAdapterPosition();
                     CommentModel clickedItem = commentModels.get(position);
 
@@ -122,9 +122,9 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
                     } else {
                         showDialogNormal();
                     }
-                    return true;
                 }
             });
+
 
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override

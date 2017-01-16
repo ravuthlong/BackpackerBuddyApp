@@ -52,6 +52,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     private long uploadedTime;
     private String newImageURL;
     private long mLastClickTime = 0;
+    private static final String HOST_URL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +198,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
         profileImageInfo.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
         profileImageInfo.put("time", Long.toString(uploadedTime));
 
-        newImageURL = "http://backpackerbuddy.net23.net/profile_pic/" + Integer.toString(userLocalStore.getLoggedInUser().getUserID())
+        newImageURL = "http://backpackerbuddy.net/profile_pic/" + Integer.toString(userLocalStore.getLoggedInUser().getUserID())
                  + "+" + Long.toString(uploadedTime) + ".JPG";
 
         Call<JsonObject> jsonObjectCall = RetrofitUserInfoSingleton

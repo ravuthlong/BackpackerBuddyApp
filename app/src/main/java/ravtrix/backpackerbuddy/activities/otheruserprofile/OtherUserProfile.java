@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -23,6 +21,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.OtherUserBucketListActivity;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 public class OtherUserProfile extends AppCompatActivity implements IOtherUserProfileView,
@@ -163,16 +162,27 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     }
 
     @Override
-    public void setUserLocation(String latitude, String longitude) {
-        try {
-            tvLocation.setText(Helpers.cityGeocoder(this,
-                    Double.parseDouble(latitude), Double.parseDouble(longitude)));
-        } catch (IOException e) {
-            // When the device failed to retrieve city and country information using Geocoder,
-            // run google location API directly
-            RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(latitude, longitude);
-            retrieveFeedTask.execute();
-        }
+    public void setUserLocation(final String latitude, final String longitude) {
+
+        Helpers.cityGeocoder(this,
+                Double.parseDouble(latitude), Double.parseDouble(longitude), new OnGeocoderFinished() {
+                    @Override
+                    public void onFinished(String place) {
+                        if (place == null || place.isEmpty()) {
+                            // When the device failed to retrieve city and country information using Geocoder,
+                            // run google location API directly
+                            RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(latitude, longitude);
+                            retrieveFeedTask.execute();
+                            progressBar.setVisibility(View.GONE);
+                            relativeLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            tvLocation.setText(place);
+                            progressBar.setVisibility(View.GONE);
+                            relativeLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -181,18 +191,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
                 .load(imageURL)
                 .fit()
                 .centerCrop()
-                .into(profileImage, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        progressBar.setVisibility(View.GONE);
-                        relativeLayout.setVisibility(View.VISIBLE);
-                    }
-                    @Override
-                    public void onError() {
-                        progressBar.setVisibility(View.GONE);
-                        relativeLayout.setVisibility(View.VISIBLE);
-                    }
-                });
+                .into(profileImage);
     }
 
     @Override

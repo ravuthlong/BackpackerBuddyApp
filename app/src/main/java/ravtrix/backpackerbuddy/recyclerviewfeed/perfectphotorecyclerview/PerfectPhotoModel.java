@@ -30,6 +30,9 @@ public class PerfectPhotoModel {
     @SerializedName("path")
     @Expose
     private String path;
+    @SerializedName("deletePath")
+    @Expose
+    private String deletePath;
     @SerializedName("post")
     @Expose
     private String post;
@@ -45,6 +48,14 @@ public class PerfectPhotoModel {
     @SerializedName("isClicked")
     @Expose
     private int isClicked = 0;
+
+    public String getDeletePath() {
+        return deletePath;
+    }
+
+    public void setDeletePath(String deletePath) {
+        this.deletePath = deletePath;
+    }
 
     public int getIsClicked() {
         return isClicked;

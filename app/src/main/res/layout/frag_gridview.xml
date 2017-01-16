@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/grid_linearLayout"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:background="@color/greenBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grid_linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/greenBackground"
     android:layout_centerHorizontal="false"
     android:layout_centerInParent="false"
     android:layout_centerVertical="false">
@@ -75,9 +75,20 @@ android:background="@color/greenBackground"
         android:indeterminate="false"
         android:visibility="visible"
         android:layout_gravity="center"
-
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/frag_grid_askLocation"
+        android:text="Enable location service to view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp" />
+
 
     <GridView
     android:id="@+id/grid_view"

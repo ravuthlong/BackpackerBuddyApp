@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -39,7 +39,7 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.activity_comment_photo_relativeMain) protected RelativeLayout relativeLayoutMain;
-    @BindView(R.id.activity_comment_photo_spinner) protected ProgressBar progressBar;
+    @BindView(R.id.activity_comment_photo_linearProg) protected LinearLayout linearProg;
     @BindView(R.id.activity_comment_photo_recyclerView) protected RecyclerView recyclerViewComments;
     @BindView(R.id.activity_comment_photo_etComment) protected EditText etComment;
     @BindView(R.id.activity_comment_photo_submitButton) protected Button bSubmit;
@@ -57,6 +57,7 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
         setTitle("Comments");
+        linearProg.setVisibility(View.VISIBLE);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(this, R.drawable.line_divider_inbox);
         recyclerViewComments.addItemDecoration(dividerDecorator);
@@ -114,6 +115,8 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
         retrofit.enqueue(new Callback<List<PhotoCommentModel>>() {
             @Override
             public void onResponse(Call<List<PhotoCommentModel>> call, Response<List<PhotoCommentModel>> response) {
+                linearProg.setVisibility(View.GONE);
+
                 if (response.body().get(0).getSuccess() == 1) {
                     photoCommentModelList = response.body();
                 } else {
@@ -133,7 +136,9 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
             }
 
             @Override
-            public void onFailure(Call<List<PhotoCommentModel>> call, Throwable t) {}
+            public void onFailure(Call<List<PhotoCommentModel>> call, Throwable t) {
+                linearProg.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -145,6 +150,8 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
         retrofit.enqueue(new Callback<List<PhotoCommentModel>>() {
             @Override
             public void onResponse(Call<List<PhotoCommentModel>> call, Response<List<PhotoCommentModel>> response) {
+                linearProg.setVisibility(View.GONE);
+
                 if (response.body().get(0).getSuccess() == 1) {
                     photoCommentModelList = response.body();
                 } else {
@@ -158,7 +165,10 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
                 recyclerViewComments.setLayoutManager(linearLayoutManager);
             }
             @Override
-            public void onFailure(Call<List<PhotoCommentModel>> call, Throwable t) {}
+            public void onFailure(Call<List<PhotoCommentModel>> call, Throwable t) {
+                linearProg.setVisibility(View.GONE);
+                Helpers.displayErrorToast(CommentPerfectPhotoActivity.this);
+            }
         });
     }
 
