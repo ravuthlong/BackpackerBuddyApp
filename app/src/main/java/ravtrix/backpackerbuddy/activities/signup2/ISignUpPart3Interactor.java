@@ -9,4 +9,5 @@ import java.util.HashMap;
 interface ISignUpPart3Interactor {
 
     void signUserUpRetrofit(HashMap<String, String> userInfo, OnRetrofitSignUp3 onRetrofitSignUp3);
+    void updateCountry(String username, String country, OnRetrofitSignUp3 onRetrofitSignUp3);
 }

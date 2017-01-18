@@ -73,8 +73,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         bEditImageFB.setOnClickListener(this);
         currentTime = System.currentTimeMillis();
         userLocalStore = new UserLocalStore(this);
-        userLocation = new UserLocation(this, userLocalStore.getLoggedInUser().getLatitude(),
-                userLocalStore.getLoggedInUser().getLongitude());
+        userLocation = new UserLocation(this);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -105,7 +104,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         switch (item.getItemId()) {
             case R.id.submitSend:
 
-                this.progressDialog = Helpers.showProgressDialog(this, "Signing up...");
+                this.progressDialog = Helpers.showProgressDialog(this, "Setting up your account. Please wait...");
 
                 if (etUsernameFB.getText().toString().trim().length() <= 0) {
                     Helpers.hideProgressDialog(progressDialog);
@@ -136,7 +135,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
 
                                 userLocation.startLocationService(new UserLocationInterface() {
                                     @Override
-                                    public void onReceivedLocation(double latitude, double longitude) {
+                                    public void onReceivedLocation(final double latitude, final double longitude) {
                                         final HashMap<String, String> userInfo = new HashMap<>();
                                         userInfo.put("email", email);
                                         userInfo.put("isFacebook", "1");
@@ -151,18 +150,14 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                                             Helpers.getCountryGeocoder(FacebookSignUpActivity.this, latitude, longitude, new OnCountryReceived() {
                                                 @Override
                                                 public void onCountryReceived(String country) {
-                                                   signUp(country, userInfo);
+                                                    userInfo.put("country", country);
+                                                    signUp(userInfo);
                                                 }
                                             });
                                         } catch (IOException e) {
-
-                                            new FacebookSignUpActivity.RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
-                                                @Override
-                                                public void onCountryReceived(String country) {
-                                                    signUp(country, userInfo);
-
-                                                }
-                                            }).execute();
+                                            // will need to update country after sign up
+                                            userInfo.put("country", "");
+                                            signUp(userInfo);
                                         }
                                     }
                                 });
@@ -215,12 +210,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         }
     }
 
-    private void signUp(String country, HashMap<String, String> userInfo) {
-        if (country.isEmpty()) {
-            userInfo.put("Unknown", country);
-        } else {
-            userInfo.put("country", country);
-        }
+    private void signUp(HashMap<String, String> userInfo) {
         // Make Retrofit call to communicate with the server
         //sign up
         if (!alreadySignedUp) {
@@ -247,6 +237,10 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
                 int userStatus = jsonObject.get("status").getAsInt();
                 // Sign up success
                 if (userStatus == 1) {
+
+                    updateCountry(userInfo.get("username"), Double.valueOf(userInfo.get("latitude")),
+                            Double.valueOf(userInfo.get("longitude")));
+
                     LoggedInUser user = new LoggedInUser();
                     user.setUsername(userInfo.get("username"));
                     user.setEmail(userInfo.get("email"));
@@ -278,6 +272,29 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
     }
 
     /**
+     * Update user country through asynctask
+     * @param username              the username of the signed up user
+     * @param latitude              their latitude
+     * @param longitude             their longitude
+     */
+    private void updateCountry(final String username, double latitude, double longitude) {
+        new FacebookSignUpActivity.RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
+            @Override
+            public void onCountryReceived(String country) {
+                Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                        .updateUserCountry()
+                        .updateUserCountry(username, country);
+                retrofit.enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {}
+                });
+            }
+        }).execute();
+    }
+
+    /**
      * Get Notification token from fire base
      * @return the token
      */
@@ -301,7 +318,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
 
         @Override
         protected String doInBackground(Void... voids) {
-            return (Helpers.getLocationInfo(latitude, longitude));
+            return (Helpers.getCountry(latitude, longitude));
         }
 
         @Override

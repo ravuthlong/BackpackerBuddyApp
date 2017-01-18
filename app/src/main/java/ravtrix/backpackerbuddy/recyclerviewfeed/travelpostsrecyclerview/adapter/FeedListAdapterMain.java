@@ -372,8 +372,104 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tvCountry.setTextSize(45);
         }
         ((ViewHolder) holder).tvCountry.setText(currentPos.getCountry());
-        ((ViewHolder) holder).tvFromDate.setText(currentPos.getFromDate());
-        ((ViewHolder) holder).tvToDate.setText(currentPos.getToDate());
+
+
+        ((ViewHolder) holder).tvFromDate.setText(getDateFromInReadFormat(currentPos));
+        ((ViewHolder) holder).tvToDate.setText(getDateToInReadFormat(currentPos));
+    }
+
+
+    private String getDateToInReadFormat(FeedItem currentPos) {
+
+        String[] dateSplitsTo = currentPos.getToDate().split("/");
+        String monthToDisplayFrom = "";
+
+        switch (dateSplitsTo[0]) {
+            case "1":
+                monthToDisplayFrom = "Jan";
+                break;
+            case "2":
+                monthToDisplayFrom = "Feb";
+                break;
+            case "3":
+                monthToDisplayFrom = "March";
+                break;
+            case "4":
+                monthToDisplayFrom = "April";
+                break;
+            case "5":
+                monthToDisplayFrom = "May";
+                break;
+            case "6":
+                monthToDisplayFrom = "June";
+                break;
+            case "7":
+                monthToDisplayFrom = "July";
+                break;
+            case "8":
+                monthToDisplayFrom = "Aug";
+                break;
+            case "9":
+                monthToDisplayFrom = "Sept";
+                break;
+            case "10":
+                monthToDisplayFrom = "Oct";
+                break;
+            case "11":
+                monthToDisplayFrom = "Nov";
+                break;
+            case "12":
+                monthToDisplayFrom = "Dec";
+                break;
+            default:
+        }
+        return monthToDisplayFrom + "/" + dateSplitsTo[1] + "/" + dateSplitsTo[2];
+    }
+
+    private String getDateFromInReadFormat(FeedItem currentPos) {
+        String[] dateSplitsFrom = currentPos.getFromDate().split("/");
+        String monthToDisplayFrom = "";
+
+        switch (dateSplitsFrom[0]) {
+            case "1":
+                monthToDisplayFrom = "Jan";
+                break;
+            case "2":
+                monthToDisplayFrom = "Feb";
+                break;
+            case "3":
+                monthToDisplayFrom = "March";
+                break;
+            case "4":
+                monthToDisplayFrom = "April";
+                break;
+            case "5":
+                monthToDisplayFrom = "May";
+                break;
+            case "6":
+                monthToDisplayFrom = "June";
+                break;
+            case "7":
+                monthToDisplayFrom = "July";
+                break;
+            case "8":
+                monthToDisplayFrom = "Aug";
+                break;
+            case "9":
+                monthToDisplayFrom = "Sept";
+                break;
+            case "10":
+                monthToDisplayFrom = "Oct";
+                break;
+            case "11":
+                monthToDisplayFrom = "Nov";
+                break;
+            case "12":
+                monthToDisplayFrom = "Dec";
+                break;
+            default:
+        }
+        return monthToDisplayFrom + "/" + dateSplitsFrom[1] + "/" + dateSplitsFrom[2];
     }
 
     private void initProfileImage(RecyclerView.ViewHolder holder, FeedItem currentPos) {

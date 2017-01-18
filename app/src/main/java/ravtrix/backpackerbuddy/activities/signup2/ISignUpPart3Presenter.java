@@ -7,5 +7,6 @@ import java.util.HashMap;
  */
 
 interface ISignUpPart3Presenter {
-    void retrofitStoreUser( HashMap<String, String> userInfo);
+    void retrofitStoreUser(HashMap<String, String> userInfo);
+    void updateCountry(String username, String country);
 }

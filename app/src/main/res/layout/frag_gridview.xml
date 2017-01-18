@@ -73,7 +73,6 @@
         android:layout_height="wrap_content"
         style="?android:attr/progressBarStyle"
         android:indeterminate="false"
-        android:visibility="visible"
         android:layout_gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>

@@ -59,6 +59,7 @@ class UserProfileInteractor implements IUserProfileInteractor {
                         retrofitProfileListener.onSetDetailFourHint("Tell us how you would imagine your backpacking day to go.");
                     }
                     retrofitProfileListener.onSetTravelStatus(responseJSON.get("traveling").getAsInt());
+                    retrofitProfileListener.onSetCountry(responseJSON.get("country").getAsString());
                 } else {
                     retrofitProfileListener.onError();
                 }

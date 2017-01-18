@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddyrecentlyonline.adapter.CustomGridViewOnline;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 import retrofit2.Call;
@@ -32,17 +31,11 @@ import retrofit2.Response;
 public class RecentlyOnlineUsersFragment extends Fragment {
     @BindView(R.id.grid_viewOnline) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_recentlyOnline) protected TextView onlineTxt;
+    @BindView(R.id.frag_gridview_online_progressbar) protected ProgressBar progressBar;
     private View view;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private int currentSelectedDropdown;
     private CustomGridViewOnline customGridViewAdapter;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-    }
 
     @Nullable
     @Override
@@ -62,8 +55,8 @@ public class RecentlyOnlineUsersFragment extends Fragment {
      * Fetch recently online user through retrofit
      */
     private void fetchRecentlyOnlineUsers() {
-        fragActivityProgressBarInterface.setProgressBarVisible();
-
+        progressBar.setVisibility(View.VISIBLE);
+        profileImageGridView.setVisibility(View.INVISIBLE);
         Call<List<UserLocationInfo>> retrofitCall = RetrofitUserInfoSingleton.getRetrofitUserInfo()
                 .getRecentlyOnlineUsers()
                 .getRecentlyOnlineUsers(userLocalStore.getLoggedInUser().getUserID());
@@ -74,12 +67,14 @@ public class RecentlyOnlineUsersFragment extends Fragment {
                 List<UserLocationInfo> userList = response.body();
                 customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList);
                 profileImageGridView.setAdapter(customGridViewAdapter);
-                hideProgressbar();
+                progressBar.setVisibility(View.INVISIBLE);
+                profileImageGridView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<List<UserLocationInfo>> call, Throwable t) {
-                hideProgressbar();
+                progressBar.setVisibility(View.INVISIBLE);
+                profileImageGridView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -95,9 +90,5 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
     public int getCurrentSelectedDropdown() {
         return this.currentSelectedDropdown;
-    }
-
-    private void hideProgressbar() {
-        fragActivityProgressBarInterface.setProgressBarInvisible();
     }
 }

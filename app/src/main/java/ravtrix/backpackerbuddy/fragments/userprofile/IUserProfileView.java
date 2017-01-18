@@ -34,5 +34,6 @@ interface IUserProfileView {
     void showTextNotTravel();
     void hideTextNotTravel();
     void hideProgressDialog();
+    void setUserLocation(String country);
 }
 

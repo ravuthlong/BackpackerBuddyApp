@@ -45,7 +45,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
         Helpers.setToolbar(this, toolbar);
         setTitle("Sign Up Part 1");
         signUpPart1Presenter = new SignUpPart1Presenter(this);
-        userLocation = new UserLocation(this, 0, 0);
+        userLocation = new UserLocation(this);
     }
 
     @Override

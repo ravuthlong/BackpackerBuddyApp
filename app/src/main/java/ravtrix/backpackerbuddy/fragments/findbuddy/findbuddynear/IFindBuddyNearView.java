@@ -11,7 +11,6 @@ import ravtrix.backpackerbuddy.models.UserLocationInfo;
 interface IFindBuddyNearView {
 
     void setCustomGridView(List<UserLocationInfo> userList);
-    void setCityText();
     void showErrorToast();
     void setViewVisible();
     void setViewInvisible();

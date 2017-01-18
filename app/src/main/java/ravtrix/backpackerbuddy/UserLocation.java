@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 
 /**
@@ -24,14 +25,11 @@ public class UserLocation {
     private LocationListener locationListener;
     private Activity context;
     private UserLocationInterface userLocationInterface;
-    private double userLongitude;
-    private double userLatitude;
-    private final static int DISTANCE_NO_UPDATE = 500; //500 meters
+    boolean gps_enabled = false;
+    boolean network_enabled = false;
 
-    public UserLocation(Activity context, double userLatitude, double userLongitude) {
+    public UserLocation(Activity context) {
         this.context = context;
-        this.userLatitude = userLatitude;
-        this.userLongitude = userLongitude;
     }
 
     /**
@@ -40,39 +38,13 @@ public class UserLocation {
      */
     public void startLocationService(UserLocationInterface userLocationInterface) {
         this.userLocationInterface = userLocationInterface;
-
-
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        System.out.println("START SERVICE");
 
-        /**
-         * Check if it is okay to use last known location
-         */
-        if (location != null && canUseLastKnownLocation(location)) {
-            final double longitude = location.getLongitude();
-            final double latitude = location.getLatitude();
-            userLocationInterface.onReceivedLocation(latitude, longitude);
-        } else {
-            setLocationListener();
-            checkPermission();
-        }
-    }
-
-    /**
-     * Can use last known location if the difference between localstore and last known is < 500 meters
-     * @param location              - the last known location
-     * @return                      - true if can use, else false
-     */
-    private boolean canUseLastKnownLocation(Location location) {
-        Location locationA = new Location("A");
-        locationA.setLatitude(userLatitude);
-        locationA.setLongitude(userLongitude);
-
-        Location locationB = new Location("B");
-        locationB.setLatitude(location.getLatitude());
-        locationB.setLongitude(location.getLongitude());
-
-        return (locationA.distanceTo(locationB) < DISTANCE_NO_UPDATE);
+        gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        setLocationListener();
+        checkPermission();
     }
 
     /**
@@ -108,11 +80,12 @@ public class UserLocation {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                System.out.println("RECEIVED LOCATION");
                 final double longitude = location.getLongitude();
                 final double latitude = location.getLatitude();
+                stopListener();
                 // Pass values over to sign up activity part 1
                 userLocationInterface.onReceivedLocation(latitude, longitude);
-                stopListener();
             }
 
             @Override
@@ -125,9 +98,9 @@ public class UserLocation {
 
             @Override
             public void onProviderDisabled(String provider) {
-                // When GPS setting is turned off
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(intent);
+                // When GPS setting is turned off hmmmmmm?
+               // Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                //context.startActivity(intent);
             }
         };
     }
@@ -137,12 +110,24 @@ public class UserLocation {
      */
     public void configureButton() {
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+            if (!gps_enabled && !network_enabled) {
+                Helpers.displayToast(context, "Turn on GPS or Network Provider to enable location updates.");
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                context.startActivity(intent);
+            } else {
+                if (network_enabled){
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                }
+                if (gps_enabled) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                }
+            }
+
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     private void stopListener() {
         try {
@@ -151,10 +136,10 @@ public class UserLocation {
                 locationManager.removeUpdates(locationListener);
                 locationManager = null;
                 locationListener = null;
+                context = null;
             }
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
         }
     }
-
 }

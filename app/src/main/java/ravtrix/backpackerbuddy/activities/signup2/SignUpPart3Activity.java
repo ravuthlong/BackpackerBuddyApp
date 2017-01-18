@@ -173,7 +173,6 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
             // Make Retrofit call to communicate with the server
             signUpPart3Presenter.retrofitStoreUser(userInfo);
         } else {
-
             try {
                 Helpers.getCountryGeocoder(this, latitude, longitude, new OnCountryReceived() {
                     @Override
@@ -188,20 +187,27 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                     }
                 });
             } catch (IOException e) {
-                new RetrieveCityCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
-                    @Override
-                    public void onCountryReceived(String country) {
-                        if (country.isEmpty()) {
-                            userInfo.put("country", "Somewhere...");
-                        } else {
-                            userInfo.put("country", country);
-                        }
-                        // Make Retrofit call to communicate with the server
-                        signUpPart3Presenter.retrofitStoreUser(userInfo);
-                    }
-                }).execute();
+                userInfo.put("country", "");
+                signUpPart3Presenter.retrofitStoreUser(userInfo);
             }
         }
+    }
+
+    @Override
+    public void updateCountry(final String username) {
+        // Because this process will take a long time, let me update after its done
+        new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryReceived() {
+            @Override
+            public void onCountryReceived(String country) {
+                if (country.isEmpty()) {
+                    // Make Retrofit call to communicate with the server
+                    signUpPart3Presenter.updateCountry(username, "Somewhere...");
+                } else {
+                    // Make Retrofit call to communicate with the server
+                    signUpPart3Presenter.updateCountry(username, country);
+                }
+            }
+        }).execute();
     }
 
     /**
@@ -226,7 +232,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
     @Override
     public void showProgressBar() {
-        progressDialog = Helpers.showProgressDialog(this, "Signing Up...");
+        progressDialog = Helpers.showProgressDialog(this, "Preparing your account. Please wait...");
     }
 
     @Override
@@ -238,11 +244,11 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     /**
      * Retrieve city and country location information from google location API
      */
-    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
+    private class RetrieveCountryTask extends AsyncTask<Void, Void, String> {
         private String latitude, longitude;
         private OnCountryReceived onCountryReceived;
 
-        RetrieveCityCountryTask(String latitude, String longitude, OnCountryReceived onCountryReceived) {
+        RetrieveCountryTask(String latitude, String longitude, OnCountryReceived onCountryReceived) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.onCountryReceived = onCountryReceived;
@@ -250,7 +256,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
 
         @Override
         protected String doInBackground(Void... voids) {
-            return (Helpers.getLocationInfo(latitude, longitude));
+            return (Helpers.getCountry(latitude, longitude));
         }
 
         @Override

@@ -41,4 +41,27 @@ class SignUpPart3Interactor implements ISignUpPart3Interactor {
             }
         });
     }
+
+    @Override
+    public void updateCountry(String username, String country, final OnRetrofitSignUp3 onRetrofitSignUp3) {
+
+        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .updateUserCountry()
+                .updateUserCountry(username, country);
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.body().get("status").getAsInt() == 1) {
+                    onRetrofitSignUp3.onSuccess(response.body());
+                } else {
+                    onRetrofitSignUp3.onFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                onRetrofitSignUp3.onFailure();
+            }
+        });
+    }
 }

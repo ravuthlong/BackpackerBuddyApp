@@ -35,6 +35,10 @@ class SignUpPart3Presenter implements ISignUpPart3Presenter {
 
                 iSignUpPart3View.hideProgressBar();
 
+                if (userInfo.get("country").isEmpty()) { //empty because IOException thrown
+                    // Update country info after the user signs up
+                    iSignUpPart3View.updateCountry(userInfo.get("username"));
+                }
                 // Set new user local store
                 long currentTime = System.currentTimeMillis();
                 LoggedInUser user = new LoggedInUser();
@@ -58,4 +62,13 @@ class SignUpPart3Presenter implements ISignUpPart3Presenter {
         });
     }
 
+    @Override
+    public void updateCountry(String username, String country) {
+        signUpPart3Interactor.updateCountry(username, country, new OnRetrofitSignUp3() {
+            @Override
+            public void onSuccess(JsonObject jsonObject) {}
+            @Override
+            public void onFailure() {}
+        });
+    }
 }

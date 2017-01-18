@@ -35,7 +35,6 @@ import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
-import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
 import static android.app.Activity.RESULT_OK;
@@ -105,11 +104,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         setProfilePic();
         Helpers.overrideFonts(getActivity(), relativeLayout);
         setViewListeners();
-        checkLocationUpdate();
+        //checkLocationUpdate();
 
-        // Set user location
-        setUserLocation(userLocalStore.getLoggedInUser().getLatitude(),
-                userLocalStore.getLoggedInUser().getLongitude());
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
         return v;
@@ -155,29 +151,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             default:
         }
-    }
-
-    private void setUserLocation(double latitude, double longitude) {
-
-        Helpers.cityGeocoder(getContext(), latitude, longitude, new OnGeocoderFinished() {
-            @Override
-            public void onFinished(String place) {
-
-                if (place == null || place.isEmpty()) {
-                    // When the device failed to retrieve city and country information using Geocoder,
-                    // run google location API directly
-                    RetrieveCityCountryTask retrieveFeedTask = new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
-                            userLocalStore.getLoggedInUser().getLongitude().toString());
-                    retrieveFeedTask.execute();
-                } else {
-                    tvLocation.setText(place);
-                    setViewVisible();
-                    hideProgressBar();
-                }
-            }
-        });
-
-
     }
 
     // Pass title and hint to edit info activity based on edit selection type
@@ -248,22 +221,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         imgTravelStatusEdit.setOnClickListener(this);
     }
 
-    /**
-     *   Check if location update is needed. If needed, update local store and server
-     */
-    private void checkLocationUpdate() {
-        long currentTime = System.currentTimeMillis();
-
-        // If it's been 5 minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 5) {
-            Helpers.updateLocationAndTime(getContext(), userLocalStore, currentTime);
-        }
+    @Override
+    public void setUserLocation(String country) {
+        tvLocation.setText(country);
+        setViewVisible();
+        hideProgressBar();
     }
 
     @Override
     public void setUsername(String username) {
         this.username.setText(username);
+        setViewVisible();
+        hideProgressBar();
     }
     @Override
     public void setDetailOneText(String text) {

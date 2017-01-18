@@ -10,4 +10,5 @@ public interface ISignUpPart3View {
     void startUserMainPage();
     void showProgressBar();
     void hideProgressBar();
+    void updateCountry(String username);
 }

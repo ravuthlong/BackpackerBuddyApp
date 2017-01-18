@@ -270,7 +270,7 @@ public class Helpers {
         return response.toString();
     }
 
-    public static String getCountryGeocoder(Context context, double latitude,
+    public static String getCountryGeocoder(Activity context, double latitude,
                                             double longitude, OnCountryReceived onCountryReceived) throws IOException {
         if (context != null) {
             Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
@@ -360,41 +360,79 @@ public class Helpers {
 
     /**
      * Update the location and time for a user in the backend
-     * @param context           the context of the class
+     * @param activity           the activity of the class
      * @param userLocalStore    the local information about the user
      * @param currentTime       the current time
      */
-    public static void updateLocationAndTime(final Context context, final UserLocalStore userLocalStore, final long currentTime) {
+    public static void updateLocationAndTime(final Activity activity, final UserLocalStore userLocalStore, final long currentTime) {
 
-        if (context != null && isConnectedToInternet(context) && (userLocalStore.getLoggedInUser().getUserID() != 0)) {
+        System.out.println("UPDATE COME");
+        if (activity != null && isConnectedToInternet(activity) && (userLocalStore.getLoggedInUser().getUserID() != 0)) {
+            System.out.println("FETCH COME");
 
-            UserLocation userLocation = new UserLocation((Activity) context, userLocalStore.getLoggedInUser().getLatitude(),
-                    userLocalStore.getLoggedInUser().getLongitude());
+            UserLocation userLocation = new UserLocation(activity);
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
                 public void onReceivedLocation(final double latitude, final double longitude) {
+                    System.out.println("RECEIVED COME");
                     final HashMap<String, String> locationHash = new HashMap<>();
                     locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                     locationHash.put("longitude", Double.toString(longitude));
                     locationHash.put("latitude", Double.toString(latitude));
                     locationHash.put("time", Long.toString(currentTime));
+
+                    new RetrieveCountryGeoTask(activity, longitude, latitude, new OnCountryGeoRetrievedListener() {
+                        @Override
+                        public void onCountryReceived(String country) {
+                            Helpers.displayToast(activity, "RECEIVED COME FROM GEO");
+                            locationHash.put("country", country);
+                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                        }
+                        @Override
+                        public void onIOException() {
+                            System.out.println("TRY ASYNCH");
+                            new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
+                                @Override
+                                public void onCountryRetrieved(String country) {
+                                    System.out.println("COUNTRY ASYNC COME");
+
+                                    locationHash.put("country", country);
+                                    retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                                }
+                            }).execute();
+                        }
+                    }).execute();
+
+
+                    /*
                     try {
-                        getCountryGeocoder(context, latitude, longitude, new OnCountryReceived() {
+                        System.out.println("TRY GEOCODE");
+
+
+                        String country = getCountryGeocoder(activity, latitude, longitude, new OnCountryReceived() {
                             @Override
                             public void onCountryReceived(String country) {
+                                System.out.println("COUNTRY COME");
+
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
                         });
+                        System.out.println("COUNTRY GEOCODE - " + country);
+
                     } catch (IOException e) {
+                        System.out.println("TRY ASYNCH");
+
                         new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
                             @Override
                             public void onCountryRetrieved(String country) {
+                                System.out.println("COUNTRY ASYNC COME");
+
                                 locationHash.put("country", country);
                                 retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
                             }
-                        });
-                    }
+                        }).execute();
+                    }*/
                 }
             });
         }
@@ -402,10 +440,8 @@ public class Helpers {
 
 
     public static void fetchLatAndLong(final Context context, UserLocalStore userLocalStore, final OnLocationReceivedGuest onLocationReceivedGuest) {
-
         if (isConnectedToInternet(context)) {
-            UserLocation userLocation = new UserLocation((Activity) context, userLocalStore.getLoggedInUser().getLatitude(),
-                    userLocalStore.getLoggedInUser().getLongitude());
+            UserLocation userLocation = new UserLocation((Activity) context);
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
                 public void onReceivedLocation(final double latitude, final double longitude) {
@@ -421,30 +457,29 @@ public class Helpers {
         jsonObjectCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
                 // Reset local storage of user also after server-side update
                 userLocalStore.changelatitude(latitude);
                 userLocalStore.changeLongitude(longitude);
                 userLocalStore.changeTime(currentTime);
+                System.out.println("LOCATION UPDATED");
             }
-
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
+            public void onFailure(Call<JsonObject> call, Throwable t) {}
         });
     }
 
     /*
     * Check if location update is needed. If needed, update local store and server
     */
-    public static void checkLocationUpdate(Context context, UserLocalStore userLocalStore) {
+    public static void checkLocationUpdate(Activity activity, UserLocalStore userLocalStore) {
         long currentTime = System.currentTimeMillis();
 
         // If it's been 5 minute since last location update, do the update
-        if (Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 5) {
-            Helpers.updateLocationAndTime(context, userLocalStore, currentTime);
+        // userLocalStore.getLoggedInUser().getTime() > currentTime shows rare case when user manually changed their mobile
+        // time last time they access the app
+        if ((Helpers.timeDifInMinutes(currentTime,
+                userLocalStore.getLoggedInUser().getTime()) > 2) || (userLocalStore.getLoggedInUser().getTime() > currentTime)) {
+            Helpers.updateLocationAndTime(activity, userLocalStore, currentTime);
         }
     }
 
@@ -589,6 +624,49 @@ public class Helpers {
         }
     }
 
+    public static class RetrieveCountryGeoTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+        private double longitude, latitude;
+        private OnCountryGeoRetrievedListener onCountryGeoRetrievedListener;
+
+        public RetrieveCountryGeoTask(Context context, double longitude, double latitude,
+                                      OnCountryGeoRetrievedListener onCountryGeoRetrievedListener) {
+            this.context = context;
+            this.longitude = longitude;
+            this.latitude = latitude;
+            this.onCountryGeoRetrievedListener = onCountryGeoRetrievedListener;
+        }
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (context != null) {
+                Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+                try {
+                    List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+                    for (Address address : addresses) {
+                        if (address != null) {
+                            String country = "";
+                            country = address.getCountryName();
+                            return country;
+                        }
+                    }
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s == null) {
+                onCountryGeoRetrievedListener.onIOException();
+            } else {
+                onCountryGeoRetrievedListener.onCountryReceived(s);
+            }
+        }
+    }
+
     private static class RetrieveCountryTask extends AsyncTask<Void, Void, String> {
         String latitude;
         String longitude;
@@ -598,15 +676,59 @@ public class Helpers {
             this.latitude = latitude;
             this.longitude = longitude;
             this.onCountryRetrievedListener = onCountryRetrievedListener;
-        }
+            System.out.println("SET ASYNCH");
 
+        }
         @Override
         protected String doInBackground(Void... voids) {
-            return (Helpers.getCountry(latitude, longitude));
+            System.out.println("PERFORMING ASYNCH");
+
+            URL url;
+            HttpURLConnection urlConnection = null;
+            JSONObject jsonObject;
+            String country = "";
+            String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+            try {
+                url = new URL(urlAddress);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                int responseCode = urlConnection.getResponseCode();
+
+                if(responseCode == HttpURLConnection.HTTP_OK) {
+                    try {
+                        jsonObject = new JSONObject(readStream(urlConnection.getInputStream()));
+
+                        JSONArray address_components = jsonObject.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+                        for (int i = 0; i < address_components.length(); i++) {
+                            JSONObject component = address_components.getJSONObject(i);
+
+                            String long_name = component.getString("long_name");
+                            JSONArray typeArray = component.getJSONArray("types");
+                            String addressType = typeArray.getString(0);
+
+                            if (null != long_name && long_name.length() > 0) {
+                                switch (addressType) {
+                                    case "country":
+                                        country += long_name;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return country;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            System.out.println("ON POST EXECUTION CALLED COUNTRY IS: " + s);
             onCountryRetrievedListener.onCountryRetrieved(s);
         }
     }

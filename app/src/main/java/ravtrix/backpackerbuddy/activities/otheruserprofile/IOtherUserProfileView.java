@@ -10,7 +10,7 @@ interface IOtherUserProfileView {
     void setUserDetailTwo(String userDetailTwo);
     void setUserDetailThree(String userDetailThree);
     void setUserDetailFour(String userDetailFour);
-    void setUserLocation(String latitude, String longitude);
+    void setUserLocation(String latitude, String longitude, String country);
     void loadProfileImage(String imageURL);
     void fetchOtherUserProfile();
     void displayErrorToast();

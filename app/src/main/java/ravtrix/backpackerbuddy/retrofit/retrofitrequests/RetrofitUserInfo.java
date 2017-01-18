@@ -91,4 +91,8 @@ public class RetrofitUserInfo {
         return retrofit.create(RetrofitUserInfoInterfaces.ChangeUsernameFacebook.class);
     }
 
+    public RetrofitUserInfoInterfaces.UpdateUserCountry updateUserCountry() {
+        return retrofit.create(RetrofitUserInfoInterfaces.UpdateUserCountry.class);
+    }
+
 }

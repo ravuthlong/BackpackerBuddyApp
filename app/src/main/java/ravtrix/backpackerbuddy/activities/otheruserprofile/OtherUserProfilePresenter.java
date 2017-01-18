@@ -27,8 +27,8 @@ class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
                 view.setUserDetailTwo(otherUserJSON.get("detailTwo").getAsString());
                 view.setUserDetailThree(otherUserJSON.get("detailThree").getAsString());
                 view.setUserDetailFour(otherUserJSON.get("detailFour").getAsString());
-                view.setUserLocation(otherUserJSON.get("latitude").getAsString().trim(),
-                       otherUserJSON.get("longitude").getAsString().trim());
+                view.setUserLocation(otherUserJSON.get("latitude").getAsString(),
+                       otherUserJSON.get("longitude").getAsString(), otherUserJSON.get("country").getAsString());
                 view.loadProfileImage(otherUserJSON.get("userpic").getAsString());
 
                 if (otherUserJSON.get("traveling").getAsInt() == 0) {

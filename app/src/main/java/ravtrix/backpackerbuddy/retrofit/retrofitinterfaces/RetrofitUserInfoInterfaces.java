@@ -54,6 +54,7 @@ public class RetrofitUserInfoInterfaces {
         @GET("/fetchUserDetails.php?userID=[userID]")
         Call<JsonObject> getUserDetails(@Query("userID") int userID);
     }
+
     public interface UpdateProfilePic {
         @FormUrlEncoded
         @POST("/updateProfilePhoto.php")
@@ -132,6 +133,12 @@ public class RetrofitUserInfoInterfaces {
         @FormUrlEncoded
         @POST("/changeUsernameFacebook.php")
         Call<JsonObject> changeusernameFacebook(@FieldMap HashMap<String, String> user);
+    }
+
+    public interface UpdateUserCountry {
+        @FormUrlEncoded
+        @POST("/updateUserCountry1.7.php")
+        Call<JsonObject> updateUserCountry(@Field("username") String username, @Field("country") String country);
     }
 }
 

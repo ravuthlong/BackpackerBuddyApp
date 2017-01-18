@@ -90,7 +90,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog = Helpers.showProgressDialog(WelcomeActivity.this, "Logging In. Please wait...");
+                progressDialog = Helpers.showProgressDialog(WelcomeActivity.this, "Logging In. May take a while. Please wait...");
             }
         });
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -144,7 +144,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Helpers.showAlertDialog(this, "Give this app permission in the future in order to take full advantage of the functionality.");
@@ -169,7 +168,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                     Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
                             .isUsernameOrEmailTaken()
                             .isUsernameOrEmailTaken("", email);
-
                     retrofit.enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -179,11 +177,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                             }
 
                             if (response.body().get("emailtaken").getAsInt() == 1) {
-
                                 // Means the user exists, so log them in
                                 logInFacebookRetrofit(email, notificationToken);
                             } else {
-
                                 Intent signUpIntent = new Intent(WelcomeActivity.this, FacebookSignUpActivity.class);
                                 signUpIntent.putExtra("email", email);
                                 signUpIntent.putExtra("imageURL", imageURL);

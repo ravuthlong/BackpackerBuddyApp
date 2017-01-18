@@ -51,8 +51,8 @@ public class FindBuddyTabFragment extends Fragment  {
 
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        adapter.addFragment(new FindBuddyNearFragment(), "Nearby");
         adapter.addFragment(new RecentlyOnlineUsersFragment(), "Recently Online");
+        adapter.addFragment(new FindBuddyNearFragment(), "Nearby");
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -67,8 +67,8 @@ public class FindBuddyTabFragment extends Fragment  {
              */
             @Override
             public void onPageSelected(int position) {
-                FindBuddyNearFragment fragmentOne = (FindBuddyNearFragment) adapter.getItem(0);
-                RecentlyOnlineUsersFragment fragmentTwo = (RecentlyOnlineUsersFragment) adapter.getItem(1);
+                RecentlyOnlineUsersFragment fragmentOne = (RecentlyOnlineUsersFragment) adapter.getItem(0);
+                FindBuddyNearFragment fragmentTwo = (FindBuddyNearFragment) adapter.getItem(1);
                 int currentSelectedDropdown;
 
                 // User currently viewing FindBuddyNearFragment

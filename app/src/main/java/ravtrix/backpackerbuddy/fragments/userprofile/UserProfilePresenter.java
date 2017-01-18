@@ -145,6 +145,11 @@ class UserProfilePresenter implements  IUserProfilePresenter {
             }
 
             @Override
+            public void onSetCountry(String country) {
+                view.setUserLocation(country);
+            }
+
+            @Override
             public void onSetTravelStatus(int status) {
                 if (status == 0) { // not traveling
                     view.showImageNotTravel();

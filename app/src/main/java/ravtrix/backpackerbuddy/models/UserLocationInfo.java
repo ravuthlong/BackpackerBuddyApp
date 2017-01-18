@@ -17,6 +17,12 @@ public class UserLocationInfo {
     @SerializedName("distance")
     @Expose
     private double distance;
+    @SerializedName("userpic")
+    @Expose
+    private String userpic;
+    @SerializedName("country")
+    @Expose
+    private String country;
 
     public String getUserpic() {
         return userpic;
@@ -25,13 +31,6 @@ public class UserLocationInfo {
     public void setUserpic(String userpic) {
         this.userpic = userpic;
     }
-
-    @SerializedName("userpic")
-    @Expose
-    private String userpic;
-    @SerializedName("country")
-    @Expose
-    private String country;
 
     public String getCountry() {
         return country;

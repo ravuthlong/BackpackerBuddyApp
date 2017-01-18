@@ -26,10 +26,7 @@ class UserMainPresenter implements IUserMainPresenter {
                 view.updateLocalstore(loggedInUser);
             }
             @Override
-            public void onError() {
-                System.out.println("I ERROR");
-
-            }
+            public void onError() {}
         });
     }
 }

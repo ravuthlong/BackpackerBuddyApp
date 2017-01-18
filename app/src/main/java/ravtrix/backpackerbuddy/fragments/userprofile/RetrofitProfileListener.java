@@ -24,5 +24,6 @@ interface RetrofitProfileListener {
     void onDetailThreeAHint(boolean hint);
     void onDetailFourAHint(boolean hint);
     void onSetTravelStatus(int status);
+    void onSetCountry(String country);
 
 }

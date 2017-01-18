@@ -40,7 +40,8 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
                     view.hideNoNearby();
                     view.setCustomGridView(userList);
                 }
-                view.setCityText();
+                view.hideProgressbar();
+                view.setViewVisible();
             }
 
             @Override
@@ -69,7 +70,6 @@ class FindBuddyPresenter implements IFindBuddyNearPresenter {
                             view.hideNoNearby();
                             view.setCustomGridView(userList);
                         }
-                        view.setCityText();
                         view.setViewVisible();
                         view.hideProgressbar();
                     }

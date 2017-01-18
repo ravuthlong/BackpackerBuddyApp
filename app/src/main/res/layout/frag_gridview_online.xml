@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/grid_linearLayout2"
     android:layout_width="match_parent"
@@ -8,11 +8,11 @@
     android:background="@color/greenBackground">
 
     <RelativeLayout
+        android:id="@+id/grid_relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp"
-        android:id="@+id/grid_relativeLayout2"
         android:gravity="center_horizontal">
 
         <ImageView
@@ -33,12 +33,21 @@
             android:layout_toEndOf="@+id/grid_locationImageOnline" />
     </RelativeLayout>
 
-
+    <ProgressBar
+        android:id="@+id/frag_gridview_online_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="false"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
     <GridView
         android:id="@+id/grid_viewOnline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/grid_relativeLayout2"
         android:columnWidth="110dp"
         android:gravity="center"
         android:numColumns="auto_fit" />
-</LinearLayout>
+</RelativeLayout>

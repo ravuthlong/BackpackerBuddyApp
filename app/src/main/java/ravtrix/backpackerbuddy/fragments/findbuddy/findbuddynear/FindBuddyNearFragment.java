@@ -33,7 +33,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.adapter.CustomGridView;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.HelpersPermission;
-import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
@@ -196,30 +195,6 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
     public void setCustomGridView(List<UserLocationInfo> userList) {
         CustomGridView customGridViewAdapter = new CustomGridView(getActivity(), userList);
         profileImageGridView.setAdapter(customGridViewAdapter);
-    }
-
-    @Override
-    public void setCityText() {
-        Helpers.cityGeocoder(getActivity(), userLocalStore.getLoggedInUser().getLatitude(),
-                userLocalStore.getLoggedInUser().getLongitude(), new OnGeocoderFinished() {
-                    @Override
-                    public void onFinished(String place) {
-
-                        if (place == null || place.isEmpty()) {
-                            // When the device failed to retrieve city and country information using Geocoder,
-                            // run google location API directly
-                            RetrieveCityCountryTask retrieveFeedTask =
-                                    new RetrieveCityCountryTask(userLocalStore.getLoggedInUser().getLatitude().toString(),
-                                            userLocalStore.getLoggedInUser().getLongitude().toString());
-                            retrieveFeedTask.execute();
-                        } else {
-                            city.setText(place);
-                            setViewVisible();
-                            hideProgressbar();
-                        }
-                    }
-                });
-
     }
 
     @Override
