@@ -23,7 +23,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="25dp"
+            android:padding="@dimen/_20sdp"
+            android:textSize="@dimen/_11ssp"
             android:text="@string/backpackerBuddyAbout"
             android:id="@+id/tvAbout" />
         </ScrollView>

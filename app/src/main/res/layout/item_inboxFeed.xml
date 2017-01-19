@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -9,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lowWhite"
-        android:padding="12dp">
+        android:padding="@dimen/_12sdp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_countryFeed_profileImage"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
             android:src="@drawable/default_photo" />
 
         <RelativeLayout
@@ -28,9 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:textSize="17sp" />
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:textSize="@dimen/_14ssp" />
 
             <TextView
                 android:id="@+id/item_inboxFeed_lastMessage"
@@ -39,7 +40,7 @@
                 android:layout_alignLeft="@+id/item_inboxFeed_username"
                 android:layout_alignStart="@+id/item_inboxFeed_username"
                 android:layout_below="@+id/item_inboxFeed_username"
-                android:textSize="13sp" />
+                android:textSize="@dimen/_11ssp" />
 
             <TextView
                 android:id="@+id/item_inboxFeed_time"
@@ -49,6 +50,5 @@
                 android:layout_alignParentRight="true"
                 android:textColor="@color/grayHint" />
         </RelativeLayout>
-
     </LinearLayout>
 </LinearLayout>

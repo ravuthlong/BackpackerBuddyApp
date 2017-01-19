@@ -12,8 +12,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/lowWhite"
-            android:layout_margin="15dp"
-            android:padding="25dp"
+            android:layout_margin="@dimen/_20sdp"
+            android:padding="@dimen/_20sdp"
             android:id="@+id/layout_filter">
 
             <TextView
@@ -21,24 +21,24 @@
                 android:text="@string/filterBy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp" />
+                android:textSize="@dimen/_15ssp"
+                android:layout_marginBottom="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:text="@string/country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/_14sdp"
                 android:gravity="center_horizontal" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/_5sdp"
                 android:background="@drawable/button"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="@dimen/_10sdp">
                 <Spinner
                     android:id="@+id/frag_filter_spinnerCountry"
                     android:layout_width="wrap_content"
@@ -51,16 +51,16 @@
                 android:text="@string/month"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/_14sdp"
                 android:gravity="center_horizontal" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="@dimen/_5sdp"
                 android:background="@drawable/button"
                 android:layout_gravity="center"
-                android:layout_marginBottom="30dp">
+                android:layout_marginBottom="@dimen/_30sdp">
                 <Spinner
                     android:id="@+id/frag_filter_spinnerMonth"
                     android:layout_width="wrap_content"

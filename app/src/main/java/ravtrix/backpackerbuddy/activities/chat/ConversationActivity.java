@@ -12,7 +12,6 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,7 +56,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     private DatabaseReference mFirebaseDatabaseReference;
     private UserLocalStore userLocalStore;
     private final UserChat userChat = new UserChat();
-    private  String otherUserID;
+    private  String otherUserID, otherUserImage;
     private ConversationPresentor conversationPresentor;
     private int backPressExit = 1;
 
@@ -86,15 +85,14 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         TextView messageTextView1, messageTextView2;
         TextView timeTextView;
         CircleImageView messengerImageView1, messengerImageView2;
-        LinearLayout layoutMessage1;
-        RelativeLayout layoutMessage2;
+        RelativeLayout layoutMessage1, layoutMessage2;
 
         public MessageViewHolder(View v) {
             super(v);
             messageTextView1 = (TextView) itemView.findViewById(R.id.item_message_message);
             timeTextView = (TextView) itemView.findViewById(R.id.item_time);
             messengerImageView1 = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
-            layoutMessage1 = (LinearLayout) itemView.findViewById(R.id.layout_message);
+            layoutMessage1 = (RelativeLayout) itemView.findViewById(R.id.layout_message);
 
             messageTextView2 = (TextView) itemView.findViewById(R.id.item_message_message2);
             messengerImageView2 = (CircleImageView) itemView.findViewById(R.id.item_inboxFeed_profileImage2);
@@ -155,7 +153,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                                 R.drawable.ic_chat_bubble_black_24dp));
                     } else {
                         Picasso.with(ConversationActivity.this)
-                                .load(model.getPhotoUrl())
+                                .load(userLocalStore.getLoggedInUser().getUserImageURL())
                                 .fit()
                                 .centerCrop()
                                 .into(viewHolder.messengerImageView2);
@@ -193,7 +191,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                                 R.drawable.ic_chat_bubble_black_24dp));
                     } else {
                         Picasso.with(ConversationActivity.this)
-                                .load(model.getPhotoUrl())
+                                .load(otherUserImage)
                                 .fit()
                                 .centerCrop()
                                 .into(viewHolder.messengerImageView1);
@@ -321,6 +319,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         if (bundle != null) {
             otherUserID = bundle.getString("otherUserID"); // ID of the other user in chat
 
+            if (bundle.containsKey("otherUserImage")) {
+                otherUserImage = bundle.getString("otherUserImage");
+            }
             if (bundle.containsKey("position")) {
                 chatPosition = bundle.getInt("position");
             }

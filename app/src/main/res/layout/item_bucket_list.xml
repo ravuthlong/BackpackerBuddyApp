@@ -10,10 +10,10 @@
         android:id="@+id/item_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp">
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:paddingTop="@dimen/_15sdp"
+        android:paddingBottom="@dimen/_15sdp">
 
         <LinearLayout
             android:id="@+id/item_layoutBucket"
@@ -25,17 +25,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
+                android:paddingRight="@dimen/_10sdp"
                 android:paddingLeft="0dp"
                 android:id="@+id/item_tv_bucket"
-                android:textSize="16sp" />
+                android:textSize="@dimen/_12ssp" />
 
             <TextView
                 android:id="@+id/item_tvBucket_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#A4A4A4"
-                android:paddingTop="5dp" />
+                android:paddingTop="@dimen/_5sdp"
+                android:textSize="@dimen/_10ssp"/>
         </LinearLayout>
 
         <FrameLayout
@@ -50,11 +51,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/frag_bucket_circleImage"
                 android:src="@drawable/ic_done_incomplete_24dp"
-                android:layout_height="25dp"
-                android:layout_width="25dp" />
+                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_20sdp" />
         </FrameLayout>
-
-
     </RelativeLayout>
-
 </LinearLayout>

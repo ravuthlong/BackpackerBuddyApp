@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
 import butterknife.BindView;
@@ -65,8 +64,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.bSignOut:
-                // Log user out of facebook
-                if (AccessToken.getCurrentAccessToken() != null){
+                // Log user out of facebook if they are a facebook user
+                if (userLocalStore.getLoggedInUser().getIsFacebook() == 1){
                     LoginManager.getInstance().logOut();
                 }
                 // Clear local storage because user has logged out

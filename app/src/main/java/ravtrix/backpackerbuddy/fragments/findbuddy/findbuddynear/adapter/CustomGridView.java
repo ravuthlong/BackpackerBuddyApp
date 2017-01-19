@@ -6,14 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
+import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocationInfo;
 
 /**
@@ -50,6 +54,7 @@ public class CustomGridView extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView;
         CircleImageView profileImage;
+        TextView tvDistance;
 
         if (convertView == null) {
             gridView = new View(context);
@@ -76,6 +81,14 @@ public class CustomGridView extends BaseAdapter {
                 context.startActivity(userProfileIntent);
             }
         });
+
+        tvDistance = (TextView) gridView.findViewById(R.id.tvDistance_nearby);
+        Helpers.overrideFonts(context, tvDistance);
+
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.DOWN);
+        String distance = df.format(nearbyUserInfo.get(position).getDistance()) + " miles";
+        tvDistance.setText(distance);
 
         // Display layout only when all images has been loaded
         return gridView;

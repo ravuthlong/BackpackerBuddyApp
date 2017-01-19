@@ -30,11 +30,11 @@
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                float:fletPadding="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="20dp">
+                float:fletPadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp">
                 <EditText
                     android:id="@+id/etEmail_facebook"
                     android:layout_width="match_parent"
@@ -44,16 +44,17 @@
                     android:ems="10"
                     android:hint="@string/email"
                     android:maxLines="1"
-                    android:paddingBottom="10dp" />
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                float:fletPadding="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
+                float:fletPadding="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_30sdp">
                 <EditText
                     android:id="@+id/etUsername_facebook"
                     android:layout_width="match_parent"
@@ -62,9 +63,10 @@
                     android:maxLines="1"
                     android:hint="@string/username"
                     android:gravity="center"
-                    android:paddingBottom="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp" />
+                    android:textSize="@dimen/_11ssp"
+                    android:paddingBottom="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_20sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
 
@@ -77,11 +79,11 @@
                 android:id="@+id/userImage_facebook"
                 android:src="@android:drawable/sym_def_app_icon"
                 app:border_color="#323944"
-                app:border_width="5dp"
-                android:layout_marginBottom="11dp"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="20dp" />
+                app:border_width="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_marginTop="@dimen/_20sdp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -98,8 +100,8 @@
                 android:background="@android:drawable/ic_menu_camera"
                 android:layout_gravity="center_horizontal"
                 android:visibility="visible"
-                android:layout_height="50dp"
-                android:layout_width="50dp" />
+                android:layout_height="@dimen/_40sdp"
+                android:layout_width="@dimen/_40sdp" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

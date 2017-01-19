@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/_10sdp"
         android:gravity="center_horizontal">
 
         <ImageView
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Recently Online"
+            android:textSize="@dimen/_12ssp"
             android:layout_gravity="center_horizontal|top"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/grid_locationImageOnline"
@@ -47,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/grid_relativeLayout2"
-        android:columnWidth="110dp"
+        android:columnWidth="@dimen/_100sdp"
         android:gravity="center"
         android:numColumns="auto_fit" />
 </RelativeLayout>

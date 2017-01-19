@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     ools:ignore="ContentDescription"
     android:orientation="vertical"
-    android:layout_height="150dp">
+    android:layout_height="@dimen/_120sdp">
 
     <LinearLayout
         android:id="@+id/backgroundLayout"
@@ -25,7 +25,7 @@
             <View
                 android:id="@+id/verticleLine"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/_1sdp"
                 android:background="#ffffff"
                 android:layout_gravity="center"
                 android:layout_toLeftOf="@+id/tvFromDate"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textSize="45sp"
+                android:textSize="@dimen/_35ssp"
                 android:textColor="#3990A1"
                 android:maxLines="1"
                 android:layout_below="@+id/tvFromDate"
@@ -47,37 +47,37 @@
                 android:layout_toEndOf="@+id/verticleLine"
                 android:layout_marginTop="-5dp"
                 android:background="#FFFFFFFF"
-                android:padding="4dp" />
+                android:padding="@dimen/_4sdp" />
 
             <TextView
                 android:id="@+id/tvFromDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="@dimen/_15ssp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
                 android:shadowDx="3"
                 android:shadowDy="3"
                 android:shadowRadius="2"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
+                android:paddingRight="@dimen/_2sdp"
+                android:paddingLeft="@dimen/_2sdp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="@dimen/_4sdp" />
 
             <TextView
                 android:id="@+id/tvToDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="@dimen/_15sdp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
                 android:shadowDx="3"
                 android:shadowDy="3"
                 android:shadowRadius="2"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
+                android:paddingLeft="@dimen/_2sdp"
+                android:paddingRight="@dimen/_2sdp"
                 android:layout_alignTop="@+id/tvFromDate"
                 android:layout_toRightOf="@+id/tvArrow"
                 android:layout_toEndOf="@+id/tvArrow" />
@@ -87,14 +87,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dash"
-                android:textSize="17sp"
+                android:textSize="@dimen/_15ssp"
                 android:textColor="#000000"
                 android:shadowColor = "#FFFFFF"
                 android:shadowDx="3"
                 android:shadowDy="3"
                 android:shadowRadius="2"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
+                android:paddingLeft="@dimen/_2sdp"
+                android:paddingRight="@dimen/_2sdp"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/tvFromDate"
                 android:layout_toEndOf="@+id/tvFromDate" />
@@ -120,9 +120,9 @@
                     android:id="@+id/item_countryFeed_profileImage"
                     android:src="@drawable/default_photo"
                     app:border_color="#8CFFFFFF"
-                    app:border_width="7dp"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp" />
+                    app:border_width="@dimen/_5sdp"
+                    android:layout_width="@dimen/_55sdp"
+                    android:layout_height="@dimen/_55sdp" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

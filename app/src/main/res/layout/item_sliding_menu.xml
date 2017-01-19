@@ -4,10 +4,10 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#1b1616"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingTop="@dimen/_5sdp"
+    android:paddingBottom="@dimen/_5sdp"
+    android:paddingLeft="@dimen/_10sdp"
+    android:paddingRight="@dimen/_10sdp"
     >
 
     <TextView
@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:textColor="#ffffff"
-        android:textSize="15sp"
+        android:textSize="@dimen/_13sdp"
         android:typeface="sans"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp" />
 </LinearLayout>

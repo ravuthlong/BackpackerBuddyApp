@@ -6,14 +6,13 @@
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
 
-
     <TextView
         android:id="@+id/tvNoInfo_FragInbox"
         android:text="@string/noInbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:textSize="18sp"
+        android:textSize="@dimen/_15ssp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

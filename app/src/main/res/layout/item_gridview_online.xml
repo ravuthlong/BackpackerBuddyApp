@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/greenBackground"
     android:gravity="center_horizontal"
-    android:padding="10dp">
+    android:padding="@dimen/_10sdp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -21,16 +21,15 @@
         android:layout_height="90dp"
         android:src="@android:drawable/sym_def_app_icon"
         app:border_color="#323944"
-        app:border_width="2dp" />
+        app:border_width="@dimen/_2sdp" />
 
     <TextView
         android:id="@+id/tvCountry_online"
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@id/grid_userImageOnline"
-        android:textSize="11sp" />
+        android:textSize="@dimen/_10ssp" />
     </RelativeLayout>
 
 </RelativeLayout>

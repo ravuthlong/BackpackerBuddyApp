@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import com.google.gson.JsonObject;
 
 import ravtrix.backpackerbuddy.helpers.RetrofitAppInfoSingleton;
+import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +26,8 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LocationUpdateSharedPreference locationUpdateSharedPreference = new LocationUpdateSharedPreference(getApplicationContext());
+        locationUpdateSharedPreference.setUpValue();
     }
 
     public void checkForRequiredUpdate(final Activity activity) {

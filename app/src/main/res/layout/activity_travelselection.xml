@@ -33,16 +33,16 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/lowWhite"
-            android:layout_margin="30dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
+            android:layout_margin="@dimen/_20sdp"
+            android:paddingLeft="@dimen/_20sdp"
+            android:paddingRight="@dimen/_20sdp"
             android:id="@+id/layout_travelSelection">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="@dimen/_30sdp">
 
                 <TextView
                     android:id="@+id/tvCountry"
@@ -50,16 +50,16 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/country"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/_14ssp"
                     android:typeface="sans"
                     android:layout_gravity="center" />
 
                 <Spinner
                     android:id="@+id/spinnerCountries"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dialog"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="@dimen/_15sdp"
                     android:background="@drawable/button"
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
@@ -68,7 +68,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="@dimen/_30sdp">
 
                     <TextView
                         android:id="@+id/tvArrival"
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/from"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="20sp" />
+                        android:textSize="@dimen/_14ssp" />
 
                     <TextView
                         android:id="@+id/tvDateLeave"
@@ -85,7 +85,7 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/dateOfArrival"
                         android:background="@drawable/button"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/_20sdp"
                         android:layout_gravity="center_horizontal"/>
             </LinearLayout>
 
@@ -93,14 +93,14 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="@dimen/_30sdp">
                     <TextView
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/until"
-                        android:textSize="20sp"
-                        android:layout_marginTop="25dp"
+                        android:textSize="@dimen/_14ssp"
+                        android:layout_marginTop="@dimen/_25sdp"
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
@@ -111,7 +111,7 @@
                         android:text="@string/dateOfLeave"
                         android:background="@drawable/button"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp" />
+                        android:layout_marginTop="@dimen/_20sdp" />
                 </LinearLayout>
 
             </LinearLayout>

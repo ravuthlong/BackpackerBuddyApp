@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/lowWhite"
-    android:padding="10dp"
+    android:padding="@dimen/_10sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -18,8 +18,8 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_photo_comment_profileimage"
             android:layout_alignParentStart="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp" />
 
         <LinearLayout
             android:id="@+id/linearlayout2"
@@ -35,14 +35,14 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textColor="@color/greenToolbar"
-                android:textSize="18sp"
-                android:layout_marginLeft="5dp" />
+                android:textSize="@dimen/_15ssp"
+                android:layout_marginLeft="@dimen/_5sdp" />
 
             <TextView
                 android:id="@+id/item_photo_comment_tvCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="@dimen/_5sdp" />
         </LinearLayout>
 
         <TextView
@@ -60,14 +60,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/relative1"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp">
 
         <TextView
             android:id="@+id/item_photo_comment_tvText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp" />
+            android:padding="@dimen/_5sdp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -80,11 +80,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="10dp"
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:paddingRight="@dimen/_10sdp"
             android:layout_alignParentEnd="true"
-            android:paddingLeft="10dp">
+            android:paddingLeft="@dimen/_10sdp">
             <ImageView
                 android:id="@+id/item_photo_comment_imageButtonMore"
                 android:layout_width="match_parent"

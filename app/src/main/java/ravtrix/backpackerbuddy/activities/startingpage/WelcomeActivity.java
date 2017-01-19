@@ -67,10 +67,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
         setContentView(R.layout.activity_mainpage);
+        callbackManager = CallbackManager.Factory.create();
         ButterKnife.bind(this);
 
         setFontStyle();
@@ -81,12 +81,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         tvGuestLogin.setOnClickListener(this);
         userLocalStore = new UserLocalStore(this);
 
+
         if (!HelpersPermission.hasLocationPermission(this)) {
             HelpersPermission.showLocationRequest(this);
         }
 
-        callbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

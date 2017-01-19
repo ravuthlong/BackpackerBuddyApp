@@ -13,7 +13,7 @@
         android:visibility="gone"
         android:gravity="center_vertical|center_horizontal"
         android:layout_gravity="center_vertical"
-        android:textSize="18sp" />
+        android:textSize="@dimen/_15ssp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_userPost"

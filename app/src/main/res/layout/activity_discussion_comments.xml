@@ -60,21 +60,21 @@
                 <EditText
                     android:id="@+id/etComment"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="@dimen/_70sdp"
                     android:inputType="textMultiLine|textCapSentences"
                     android:focusable="true"
-                    android:padding="5dp"
+                    android:padding="@dimen/_5sdp"
                     android:layout_toLeftOf="@+id/submitButton"
                     android:background="@android:color/transparent"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/_11ssp"
                     android:hint="@string/writeComment"/>
 
                 <Button
                     android:id="@+id/submitButton"
                     android:text="@string/stringPost"
                     android:layout_width="wrap_content"
-                    android:layout_height="70dp"
-                    android:textSize="12sp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:textSize="@dimen/_9ssp"
                     android:background="@drawable/edit_text_border"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true" />

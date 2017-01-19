@@ -34,8 +34,9 @@
                 android:layout_weight="1"
                 android:gravity="top|left"
                 android:scrollbars="vertical"
+                android:textSize="@dimen/_12ssp"
                 android:hint="@string/writePost"
-                android:padding="15dp" />
+                android:padding="@dimen/_15sdp" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

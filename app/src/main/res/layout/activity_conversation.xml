@@ -19,37 +19,35 @@
             android:layout_width="match_parent" >
         </include>
 
+        <ImageView
+            android:id="@+id/sendMessageButton"
+            android:contentDescription="@string/txtFeedback"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            app:srcCompat="@android:drawable/ic_menu_send"
+            android:layout_alignBottom="@+id/textMessage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/_10sdp" />
 
-
-                <ImageView
-                    android:id="@+id/sendMessageButton"
-                    android:contentDescription="@string/txtFeedback"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:srcCompat="@android:drawable/ic_menu_send"
-                    android:layout_alignBottom="@+id/textMessage"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="10dp" />
-
-                <EditText
-                    android:id="@+id/textMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hntMessage"
-                    android:layout_marginLeft="10dp"
-                    android:paddingBottom="20dp"
-                    android:paddingTop="20dp"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:maxLines="5"
-                    android:scrollbars="vertical"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/sendMessageButton"
-                    android:layout_toStartOf="@+id/sendMessageButton" />
-
+        <EditText
+            android:id="@+id/textMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/hntMessage"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_20sdp"
+            android:paddingTop="@dimen/_20sdp"
+            android:inputType="textMultiLine|textCapSentences"
+            android:textSize="@dimen/_11ssp"
+            android:maxLines="5"
+            android:scrollbars="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/sendMessageButton"
+            android:layout_toStartOf="@+id/sendMessageButton" />
 
         <ProgressBar
             android:id="@+id/activity_conversation_spinner"
@@ -58,7 +56,6 @@
             style="?android:attr/progressBarStyle"
             android:indeterminate="true"
             android:layout_centerInParent="true" />
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_recyclerView"
@@ -69,7 +66,5 @@
             android:layout_alignParentStart="true">
 
         </android.support.v7.widget.RecyclerView>
-            </RelativeLayout>
-
-
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

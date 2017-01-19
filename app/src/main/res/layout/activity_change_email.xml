@@ -25,15 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/greenLighter"
-        android:paddingTop="20dp"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp">
-
+        android:paddingTop="@dimen/_20sdp"
+        android:paddingLeft="@dimen/_70sdp"
+        android:paddingRight="@dimen/_70sdp">
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            float:fletPadding="10dp">
+            float:fletPadding="@dimen/_10sdp">
             <EditText
                 android:id="@+id/tvEmail_change"
                 android:layout_width="match_parent"
@@ -41,28 +40,29 @@
                 android:inputType="textEmailAddress"
                 android:ems="10"
                 android:hint="@string/newEmail"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:textSize="14sp"/>
+                android:padding="@dimen/_20sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:textSize="@dimen/_11ssp"/>
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            float:fletPadding="10dp">
+            float:fletPadding="@dimen/_10sdp">
             <EditText
                 android:id="@+id/tvPassword_confirm"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
                 android:hint="@string/passwordHint"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:layout_marginTop="50dp"
-                android:textSize="14sp"/>
+                android:padding="@dimen/_20sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:textSize="@dimen/_11ssp"
+                />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
     </LinearLayout>

@@ -66,14 +66,13 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
 
         ButterKnife.bind(this, fragView);
         setHasOptionsMenu(true);
-        profileImageGridView.setVisibility(View.INVISIBLE);
 
+        profileImageGridView.setVisibility(View.INVISIBLE);
         Helpers.overrideFonts(getActivity(), nearbyRelative);
         Helpers.overrideFonts(getActivity(), tvNoLocationPermission);
 
         userLocalStore = new UserLocalStore(getActivity());
         findBuddyPresenter = new FindBuddyPresenter(this, getContext(), userLocalStore);
-
         Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
         if (!HelpersPermission.hasLocationPermission(getContext())) {

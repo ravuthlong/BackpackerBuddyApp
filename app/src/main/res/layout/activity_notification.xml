@@ -24,19 +24,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/lowWhite"
-            android:layout_marginTop="30dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:layout_marginTop="@dimen/_30sdp"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp">
 
             <TextView
                 android:id="@+id/activity_notif_tvNotif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Message Notification"
-                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/_11ssp"
+                android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="@dimen/_8sdp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -59,7 +60,7 @@
                     android:textOn="On"
                     android:showText="true"
                     android:gravity="center_vertical|end"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginRight="@dimen/_10sdp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -67,19 +68,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/lowWhite"
-        android:layout_marginTop="1dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
-
+        android:layout_marginTop="@dimen/_1sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:paddingTop="@dimen/_10sdp">
 
         <TextView
             android:id="@+id/activity_notif_tvComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comment Notification"
+            android:textSize="@dimen/_11ssp"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="@dimen/_10sdp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -88,7 +89,6 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/activity_notif_tvComment"
             android:gravity="right">
-
 
             <TextView
                 android:id="@+id/activity_notif_statusComment"
@@ -102,7 +102,7 @@
                 android:textOff="Off"
                 android:textOn="On"
                 android:showText="true"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="@dimen/_10sdp" />
         </LinearLayout>
 
 

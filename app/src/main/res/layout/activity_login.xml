@@ -22,8 +22,8 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:paddingLeft="70dp"
-            android:paddingRight="70dp"
+            android:paddingLeft="@dimen/_70sdp"
+            android:paddingRight="@dimen/_70sdp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/greenBackground"
@@ -32,31 +32,33 @@
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                float:fletPadding="10dp"
-                android:layout_marginTop="10dp">
+                float:fletPadding="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp">
 
                 <EditText
                     android:id="@+id/etLoggedInUsername"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:ems="10"
                     android:hint="@string/username"
-                    android:paddingBottom="10dp" />
+                    android:textSize="@dimen/_12ssp"
+                    android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                float:fletPadding="10dp">
+                float:fletPadding="@dimen/_10sdp">
                 <EditText
                     android:id="@+id/etLoggedInPassword"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPassword"
+                    android:textSize="@dimen/_12sdp"
                     android:hint="@string/password"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
 

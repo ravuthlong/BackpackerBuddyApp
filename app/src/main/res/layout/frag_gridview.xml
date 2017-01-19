@@ -10,12 +10,11 @@
     android:layout_centerInParent="false"
     android:layout_centerVertical="false">
 
-
     <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:layout_margin="10dp"
+    android:layout_margin="@dimen/_10sdp"
     android:id="@+id/grid_relativeLayout"
     android:gravity="center_horizontal">
 
@@ -31,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/near"
+        android:textSize="@dimen/_12ssp"
         android:layout_gravity="center_horizontal|top"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/grid_locationImage"
@@ -43,7 +43,7 @@
         android:layout_toRightOf="@+id/frag_gridview_nearTxt"
         android:layout_toEndOf="@+id/frag_gridview_nearTxt"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginLeft="@dimen/_5sdp" />
 </RelativeLayout>
 
     <LinearLayout
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:visibility="gone"
         android:layout_below="@id/grid_relativeLayout"
         android:gravity="center">
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:textSize="18sp"
+            android:textSize="@dimen/_15ssp"
             android:gravity="center_horizontal" />
     </LinearLayout>
 
@@ -86,18 +86,15 @@
         android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textSize="18sp" />
-
+        android:textSize="@dimen/_15ssp" />
 
     <GridView
-    android:id="@+id/grid_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnWidth="110dp"
-    android:gravity="center"
-    android:numColumns="auto_fit"
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="@dimen/_100sdp"
+        android:gravity="center"
+        android:numColumns="auto_fit"
         android:layout_below="@id/grid_relativeLayout"
         android:visibility="visible" />
-
-
 </RelativeLayout>

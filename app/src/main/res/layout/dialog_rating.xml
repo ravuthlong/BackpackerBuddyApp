@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialog_tvRate"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="@dimen/_15ssp" />
 
     <RatingBar
         android:id="@+id/dialog_ratingbar"
@@ -36,23 +36,24 @@
         android:stepSize="1.0"
         android:rating="0"
         android:isIndicator="false"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="15dp">
+        android:paddingLeft="@dimen/_20sdp"
+        android:paddingRight="@dimen/_20sdp"
+        android:paddingBottom="@dimen/_15sdp">
 
         <TextView
             android:text="Never"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/dialog_tvNever"
+            android:textSize="@dimen/_12ssp"
             android:layout_alignParentStart="true" />
 
         <TextView
@@ -60,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/dialog_tvLater"
+            android:textSize="@dimen/_12ssp"
             android:textColor="@color/greenBackground"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>

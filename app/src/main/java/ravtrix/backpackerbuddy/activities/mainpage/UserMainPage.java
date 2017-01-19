@@ -22,8 +22,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -56,6 +54,7 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityResetDrawer;
 import ravtrix.backpackerbuddy.interfacescom.FragActivitySetDrawerInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
+import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
@@ -85,19 +84,19 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private boolean isUserAGuest = false;
     private ImageButton settingsButton;
     private UserMainPresenter userMainPresenter;
+    private LocationUpdateSharedPreference locationUpdateSharedPreference;
     private static final int REQUEST_SELECT_PICTURE = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication());
         ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         userLocalStore = new UserLocalStore(this);
+        locationUpdateSharedPreference = new LocationUpdateSharedPreference(this);
         userMainPresenter = new UserMainPresenter(this);
 
         Bundle bundle = getIntent().getExtras();
@@ -352,6 +351,11 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         super.onPause();
         // If user hit or hold home button, do not refresh profile picture
         this.userHitHome = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override

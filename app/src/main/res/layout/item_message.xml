@@ -7,52 +7,52 @@
     <TextView
         android:id="@+id/item_time"
         android:layout_width="wrap_content"
-        android:layout_height="30sp"
-        android:textSize="12sp"
+        android:layout_height="@dimen/_30sdp"
+        android:textSize="@dimen/_10ssp"
         android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="@dimen/_10sdp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_message"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
         android:gravity="center_vertical"
         android:visibility="visible">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:id="@+id/item_countryFeed_profileImage"
-            android:src="@drawable/default_photo"
-            android:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/item_message_message"
-            android:textSize="14sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:textSize="@dimen/_12ssp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
             android:visibility="visible"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/item_countryFeed_profileImage"
             android:background="@drawable/bubleft" />
 
-    </LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:id="@+id/item_countryFeed_profileImage"
+            android:src="@drawable/default_photo"
+            android:visibility="visible"
+            android:layout_below="@+id/item_message_message"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_message2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
         android:gravity="right|center_vertical"
         android:visibility="visible">
 
@@ -61,24 +61,21 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/item_message_message2"
-            android:textSize="14sp"
-            android:paddingRight="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:paddingLeft="40dp"
+            android:textSize="@dimen/_12ssp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
             android:background="@drawable/bubright"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/item_inboxFeed_profileImage2"
             />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:id="@+id/item_inboxFeed_profileImage2"
             android:src="@drawable/default_photo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            />
+            android:layout_below="@+id/item_message_message2"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 </LinearLayout>

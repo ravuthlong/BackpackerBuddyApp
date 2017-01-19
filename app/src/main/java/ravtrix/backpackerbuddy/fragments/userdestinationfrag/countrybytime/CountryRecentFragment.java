@@ -75,6 +75,7 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
 
         feedListAdapter = null;
         userLocalStore = new UserLocalStore(getActivity());
+        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
         feedItems = new ArrayList<>();
         feedTen = new ArrayList<>();
 
@@ -87,8 +88,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
 
         this.linearLayoutManager = new LinearLayoutManager(getActivity());
         floatingActionButton.setOnClickListener(this);
-
-        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
         if (receivedQueryBundle != null) {
             // Retrieve with filter

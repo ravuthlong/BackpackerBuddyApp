@@ -35,10 +35,10 @@
             android:background="@color/lowWhite"
             android:textAlignment="textStart"
             android:layout_gravity="start"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp"
-            android:layout_marginBottom="1dp" />
+            android:layout_marginBottom="@dimen/_1sdp" />
 
 
         <Button
@@ -50,15 +50,15 @@
             android:background="@color/lowWhite"
             android:textAlignment="textStart"
             android:layout_gravity="start"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp"
             android:layout_below="@+id/bPassword"
-            android:layout_marginBottom="1dp" />
+            android:layout_marginBottom="@dimen/_1sdp" />
 
         <Button
             android:id="@+id/bEmail"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:text="@string/email"
             android:layout_width="match_parent"
@@ -81,10 +81,10 @@
             android:layout_gravity="start"
             android:layout_below="@+id/bEmail"
             android:layout_marginTop="100dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp"
-            android:layout_marginBottom="1dp" />
+            android:layout_marginBottom="@dimen/_1sdp" />
 
         <Button
             android:id="@+id/bFeedback"
@@ -96,7 +96,7 @@
             android:layout_gravity="start"
             android:layout_below="@+id/bNotification"
             android:background="@color/lowWhite"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp" />
 
@@ -111,10 +111,10 @@
             android:background="@color/lowWhite"
             android:layout_above="@+id/bAbout"
             android:layout_centerHorizontal="true"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginBottom="@dimen/_20sdp" />
 
         <Button
             android:id="@+id/bAbout"
@@ -127,7 +127,7 @@
             android:background="@color/lowWhite"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp"
             android:textSize="15sp" />
 

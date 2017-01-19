@@ -48,20 +48,19 @@
                     <View
                         android:id="@+id/line_otherProfile"
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="@dimen/_30sdp"
                         android:background="#7d9f84"
                         android:layout_gravity="center" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/activity_other_profileImage"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
+                        android:layout_width="@dimen/_90sdp"
+                        android:layout_height="@dimen/_90sdp"
                         android:src="@android:drawable/sym_def_app_icon"
                         android:layout_gravity="center_horizontal"
                         app:border_color="#323944"
-                        app:border_width="5dp"
-                        android:layout_marginTop="20dp" />
-
+                        app:border_width="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_20sdp" />
                     </FrameLayout>
 
                 <LinearLayout
@@ -75,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingRight="12dp"
+                        android:paddingRight="@dimen/_12sdp"
                         android:paddingLeft="0dp"
                         android:id="@+id/username_otherProfile" />
 
@@ -116,7 +115,7 @@
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:id="@+id/linearlayout3">
 
@@ -141,9 +140,9 @@
                     android:layout_height="match_parent"
                     android:background="@color/greenLighter"
                     android:layout_marginBottom="90dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="@dimen/_15sdp"
                     style="@style/PaddingPage"
-                    android:paddingBottom="25dp"
+                    android:paddingBottom="@dimen/_25sdp"
                         android:id="@+id/linearlayout4">
 
                     <TextView
@@ -168,10 +167,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_user_profile"
-                        android:padding="20dp"
+                        android:padding="@dimen/_20sdp"
                         android:gravity="center"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_20sdp" />
 
                     <TextView
                         android:id="@+id/textView4"
@@ -180,7 +179,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/sixThings"
                         android:textColor="@color/white"
-                        android:layout_marginTop="15dp" />
+                        android:layout_marginTop="@dimen/_15sdp" />
 
                     <TextView
                         android:id="@+id/detail2_otherProfile"
@@ -195,10 +194,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_user_profile"
-                        android:padding="20dp"
+                        android:padding="@dimen/_20sdp"
                         android:gravity="center"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_20sdp" />
 
                     <TextView
                         android:id="@+id/textView6"
@@ -207,7 +206,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/personality"
                         android:textColor="@color/white"
-                        android:layout_marginTop="15dp" />
+                        android:layout_marginTop="@dimen/_15sdp" />
 
                     <TextView
                         android:id="@+id/detail3_otherProfile"
@@ -222,10 +221,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_user_profile"
-                        android:padding="20dp"
+                        android:padding="@dimen/_20sdp"
                         android:gravity="center"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_20sdp" />
 
                     <TextView
                         android:id="@+id/textView8"
@@ -234,7 +233,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/idealDay"
                         android:textColor="@color/white"
-                        android:layout_marginTop="15dp" />
+                        android:layout_marginTop="@dimen/_15sdp" />
 
                     <TextView
                         android:id="@+id/detail4_otherProfile"
@@ -242,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="Small Text"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/activity_other_noIdeal"
@@ -251,11 +250,11 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_user_profile"
                         android:gravity="center"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:paddingBottom="20dp"
-                        android:paddingTop="20dp" />
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:paddingBottom="@dimen/_20sdp"
+                        android:paddingTop="@dimen/_20sdp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

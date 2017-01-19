@@ -12,7 +12,6 @@ interface IOtherUserProfileView {
     void setUserDetailFour(String userDetailFour);
     void setUserLocation(String latitude, String longitude, String country);
     void loadProfileImage(String imageURL);
-    void fetchOtherUserProfile();
     void displayErrorToast();
     void showProgressbar();
     void showImgTravel();

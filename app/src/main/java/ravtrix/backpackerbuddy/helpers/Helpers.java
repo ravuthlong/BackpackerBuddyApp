@@ -43,11 +43,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttpClient;
 import ravtrix.backpackerbuddy.UserLocation;
 import ravtrix.backpackerbuddy.activities.signup2.OnCountryReceived;
 import ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear.OnLocationReceivedGuest;
 import ravtrix.backpackerbuddy.interfacescom.OnGeocoderFinished;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
+import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +92,14 @@ public class Helpers {
             pDialog.dismiss();
     }
 
+    private static OkHttpClient okClient() {
+        return new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .build();
+    }
+
     /**
      * Create a retrofit object
      * @param serverURL       the url to the server
@@ -98,6 +108,7 @@ public class Helpers {
 
         return new Retrofit.Builder()
                 .baseUrl(serverURL)
+                .client(okClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
@@ -364,17 +375,13 @@ public class Helpers {
      * @param userLocalStore    the local information about the user
      * @param currentTime       the current time
      */
-    public static void updateLocationAndTime(final Activity activity, final UserLocalStore userLocalStore, final long currentTime) {
+    private static void updateLocationAndTime(final Activity activity, final UserLocalStore userLocalStore, final long currentTime) {
 
-        System.out.println("UPDATE COME");
         if (activity != null && isConnectedToInternet(activity) && (userLocalStore.getLoggedInUser().getUserID() != 0)) {
-            System.out.println("FETCH COME");
-
             UserLocation userLocation = new UserLocation(activity);
             userLocation.startLocationService(new UserLocationInterface() {
                 @Override
                 public void onReceivedLocation(final double latitude, final double longitude) {
-                    System.out.println("RECEIVED COME");
                     final HashMap<String, String> locationHash = new HashMap<>();
                     locationHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
                     locationHash.put("longitude", Double.toString(longitude));
@@ -384,55 +391,20 @@ public class Helpers {
                     new RetrieveCountryGeoTask(activity, longitude, latitude, new OnCountryGeoRetrievedListener() {
                         @Override
                         public void onCountryReceived(String country) {
-                            Helpers.displayToast(activity, "RECEIVED COME FROM GEO");
                             locationHash.put("country", country);
-                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                            retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude, activity);
                         }
                         @Override
                         public void onIOException() {
-                            System.out.println("TRY ASYNCH");
                             new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
                                 @Override
                                 public void onCountryRetrieved(String country) {
-                                    System.out.println("COUNTRY ASYNC COME");
-
                                     locationHash.put("country", country);
-                                    retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
+                                    retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude, activity);
                                 }
                             }).execute();
                         }
                     }).execute();
-
-
-                    /*
-                    try {
-                        System.out.println("TRY GEOCODE");
-
-
-                        String country = getCountryGeocoder(activity, latitude, longitude, new OnCountryReceived() {
-                            @Override
-                            public void onCountryReceived(String country) {
-                                System.out.println("COUNTRY COME");
-
-                                locationHash.put("country", country);
-                                retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
-                            }
-                        });
-                        System.out.println("COUNTRY GEOCODE - " + country);
-
-                    } catch (IOException e) {
-                        System.out.println("TRY ASYNCH");
-
-                        new RetrieveCountryTask(Double.toString(latitude), Double.toString(longitude), new OnCountryRetrievedListener() {
-                            @Override
-                            public void onCountryRetrieved(String country) {
-                                System.out.println("COUNTRY ASYNC COME");
-
-                                locationHash.put("country", country);
-                                retrofitUpdateLocation(userLocalStore, currentTime, locationHash, latitude, longitude);
-                            }
-                        }).execute();
-                    }*/
                 }
             });
         }
@@ -452,7 +424,8 @@ public class Helpers {
     }
 
     private static void retrofitUpdateLocation(final UserLocalStore userLocalStore, final long currentTime,
-                                          HashMap<String, String> locationHash, final double latitude, final double longitude) {
+                                               HashMap<String, String> locationHash, final double latitude, final double longitude,
+                                               final Activity activity) {
         Call<JsonObject> jsonObjectCall =  RetrofitUserInfoSingleton.getRetrofitUserInfo().updateLocation().updateLocation(locationHash);
         jsonObjectCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -461,7 +434,9 @@ public class Helpers {
                 userLocalStore.changelatitude(latitude);
                 userLocalStore.changeLongitude(longitude);
                 userLocalStore.changeTime(currentTime);
-                System.out.println("LOCATION UPDATED");
+
+                LocationUpdateSharedPreference locationUpdateSharedPreference = new LocationUpdateSharedPreference(activity);
+                locationUpdateSharedPreference.setLocationNotUpdating();
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {}
@@ -474,12 +449,20 @@ public class Helpers {
     public static void checkLocationUpdate(Activity activity, UserLocalStore userLocalStore) {
         long currentTime = System.currentTimeMillis();
 
-        // If it's been 5 minute since last location update, do the update
-        // userLocalStore.getLoggedInUser().getTime() > currentTime shows rare case when user manually changed their mobile
-        // time last time they access the app
-        if ((Helpers.timeDifInMinutes(currentTime,
-                userLocalStore.getLoggedInUser().getTime()) > 2) || (userLocalStore.getLoggedInUser().getTime() > currentTime)) {
-            Helpers.updateLocationAndTime(activity, userLocalStore, currentTime);
+        LocationUpdateSharedPreference locationUpdateSharedPreference = new LocationUpdateSharedPreference(activity);
+
+        // Check to make sure the app is not already running location update
+        if (!locationUpdateSharedPreference.isLocationUpdating()) {
+            // If it's been 5 minute since last location update, do the update
+            // userLocalStore.getLoggedInUser().getTime() > currentTime shows rare case when user manually changed their mobile
+            // time last time they access the app
+            if ((Helpers.timeDifInMinutes(currentTime,
+                    userLocalStore.getLoggedInUser().getTime()) > 5) || (userLocalStore.getLoggedInUser().getTime() > currentTime)) {
+                // User is updating on this fragment. Prevent other fragments from updating the location
+                locationUpdateSharedPreference.setLocationUpdating();
+
+                Helpers.updateLocationAndTime(activity, userLocalStore, currentTime);
+            }
         }
     }
 
@@ -624,13 +607,13 @@ public class Helpers {
         }
     }
 
-    public static class RetrieveCountryGeoTask extends AsyncTask<Void, Void, String> {
+    private static class RetrieveCountryGeoTask extends AsyncTask<Void, Void, String> {
 
         private Context context;
         private double longitude, latitude;
         private OnCountryGeoRetrievedListener onCountryGeoRetrievedListener;
 
-        public RetrieveCountryGeoTask(Context context, double longitude, double latitude,
+        RetrieveCountryGeoTask(Context context, double longitude, double latitude,
                                       OnCountryGeoRetrievedListener onCountryGeoRetrievedListener) {
             this.context = context;
             this.longitude = longitude;
@@ -676,12 +659,11 @@ public class Helpers {
             this.latitude = latitude;
             this.longitude = longitude;
             this.onCountryRetrievedListener = onCountryRetrievedListener;
-            System.out.println("SET ASYNCH");
 
         }
         @Override
         protected String doInBackground(Void... voids) {
-            System.out.println("PERFORMING ASYNCH");
+            //System.out.println("PERFORMING ASYNCH");
 
             URL url;
             HttpURLConnection urlConnection = null;
@@ -728,7 +710,7 @@ public class Helpers {
 
         @Override
         protected void onPostExecute(String s) {
-            System.out.println("ON POST EXECUTION CALLED COUNTRY IS: " + s);
+            //System.out.println("ON POST EXECUTION CALLED COUNTRY IS: " + s);
             onCountryRetrievedListener.onCountryRetrieved(s);
         }
     }

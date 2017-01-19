@@ -36,7 +36,9 @@
                 android:gravity="top|left"
                 android:scrollbars="vertical"
                 android:hint="@string/writeBucket"
-                android:padding="15dp" />
+                android:padding="@dimen/_15sdp"
+                android:textSize="@dimen/_13ssp"
+                />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

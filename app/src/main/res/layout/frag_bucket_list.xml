@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp">
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_15sdp">
 
             <TextView
                 android:id="@+id/frag_bucket_txAddBucket"
@@ -30,7 +30,7 @@
                 android:text="Add To Bucket List"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/selector_color"
-                android:textSize="18sp" />
+                android:textSize="@dimen/_15ssp" />
 
             <ImageView
                 android:id="@+id/frag_bucket_imgAdd"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:textSize="18sp"
+            android:textSize="@dimen/_15ssp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 

@@ -80,9 +80,10 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
         swipeRefreshLayout.setOnRefreshListener(this);
 
         userLocalStore = new UserLocalStore(getContext());
+        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
+
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerView.addItemDecoration(dividerDecorator);
-        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
         fetchPerfectPhotos();
         return view;

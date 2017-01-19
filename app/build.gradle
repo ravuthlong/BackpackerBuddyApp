@@ -66,5 +66,9 @@ dependencies {
     //Autofit text
     compile 'me.grantland:autofittextview:0.2.+'
 
+    compile 'com.intuit.sdp:sdp-android:1.0.4'
+    compile 'com.intuit.ssp:ssp-android:1.0.4'
+
+
 }
 apply plugin: 'com.google.gms.google-services'

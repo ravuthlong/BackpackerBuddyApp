@@ -49,16 +49,16 @@
                 <EditText
                     android:id="@+id/activity_post_perfect_post"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="@dimen/_90sdp"
                     android:inputType="textPersonName|textMultiLine|textCapSentences"
                     android:hint="Why is it so perfect?"
                     android:ems="10"
                     android:background="@android:color/transparent"
-                    android:textSize="13sp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginBottom="1dp"
-                    android:padding="5dp" />
+                    android:textSize="@dimen/_11ssp"
+                    android:layout_marginLeft="@dimen/_1sdp"
+                    android:layout_marginRight="@dimen/_1sdp"
+                    android:layout_marginBottom="@dimen/_1sdp"
+                    android:padding="@dimen/_5sdp" />
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>

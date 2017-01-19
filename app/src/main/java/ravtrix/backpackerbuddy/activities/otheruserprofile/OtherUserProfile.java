@@ -1,7 +1,6 @@
 package ravtrix.backpackerbuddy.activities.otheruserprofile;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +47,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.linearOtherProfile) protected LinearLayout linearLayout;
     private OtherUserProfilePresenter otherUserProfilePresenter;
     private int otherUserID;
+    private String otherUserImage = "";
     private UserLocalStore userLocalStore;
 
     @Override
@@ -83,6 +83,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
                 if (userLocalStore.getLoggedInUser().getUserID() != 0) {
                     Intent convoIntent = new Intent(this, ConversationActivity.class);
                     convoIntent.putExtra("otherUserID", Integer.toString(otherUserID));
+                    convoIntent.putExtra("otherUserImage", otherUserImage);
                     startActivity(convoIntent);
                 } else {
                     Helpers.displayToast(this, "Become a member to chat");
@@ -103,7 +104,6 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    @Override
     public void fetchOtherUserProfile() {
         final Bundle postInfo = getIntent().getExtras();
         this.otherUserID = postInfo.getInt("userID");
@@ -156,7 +156,6 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
         } else {
             this.userDetailFour.setVisibility(View.GONE);
             this.noIdeal.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -167,6 +166,8 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
 
     @Override
     public void loadProfileImage(String imageURL) {
+
+        this.otherUserImage = imageURL;
         Picasso.with(getApplicationContext())
                 .load(imageURL)
                 .fit()
@@ -238,28 +239,5 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     public void showFloatingButtonMessage() {
         messageButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Retrieve city and country location information from google location API
-     */
-    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
-        String latitude;
-        String longitude;
-
-        RetrieveCityCountryTask(String latitude, String longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return (Helpers.getLocationInfo(latitude, longitude));
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            tvLocation.setText(s);
-        }
     }
 }
