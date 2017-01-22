@@ -5,7 +5,7 @@ The user can sign up, create a personalized profile, post their traveling itiner
 
 This personal project was inspired by my solo trip around Eastern Europe in June of 2016. :)
 
-# Some Noteable Tools Used </b>
+# Some Notable Tools Used </b>
 * MySQL for database </b>
 * Firebase Cloud Messaging for chat </b>
 * Firebase Cloud Messaging for new message notification </b>
