@@ -20,7 +20,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.bucketlist.EditBucketActivity;
+import ravtrix.backpackerbuddy.activities.bucketlist.editbucket.EditBucketActivity;
 import ravtrix.backpackerbuddy.fragments.bucketlist.BucketListFrag;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserBucketListSingleton;

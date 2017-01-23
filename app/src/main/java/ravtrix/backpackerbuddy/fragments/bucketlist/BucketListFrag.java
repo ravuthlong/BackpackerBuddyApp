@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.BucketComparator;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.bucketlist.BucketPostActivity;
+import ravtrix.backpackerbuddy.activities.bucketlist.newbucket.BucketPostActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserBucketListSingleton;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;

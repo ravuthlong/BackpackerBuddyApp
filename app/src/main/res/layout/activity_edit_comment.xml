@@ -61,7 +61,7 @@
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:gravity="top|left"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:background="@android:color/transparent"
                     android:inputType="textMultiLine|textCapSentences"
                     android:maxLines="10"

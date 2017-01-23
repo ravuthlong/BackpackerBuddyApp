@@ -23,8 +23,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
-import ravtrix.backpackerbuddy.activities.discussion.EditDiscussionActivity;
+import ravtrix.backpackerbuddy.activities.discussion.discussioncomments.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.discussion.editdiscussion.EditDiscussionActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.discussionroom.DiscussionRoomFragment;
 import ravtrix.backpackerbuddy.fragments.managedestination.auserdiscussionposts.AUserDisPostsFragment;

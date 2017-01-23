@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.message;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +29,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserChatSingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
 import ravtrix.backpackerbuddy.recyclerviewfeed.userinboxrecyclerview.adapter.FeedListAdapterInbox;
@@ -45,18 +44,12 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
     @BindView(R.id.frag_userinbox_recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.frag_userInbox_swipeRefresh) protected SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tvNoInfo_FragInbox) protected TextView noInbox;
+    @BindView(R.id.frag_inbox_progressBar) protected ProgressBar progressBar;
     private FeedListAdapterInbox feedListAdapterInbox;
     private List<FeedItemInbox> feedItemInbox;
     private UserLocalStore userLocalStore;
     private DatabaseReference mFirebaseDatabaseReference;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-    }
 
     @Nullable
     @Override
@@ -65,14 +58,14 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         FirebaseMessagingService.cancelNotification(getActivity(), 0);
 
         ButterKnife.bind(this, view);
-        view.setVisibility(View.INVISIBLE);
+        swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         Helpers.overrideFonts(getContext(), noInbox);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerView.addItemDecoration(dividerDecorator);
 
-        fragActivityProgressBarInterface.setProgressBarVisible();
         userLocalStore = new UserLocalStore(getContext());
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -109,8 +102,9 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                                     // and whether or not you are the creator of that chat
 
                 if (feedItemInbox.get(0).getSuccess() == 0) {
-                    fragActivityProgressBarInterface.setProgressBarInvisible();
-                    view.setVisibility(View.VISIBLE);
+                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+
                     noInbox.setVisibility(View.VISIBLE);
                     swipeRefreshLayout.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
@@ -142,7 +136,9 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
             @Override
             public void onFailure(Call<List<FeedItemInbox>> call, Throwable t) {
-                fragActivityProgressBarInterface.setProgressBarInvisible();
+
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
                 Helpers.displayErrorToast(getContext());
             }
         });
@@ -213,12 +209,11 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                 if (counter.getI() == feedItemInbox.size()) {
                                     // Sort chat rooms in order based on time
                                     Collections.sort(feedItemInbox);
-                                    feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox,
-                                            view, fragActivityProgressBarInterface);
+                                    feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox);
                                     setRecyclerView(feedListAdapterInbox);
 
-                                    fragActivityProgressBarInterface.setProgressBarInvisible();
-                                    view.setVisibility(View.VISIBLE);
+                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
                             }
 

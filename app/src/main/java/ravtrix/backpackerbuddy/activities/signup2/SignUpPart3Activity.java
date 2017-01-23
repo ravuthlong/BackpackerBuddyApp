@@ -113,19 +113,20 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         // Prevents double clicking
         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
             return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        switch (item.getItemId()) {
-            case R.id.submitSend:
+        } else {
+            mLastClickTime = SystemClock.elapsedRealtime();
+            switch (item.getItemId()) {
+                case R.id.submitSend:
 
-                if (isPhotoUploaed) {
-                    signUserUp();
-                } else {
-                    Helpers.displayToast(this, "You must upload a photo...");
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                    if (isPhotoUploaed) {
+                        signUserUp();
+                    } else {
+                        Helpers.displayToast(this, "You must upload a photo...");
+                    }
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
     }
 

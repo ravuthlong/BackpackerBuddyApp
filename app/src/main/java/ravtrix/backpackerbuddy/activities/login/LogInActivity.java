@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
@@ -69,16 +66,11 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         // Only continue if google play services is available
         if (Helpers.checkPlayServices(this)) {
             if (username.isEmpty() && password.isEmpty()) {
-                // Animation bounce if username AND password fields entered are empty
-                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
-                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
-
+                Helpers.displayToast(this, "Empty fields");
             } else if (username.isEmpty()) {
-                // Animation bounce if username field entered is empty
-                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInUsername));
+                Helpers.displayToast(this, "Empty username");
             } else if (password.isEmpty()) {
-                // Animation bounce if password field entered is empty
-                YoYo.with(Techniques.Bounce).duration(500).playOn(findViewById(R.id.etLoggedInPassword));
+                Helpers.displayToast(this, "Empty password");
             } else {
                 logInPresenter.logUserIn(username, password, token);
             }

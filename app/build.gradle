@@ -13,8 +13,8 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 23
-        versionName "1.7"
+        versionCode 24
+        versionName "1.8"
     }
     buildTypes {
         release {
@@ -33,8 +33,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     // Circle Image View
     compile 'de.hdodenhof:circleimageview:1.3.0'
@@ -43,10 +43,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
     // Picasso image loading
     compile 'com.squareup.picasso:picasso:2.5.2'
-    // Animations
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.daimajia.easing:library:1.0.1@aar'
-    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
     // Retrofit HTTP Client
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'

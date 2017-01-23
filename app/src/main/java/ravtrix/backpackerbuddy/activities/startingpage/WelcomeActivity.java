@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -105,7 +104,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(getApplicationContext(), error.getCause().toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -138,7 +136,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override

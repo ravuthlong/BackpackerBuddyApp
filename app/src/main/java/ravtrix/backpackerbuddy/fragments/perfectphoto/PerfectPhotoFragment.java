@@ -32,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.perfectphoto.PostPerfectPhotoActivity;
+import ravtrix.backpackerbuddy.activities.perfectphoto.postperfectphoto.PostPerfectPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitPerfectPhotoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;

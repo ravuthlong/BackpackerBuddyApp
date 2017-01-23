@@ -11,4 +11,5 @@ interface ISignUpPart1View {
     void displayEmailTakenDialog();
     void displayUsernameAndEmailTakenDialog();
     void displayErrorToast();
+    void hideProgressDialog();
 }

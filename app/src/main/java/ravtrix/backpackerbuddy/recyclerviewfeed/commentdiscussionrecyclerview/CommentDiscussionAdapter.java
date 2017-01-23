@@ -25,8 +25,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
-import ravtrix.backpackerbuddy.activities.discussion.EditDiscussionComment;
+import ravtrix.backpackerbuddy.activities.discussion.discussioncomments.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.discussion.editdiscussioncomment.EditDiscussionCommentActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
@@ -166,7 +166,7 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
                 // the user clicked on colors[which]
                 switch(which) {
                     case 0:
-                        Intent intent = new Intent(context, EditDiscussionComment.class);
+                        Intent intent = new Intent(context, EditDiscussionCommentActivity.class);
                         intent.putExtra("commentID", commentID);
                         intent.putExtra("comment", comment);
                         ((Activity) context).startActivityForResult(intent, 1); // request code 1

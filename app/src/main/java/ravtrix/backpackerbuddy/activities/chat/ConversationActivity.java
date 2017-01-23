@@ -66,8 +66,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         setContentView(R.layout.activity_conversation);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
-
         setTitle("Conversation");
+
         toolbar.setTitleTextColor(Color.WHITE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -80,6 +80,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         setChatRoom();
         setListeners();
     }
+
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView1, messageTextView2;
@@ -240,7 +241,6 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     mFirebaseDatabaseReference.child(chatRoomName)
                             .push().setValue(message);
                     textMessage.setText("");
-
                     passIntentResult(chatPosition, userMessage, time);
 
                 } else if (dataSnapshot.child(chatRoomName2).exists()) {
@@ -251,7 +251,6 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     mFirebaseDatabaseReference.child(chatRoomName2)
                             .push().setValue(message);
                     textMessage.setText("");
-
                     passIntentResult(chatPosition, userMessage, time);
                 } else {
 
@@ -262,13 +261,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
                     jsonObjectCall.enqueue(new Callback<JsonObject>() {
                         @Override
-                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            //success
-                        }
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
                         @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                        }
+                        public void onFailure(Call<JsonObject> call, Throwable t) {}
                     });
 
                     Map<String, Object> userData = new HashMap<>();
@@ -339,6 +334,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         userChat.setUserTwo(Integer.parseInt(otherUserID));
     }
 
+    /**
+     * Chat rooms information passed as bundle by item inbox
+     */
     private void setChatRoom() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -361,7 +359,6 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     }
 
     private void setListeners() {
-
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -402,8 +399,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
     @Override
     public void onBackPressed() {
-
-        System.out.println("BACKPRESS EXIT: " + backPressExit);
+        // backPressExit 1 if user navigate naturally
+        // backPressExit 0 if user opens app through push notification
         if (backPressExit == 0) {
             Intent intent = new Intent(this, UserMainPage.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

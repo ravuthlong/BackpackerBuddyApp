@@ -11,7 +11,7 @@ import retrofit2.Response;
  * Created by Ravinder on 1/11/17.
  */
 
-public class UserMainInteractor implements IUserMainInteractor {
+class UserMainInteractor implements IUserMainInteractor {
 
     @Override
     public void updateLocalstore(int userID, final OnRetrofitLogInListener onRetrofitLogInListener) {

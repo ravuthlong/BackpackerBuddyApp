@@ -11,8 +11,18 @@
         android:text="@string/noInbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:textSize="@dimen/_15ssp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:id="@+id/frag_inbox_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="false"
+        android:visibility="visible"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

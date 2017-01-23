@@ -65,7 +65,7 @@
                 android:maxLines="10"
                 android:scrollbars="vertical"
                 android:hint="@string/info"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_13ssp"
                 android:padding="@dimen/_5sdp" />
         </RelativeLayout>
     </ScrollView>

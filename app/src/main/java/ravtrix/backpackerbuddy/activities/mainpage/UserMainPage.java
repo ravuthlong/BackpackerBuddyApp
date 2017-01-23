@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.AppRater;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.SettingsActivity;
+import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;

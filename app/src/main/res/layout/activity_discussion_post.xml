@@ -34,7 +34,7 @@
                 android:layout_weight="1"
                 android:gravity="top|left"
                 android:scrollbars="vertical"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_13ssp"
                 android:hint="@string/writePost"
                 android:padding="@dimen/_15sdp" />
         </LinearLayout>

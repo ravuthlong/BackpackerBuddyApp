@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,11 +21,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.discussion.DiscussionPostActivity;
+import ravtrix.backpackerbuddy.activities.discussion.insertdiscussion.DiscussionPostActivity;
 import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
@@ -44,17 +43,12 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     @BindView(R.id.swipe_refresh_discussion) protected SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tvNoInfo_FragDiscussion) protected TextView tvNoInfo;
     @BindView(R.id.bFloatingActionButtonDiscussion) protected FloatingActionButton addPostButton;
+    @BindView(R.id.frag_discussion_progressBar) protected ProgressBar progressBar;
     private View view;
     private DiscussionAdapter discussionAdapter;
     private List<DiscussionModel> discussionModels;
     private UserLocalStore userLocalStore;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-    }
+    //private FragActivityProgressBarInterface fragActivityProgressBarInterface;
 
     @Nullable
     @Override
@@ -62,7 +56,11 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         view = inflater.inflate(R.layout.frag_discussion_room, container, false);
 
         ButterKnife.bind(this, view);
-        view.setVisibility(View.INVISIBLE);
+
+        swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        //fragActivityProgressBarInterface.setProgressBarVisible();
+
         FirebaseMessagingService.cancelNotification(getActivity(), 1);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
@@ -74,7 +72,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         addPostButton.setOnClickListener(this);
         Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
-        fragActivityProgressBarInterface.setProgressBarVisible();
         fetchDiscussionPosts();
 
         return view;
@@ -127,7 +124,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
                 if (response.body().get(0).getSuccess() == 1) {
                     discussionModels = response.body(); // GSON convert json into models
                 } else {
-                    fragActivityProgressBarInterface.setProgressBarInvisible();
                     view.setVisibility(View.VISIBLE);
                     discussionModels = new ArrayList<>(); //empty
                 }
@@ -172,8 +168,8 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     private void displayAfterLoading() {
         // stop progress bar
-        fragActivityProgressBarInterface.setProgressBarInvisible();
-        view.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
 
         // stop refreshing layout is it is running
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {

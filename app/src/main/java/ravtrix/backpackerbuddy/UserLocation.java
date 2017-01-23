@@ -38,13 +38,14 @@ public class UserLocation {
      */
     public void startLocationService(UserLocationInterface userLocationInterface) {
         this.userLocationInterface = userLocationInterface;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        System.out.println("START SERVICE");
 
-        gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        setLocationListener();
-        checkPermission();
+        if (context != null) {
+            locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            setLocationListener();
+            checkPermission();
+        }
     }
 
     /**

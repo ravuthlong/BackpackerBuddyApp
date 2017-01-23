@@ -83,12 +83,7 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
 
             String username = bundle.getString("firstName") + bundle.getString("lastName");
             etUsernameFB.setText(username);
-
-            Picasso.with(this)
-                    .load(bundle.getString("imageURL"))
-                    .fit()
-                    .centerCrop()
-                    .into(imageFB);
+            setProfileImage(bundle.getString("imageURL"));
         }
     }
 
@@ -208,6 +203,14 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
         if (AccessToken.getCurrentAccessToken() != null){
             LoginManager.getInstance().logOut();
         }
+    }
+
+    private void setProfileImage(String image) {
+        Picasso.with(this)
+                .load(image)
+                .fit()
+                .centerCrop()
+                .into(imageFB);
     }
 
     private void signUp(HashMap<String, String> userInfo) {

@@ -22,7 +22,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
 import ravtrix.backpackerbuddy.fragments.message.MessagesFragment;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.userinboxrecyclerview.data.FeedItemInbox;
 
@@ -35,20 +34,17 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
     private LayoutInflater inflater;
     private Context context;
     private List<FeedItemInbox> feedItemInbox;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private UserLocalStore userLocalStore;
     private MessagesFragment messagesFragment;
     private FeedListAdapterInbox.ViewHolder viewHolder;
     private ArrayList<View> itemViews;
     private int i = 0;
 
-    public FeedListAdapterInbox(MessagesFragment messagesFragment, Context context, List<FeedItemInbox> feedItemInbox, View view,
-                                FragActivityProgressBarInterface fragActivityProgressBarInterface) {
+    public FeedListAdapterInbox(MessagesFragment messagesFragment, Context context, List<FeedItemInbox> feedItemInbox) {
         if (context != null) {
             this.context = context;
             this.inflater = LayoutInflater.from(context);
             this.feedItemInbox = feedItemInbox;
-            this.fragActivityProgressBarInterface = fragActivityProgressBarInterface;
             this.messagesFragment = messagesFragment;
             this.userLocalStore = new UserLocalStore(context);
             this.itemViews = new ArrayList<>();

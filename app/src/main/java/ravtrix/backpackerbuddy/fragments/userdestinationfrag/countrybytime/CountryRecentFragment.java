@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.userdestinationfrag.countrybytime;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +29,6 @@ import ravtrix.backpackerbuddy.activities.createdestination.DestinationActivity;
 import ravtrix.backpackerbuddy.fragments.userdestinationfrag.CountryTabFragment;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.adapter.FeedListAdapterMain;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.data.FeedItem;
@@ -48,30 +47,26 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
     @BindView(R.id.swipe_refresh_country)protected SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.bFloatingActionButton) protected FloatingActionButton floatingActionButton;
     @BindView(R.id.tvNoInfo_FragUserCountries) protected TextView tvNoResult;
+    @BindView(R.id.frag_usercountries_progressBar) protected ProgressBar progressBar;
     private List<FeedItem> feedItems;
     private List<FeedItem> feedTen;
     private FeedListAdapterMain feedListAdapter;
     private UserLocalStore userLocalStore;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private View view;
     private Bundle receivedQueryBundle;
     private LinearLayoutManager linearLayoutManager;
     private MenuItem bRecentPostsItem;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_usercountries_recent, container, false);
-        view.setVisibility(View.INVISIBLE);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+
+        recyclerView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         feedListAdapter = null;
         userLocalStore = new UserLocalStore(getActivity());
@@ -79,7 +74,6 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         feedItems = new ArrayList<>();
         feedTen = new ArrayList<>();
 
-        fragActivityProgressBarInterface.setProgressBarVisible();
         Helpers.overrideFonts(getContext(), tvNoResult);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
@@ -249,15 +243,16 @@ public class CountryRecentFragment extends Fragment implements  View.OnClickList
         feedListAdapter.setRecyclerView(recyclerView);
 
         setRecyclerView(feedListAdapter);
-        fragActivityProgressBarInterface.setProgressBarInvisible();
-        view.setVisibility(View.VISIBLE);
+
+        recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         swipeRefreshLayout.setRefreshing(false);
     }
 
     private void showErrorMessage() {
-        fragActivityProgressBarInterface.setProgressBarInvisible();
+        recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         Helpers.displayErrorToast(getContext());
-        view.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(false);
     }
 

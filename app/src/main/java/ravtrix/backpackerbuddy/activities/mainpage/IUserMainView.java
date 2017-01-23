@@ -6,6 +6,6 @@ import ravtrix.backpackerbuddy.models.LoggedInUser;
  * Created by Ravinder on 10/4/16.
  */
 
-public interface IUserMainView {
+interface IUserMainView {
     void updateLocalstore(LoggedInUser updated);
 }

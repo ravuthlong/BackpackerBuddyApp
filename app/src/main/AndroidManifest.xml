@@ -57,7 +57,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.settings.SettingsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
@@ -100,63 +100,63 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".activities.userinfoedit.ChangeEmail"
+            android:name=".activities.userinfoedit.changeemail.ChangeEmail"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.userinfoedit.ChangePassword"
+            android:name=".activities.userinfoedit.changepassword.ChangePassword"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.discussion.DiscussionPostActivity"
+            android:name=".activities.discussion.insertdiscussion.DiscussionPostActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.discussion.DiscussionComments"
+            android:name=".activities.discussion.discussioncomments.DiscussionComments"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.createdestination.DestinationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.discussion.EditDiscussionComment"
+            android:name=".activities.discussion.editdiscussioncomment.EditDiscussionCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.discussion.EditDiscussionActivity"
+            android:name=".activities.discussion.editdiscussion.EditDiscussionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.bucketlist.BucketPostActivity"
+            android:name=".activities.bucketlist.newbucket.BucketPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.bucketlist.EditBucketActivity"
+            android:name=".activities.bucketlist.editbucket.EditBucketActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.OtherUserBucketListActivity"
+            android:name=".activities.otheruserbucket.OtherUserBucketListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.facebooksignup.FacebookSignUpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AboutActivity"
+            android:name=".activities.aboutpage.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.NotificationActivity"
+            android:name=".activities.notificationsettings.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.userinfoedit.ChangeUsername"
+            android:name=".activities.userinfoedit.changeusername.ChangeUsername"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.perfectphoto.PostPerfectPhotoActivity"
+            android:name=".activities.perfectphoto.postperfectphoto.PostPerfectPhotoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.perfectphoto.CommentPerfectPhotoActivity"
+            android:name=".activities.perfectphoto.commentsperfectphoto.CommentPerfectPhotoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.perfectphoto.EditCommentPerfectPhoto"
+            android:name=".activities.perfectphoto.editcommentperfectphoto.EditCommentPerfectPhoto"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.perfectphoto.EditPhotoPostActivity"
+            android:name=".activities.perfectphoto.editphotopostperfect.EditPhotoPostActivity"
             android:screenOrientation="portrait" />
     </application>
 

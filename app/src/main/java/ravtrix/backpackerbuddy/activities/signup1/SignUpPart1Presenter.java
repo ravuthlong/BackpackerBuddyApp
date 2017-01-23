@@ -27,6 +27,7 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
         String errorFields = validate(username, password, email, etConfirmPassword);
 
         if (errorFields.length() > 0) {
+            iSignUpPart1View.hideProgressDialog();
             Toast toast= Toast.makeText((Activity) iSignUpPart1View,
                     errorFields, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);

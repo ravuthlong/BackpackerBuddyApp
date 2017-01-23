@@ -59,6 +59,7 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
         switch (item.getItemId()) {
             case R.id.submitSend:
+                progressDialog = Helpers.showProgressDialog(this, "Signing Up. Please wait...");
                 // Regular sign up
                 inputValidationAndNextStep();
                 return true;
@@ -79,8 +80,6 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
     // Go to part 2 sign up after location is received
     private void startPart2SignUp(final String email, final String username,final String password) {
-        progressDialog = Helpers.showProgressDialog(this, "Signing Up. Please wait...");
-
         userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(double latitude, double longitude) {
@@ -99,6 +98,8 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
     // Sign up without accessing latitude and longitude since user refuses
     private void startPart2WithoutLocation() {
+        Helpers.hideProgressDialog(progressDialog);
+
         Intent intent = new Intent(SignUpPart1Activity.this, SignUpPart3Activity.class);
         intent.putExtra("email", email);
         intent.putExtra("username", username);
@@ -131,21 +132,32 @@ public class SignUpPart1Activity extends OptionMenuSendBaseActivity implements I
 
     @Override
     public void displayUsernameTakenDialog() {
+        Helpers.hideProgressDialog(progressDialog);
+
         Helpers.showAlertDialog(this, "Username has been taken...");
     }
 
     @Override
     public void displayEmailTakenDialog() {
+        Helpers.hideProgressDialog(progressDialog);
+
         Helpers.showAlertDialog(this, "Email has been taken...");
     }
 
     @Override
     public void displayUsernameAndEmailTakenDialog() {
+        Helpers.hideProgressDialog(progressDialog);
         Helpers.showAlertDialog(this, "Username and Email have been taken...");
+    }
+
+    public void hideProgressDialog() {
+        Helpers.hideProgressDialog(progressDialog);
     }
 
     @Override
     public void displayErrorToast() {
+        Helpers.hideProgressDialog(progressDialog);
+
         Helpers.displayToast(this, "Error. Try again...");
     }
 

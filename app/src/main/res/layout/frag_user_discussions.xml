@@ -15,14 +15,23 @@
         android:layout_gravity="center_vertical"
         android:textSize="@dimen/_15ssp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_userFav"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/greenBackground"
-            android:choiceMode="singleChoice"
-            android:layout_gravity='start' >
+    <ProgressBar
+        android:id="@+id/frag_a_user_discussion_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="false"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
 
-        </android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_userFav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greenBackground"
+        android:choiceMode="singleChoice"
+        android:layout_gravity='start' >
+
+    </android.support.v7.widget.RecyclerView>
 
 </android.support.design.widget.CoordinatorLayout>

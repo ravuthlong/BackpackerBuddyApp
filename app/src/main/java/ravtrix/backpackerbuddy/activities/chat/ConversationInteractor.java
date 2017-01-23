@@ -21,12 +21,9 @@ class ConversationInteractor implements IConversationInteractor {
                         username + ": " + message, userID);
         retrofit.enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                // Notified the other user
-            }
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-            }
+            public void onFailure(Call<JsonObject> call, Throwable t) {}
         });
     }
 }

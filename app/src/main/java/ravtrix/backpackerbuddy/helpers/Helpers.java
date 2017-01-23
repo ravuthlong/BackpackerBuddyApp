@@ -603,7 +603,7 @@ public class Helpers {
         if (!isConnectedToInternet(context)) {
             Helpers.displayToast(context, "Not connected to the internet");
         } else {
-            Helpers.displayToast(context, "Error");
+            Helpers.displayToast(context, "Problem loading...");
         }
     }
 

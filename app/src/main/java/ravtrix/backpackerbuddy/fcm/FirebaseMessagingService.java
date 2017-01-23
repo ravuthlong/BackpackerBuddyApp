@@ -13,7 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
-import ravtrix.backpackerbuddy.activities.discussion.DiscussionComments;
+import ravtrix.backpackerbuddy.activities.discussion.discussioncomments.DiscussionComments;
 
 /**
  * Created by Ravinder on 9/21/16.

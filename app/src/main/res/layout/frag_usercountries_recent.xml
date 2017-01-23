@@ -16,6 +16,15 @@
         android:layout_gravity="center_vertical"
         android:textSize="@dimen/_16sdp" />
 
+    <ProgressBar
+        android:id="@+id/frag_usercountries_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="false"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_country"
         android:layout_width="match_parent"

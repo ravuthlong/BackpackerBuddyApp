@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/greenBackground"
+    android:fitsSystemWindows="true">
 
-<ScrollView
+    <ProgressBar
+        android:id="@+id/frag_profile_progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:indeterminate="false"
+        android:visibility="gone"
+        android:layout_gravity="center" />
+
+    <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+        <RelativeLayout
         android:id="@+id/relativeFragProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".fragments.userprofile.UserProfileFragment"
-        android:background="@color/greenBackground">
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/frameLayout"
@@ -324,4 +338,6 @@
 
         </LinearLayout>
     </RelativeLayout>
+
 </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

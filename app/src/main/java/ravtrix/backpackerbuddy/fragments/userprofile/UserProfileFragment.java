@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,7 +33,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
 import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
@@ -69,10 +68,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.txtTravel) protected TextView txtTravel;
     @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
     @BindView(R.id.imgTravelStatusEdit) protected ImageView imgTravelStatusEdit;
-    @BindView(R.id.relativeFragProfile) protected RelativeLayout relativeLayout;
+    @BindView(R.id.relativeFragProfile) protected RelativeLayout relativeFragProfile;
+    @BindView(R.id.frag_profile_progressBar) protected ProgressBar progressBar;
     private UserLocalStore userLocalStore;
     private View v;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
     private FragActivityUpdateProfilePic fragActivityUpdateProfilePic;
     private boolean isDetailOneAHint = true;
     private boolean isDetailTwoAHint = true;
@@ -86,7 +85,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
         this.fragActivityUpdateProfilePic = (FragActivityUpdateProfilePic) context;
     }
 
@@ -94,15 +92,15 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.frag_user_profile, container, false);
-        v.setVisibility(View.INVISIBLE);
-        fragActivityProgressBarInterface.setProgressBarVisible();
         ButterKnife.bind(this, v);
+        relativeFragProfile.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         userLocalStore = new UserLocalStore(getActivity());
         presenter = new UserProfilePresenter(this);
 
         setProfilePic();
-        Helpers.overrideFonts(getActivity(), relativeLayout);
+        Helpers.overrideFonts(getActivity(), relativeFragProfile);
         setViewListeners();
         //checkLocationUpdate();
 
@@ -277,11 +275,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
     @Override
     public void hideProgressBar() {
-        fragActivityProgressBarInterface.setProgressBarInvisible();
+        progressBar.setVisibility(View.INVISIBLE);
     }
     @Override
     public void setViewVisible() {
-        v.setVisibility(View.VISIBLE);
+        relativeFragProfile.setVisibility(View.VISIBLE);
     }
     @Override
     public void setDetailOneColor() {
@@ -368,30 +366,5 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void hideProgressDialog() {
         Helpers.hideProgressDialog(progressDialog);
-    }
-
-    /**
-     * Retrieve city and country location information from google location API
-     */
-    private class RetrieveCityCountryTask extends AsyncTask<Void, Void, String> {
-        String latitude;
-        String longitude;
-
-        RetrieveCityCountryTask(String latitude, String longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            return (Helpers.getLocationInfo(latitude, longitude));
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            tvLocation.setText(s);
-            setViewVisible();
-            hideProgressBar();
-        }
     }
 }

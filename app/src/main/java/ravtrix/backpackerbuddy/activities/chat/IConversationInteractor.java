@@ -9,7 +9,7 @@ interface IConversationInteractor {
 
     /**
      * Notify the other user the message has been sent to them
-     * @param message           the message
+     * @param message           - the message
      */
     void notifyOtherUser(String message, String otherUserID, String username, int userID);
 }

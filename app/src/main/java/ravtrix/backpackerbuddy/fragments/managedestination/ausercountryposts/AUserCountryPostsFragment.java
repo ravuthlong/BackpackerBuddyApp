@@ -1,6 +1,5 @@
 package ravtrix.backpackerbuddy.fragments.managedestination.ausercountryposts;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserCountrySingleton;
-import ravtrix.backpackerbuddy.interfacescom.FragActivityProgressBarInterface;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.adapter.FeedListAdapterAUserPosts;
 import ravtrix.backpackerbuddy.recyclerviewfeed.ausercountryrecyclerview.data.FeedItemAUserCountry;
@@ -35,28 +34,21 @@ public class AUserCountryPostsFragment extends Fragment {
 
     @BindView(R.id.recyclerView_userPost) protected RecyclerView recyclerView;
     @BindView(R.id.tvNoInfo_FragUserPost) protected TextView noInfoTv;
+    @BindView(R.id.frag_a_user_posts_progressBar) protected ProgressBar progressBar;
     private View view;
     private List<FeedItemAUserCountry> feedItemAUserCountries;
     private FeedListAdapterAUserPosts feedListAdapterAUserPosts;
     private UserLocalStore userLocalStore;
-    private FragActivityProgressBarInterface fragActivityProgressBarInterface;
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.fragActivityProgressBarInterface = (FragActivityProgressBarInterface) context;
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.frag_user_posts, container, false);
-        view.setVisibility(View.GONE);
         ButterKnife.bind(this, view);
 
-        fragActivityProgressBarInterface.setProgressBarVisible();
+        recyclerView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         Helpers.overrideFonts(getContext(), noInfoTv);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_main);
@@ -81,7 +73,7 @@ public class AUserCountryPostsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<FeedItemAUserCountry>> call, Response<List<FeedItemAUserCountry>> response) {
 
-                view.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 if (response.body().get(0).isSuccess() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     noInfoTv.setVisibility(View.VISIBLE);
@@ -91,11 +83,13 @@ public class AUserCountryPostsFragment extends Fragment {
                     feedListAdapterAUserPosts = new FeedListAdapterAUserPosts(AUserCountryPostsFragment.this, feedItemAUserCountries);
                     setRecyclerView(feedListAdapterAUserPosts);
                 }
-                fragActivityProgressBarInterface.setProgressBarInvisible();
+                progressBar.setVisibility(View.INVISIBLE);
+                //fragActivityProgressBarInterface.setProgressBarInvisible();
             }
             @Override
             public void onFailure(Call<List<FeedItemAUserCountry>> call, Throwable t) {
                 System.out.println(t.getMessage());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -105,6 +99,4 @@ public class AUserCountryPostsFragment extends Fragment {
         recyclerView.setAdapter(feedListAdapterAUserPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
-
 }

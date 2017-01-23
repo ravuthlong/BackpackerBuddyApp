@@ -43,7 +43,6 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
     private TextView tvDateArrival;
     private TextView tvDateLeave;
     protected String selectedCountry;
-    private static final int DIALOG_ID = 0;
     private static int thisYear;
     private static int thisDay;
     private static int thisMonth;
@@ -178,42 +177,6 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
         spinnerCountries.setAdapter(countryArrayAdapter);
     }
 
-    public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-        private DatePickerListenerFrom datePickerListenerFrom;
-
-        @Override
-        @NonNull
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            datePickerListenerFrom = (DatePickerListenerFrom) getActivity();
-
-            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay - 1);
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-            datePickerListenerFrom.returnDateFrom(year, monthOfYear, dayOfMonth);
-        }
-    }
-
-    public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-        private DatePickerListenerTo datePickerListenerTo;
-
-        @Override
-        @NonNull
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            datePickerListenerTo = (DatePickerListenerTo) getActivity();
-            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            datePickerListenerTo.returnDateTo(year, monthOfYear, dayOfMonth);
-        }
-    }
-
     @Override
     public void showProgressDialog() {
         this.progressDialog = Helpers.showProgressDialog(this, "Posting...");
@@ -268,5 +231,41 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
         dateTypeUntil.set(Calendar.MONTH, Integer.valueOf(monthString));
         dateTypeUntil.set(Calendar.YEAR, Integer.valueOf(yearString));
         dateTo = yearString + "-" + monthString + "-" + dayString;
+    }
+
+    public static class DatePickerFragmentFrom extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        private DatePickerListenerFrom datePickerListenerFrom;
+
+        @Override
+        @NonNull
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            datePickerListenerFrom = (DatePickerListenerFrom) getActivity();
+
+            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay - 1);
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            datePickerListenerFrom.returnDateFrom(year, monthOfYear, dayOfMonth);
+        }
+    }
+
+    public static class DatePickerFragmentTo extends android.support.v4.app.DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        private DatePickerListenerTo datePickerListenerTo;
+
+        @Override
+        @NonNull
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            datePickerListenerTo = (DatePickerListenerTo) getActivity();
+            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            datePickerListenerTo.returnDateTo(year, monthOfYear, dayOfMonth);
+        }
     }
 }
