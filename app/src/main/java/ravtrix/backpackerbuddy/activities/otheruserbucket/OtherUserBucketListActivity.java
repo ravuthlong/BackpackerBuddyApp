@@ -9,23 +9,17 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.BucketComparator;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserBucketListSingleton;
 import ravtrix.backpackerbuddy.recyclerviewfeed.bucketlistrecyclerview.adapter.BucketListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.bucketlistrecyclerview.data.BucketListModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class OtherUserBucketListActivity extends AppCompatActivity {
+public class OtherUserBucketListActivity extends AppCompatActivity implements IOtherUserBucketListView {
 
     @BindView(R.id.activity_other_recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.activity_other_progressBar) protected ProgressBar progressBar;
@@ -34,23 +28,26 @@ public class OtherUserBucketListActivity extends AppCompatActivity {
     private String otherUserID;
     private List<BucketListModel> bucketListModels;
     private RecyclerView.ItemDecoration dividerDecorator;
-    private BucketListAdapter bucketListAdapter;
+    private OtherUserBucketListPresenter otherUserBucketListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_user_bucket_list);
+
+        // View components set
         ButterKnife.bind(this);
         setTitle("Bucket List");
-
-        progressBar.setVisibility(View.VISIBLE);
+        setTypeface();
         Helpers.setToolbar(this, toolbar);
-
         dividerDecorator = new DividerDecoration(this, R.drawable.line_divider_inbox);
 
+        // Data set
         setBundle();
-        setTypeface();
-        fetchUserBucketList();
+
+        // Presenter set
+        otherUserBucketListPresenter = new OtherUserBucketListPresenter(this);
+        otherUserBucketListPresenter.fetchUserBucketList(otherUserID);
     }
 
     private void setBundle() {
@@ -61,41 +58,50 @@ public class OtherUserBucketListActivity extends AppCompatActivity {
         }
     }
 
-    private void fetchUserBucketList() {
-
-        Call<List<BucketListModel>> retrofit = RetrofitUserBucketListSingleton.getRetrofitBucketList()
-                .fetchUserBucketList()
-                .fetchUserBucketList(Integer.parseInt(otherUserID));
-
-        retrofit.enqueue(new Callback<List<BucketListModel>>() {
-            @Override
-            public void onResponse(Call<List<BucketListModel>> call, Response<List<BucketListModel>> response) {
-                progressBar.setVisibility(View.GONE);
-
-                if (response.body().get(0).getSuccess() == 0) {
-                    // Empty list
-                    recyclerView.setVisibility(View.GONE);
-                    tvNoBucket.setVisibility(View.VISIBLE);
-                } else {
-                    bucketListModels = response.body();
-                    Collections.sort(bucketListModels, new BucketComparator());
-
-                    bucketListAdapter = new BucketListAdapter(OtherUserBucketListActivity.this, null, bucketListModels);
-                    recyclerView.setAdapter(bucketListAdapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(OtherUserBucketListActivity.this));
-                    recyclerView.addItemDecoration(dividerDecorator);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BucketListModel>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Helpers.displayToast(OtherUserBucketListActivity.this, "Error");
-            }
-        });
-    }
-
     private void setTypeface() {
         Helpers.overrideFonts(this, tvNoBucket);
+    }
+
+    @Override
+    public void setBucketListModels(List<BucketListModel> bucketListModels) {
+        this.bucketListModels = bucketListModels;
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideRecyclerView() {
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showRecyclerView() {
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void displayErrorToast() {
+        Helpers.displayErrorToast(this);
+    }
+
+    @Override
+    public void showTvNoBucket() {
+        tvNoBucket.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setRecyclerView() {
+        BucketListAdapter bucketListAdapter = new BucketListAdapter(OtherUserBucketListActivity.this, null, bucketListModels);
+        recyclerView.setAdapter(bucketListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(OtherUserBucketListActivity.this));
+        recyclerView.addItemDecoration(dividerDecorator);
     }
 }

@@ -24,56 +24,53 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.insertdiscussion.DiscussionPostActivity;
 import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ravinder on 12/21/16.
  */
 
-public class DiscussionRoomFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class DiscussionRoomFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        IDiscussionRoomFragView {
 
     @BindView(R.id.postRecyclerViewDiscussion) protected  RecyclerView recyclerViewDiscussion;
     @BindView(R.id.swipe_refresh_discussion) protected SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tvNoInfo_FragDiscussion) protected TextView tvNoInfo;
     @BindView(R.id.bFloatingActionButtonDiscussion) protected FloatingActionButton addPostButton;
     @BindView(R.id.frag_discussion_progressBar) protected ProgressBar progressBar;
+    private DiscussionRoomFragPresenter discussionRoomFragPresenter;
     private View view;
     private DiscussionAdapter discussionAdapter;
     private List<DiscussionModel> discussionModels;
     private UserLocalStore userLocalStore;
-    //private FragActivityProgressBarInterface fragActivityProgressBarInterface;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_discussion_room, container, false);
-
         ButterKnife.bind(this, view);
-
         swipeRefreshLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        //fragActivityProgressBarInterface.setProgressBarVisible();
 
+        // Cancel push notification if exists
         FirebaseMessagingService.cancelNotification(getActivity(), 1);
 
+        // Adding decorator to recycler view
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
         recyclerViewDiscussion.addItemDecoration(dividerDecorator);
-        handleFloatingButtonScroll(addPostButton);
+
+        handleFloatingButtonScroll(addPostButton); // hiding floating button on scroll
 
         userLocalStore = new UserLocalStore(getContext());
+        discussionRoomFragPresenter = new DiscussionRoomFragPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         addPostButton.setOnClickListener(this);
-        Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
-        fetchDiscussionPosts();
-
+        Helpers.checkLocationUpdate(getActivity(), userLocalStore); // check the need for location update
+        discussionRoomFragPresenter.fetchDiscussionPosts(userLocalStore.getLoggedInUser().getUserID());
         return view;
     }
 
@@ -95,7 +92,11 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     @Override
     public void onRefresh() {
         // refresh fragment
-        fetchDiscussionPostsRefresh();
+       discussionRoomFragPresenter.fetchDiscussionPostsRefresh(userLocalStore.getLoggedInUser().getUserID());
+    }
+
+    public void refresh() {
+        discussionRoomFragPresenter.fetchDiscussionPostsRefresh(userLocalStore.getLoggedInUser().getUserID());
     }
 
     @Override
@@ -107,75 +108,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public void refresh() {
-        fetchDiscussionPostsRefresh();
-    }
-
-    private void fetchDiscussionPosts() {
-
-        Call<List <DiscussionModel>> retrofitCall = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
-                .getDiscussions()
-                .getDiscussions(userLocalStore.getLoggedInUser().getUserID());
-
-        retrofitCall.enqueue(new Callback<List<DiscussionModel>>() {
-            @Override
-            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
-
-                if (response.body().get(0).getSuccess() == 1) {
-                    discussionModels = response.body(); // GSON convert json into models
-                } else {
-                    view.setVisibility(View.VISIBLE);
-                    discussionModels = new ArrayList<>(); //empty
-                }
-
-                discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels, userLocalStore);
-                recyclerViewDiscussion.setAdapter(discussionAdapter);
-                recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
-                displayAfterLoading();
-            }
-            @Override
-            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
-                displayAfterLoading();
-                Helpers.displayErrorToast(getContext());
-            }
-        });
-    }
-
-    private void fetchDiscussionPostsRefresh() {
-        Call<List <DiscussionModel>> retrofitCall = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
-                .getDiscussions()
-                .getDiscussions(userLocalStore.getLoggedInUser().getUserID());
-
-        retrofitCall.enqueue(new Callback<List<DiscussionModel>>() {
-            @Override
-            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
-
-                if (response.body().get(0).getSuccess() == 1) {
-                    discussionModels = response.body(); // GSON convert json into models
-                } else {
-                    discussionModels = new ArrayList<>(); //empty
-                }
-                discussionAdapter.swap(discussionModels);
-                displayAfterLoading();
-            }
-            @Override
-            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
-                Helpers.displayErrorToast(getContext());
-                displayAfterLoading();
-            }
-        });
-    }
-
-    private void displayAfterLoading() {
-        // stop progress bar
-        swipeRefreshLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-
-        // stop refreshing layout is it is running
-        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
 
     // Hide floating action button on scroll down and show on scroll up
     private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {
@@ -197,4 +129,57 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         });
     }
 
+    @Override
+    public void displayErrorToast() {
+        Helpers.displayErrorToast(getContext());
+    }
+
+    @Override
+    public void swapData(List<DiscussionModel> discussionModels) {
+        discussionAdapter.swap(discussionModels);
+    }
+
+    @Override
+    public void setDiscussionModels(List<DiscussionModel> discussionModels) {
+        this.discussionModels = discussionModels;
+    }
+
+    @Override
+    public void setDiscussionModelsEmpty() {
+        this.discussionModels = new ArrayList<>(); //empty
+    }
+
+    @Override
+    public void setRecyclerView() {
+        discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels, userLocalStore);
+        recyclerViewDiscussion.setAdapter(discussionAdapter);
+        recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    @Override
+    public void hideSwipeLayout() {
+        swipeRefreshLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSwipeLayout() {
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopSwipeRefreshing() {
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
 }

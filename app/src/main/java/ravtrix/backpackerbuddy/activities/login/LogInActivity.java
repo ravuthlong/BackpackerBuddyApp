@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
@@ -27,6 +29,7 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
+    @BindView(R.id.activity_login_linear) protected LinearLayout linearLayout;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     private UserLocalStore userLocalStore;
     private LogInPresenter logInPresenter;
@@ -38,7 +41,9 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, linearLayout);
         setTitle("Log In");
+
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
     }

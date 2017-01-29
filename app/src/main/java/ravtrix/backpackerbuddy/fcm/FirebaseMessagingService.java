@@ -33,12 +33,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "FCM Notification Message: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody(), "0");
+            sendNotification(remoteMessage.getNotification().getBody(), "0", "");
         } else {
             // From server php
 
             if (remoteMessage.getData().get("type").equals("0")) {
-                sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"));
+                sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"),
+                        remoteMessage.getData().get("senderImage"));
             } else {
                 sendNotificationComment(remoteMessage.getData().get("message"),
                         Integer.parseInt(remoteMessage.getData().get("discussionID")),
@@ -47,10 +48,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
     }
 
-    private void sendNotification(String body, String senderID) {
+    private void sendNotification(String body, String senderID, String senderImage) {
 
         Intent intent = new Intent(this, ConversationActivity.class);
         intent.putExtra("otherUserID", senderID);
+        intent.putExtra("otherUserImage", senderImage);
         intent.putExtra("backpressExit", 0);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -70,12 +72,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notifBuilder.build()); // 0 id of notification
-    }
-
-    public static void cancelNotification(Context ctx, int notifyId) {
-        String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
-        nMgr.cancel(notifyId);
     }
 
     private void sendNotificationComment(String body, int discussionID, int ownerID) {
@@ -101,6 +97,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notifBuilder.build()); // 1 id of notification
+    }
 
+    public static void cancelNotification(Context ctx, int notifyId) {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) ctx.getSystemService(ns);
+        nMgr.cancel(notifyId);
     }
 }

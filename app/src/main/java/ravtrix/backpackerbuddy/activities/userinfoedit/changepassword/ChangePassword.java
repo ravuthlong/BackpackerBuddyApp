@@ -5,8 +5,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -14,18 +12,15 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class ChangePassword extends OptionMenuSaveBaseActivity {
+public class ChangePassword extends OptionMenuSaveBaseActivity implements IChangePasswordView {
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.tvUserPassword_change) protected EditText userPassword;
     @BindView(R.id.tvNewPassword_change) protected EditText newPassword;
     @BindView(R.id.tvNewPassword2_change) protected EditText newPassword2;
     private UserLocalStore userLocalStore;
+    private ChangePasswordPresenter changePasswordPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +31,7 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
         Helpers.setToolbar(this, toolbar);
         this.setTitle("Change password");
         userLocalStore = new UserLocalStore(this);
+        changePasswordPresenter = new ChangePasswordPresenter(this);
     }
 
     @Override
@@ -63,32 +59,12 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
      */
     private void changePassword(String oldPassword, String newPassword) {
 
-        HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("username", userLocalStore.getLoggedInUser().getUsername());
-        userInfo.put("oldpassword", oldPassword);
-        userInfo.put("newpassword", newPassword);
+        HashMap<String, String> passwordHash = new HashMap<>();
+        passwordHash.put("username", userLocalStore.getLoggedInUser().getUsername());
+        passwordHash.put("oldpassword", oldPassword);
+        passwordHash.put("newpassword", newPassword);
 
-        Call<JsonObject> passwordCheck = RetrofitUserInfoSingleton.getRetrofitUserInfo()
-                .changePassword()
-                .changePassword(userInfo);
-
-        passwordCheck.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                if (response.body().get("status").getAsInt() == 1) {
-                    Helpers.displayToast(ChangePassword.this, "Password changed successfully");
-                    finish();
-                }  else {
-                    // Changed unsuccessfully
-                    Helpers.displayToast(ChangePassword.this, "Problem changing password");
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayErrorToast(ChangePassword.this);
-            }
-        });
+        changePasswordPresenter.changePassword(passwordHash);
     }
 
 
@@ -117,4 +93,23 @@ public class ChangePassword extends OptionMenuSaveBaseActivity {
         return missingInfo;
     }
 
+    @Override
+    public void displayWrongPassword() {
+        Helpers.displayToast(ChangePassword.this, "Old password is incorrect");
+    }
+
+    @Override
+    public void passwordChangedToast() {
+        Helpers.displayToast(ChangePassword.this, "Password changed successfully");
+    }
+
+    @Override
+    public void displayErrorToast() {
+        Helpers.displayErrorToast(ChangePassword.this);
+    }
+
+    @Override
+    public void finished() {
+        finish();
+    }
 }

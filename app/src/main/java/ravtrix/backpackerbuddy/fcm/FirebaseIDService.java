@@ -25,6 +25,5 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
         // If you need to handle the generation of a token, initially or
         // after a refresh this is where you should do that.
         Log.d(TAG, "FCM Token: " + token);
-        System.out.println("TOKEN IS " + token);
     }
 }

@@ -28,7 +28,7 @@ import retrofit2.Response;
  * Created by Ravinder on 9/26/16.
  */
 
-public class RecentlyOnlineUsersFragment extends Fragment {
+public class RecentlyOnlineUsersFragment extends Fragment implements IFindBuddyRecentlyView {
     @BindView(R.id.grid_viewOnline) protected GridView profileImageGridView;
     @BindView(R.id.frag_gridview_recentlyOnline) protected TextView onlineTxt;
     @BindView(R.id.frag_gridview_online_progressbar) protected ProgressBar progressBar;
@@ -36,6 +36,7 @@ public class RecentlyOnlineUsersFragment extends Fragment {
     private UserLocalStore userLocalStore;
     private int currentSelectedDropdown;
     private CustomGridViewOnline customGridViewAdapter;
+    private List<UserLocationInfo> userList;
 
     @Nullable
     @Override
@@ -50,7 +51,6 @@ public class RecentlyOnlineUsersFragment extends Fragment {
         return view;
     }
 
-
     /**
      * Fetch recently online user through retrofit
      */
@@ -64,9 +64,11 @@ public class RecentlyOnlineUsersFragment extends Fragment {
         retrofitCall.enqueue(new Callback<List<UserLocationInfo>>() {
             @Override
             public void onResponse(Call<List<UserLocationInfo>> call, Response<List<UserLocationInfo>> response) {
-                List<UserLocationInfo> userList = response.body();
+                userList = response.body();
+
                 customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList);
                 profileImageGridView.setAdapter(customGridViewAdapter);
+
                 progressBar.setVisibility(View.INVISIBLE);
                 profileImageGridView.setVisibility(View.VISIBLE);
             }
@@ -90,5 +92,36 @@ public class RecentlyOnlineUsersFragment extends Fragment {
 
     public int getCurrentSelectedDropdown() {
         return this.currentSelectedDropdown;
+    }
+
+    @Override
+    public void setOnlineUserModels(List<UserLocationInfo> userModels) {
+        this.userList = userModels;
+    }
+
+    @Override
+    public void setGridView() {
+        customGridViewAdapter = new CustomGridViewOnline(getActivity(), userList);
+        profileImageGridView.setAdapter(customGridViewAdapter);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showGridView() {
+
+    }
+
+    @Override
+    public void hideGridView() {
+
     }
 }

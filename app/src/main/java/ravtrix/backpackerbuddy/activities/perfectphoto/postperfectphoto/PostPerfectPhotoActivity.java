@@ -17,8 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,13 +26,9 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuPostBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitPerfectPhotoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity {
+public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity implements IPostPerfectPhotoView {
 
     @BindView(R.id.activity_post_perfect_imgImage) protected ImageView imgPerfect;
     @BindView(R.id.activity_post_perfect_post) protected EditText post;
@@ -44,6 +38,8 @@ public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity {
     private long mLastClickTime = 0;
     private UserLocalStore userLocalStore;
     private Bitmap thumbnailBitmap;
+    private ProgressDialog progressDialog;
+    private PostPerfectPhotoPresenter postPerfectPhotoPresenter;
 
     public static void startWithUri(Context context, Fragment fragment, Uri uri) {
         Intent intent = new Intent(context, PostPerfectPhotoActivity.class);
@@ -66,6 +62,8 @@ public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity {
             thumbnailBitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.08), (int)(bitmap.getHeight()*0.08), true);
             imgPerfect.setImageBitmap(bitmap);
         } catch (IOException e) {e.printStackTrace();}
+
+        postPerfectPhotoPresenter = new PostPerfectPhotoPresenter(this);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity {
 
 
     private void postNewPerfectPhoto() {
-        final ProgressDialog progressDialog = Helpers.showProgressDialog(this, "Posting...");
+        showProgressBar();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ((BitmapDrawable) imgPerfect
                 .getDrawable())
@@ -117,21 +115,32 @@ public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity {
         perfectPhotoInfo.put("time", Long.toString(System.currentTimeMillis()));
         perfectPhotoInfo.put("post", post.getText().toString().trim());
 
-        Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
-                .insertPerfectPhoto()
-                .insertPerfectPhoto(perfectPhotoInfo);
-        retrofit.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Helpers.hideProgressDialog(progressDialog);
-                setResult(RESULT_REFRESH); // Send result 1 back to Fragment perfect photo to do refresh
-                finish();
-            }
+        // Send to retrofit
+        postPerfectPhotoPresenter.postNewPerfectPhoto(perfectPhotoInfo);
+    }
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayErrorToast(PostPerfectPhotoActivity.this);
-            }
-        });
+    @Override
+    public void showProgressBar() {
+        progressDialog = Helpers.showProgressDialog(this, "Posting...");
+    }
+
+    @Override
+    public void hideProgressBar() {
+        Helpers.hideProgressDialog(progressDialog);
+    }
+
+    @Override
+    public void setResultCode(int code) {
+        setResult(code);
+    }
+
+    @Override
+    public void finished() {
+        finish();
+    }
+
+    @Override
+    public void showErrorToast() {
+        Helpers.displayErrorToast(this);
     }
 }

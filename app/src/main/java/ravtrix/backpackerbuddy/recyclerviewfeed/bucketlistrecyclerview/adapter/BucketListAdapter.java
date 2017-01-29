@@ -140,7 +140,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     public void swap(List<BucketListModel> models){
         bucketListModels.clear();
         bucketListModels.addAll(models);
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     /**
@@ -219,7 +219,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
      * @param status        the new status to change to (0 or 1)
      *                      0 is incomplete, 1 is complete
      */
-    private void retrofitUpdateBucketStatus(int bucketID, int status) {
+    private void retrofitUpdateBucketStatus(final int bucketID, int status) {
 
         final ProgressDialog progressDialog = Helpers.showProgressDialog(context, "Updating...");
 

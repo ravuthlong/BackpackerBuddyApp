@@ -18,6 +18,17 @@ interface IDiscussionCommentsInteractor {
      */
     void notifyTheOwnerRetrofit(int userID, String comment, int discussionID);
 
+
+    /**
+     * Notify all other users that is not the owner of the disussion and the current sender
+     * @param userID                     - the current sender's userID
+     * @param ownerID                    - the owner of the discussion post's userID
+     * @param comment                    - the comment discussion to be shown
+     * @param discussionID               - the unique discussionID
+     */
+    void notifyOtherUsersRetrofit(int userID, int ownerID, String comment, int discussionID);
+
+
     /**
      * Increment total comment count after commenting
      * @param discussionID              - the discussionID to increment the discussion

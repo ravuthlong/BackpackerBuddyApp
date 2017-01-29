@@ -3,63 +3,63 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:fitsSystemWindows="true">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/green"
-    android:orientation="vertical">
-
     <LinearLayout
-        android:id="@+id/ConcernedPortionofScreen"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.97"
+        android:layout_height="match_parent"
+        android:background="@color/green"
         android:orientation="vertical">
 
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/ConcernedPortionofScreen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="0.97"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:background="@color/greenBackground">
+                android:layout_height="match_parent">
 
-                <android.support.v4.widget.SwipeRefreshLayout
-                    android:id="@+id/frag_perfect_swipe"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/frag_perfect_recyclerView"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:background="@color/greenBackground">
+
+                    <android.support.v4.widget.SwipeRefreshLayout
+                        android:id="@+id/frag_perfect_swipe"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                    </android.support.v7.widget.RecyclerView>
-                </android.support.v4.widget.SwipeRefreshLayout>
-            </LinearLayout>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/frag_perfect_circleview"
-                android:layout_width="@dimen/_45sdp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:src="@drawable/ic_photo"
-                android:layout_height="@dimen/_40sdp"/>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/frag_perfect_recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </android.support.v7.widget.RecyclerView>
+                    </android.support.v4.widget.SwipeRefreshLayout>
+                </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/frag_perfect_circleview"
+                    android:layout_width="@dimen/_45sdp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:src="@drawable/ic_photo"
+                    android:layout_height="@dimen/_40sdp"/>
 
-            <ProgressBar
-                android:id="@+id/frag_perfect_progressBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="?android:attr/progressBarStyle"
-                android:indeterminate="false"
-                android:visibility="gone"
-                android:layout_gravity="center"/>
-        </FrameLayout>
+                <ProgressBar
+                    android:id="@+id/frag_perfect_progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminate="false"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/RestofScreen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.03"
+            android:orientation="vertical" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/RestofScreen"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.03"
-        android:orientation="vertical" />
-</LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

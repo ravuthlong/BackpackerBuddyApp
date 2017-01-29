@@ -16,7 +16,6 @@ class EditPostInteractor implements IEditPostInteractor {
 
     EditPostInteractor() {}
 
-
     @Override
     public void editPostRetrofit(HashMap<String, String> travelSpotHash,
                                  final OnRetrofitEditPostListener onRetrofitEditPostListener) {

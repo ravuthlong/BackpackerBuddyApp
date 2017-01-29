@@ -20,28 +20,19 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
-
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ravtrix.backpackerbuddy.BucketComparator;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.bucketlist.newbucket.BucketPostActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserBucketListSingleton;
-import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.bucketlistrecyclerview.adapter.BucketListAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.bucketlistrecyclerview.data.BucketListModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class BucketListFrag extends Fragment implements View.OnClickListener {
+public class BucketListFrag extends Fragment implements View.OnClickListener, IBucketListFragView {
 
     @BindView(R.id.frag_bucket_RecyclerView) protected RecyclerView bucketRecyclerView;
     @BindView(R.id.frag_bucket_noBucket) protected TextView tvNoBucket;
@@ -55,6 +46,8 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
     private static int REQUEST_CODE = 1;
     private static int RESULT_CODE = 1; // After new submission, edit
     private boolean cancelState;
+    private BucketListFragPresenter bucketListFragPresenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,14 +55,17 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         Helpers.overrideFonts(getContext(), tvAddBucket);
+
         progressBar.setVisibility(View.VISIBLE);
 
         setTypeface();
+
         tvAddBucket.setOnClickListener(this);
         userLocalStore = new UserLocalStore(getContext());
+        bucketListFragPresenter = new BucketListFragPresenter(this);
         dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
 
-        fetchUserBucketList();
+        bucketListFragPresenter.fetchUserBucketList(userLocalStore.getLoggedInUser().getUserID());
         return view;
     }
 
@@ -115,7 +111,7 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     menuItemPrivatePublic.setTitle("Public");
-                                    updateBucketVisibility(userLocalStore.getLoggedInUser().getUserID(), 1);
+                                    bucketListFragPresenter.updateBucketVisibilityRetrofit(userLocalStore.getLoggedInUser().getUserID(), 1);
                                 }
                             });
                             dialogBuilder.show();
@@ -138,7 +134,7 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     menuItemPrivatePublic.setTitle("Private");
-                                    updateBucketVisibility(userLocalStore.getLoggedInUser().getUserID(), 0);
+                                    bucketListFragPresenter.updateBucketVisibilityRetrofit(userLocalStore.getLoggedInUser().getUserID(), 0);
                                 }
                             });
                             dialogBuilder.show();
@@ -166,103 +162,74 @@ public class BucketListFrag extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void fetchUserBucketListRefresh() {
+        bucketListFragPresenter.fetchUserBucketListUpdate(userLocalStore.getLoggedInUser().getUserID(), bucketListAdapter);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_CODE) {
-            if (requestCode == RESULT_CODE) {
-                fetchUserBucketListRefresh(); // refresh from new bucket submission
+            if (resultCode == RESULT_CODE) {
+                bucketListFragPresenter.fetchUserBucketListUpdate(userLocalStore.getLoggedInUser().getUserID(), bucketListAdapter); // refresh from new bucket submission
             }
         }
-    }
-
-    private void fetchUserBucketList() {
-
-        Call<List<BucketListModel>> retrofit = RetrofitUserBucketListSingleton.getRetrofitBucketList()
-                .fetchUserBucketList()
-                .fetchUserBucketList(userLocalStore.getLoggedInUser().getUserID());
-
-        retrofit.enqueue(new Callback<List<BucketListModel>>() {
-            @Override
-            public void onResponse(Call<List<BucketListModel>> call, Response<List<BucketListModel>> response) {
-
-                progressBar.setVisibility(View.GONE);
-                if (response.body().get(0).getSuccess() == 0) {
-                    // Empty no list
-                    bucketRecyclerView.setVisibility(View.GONE);
-                    tvNoBucket.setVisibility(View.VISIBLE);
-                } else {
-                    bucketListModels = response.body();
-                    Collections.sort(bucketListModels, new BucketComparator());
-
-                    bucketListAdapter = new BucketListAdapter(getContext(), BucketListFrag.this, bucketListModels);
-                    bucketRecyclerView.setAdapter(bucketListAdapter);
-                    bucketRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    bucketRecyclerView.addItemDecoration(dividerDecorator);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BucketListModel>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Helpers.displayErrorToast(getContext());
-            }
-        });
-    }
-
-    public void fetchUserBucketListRefresh() {
-
-        Call<List<BucketListModel>> retrofit = RetrofitUserBucketListSingleton.getRetrofitBucketList()
-                .fetchUserBucketList()
-                .fetchUserBucketList(userLocalStore.getLoggedInUser().getUserID());
-
-        retrofit.enqueue(new Callback<List<BucketListModel>>() {
-            @Override
-            public void onResponse(Call<List<BucketListModel>> call, Response<List<BucketListModel>> response) {
-
-                if (response.body().get(0).getSuccess() == 0) {
-                    // Empty no list
-                    bucketRecyclerView.setVisibility(View.GONE);
-                    tvNoBucket.setVisibility(View.VISIBLE);
-                } else {
-                    bucketListModels = response.body();
-                    Collections.sort(bucketListModels, new BucketComparator());
-
-                    bucketListAdapter.swap(bucketListModels);
-                }
-            }
-            @Override
-            public void onFailure(Call<List<BucketListModel>> call, Throwable t) {
-                Helpers.displayErrorToast(getContext());
-            }
-        });
-    }
-
-    private void updateBucketVisibility(int userID, final int status) {
-
-        Call<JsonObject> retrofit = RetrofitUserInfoSingleton.getRetrofitUserInfo()
-                .updateBucketVisibility()
-                .updateBucketVisibility(userID, status);
-
-        retrofit.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.body().get("status").getAsInt() == 0) {
-                    Helpers.displayToast(getContext(), "Error");
-                } else {
-                    userLocalStore.changeBucketStat(status);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayToast(getContext(), "Error");
-            }
-        });
     }
 
     private void setTypeface() {
         Helpers.overrideFonts(getContext(), tvNoBucket);
     }
 
+    @Override
+    public void setRecyclerViewVisible() {
+        bucketRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setRecyclerViewInvisible() {
+        bucketRecyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setProgressbarVisible() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setProgressbarInvisible() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setBucketModels(List<BucketListModel> bucketModels) {
+        bucketListModels = bucketModels;
+    }
+
+    @Override
+    public void setRecyclerView() {
+        bucketListAdapter = new BucketListAdapter(getContext(), BucketListFrag.this, bucketListModels);
+        bucketRecyclerView.setAdapter(bucketListAdapter);
+        bucketRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        bucketRecyclerView.addItemDecoration(dividerDecorator);
+    }
+
+    @Override
+    public void displayErrorToast() {
+        Helpers.displayErrorToast(getContext());
+    }
+
+    @Override
+    public void swapBucketModels(List<BucketListModel> bucketModels) {
+        bucketListAdapter.swap(bucketListModels);
+    }
+
+    @Override
+    public void changeBucketStatLocalstore(int status) {
+        userLocalStore.changeBucketStat(status);
+    }
+
+    @Override
+    public void showTvNoBucket() {
+        tvNoBucket.setVisibility(View.VISIBLE);
+    }
 }

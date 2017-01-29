@@ -85,8 +85,6 @@ public class FindBuddyTabFragment extends Fragment  {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                //System.out.println("PAGE SCROLL!!!: " + state);
-
             }
 
 

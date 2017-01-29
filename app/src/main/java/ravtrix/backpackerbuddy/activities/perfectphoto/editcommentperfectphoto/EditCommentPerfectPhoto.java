@@ -9,27 +9,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.google.gson.JsonObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSaveBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
-import ravtrix.backpackerbuddy.helpers.RetrofitPerfectPhotoSingleton;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
-public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
+public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity implements IEditCommentPerfectPhotoView {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.activity_edit_comment_relative) protected RelativeLayout relativeLayout;
     @BindView(R.id.activity_edit_comment_etEditComment) protected EditText etComment;
     private String comment = "";
     private int commentID;
-    private static final int REQUEST_REFRESH = 1;
+    private EditCommentPerfectPhotoPresenter editCommentPerfectPhotoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +37,8 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
         getBundle();
         etComment.setText(comment);
         etComment.setSelection(etComment.getText().length());
+
+        editCommentPerfectPhotoPresenter = new EditCommentPerfectPhotoPresenter(this);
     }
 
     @Override
@@ -54,43 +50,12 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
                     Helpers.displayToast(this, "Post is too short...");
                 } else {
                     // Update comment
-                    updateCommentRetrofit(commentID, etComment.getText().toString().trim());
+                    editCommentPerfectPhotoPresenter.updateComment(commentID, etComment.getText().toString().trim());
                 }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void updateCommentRetrofit(int commentID, String newComment) {
-
-        Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
-                .updatePhotoComment()
-                .updatePhotoComment(commentID, newComment);
-        retrofit.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.body().get("status").getAsInt() == 1) {
-
-                    // Hide soft keyboard
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    setResult(REQUEST_REFRESH); // result code 1
-                    finish();
-                } else {
-                    Helpers.displayErrorToast(EditCommentPerfectPhoto.this);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Helpers.displayErrorToast(EditCommentPerfectPhoto.this);
-            }
-        });
-
     }
 
     private void getBundle() {
@@ -99,5 +64,30 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity {
             comment = bundle.getString("comment");
             commentID = bundle.getInt("commentID");
         }
+    }
+
+    @Override
+    public void hideKeyboard() {
+        // Hide soft keyboard
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void setResultCode(int code) {
+        setResult(code); // result code 1
+    }
+
+    @Override
+    public void finished() {
+        finish();
+    }
+
+    @Override
+    public void showErrorToast() {
+        Helpers.displayErrorToast(this);
     }
 }

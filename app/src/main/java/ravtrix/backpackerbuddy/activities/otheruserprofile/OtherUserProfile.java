@@ -53,20 +53,22 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_other_user_profile);
 
+        // Setting views
+        setContentView(R.layout.activity_other_user_profile);
         ButterKnife.bind(this);
         Helpers.overrideFonts(this, linearLayout);
         this.setTitle("User Profile");
         relativeLayout.setVisibility(View.INVISIBLE);
+        setToolbar();
+        showProgressbar();
 
         userLocalStore = new UserLocalStore(this);
         otherUserProfilePresenter = new OtherUserProfilePresenter(this);
         messageButton.setOnClickListener(this);
         bucketButton.setOnClickListener(this);
 
-        setToolbar();
-        showProgressbar();
+        // Getting data
         fetchOtherUserProfile();
     }
 

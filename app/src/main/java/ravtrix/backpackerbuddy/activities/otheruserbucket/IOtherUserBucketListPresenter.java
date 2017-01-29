@@ -5,4 +5,6 @@ package ravtrix.backpackerbuddy.activities.otheruserbucket;
  */
 
 interface IOtherUserBucketListPresenter {
+
+    void fetchUserBucketList(String otherUserID);
 }

@@ -39,6 +39,8 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
                     if (userID != ownerID) {
                         notifyTheOwner(ownerID, discussionHash.get("comment"), discussionID);
                     }
+                    // Notify all other users that has commented in this post that is NOT the current poster
+                    notifyOtherUsers(userID, ownerID, discussionHash.get("comment"), discussionID);
                     fetchDiscussionComments(userID, discussionID);
                 }
             }
@@ -51,6 +53,8 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
 
     @Override
     public void fetchDiscussionComments(int userID, int discussionID) {
+
+        iDiscussionCommentsView.showProgressbar();
         discussionCommentsInteractor.fetchDiscussionComments(userID, discussionID, new OnRetrofitCommentModels() {
             @Override
             public void onFinished(List<CommentModel> commentModels, int status) {
@@ -59,6 +63,7 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
                 } else {
                     iDiscussionCommentsView.setModelsEmpty();
                 }
+                // Set recycler view/ adapter and show results
                 iDiscussionCommentsView.setRecyclerView();
                 iDiscussionCommentsView.showDisplayAfterLoading();
             }
@@ -74,7 +79,6 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
     public void fetchDiscussionCommentsRefresh(int userID, int discussionID) {
 
         iDiscussionCommentsView.showProgressbar();
-
         discussionCommentsInteractor.fetchDiscussionComments(userID, discussionID, new OnRetrofitCommentModels() {
             @Override
             public void onFinished(List<CommentModel> commentModels, int status) {
@@ -84,6 +88,7 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
                 } else {
                     iDiscussionCommentsView.setModelsEmpty();
                 }
+                // Load new models in
                 iDiscussionCommentsView.swapModels(commentModels);
             }
 
@@ -98,6 +103,11 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
     @Override
     public void notifyTheOwner(int userID, String comment, int discussionID) {
         discussionCommentsInteractor.notifyTheOwnerRetrofit(userID, comment, discussionID);
+    }
+
+    @Override
+    public void notifyOtherUsers(int userID, int ownerID, String comment, int discussionID) {
+        discussionCommentsInteractor.notifyOtherUsersRetrofit(userID, ownerID, comment, discussionID);
     }
 
     @Override

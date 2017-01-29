@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -34,8 +36,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.AppRater;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
+import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.application.BaseApplication;
@@ -91,6 +93,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
         ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
 
         setContentView(R.layout.activity_main);
@@ -470,6 +474,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         settingsButton = (ImageButton) header.findViewById(R.id.settingsButton);
         profilePic = (CircleImageView) header.findViewById(R.id.profile_image);
         changeTypeface(navigationView);
+
 
         setProfilepicture();
 

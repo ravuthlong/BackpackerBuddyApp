@@ -3,6 +3,7 @@ package ravtrix.backpackerbuddy.activities.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,6 +60,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     private  String otherUserID, otherUserImage;
     private ConversationPresentor conversationPresentor;
     private int backPressExit = 1;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,6 +367,12 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 if (textMessage.getText().toString().trim().equals("")) {
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
+                    // Prevents double clicking
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        System.out.println("PREVENTING DOUBLE CLICK");
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     sendMessage();
 
                 }

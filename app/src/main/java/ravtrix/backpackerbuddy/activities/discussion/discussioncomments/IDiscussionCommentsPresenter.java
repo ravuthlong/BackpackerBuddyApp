@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 interface IDiscussionCommentsPresenter {
     void notifyTheOwner(int userID, String comment, int discussionID);
+    void notifyOtherUsers(int userID, int ownerID, String comment, int discussionID);
     void incrementTotalComment(int discussionID);
     void insertComment(HashMap<String, String> discussionHash, int userID, int discussionID, int ownerID);
     void fetchDiscussionComments(int userID, int discussionID);

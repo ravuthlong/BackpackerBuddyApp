@@ -73,6 +73,20 @@ class DiscussionCommentsInteractor implements IDiscussionCommentsInteractor {
     }
 
     @Override
+    public void notifyOtherUsersRetrofit(int userID, int ownerID, String comment, int discussionID) {
+        Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .sendNotificationToOtherUsers()
+                .sendNotificationToOtherUsers(userID, ownerID, comment, discussionID);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {}
+        });
+    }
+
+    @Override
     public void incrementTotalComment(int discussionID) {
         Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
                 .incrementCommentCount()

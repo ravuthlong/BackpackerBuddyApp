@@ -67,4 +67,8 @@ public class RetrofitUserDiscussion {
     public RetrofitUserDiscussionInterfaces.SendNotification sendNotification() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.SendNotification.class);
     }
+
+    public RetrofitUserDiscussionInterfaces.SendNotificationToOtherUsers sendNotificationToOtherUsers() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.SendNotificationToOtherUsers.class);
+    }
 }

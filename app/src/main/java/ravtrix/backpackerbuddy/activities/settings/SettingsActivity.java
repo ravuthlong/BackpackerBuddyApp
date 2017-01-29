@@ -47,13 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         Helpers.overrideFonts(this, relativeLayout);
         this.setTitle("Settings");
 
-        bSignOut.setOnClickListener(this);
-        bChangePassword.setOnClickListener(this);
-        bChangeEmail.setOnClickListener(this);
-        bChangeUsername.setOnClickListener(this);
-        bFeedback.setOnClickListener(this);
-        bAbout.setOnClickListener(this);
-        bNotificaton.setOnClickListener(this);
+        setButtonListeners();
         userLocalStore = new UserLocalStore(this);
 
         if (userLocalStore.getLoggedInUser().getIsFacebook() == 1) {
@@ -100,5 +94,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
+    }
+
+    private void setButtonListeners() {
+        bSignOut.setOnClickListener(this);
+        bChangePassword.setOnClickListener(this);
+        bChangeEmail.setOnClickListener(this);
+        bChangeUsername.setOnClickListener(this);
+        bFeedback.setOnClickListener(this);
+        bAbout.setOnClickListener(this);
+        bNotificaton.setOnClickListener(this);
     }
 }

@@ -96,4 +96,11 @@ public class RetrofitUserDiscussionInterfaces {
         Call<JsonObject> sendNotification(@Field("userID") int userID, @Field("message") String message,
                                           @Field("discussionID") int discussionID);
     }
+
+    public interface SendNotificationToOtherUsers {
+        @FormUrlEncoded
+        @POST("/sendNotificationCommentsOtherUsers1.9.php")
+        Call<JsonObject> sendNotificationToOtherUsers(@Field("userID") int userID, @Field("ownerID") int ownerID,
+                                                      @Field("message") String message, @Field("discussionID") int discussionID);
+    }
 }

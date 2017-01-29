@@ -7,5 +7,11 @@ import ravtrix.backpackerbuddy.activities.login.OnRetrofitLogInListener;
  */
 
 interface IUserMainInteractor {
+
+    /**
+     * Update local information by fetching from server first
+     * @param userID                        - the userID
+     * @param onRetrofitLogInListener       - listener for retrofit completion
+     */
     void updateLocalstore(int userID, OnRetrofitLogInListener onRetrofitLogInListener);
 }
