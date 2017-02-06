@@ -46,6 +46,7 @@ public class EditDiscussionActivity extends OptionMenuSaveBaseActivity implement
                     Helpers.displayToast(this, "Post is too short...");
                 } else {
                     editDiscussionPresenter.editDiscussion(discussionID, etEditDiscussion.getText().toString().trim());
+                    Helpers.hideKeyboard(this);
                 }
                 return true;
             default:

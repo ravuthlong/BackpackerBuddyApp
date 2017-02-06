@@ -36,6 +36,10 @@ public class RetrofitUserDiscussion {
         return retrofit.create(RetrofitUserDiscussionInterfaces.GetDiscussions.class);
     }
 
+    public RetrofitUserDiscussionInterfaces.GetOneDiscussion getADiscussion() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.GetOneDiscussion.class);
+    }
+
     public RetrofitUserDiscussionInterfaces.GetAUserDiscussions getAUserDiscussions() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.GetAUserDiscussions.class);
     }

@@ -37,7 +37,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.AppRater;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
-import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.application.BaseApplication;
@@ -59,6 +58,7 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
+import ravtrix.backpackerbuddy.notificationactivities.NotificationPostActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -87,7 +87,6 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     private ImageButton settingsButton;
     private UserMainPresenter userMainPresenter;
     private LocationUpdateSharedPreference locationUpdateSharedPreference;
-    private static final int REQUEST_SELECT_PICTURE = 0x01;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +197,8 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         switch (v.getId()) {
             case R.id.settingsButton:
-                startActivityForResult(new Intent(this, SettingsActivity.class), 2);
+                //startActivityForResult(new Intent(this, SettingsActivity.class), 2);
+                startActivity(new Intent(this, NotificationPostActivity.class));
                 break;
             case R.id.profile_image:
                 currentPos = 4;

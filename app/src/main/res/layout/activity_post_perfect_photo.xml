@@ -54,7 +54,7 @@
                     android:hint="Why is it so perfect?"
                     android:ems="10"
                     android:background="@android:color/transparent"
-                    android:textSize="@dimen/_11ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:layout_marginLeft="@dimen/_1sdp"
                     android:layout_marginRight="@dimen/_1sdp"
                     android:layout_marginBottom="@dimen/_1sdp"

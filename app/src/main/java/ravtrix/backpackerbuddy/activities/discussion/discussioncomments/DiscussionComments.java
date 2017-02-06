@@ -21,7 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.commentdiscussionrecyclerview.CommentDiscussionAdapter;
@@ -109,26 +108,12 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         if (discussionBundle != null) {
             discussionID = discussionBundle.getInt("discussionID");
             ownerID = discussionBundle.getInt("ownerID");
-
-            if (discussionBundle.containsKey("backpressExit")) {
-                // Push notification send this key.
-                backPressExit = discussionBundle.getInt("backpressExit");
-            }
         }
     }
 
     @Override
     public void onBackPressed() {
-
-         // Backpressexit is 0 if the user hits DiscussionComments activity from a push notification
-        if (backPressExit == 0) {
-            Intent intent = new Intent(this, UserMainPage.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override

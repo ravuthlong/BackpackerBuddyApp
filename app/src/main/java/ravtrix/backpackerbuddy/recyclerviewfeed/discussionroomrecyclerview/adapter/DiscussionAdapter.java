@@ -71,6 +71,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 .placeholder(R.drawable.default_photo)
                 .into(holder.profileImage);
 
+
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                 currentItem.getTime(),

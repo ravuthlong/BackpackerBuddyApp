@@ -168,7 +168,6 @@ public class PhotoCommentAdapter extends RecyclerView.Adapter<PhotoCommentAdapte
         builder.show();
     }
 
-
     /**
      * Option pop up dialog only includes option to report a post
      */

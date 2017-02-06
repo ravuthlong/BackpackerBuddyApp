@@ -13,7 +13,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
-import ravtrix.backpackerbuddy.activities.discussion.discussioncomments.DiscussionComments;
+import ravtrix.backpackerbuddy.notificationactivities.NotificationPhotoActivity;
+import ravtrix.backpackerbuddy.notificationactivities.NotificationPostActivity;
 
 /**
  * Created by Ravinder on 9/21/16.
@@ -37,13 +38,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         } else {
             // From server php
 
+            /**
+             * TYPE 0: Message notification
+             * TYPE 1: Post comment notification
+             * TYPE 2: Photo comment notification
+             */
             if (remoteMessage.getData().get("type").equals("0")) {
                 sendNotification(remoteMessage.getData().get("message"), remoteMessage.getData().get("senderID"),
                         remoteMessage.getData().get("senderImage"));
-            } else {
+            } else if (remoteMessage.getData().get("type").equals("1")) {
                 sendNotificationComment(remoteMessage.getData().get("message"),
                         Integer.parseInt(remoteMessage.getData().get("discussionID")),
                         Integer.parseInt(remoteMessage.getData().get("ownerID")));
+            } else {
+                //2
+                sendNotificationPhotoComment(remoteMessage.getData().get("message"),
+                        Integer.parseInt(remoteMessage.getData().get("photoID")),
+                        Integer.parseInt(remoteMessage.getData().get("ownerID")));
+
             }
         }
     }
@@ -75,10 +87,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     private void sendNotificationComment(String body, int discussionID, int ownerID) {
-        Intent intent = new Intent(this, DiscussionComments.class);
+        Intent intent = new Intent(this, NotificationPostActivity.class);
         intent.putExtra("discussionID", discussionID);
         intent.putExtra("ownerID", ownerID);
-        intent.putExtra("backpressExit", 0);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // 1 is request code
@@ -97,6 +108,30 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notifBuilder.build()); // 1 id of notification
+    }
+
+    private void sendNotificationPhotoComment(String body, int photoID, int ownerID) {
+        Intent intent = new Intent(this, NotificationPhotoActivity.class);
+        intent.putExtra("photoID", photoID);
+        intent.putExtra("ownerID", ownerID);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // 1 is request code
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        // Set notification sound
+        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("New Photo Comment")
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(notificationSound)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(2, notifBuilder.build()); // 2 id of notification
     }
 
     public static void cancelNotification(Context ctx, int notifyId) {

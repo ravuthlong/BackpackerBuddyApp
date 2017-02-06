@@ -25,6 +25,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -157,6 +158,8 @@
         <activity
             android:name=".activities.perfectphoto.editphotopostperfect.EditPhotoPostActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".notificationactivities.NotificationPostActivity" />
+        <activity android:name=".notificationactivities.NotificationPhotoActivity"></activity>
     </application>
 
 </manifest>

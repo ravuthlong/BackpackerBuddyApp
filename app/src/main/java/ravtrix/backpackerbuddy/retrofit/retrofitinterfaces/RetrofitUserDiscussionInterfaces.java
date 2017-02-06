@@ -50,6 +50,11 @@ public class RetrofitUserDiscussionInterfaces {
         Call<List<DiscussionModel>> getDiscussions(@Query("userID") int userID);
     }
 
+    public interface GetOneDiscussion {
+        @GET("/fetchADiscussion1.10.php?discussionID=[discussionID]&userID=[userID]")
+        Call<List<DiscussionModel>> getADiscussion(@Query("discussionID") int discussionID, @Query("userID") int userID);
+    }
+
     public interface GetAUserDiscussions {
         @GET("/fetchAUserDiscussion.php?userID=[userID]")
         Call<List<DiscussionModel>> getAUserDiscussions(@Query("userID") int userID);
@@ -72,6 +77,9 @@ public class RetrofitUserDiscussionInterfaces {
         Call<JsonObject> removeCommentAndDecrement(@FieldMap HashMap<String, String> commentInfo);
     }
 
+    /**
+     * DiscussionInfo (userID, discussionID, comment, time)
+     */
     public interface InsertComment {
         @FormUrlEncoded
         @POST("/insertDiscussionComment.php")

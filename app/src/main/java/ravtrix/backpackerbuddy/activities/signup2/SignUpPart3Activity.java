@@ -1,15 +1,22 @@
 package ravtrix.backpackerbuddy.activities.signup2;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.MenuItem;
@@ -50,6 +57,8 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private Double longitude = 0.0;
     private Double latitude = 0.0;
     private boolean isPhotoUploaed = false;
+    protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
+    private AlertDialog mAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +82,18 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.bEditImage:
-                // Get the image from gallery
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            getString(R.string.permission_read_storage_rationale),
+                            REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+                } else {
+                    // Get the image from gallery
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                }
                 break;
             case R.id.imgRotate:
                 bitmapImage = Helpers.rotateBitmap(bitmapImage);
@@ -107,6 +125,20 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_STORAGE_READ_ACCESS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Get the image from gallery
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -192,6 +224,39 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
                 signUpPart3Presenter.retrofitStoreUser(userInfo);
             }
         }
+    }
+
+    /**
+     * Requests given permission.
+     * If the permission has been denied previously, a Dialog will prompt the user to grant the
+     * permission, otherwise it is requested directly.
+     */
+    protected void requestPermission(final String permission, String rationale, final int requestCode) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            showAlertDialog(getString(R.string.permission_title_rationale), rationale,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(SignUpPart3Activity.this,
+                                    new String[]{permission}, requestCode);
+                        }
+                    }, getString(R.string.label_ok), null, getString(R.string.label_cancel));
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+        }
+    }
+
+    protected void showAlertDialog(String title, String message,
+                                   DialogInterface.OnClickListener onPositiveButtonClickListener,
+                                   String positiveText,
+                                   DialogInterface.OnClickListener onNegativeButtonClickListener,
+                                   String negativeText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(positiveText, onPositiveButtonClickListener);
+        builder.setNegativeButton(negativeText, onNegativeButtonClickListener);
+        mAlertDialog = builder.show();
     }
 
     @Override

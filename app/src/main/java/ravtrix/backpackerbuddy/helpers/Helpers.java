@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +91,15 @@ public class Helpers {
     public static void hideProgressDialog(ProgressDialog pDialog) {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        // Check if no view has focus:
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private static OkHttpClient okClient() {
@@ -284,7 +294,7 @@ public class Helpers {
     public static String getCountryGeocoder(Activity context, double latitude,
                                             double longitude, OnCountryReceived onCountryReceived) throws IOException {
         if (context != null) {
-            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+            Geocoder geoCoder = new Geocoder(context, Locale.ENGLISH);
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
             for (Address address : addresses) {
                 if (address != null) {

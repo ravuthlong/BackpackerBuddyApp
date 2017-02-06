@@ -24,6 +24,10 @@ public class RetrofitPerfectPhoto {
         return retrofit.create(RetrofitPerfectPhotoInterfaces.GetPerfectPhotos.class);
     }
 
+    public RetrofitPerfectPhotoInterfaces.GetOnePerfectPhoto getOnePerfectPhoto() {
+        return retrofit.create(RetrofitPerfectPhotoInterfaces.GetOnePerfectPhoto.class);
+    }
+
     public RetrofitPerfectPhotoInterfaces.InsertAndUpdateLovePhoto insertAndUpdateLovePhoto() {
         return retrofit.create(RetrofitPerfectPhotoInterfaces.InsertAndUpdateLovePhoto.class);
     }
@@ -58,5 +62,13 @@ public class RetrofitPerfectPhoto {
 
     public RetrofitPerfectPhotoInterfaces.UpdatePhotoPost updatePhotoPost() {
         return retrofit.create(RetrofitPerfectPhotoInterfaces.UpdatePhotoPost.class);
+    }
+
+    public RetrofitPerfectPhotoInterfaces.SendNotificationOwner sendNotificationOwner() {
+        return retrofit.create(RetrofitPerfectPhotoInterfaces.SendNotificationOwner.class);
+    }
+
+    public RetrofitPerfectPhotoInterfaces.SendNotificationAllOther sendNotificationAllOther() {
+        return retrofit.create(RetrofitPerfectPhotoInterfaces.SendNotificationAllOther.class);
     }
 }

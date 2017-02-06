@@ -173,7 +173,7 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
     }
 
     private void insertPhotoCommentRetrofit() {
-        HashMap<String, String> photoHash = new HashMap<>();
+        final HashMap<String, String> photoHash = new HashMap<>();
         photoHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
         photoHash.put("photoID", Integer.toString(photoID));
         photoHash.put("comment", etComment.getText().toString().trim());
@@ -199,6 +199,10 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
                     // Success
                     incrementTotalComment(photoID);
                     fetchPhotoCommentsRefresh(); // refresh page
+
+                    notifyTheOwner(ownerID, photoHash.get("comment"), photoID);
+                    notifyOtherUsers(userLocalStore.getLoggedInUser().getUserID(), ownerID,
+                            photoHash.get("comment"), photoID);
                 }
             }
 
@@ -212,6 +216,33 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
         Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
                 .incrementPhotoCommentCount()
                 .incrementPhotoCommentCount(Integer.toString(photoID));
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {}
+        });
+    }
+
+    public void notifyTheOwner(int userID, String comment, int photoID) {
+        Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
+                .sendNotificationOwner()
+                .sendNotificationOwner(userID, comment, photoID);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+            }
+        });
+    }
+
+    public void notifyOtherUsers(int userID, int ownerID, String comment, int photoID) {
+        Call<JsonObject> retrofit = RetrofitPerfectPhotoSingleton.getRetrofitPerfectPhoto()
+                .sendNotificationAllOther()
+                .sendNotificationOthers(userID, ownerID, comment, photoID);
+
         retrofit.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}

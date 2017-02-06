@@ -32,6 +32,11 @@ public class RetrofitPerfectPhotoInterfaces {
         Call<List<PerfectPhotoModel>> getPerfectPhotos(@Query("userID") int userID);
     }
 
+    public interface GetOnePerfectPhoto {
+        @GET("/fetchAPerfectPhoto1.10.php?userID=[userID]&photoID=[photoID]")
+        Call<List<PerfectPhotoModel>> getOnePerfectPhoto(@Query("userID") int userID, @Query("photoID") int photoID);
+    }
+
     public interface InsertAndUpdateLovePhoto {
         @FormUrlEncoded
         @POST("/insertAndUpdateLovePhoto1.5.php")
@@ -84,5 +89,19 @@ public class RetrofitPerfectPhotoInterfaces {
         @FormUrlEncoded
         @POST("/updatePerfectPhoto1.5.php")
         Call<JsonObject> updatePhotoPost(@Field("photoID") int photoID, @Field("post") String post);
+    }
+
+    public interface SendNotificationOwner {
+        @FormUrlEncoded
+        @POST("/sendNotificationPhotoComment1.10.php")
+        Call<JsonObject> sendNotificationOwner(@Field("userID") int userID, @Field("message") String message,
+                                               @Field("photoID") int photoID);
+    }
+
+    public interface SendNotificationAllOther {
+        @FormUrlEncoded
+        @POST("/sendNotificationPhotoCommentOtherUsers1.10.php")
+        Call<JsonObject> sendNotificationOthers(@Field("userID") int userID, @Field("ownerID") int ownerID,
+                                                @Field("message") String message, @Field("photoID") int photoID);
     }
 }
