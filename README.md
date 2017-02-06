@@ -27,5 +27,5 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 ![Alt text](http://i.imgur.com/3vMaxAg.png)
 ![Alt text](http://i.imgur.com/p0L5oUv.png)
 
-![Alt text](http://i.imgur.com/SQtmBDh.png) [Link to Google Play](https://play.google.com/store/apps/details?id=ravtrix.backpackerbuddy)
+![Alt text](http://i.imgur.com/SQtmBDh.png) [Link to Google Play](https://play.google.com/store/apps/details?id=ravtrix.backpackerbuddy) <br>
 ![Alt text](http://i.imgur.com/X9xyBYJ.png)  [Link to Backpacker Buddy Instagram Page](https://www.instagram.com/backpackerbuddy/)
