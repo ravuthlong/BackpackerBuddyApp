@@ -20,7 +20,7 @@ This personal project was inspired by my solo trip around Eastern Europe in June
 ![Alt text](http://i.imgur.com/YKbfE2S.png)
 ![Alt text](http://i.imgur.com/W5l2htI.png)
 ![Alt text](http://i.imgur.com/0XGH2Xv.png)
-![Alt text](http://i.imgur.com/xLaXDBk.png)
+![Alt text](http://i.imgur.com/dSb7S4X.png)
 ![Alt text](http://i.imgur.com/VjAQoBk.png)
 ![Alt text](http://i.imgur.com/bGBJPb1.png)
 ![Alt text](http://i.imgur.com/sKuqpP2.png)
