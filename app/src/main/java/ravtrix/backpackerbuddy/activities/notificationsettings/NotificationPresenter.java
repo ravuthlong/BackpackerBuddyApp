@@ -23,7 +23,7 @@ class NotificationPresenter implements INotificationPresenter {
         this.notificationInteractor.fetchNotificationStatus(userID, new OnFinishedListenerRetrofit() {
             @Override
             public void onFinished(JsonObject jsonObject) {
-                if (jsonObject.get("success").getAsInt() == 1) {
+                if (jsonObject.get("messageNotif").getAsInt() == 1) {
                     // User chose message notification to be turned on
                     iNotificationView.setMessageNotifOn();
                     iNotificationView.setTvMessageOn();
@@ -42,6 +42,8 @@ class NotificationPresenter implements INotificationPresenter {
                     iNotificationView.setCommentNotifOff();
                     iNotificationView.setTvCommentOff();
                 }
+
+                iNotificationView.setButtonListeners();
             }
 
             @Override

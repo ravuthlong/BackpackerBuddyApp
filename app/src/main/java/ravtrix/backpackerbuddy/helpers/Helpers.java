@@ -153,7 +153,7 @@ public class Helpers {
     /**
      * Display a toast on the screen
      * @param context       the context to display the toast
-     * @param string        the message to be diaplyed
+     * @param string        the message to be displayed
      */
     public static void displayToast(Context context, String string) {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
@@ -172,7 +172,7 @@ public class Helpers {
         String city = "";
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -225,7 +225,7 @@ public class Helpers {
         JSONObject jsonObject;
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -673,14 +673,12 @@ public class Helpers {
         }
         @Override
         protected String doInBackground(Void... voids) {
-            //System.out.println("PERFORMING ASYNCH");
-
             URL url;
             HttpURLConnection urlConnection = null;
             JSONObject jsonObject;
             String country = "";
             String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI";
+                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
             try {
                 url = new URL(urlAddress);
                 urlConnection = (HttpURLConnection) url.openConnection();

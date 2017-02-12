@@ -138,6 +138,6 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
 
         long anotherTime = another.getTimeMilli();
         //descending order
-        return (int) (anotherTime - this.timeMilli);
+        return (int)(anotherTime - this.getTimeMilli());
     }
 }

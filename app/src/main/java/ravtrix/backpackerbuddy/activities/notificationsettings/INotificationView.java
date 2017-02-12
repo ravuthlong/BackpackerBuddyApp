@@ -15,4 +15,5 @@ interface INotificationView {
     void setTvCommentOn();
     void setTvCommentOff();
     void displayErrorToast();
+    void setButtonListeners();
 }

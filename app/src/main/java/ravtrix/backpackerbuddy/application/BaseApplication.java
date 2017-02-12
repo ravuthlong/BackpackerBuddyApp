@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 
 import com.google.gson.JsonObject;
 
+import ravtrix.backpackerbuddy.Version;
 import ravtrix.backpackerbuddy.helpers.RetrofitAppInfoSingleton;
 import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import retrofit2.Call;
@@ -40,14 +41,17 @@ public class BaseApplication extends Application {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                 int success = response.body().get("success").getAsInt();
-                double versionNum = Double.parseDouble(response.body().get("versionMin").getAsString());
 
                 // If current version of this app is less than or equal to the set minimum version
                 // on the server side, prompt an update dialog
-                if ((success == 1) && (Double.parseDouble(getVersionInfo()) <= versionNum)) {
+                Version currentPhone = new Version(getVersionInfo());
+                Version requiredMoreThan = new Version(response.body().get("versionMin").getAsString());
+
+                // check that current phone version is not less than required or equal to required
+                if ((success == 1) &&
+                        ((currentPhone.compareTo(requiredMoreThan) == -1) || (currentPhone.compareTo(requiredMoreThan) == 0))) {
                     showUpdateDialog(activity);
                 }
-
             }
 
             @Override

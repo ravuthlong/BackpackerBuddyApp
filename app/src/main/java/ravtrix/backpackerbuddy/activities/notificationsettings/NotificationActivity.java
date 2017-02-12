@@ -39,8 +39,6 @@ public class NotificationActivity extends AppCompatActivity implements CompoundB
         sNotif.setChecked(true);
         sComment.setChecked(true);
 
-        sNotif.setOnCheckedChangeListener(NotificationActivity.this);
-        sComment.setOnCheckedChangeListener(NotificationActivity.this);
         notificationPresenter = new NotificationPresenter(this);
 
         notificationPresenter.fetchNotificationStatus(userLocalStore.getLoggedInUser().getUserID());
@@ -103,5 +101,11 @@ public class NotificationActivity extends AppCompatActivity implements CompoundB
     @Override
     public void displayErrorToast() {
         Helpers.displayErrorToast(this);
+    }
+
+    @Override
+    public void setButtonListeners() {
+        sNotif.setOnCheckedChangeListener(NotificationActivity.this);
+        sComment.setOnCheckedChangeListener(NotificationActivity.this);
     }
 }

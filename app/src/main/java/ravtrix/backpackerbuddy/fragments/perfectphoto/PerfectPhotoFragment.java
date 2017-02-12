@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.perfectphoto.postperfectphoto.PostPerfectPhotoActivity;
+import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.helpers.RetrofitPerfectPhotoSingleton;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -73,6 +74,7 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.frag_perfect_photo, container, false);
         ButterKnife.bind(this, view);
+        FirebaseMessagingService.cancelNotification(getActivity(), 2);
 
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
