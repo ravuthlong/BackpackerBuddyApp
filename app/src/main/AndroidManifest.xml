@@ -111,7 +111,7 @@
             android:name=".activities.discussion.insertdiscussion.DiscussionPostActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".activities.discussion.discussioncomments.DiscussionComments"
             android:screenOrientation="portrait" />

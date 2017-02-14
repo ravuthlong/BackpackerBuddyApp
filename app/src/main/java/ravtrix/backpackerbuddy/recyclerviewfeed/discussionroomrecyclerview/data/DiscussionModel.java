@@ -24,6 +24,9 @@ public class DiscussionModel {
     @SerializedName("country")
     @Expose
     private String country;
+    @SerializedName("countryTag")
+    @Expose
+    private String countryTag;
     @SerializedName("discussionID")
     @Expose
     private int discussionID;
@@ -42,6 +45,23 @@ public class DiscussionModel {
     @SerializedName("isClicked")
     @Expose
     private int isClicked = 0;
+    private int tagColor;
+
+    public int getTagColor() {
+        return tagColor;
+    }
+
+    public void setTagColor(int tagColor) {
+        this.tagColor = tagColor;
+    }
+
+    public String getCountryTag() {
+        return countryTag;
+    }
+
+    public void setCountryTag(String countryTag) {
+        this.countryTag = countryTag;
+    }
 
     public int getIsClicked() {
         return isClicked;

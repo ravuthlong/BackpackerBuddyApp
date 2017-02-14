@@ -23,7 +23,7 @@ public class RetrofitUserDiscussionInterfaces {
 
     public interface InsertDiscussion {
         @FormUrlEncoded
-        @POST("/insertDiscussion.php")
+        @POST("/insertDiscussion1.9.2.php")
         Call<JsonObject> insertDiscussion(@FieldMap HashMap<String, String> newDiscussion);
     }
 
@@ -46,7 +46,7 @@ public class RetrofitUserDiscussionInterfaces {
     }
 
     public interface GetDiscussions {
-        @GET("/fetchDiscussions.php?userID=[userID]")
+        @GET("/fetchDiscussions1.9.2.php?userID=[userID]")
         Call<List<DiscussionModel>> getDiscussions(@Query("userID") int userID);
     }
 

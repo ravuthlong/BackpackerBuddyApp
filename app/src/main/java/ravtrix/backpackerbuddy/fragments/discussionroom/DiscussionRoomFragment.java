@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +48,13 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     private DiscussionAdapter discussionAdapter;
     private List<DiscussionModel> discussionModels;
     private UserLocalStore userLocalStore;
+
+    private int[] colors =  new int[] {Color.rgb(206,139,139), Color.rgb(139,206,197),
+            Color.rgb(110,116,203), Color.rgb(139,206,159), Color.rgb(203,158,110),
+            Color.rgb(110,203,201), Color.rgb(203,110,110)};
+    //red,blue
+    //purple,green,orange
+    //blue-green,orange-red
 
     @Nullable
     @Override
@@ -129,6 +138,15 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         });
     }
 
+    private void setModelColors(List<DiscussionModel> discussionModels) {
+        // Generate random text color for country tag
+        Random random = new Random();
+        for (int i = 0; i < discussionModels.size(); i++) {
+            int randomColor = random.nextInt(colors.length);
+            discussionModels.get(i).setTagColor(colors[randomColor]);
+        }
+    }
+
     @Override
     public void displayErrorToast() {
         Helpers.displayErrorToast(getContext());
@@ -136,11 +154,13 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     @Override
     public void swapData(List<DiscussionModel> discussionModels) {
+        setModelColors(discussionModels);
         discussionAdapter.swap(discussionModels);
     }
 
     @Override
     public void setDiscussionModels(List<DiscussionModel> discussionModels) {
+        setModelColors(discussionModels);
         this.discussionModels = discussionModels;
     }
 

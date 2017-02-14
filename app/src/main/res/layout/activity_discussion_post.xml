@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/linear_newDiscussion">
+            android:id="@+id/linear_newDiscussion"
+            android:weightSum="1">
 
             <EditText
                 android:id="@+id/etDiscussion"
@@ -30,12 +31,36 @@
                 android:layout_height="0dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:ems="10"
-                android:layout_weight="1"
+                android:layout_weight="0.9"
                 android:gravity="top|left"
                 android:scrollbars="vertical"
                 android:textSize="@dimen/_13ssp"
                 android:hint="@string/writePost"
                 android:padding="@dimen/_15sdp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:background="@drawable/button_green"
+                android:gravity="center"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:text="Select a Country Tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:textColor="@color/white" />
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_discussion_post_countrySpinner"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toRightOf="@+id/textView3" />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

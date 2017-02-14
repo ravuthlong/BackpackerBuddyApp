@@ -64,22 +64,40 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/relative1"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp">
+        android:layout_marginTop="@dimen/_4sdp">
 
         <TextView
+            android:id="@+id/tvText_discussion"
             android:text="This is where the user comment goes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tvText_discussion"
             android:padding="@dimen/_5sdp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative2"
+        android:layout_marginBottom="@dimen/_4sdp">
+
+        <TextView
+            android:id="@+id/item_discussion_tvCountryTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_14ssp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relative3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relative2"
+        android:layout_below="@+id/relative4"
         android:layout_centerHorizontal="true">
 
         <LinearLayout
@@ -88,8 +106,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button"
             android:layout_marginRight="@dimen/_10sdp"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp">
             <ImageView
@@ -115,8 +133,8 @@
             android:layout_toEndOf="@+id/layoutLove"
             android:layout_alignParentTop="true"
             android:background="@drawable/button"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="0dp">
             <ImageView
@@ -139,8 +157,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingRight="@dimen/_10sdp"
             android:layout_alignParentEnd="true"
             android:paddingLeft="@dimen/_10sdp">

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/_5sdp"
         android:paddingRight="@dimen/_5sdp"
-        android:paddingTop="@dimen/_10sdp">
+        android:paddingTop="@dimen/_8sdp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_perfect_imgProfile"
             android:layout_alignParentStart="true"
@@ -58,8 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_perfect_relative1"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_4sdp">
         <ImageView
             android:id="@+id/item_perfect_image"
             android:scaleType="fitCenter"
@@ -74,8 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/item_perfect_relative2"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         android:paddingLeft="@dimen/_5sdp"
         android:paddingRight="@dimen/_5sdp">
 
@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/item_perfect_post"
-            android:padding="@dimen/_5sdp" />
+            android:padding="@dimen/_4sdp" />
     </RelativeLayout>
 
 
@@ -95,7 +95,7 @@
         android:layout_centerHorizontal="true"
         android:paddingLeft="@dimen/_5sdp"
         android:paddingRight="@dimen/_5sdp"
-        android:paddingBottom="@dimen/_20sdp">
+        android:paddingBottom="@dimen/_15sdp">
 
         <LinearLayout
             android:id="@+id/item_perfect_layoutLove"
@@ -103,8 +103,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button"
             android:layout_marginRight="@dimen/_10sdp"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingLeft="@dimen/_12sdp"
             android:paddingRight="0dp"
             >
@@ -130,8 +130,8 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/item_perfect_layoutLove"
             android:background="@drawable/button"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingLeft="@dimen/_12sdp"
             android:paddingRight="0dp">
             <ImageView
@@ -154,8 +154,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_4sdp"
             android:paddingRight="@dimen/_10sdp"
             android:layout_alignParentEnd="true"
             android:paddingLeft="@dimen/_10sdp">

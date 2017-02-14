@@ -1,12 +1,16 @@
 package ravtrix.backpackerbuddy.activities.discussion.insertdiscussion;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import java.util.HashMap;
 
@@ -22,6 +26,7 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.etDiscussion) protected EditText etDiscussion;
     @BindView(R.id.linear_newDiscussion) protected LinearLayout linearNewDis;
+    @BindView(R.id.activity_discussion_post_countrySpinner) protected Spinner spinnerCountries;
     private DiscussionPostPresenter discussionPostPresenter;
     private UserLocalStore userLocalStore;
     private long mLastClickTime = 0;
@@ -35,6 +40,12 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
         Helpers.setToolbar(this, toolbar);
         Helpers.overrideFonts(this, linearNewDis);
         this.setTitle("New Discussion");
+
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(this,
+                R.array.countriesShort, R.layout.item_spinner);
+        // Drop down
+        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountries.setAdapter(countryArrayAdapter);
 
         this.discussionPostPresenter = new DiscussionPostPresenter(this);
         userLocalStore = new UserLocalStore(this);
@@ -52,12 +63,24 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
 
-                if (etDiscussion.getText().toString().trim().length() < 10) {
-                    Helpers.displayToast(this, "Post is too short...");
-                } else if (etDiscussion.getText().toString().trim().length() >= 500) {
-                    Helpers.displayToast(this, "Exceeded max character count (500)");
-                }else {
-                    discussionPostPresenter.insertDiscussion(getDiscussionHash());
+                if (spinnerCountries.getSelectedItem().toString().equals("None")) {
+                    AlertDialog.Builder dialog = Helpers.showAlertDialogWithTwoOptions(this,
+                            getResources().getString(R.string.countryTagMissing),
+                            getResources().getString(R.string.continueNoTag), "No");
+
+                    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (checkInputOkay()) {
+                                discussionPostPresenter.insertDiscussion(getDiscussionHash());
+                            }
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    if (checkInputOkay()) {
+                        discussionPostPresenter.insertDiscussion(getDiscussionHash());
+                    }
                 }
                 return true;
             default:
@@ -65,13 +88,25 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
         }
     }
 
+    private boolean checkInputOkay() {
+        boolean isOkay = true;
+
+        if (etDiscussion.getText().toString().trim().length() < 10) {
+            Helpers.displayToast(DiscussionPostActivity.this, "Post is too short...");
+            isOkay =  false;
+        } else if (etDiscussion.getText().toString().trim().length() >= 500) {
+            Helpers.displayToast(DiscussionPostActivity.this, "Exceeded max character count (500)");
+            isOkay = false;
+        }
+        return isOkay;
+    }
     private HashMap<String, String> getDiscussionHash() {
 
         HashMap<String, String> newDiscussion = new HashMap<>();
         newDiscussion.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
         newDiscussion.put("post", etDiscussion.getText().toString());
         newDiscussion.put("time", Long.toString(System.currentTimeMillis()));
-
+        newDiscussion.put("country", spinnerCountries.getSelectedItem().toString());
         return newDiscussion;
     }
 

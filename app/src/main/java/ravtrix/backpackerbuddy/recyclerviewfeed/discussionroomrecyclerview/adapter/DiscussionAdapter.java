@@ -49,6 +49,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
 
     public DiscussionAdapter(Fragment fragment, List<DiscussionModel> discussionModels,
                              UserLocalStore userLocalStore) {
+
         this.discussionModels = discussionModels;
         this.fragment = fragment;
         this.userLocalStore = userLocalStore;
@@ -71,6 +72,13 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 .placeholder(R.drawable.default_photo)
                 .into(holder.profileImage);
 
+        if (currentItem.getCountryTag().isEmpty()) {
+            holder.tvCountryTag.setVisibility(View.GONE);
+        } else {
+            holder.tvCountryTag.setVisibility(View.VISIBLE);
+            holder.tvCountryTag.setTextColor(currentItem.getTagColor());
+        }
+        String countryTag = "#" + currentItem.getCountryTag();
 
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
@@ -78,10 +86,10 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
 
         holder.tvTime.setText(timeAgo);
-
         holder.tvUsername.setText(currentItem.getUsername());
         holder.tvCountry.setText(currentItem.getCountry());
         holder.tvText.setText(currentItem.getPost().replace("\\", "")); // remove extra /
+        holder.tvCountryTag.setText(countryTag);
         holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
         holder.tvCommentNum.setText(Integer.toString(currentItem.getCommentNum()));
 
@@ -125,7 +133,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     // Holder knows and references where the fields are
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvCommentNum;
+        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvCommentNum, tvCountryTag;
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
         private LinearLayout layoutLove, layoutComment, relativeMore;
@@ -137,6 +145,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername_discussion);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime_discussion);
             tvText = (TextView) itemView.findViewById(R.id.tvText_discussion);
+            tvCountryTag = (TextView) itemView.findViewById(R.id.item_discussion_tvCountryTag);
             profileImage = (CircleImageView) itemView.findViewById(R.id.profileimage_discussion);
             relativeDiscussion = (RelativeLayout) itemView.findViewById(R.id.relative_discussion);
             relativeMore = (LinearLayout) itemView.findViewById(R.id.item_discussion_layoutMore);
@@ -145,6 +154,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
             imageButtonLove = (ImageView) itemView.findViewById(R.id.imageButtonLove);
             layoutLove = (LinearLayout) itemView.findViewById(R.id.layoutLove);
             layoutComment = (LinearLayout) itemView.findViewById(R.id.layoutComment);
+
 
             // Change font for all text view fields
             Helpers.overrideFonts(fragment.getContext(), relativeDiscussion);
