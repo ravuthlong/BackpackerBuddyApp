@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
@@ -47,11 +48,34 @@ class DiscussionRoomFragPresenter implements IDiscussionRoomFragPresenter {
             public void onFinished(List<DiscussionModel> discussionModels) {
                 if (discussionModels.get(0).getSuccess() == 1) {
                     iDiscussionRoomFragView.setDiscussionModels(discussionModels);
+                    iDiscussionRoomFragView.swapData(discussionModels);
                 } else {
                     iDiscussionRoomFragView.setDiscussionModelsEmpty();
+                    iDiscussionRoomFragView.displayNoResultSnack();
                 }
-                iDiscussionRoomFragView.swapData(discussionModels);
                 displayAfterLoading();
+            }
+
+            @Override
+            public void onError() {
+                iDiscussionRoomFragView.displayErrorToast();
+            }
+        });
+    }
+
+    @Override
+    public void fetchDiscussionPostsFilter(HashMap<String, String> postHash) {
+
+        discussionRoomFragInteractor.fetchDiscussionFilterPostsRetrofit(postHash, new OnRetrofitDiscussionRoomFinished() {
+            @Override
+            public void onFinished(List<DiscussionModel> discussionModels) {
+                if (discussionModels.get(0).getSuccess() == 1) {
+                    iDiscussionRoomFragView.setDiscussionModels(discussionModels);
+                    iDiscussionRoomFragView.swapData(discussionModels);
+                } else {
+                    iDiscussionRoomFragView.setDiscussionModelsEmpty();
+                    iDiscussionRoomFragView.displayNoResultSnack();
+                }
             }
 
             @Override

@@ -16,6 +16,11 @@
     <color name="femalePink">#B23D88</color>
     <color name="navDrawer">#262C35</color>
     <color name="navDrawerFooter">#2A3038</color>
+    <color name="tagColor">#6ECBC9</color>
+    <color name="whiteWithOpacity">#666E6E6E</color>
+    <color name="whiteWithDarkerOpacity">#CC6E6E6E</color>
+    <color name="black_alpha_40">#66000000</color>
+
     <color tools:override="true" name="ucrop_color_toolbar">#4a6b43</color>
     <color tools:override="true" name="ucrop_color_statusbar">#416150</color>
 </resources>

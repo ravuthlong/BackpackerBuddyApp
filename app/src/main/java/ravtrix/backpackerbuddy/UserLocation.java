@@ -3,17 +3,18 @@ package ravtrix.backpackerbuddy;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.HelpersPermission;
 import ravtrix.backpackerbuddy.interfacescom.UserLocationInterface;
 
 /**
@@ -27,6 +28,8 @@ public class UserLocation {
     private UserLocationInterface userLocationInterface;
     boolean gps_enabled = false;
     boolean network_enabled = false;
+    private static final int LOCATION_REQUEST_CODE = 1;
+    private boolean isFacebookSignUpCalling = false;
 
     public UserLocation(Activity context) {
         this.context = context;
@@ -64,7 +67,7 @@ public class UserLocation {
                 context.requestPermissions(new String[] {
                         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.INTERNET
-                }, 1);
+                }, 0);
             } else {
                 configureButton();
             }
@@ -81,7 +84,6 @@ public class UserLocation {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                System.out.println("RECEIVED LOCATION");
                 final double longitude = location.getLongitude();
                 final double latitude = location.getLatitude();
                 stopListener();
@@ -112,10 +114,24 @@ public class UserLocation {
     public void configureButton() {
         try {
 
-            if (!gps_enabled && !network_enabled) {
-                Helpers.displayToast(context, "Turn on GPS or Network Provider to enable location updates.");
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(intent);
+            if (!gps_enabled && !network_enabled && isFacebookSignUpCalling) {
+
+                AlertDialog.Builder builder = Helpers.showAlertDialogWithTwoOptions(context, "Location Service", "Turn on location service so other users can see your current country", "No");
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        userLocationInterface.onReceivedLocation(0, 0); // permission denied, just use 0,0
+                    }
+                });
+                builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // requesting permission to access location
+                        HelpersPermission.showLocationRequest(context);
+                    }
+                });
+                builder.show();
+
             } else {
                 if (network_enabled){
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
@@ -142,5 +158,9 @@ public class UserLocation {
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void setIsFacebookCalling(boolean isFacebookCalling) {
+        this.isFacebookSignUpCalling = isFacebookCalling;
     }
 }

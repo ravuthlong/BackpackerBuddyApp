@@ -1,15 +1,20 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -17,8 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +31,7 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.discussion.insertdiscussion.DiscussionPostActivity;
 import ravtrix.backpackerbuddy.fcm.FirebaseMessagingService;
 import ravtrix.backpackerbuddy.helpers.Helpers;
+import ravtrix.backpackerbuddy.helpers.HelpersDisplay;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
@@ -49,18 +55,12 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     private List<DiscussionModel> discussionModels;
     private UserLocalStore userLocalStore;
 
-    private int[] colors =  new int[] {Color.rgb(206,139,139), Color.rgb(139,206,197),
-            Color.rgb(110,116,203), Color.rgb(139,206,159), Color.rgb(203,158,110),
-            Color.rgb(110,203,201), Color.rgb(203,110,110)};
-    //red,blue
-    //purple,green,orange
-    //blue-green,orange-red
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_discussion_room, container, false);
         ButterKnife.bind(this, view);
+
         swipeRefreshLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -80,7 +80,43 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
         Helpers.checkLocationUpdate(getActivity(), userLocalStore); // check the need for location update
         discussionRoomFragPresenter.fetchDiscussionPosts(userLocalStore.getLoggedInUser().getUserID());
+
+        setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.toolbar_filter, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.buttonFilter:
+                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                b.setTitle("Filter By Country");
+                final String[] types = getResources().getStringArray(R.array.countriesShort);
+                types[0] = "All"; // Change the first option from None to All because first option should show all country instead
+                b.setItems(types, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (which != 0) {
+                            retrofitFetchFilteredPosts(types[which]);
+                        } else {
+                            // fetch all instead, user chose "All" option
+                            discussionRoomFragPresenter.fetchDiscussionPostsRefresh(userLocalStore.getLoggedInUser().getUserID());
+                        }
+                    }
+                });
+                b.setCancelable(true);
+                b.show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -117,6 +153,14 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         }
     }
 
+    public void retrofitFetchFilteredPosts(String countryTag) {
+        HashMap<String, String> postHash = new HashMap<>();
+        postHash.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
+        postHash.put("tag", countryTag);
+
+        discussionRoomFragPresenter.fetchDiscussionPostsFilter(postHash);
+    }
+
 
     // Hide floating action button on scroll down and show on scroll up
     private void handleFloatingButtonScroll(final FloatingActionButton floatingActionButton) {
@@ -140,10 +184,8 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     private void setModelColors(List<DiscussionModel> discussionModels) {
         // Generate random text color for country tag
-        Random random = new Random();
         for (int i = 0; i < discussionModels.size(); i++) {
-            int randomColor = random.nextInt(colors.length);
-            discussionModels.get(i).setTagColor(colors[randomColor]);
+            discussionModels.get(i).setTagColor(ContextCompat.getColor(getContext(), R.color.tagColor));
         }
     }
 
@@ -201,5 +243,10 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void displayNoResultSnack() {
+        HelpersDisplay.makeSnackbar(recyclerViewDiscussion, "No results matching search");
     }
 }

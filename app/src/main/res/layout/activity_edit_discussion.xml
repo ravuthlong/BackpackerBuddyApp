@@ -22,39 +22,37 @@
         <ScrollView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:fillViewport="false">
+            android:fillViewport="true">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/greenLighter"
-                android:id="@+id/relativeEditDiscussion">
+                android:orientation="vertical"
+                android:id="@+id/linearEditDiscussion"
+                android:weightSum="1">
 
-                <FrameLayout
-                    android:id="@+id/frameLayout2"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="0.9">
+
+                <TextView
+                    android:id="@+id/tvDiscussion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_20sdp">
-
-                    <TextView
-                        android:id="@+id/tvDiscussion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left|top"
-                        android:text="@string/discussion"
-                        android:textSize="@dimen/_13ssp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </FrameLayout>
+                    android:layout_gravity="left|top"
+                    android:text="@string/discussion"
+                    android:textSize="@dimen/_13ssp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_5sdp" />
 
                 <EditText
                     android:id="@+id/etEditDiscussion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/frameLayout2"
-                    android:layout_alignStart="@+id/frameLayout2"
-                    android:layout_below="@+id/frameLayout2"
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:gravity="top|left"
@@ -65,7 +63,33 @@
                     android:scrollbars="vertical"
                     android:hint="@string/discussion"
                     android:padding="@dimen/_5sdp" />
-            </RelativeLayout>
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1"
+                    android:background="@drawable/button_green"
+                    android:gravity="center"
+                    android:paddingLeft="10dp">
+
+                    <TextView
+                        android:text="Select a Country Tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        android:textColor="@color/white" />
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/activity_edit_discussion_countrySpinner"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toRightOf="@+id/textView3" />
+                </RelativeLayout>
+            </LinearLayout>
         </ScrollView>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

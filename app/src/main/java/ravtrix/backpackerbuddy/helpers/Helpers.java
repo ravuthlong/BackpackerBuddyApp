@@ -604,8 +604,13 @@ public class Helpers {
      * @return              true is the user is connected to the internet, false otherwise
      */
     private static boolean isConnectedToInternet(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        NetworkInfo activeNetwork = null;
+
+        if (context != null) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
         return activeNetwork != null;
     }
 

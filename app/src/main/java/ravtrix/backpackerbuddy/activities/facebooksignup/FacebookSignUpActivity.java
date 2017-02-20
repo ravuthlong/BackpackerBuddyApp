@@ -231,7 +231,9 @@ public class FacebookSignUpActivity extends OptionMenuSendBaseActivity implement
 
     private void signUserUp(final HashMap<String, String> userInfo) {
         // Make Retrofit call to communicate with the server
-        Call<JsonObject> returnedStatus = RetrofitUserInfoSingleton.getRetrofitUserInfo().signUserUpPart1().signedUpStatus(userInfo);
+        Call<JsonObject> returnedStatus = RetrofitUserInfoSingleton.getRetrofitUserInfo()
+                .signUserUpPart1()
+                .signedUpStatus(userInfo);
         returnedStatus.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

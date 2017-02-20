@@ -33,13 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <View
-                android:id="@+id/verticleLine"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="#7d9f84"
-                android:layout_gravity="center" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image_profile"
                 android:layout_width="120dp"

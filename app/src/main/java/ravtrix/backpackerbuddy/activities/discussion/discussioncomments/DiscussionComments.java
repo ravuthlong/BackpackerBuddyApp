@@ -50,6 +50,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         Helpers.setToolbar(this, toolbar);
         setTitle("Comments");
 
+        Helpers.overrideFonts(this, etComment);
         hideProgressbar();
         hideRecyclerView();
 
@@ -57,6 +58,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
         recyclerView.addItemDecoration(dividerDecorator);
 
         getDiscussionBundle();
+
         userLocalStore = new UserLocalStore(this);
         discussionCommentsPresenter = new DiscussionCommentsPresenter(this);
         submitButton.setOnClickListener(this);

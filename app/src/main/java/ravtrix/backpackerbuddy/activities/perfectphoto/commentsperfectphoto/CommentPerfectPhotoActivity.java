@@ -56,6 +56,7 @@ public class CommentPerfectPhotoActivity extends AppCompatActivity implements Vi
         setContentView(R.layout.activity_comment_perfect_photo);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, etComment);
         setTitle("Comments");
         linearProg.setVisibility(View.VISIBLE);
 

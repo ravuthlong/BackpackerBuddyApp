@@ -39,7 +39,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
-import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.application.BaseApplication;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
@@ -59,9 +58,6 @@ import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by Ravinder on 3/29/16.
@@ -101,29 +97,11 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         new LocationUpdateSharedPreference(this); // check fr version update
         userMainPresenter = new UserMainPresenter(this);
 
-        Bundle bundle = getIntent().getExtras();
-        // First check if they want a guest access, from Welcome Page
-        if (bundle != null && bundle.containsKey("isGuest")) {
-            this.isUserAGuest = bundle.getBoolean("isGuest");
-            if (isUserAGuest) {
-                AppRater.app_launched(this); // Check the need to show rate dialog
-                setUpView();
-                settingsButton.setVisibility(View.GONE);
-                navigationView_Footer.setNavigationItemSelectedListener(this);
-                changeTypeFaceFooter(navigationView_Footer);
-            }
 
-        } else if (checkIsUserNotLoggedIn()) {
-            // Non logged in user goes to logged in page
-            Intent intent = new Intent(UserMainPage.this, WelcomeActivity.class);
-            intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            AppRater.app_launched(this); // Check the need to show rate dialog
-            setUpView();
-            navigationView_Footer.setVisibility(View.GONE);
-        }
-        if (!isUserAGuest && userLocalStore.getLoggedInUser().getUserID() != 0) {
+        AppRater.app_launched(this); // Check the need to show rate dialog
+        setUpView();
+        navigationView_Footer.setVisibility(View.GONE);
+        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
             // Update local store upon every opening. This is a way of syncing data
             userMainPresenter.updateLocalstore(userLocalStore.getLoggedInUser().getUserID());
         }

@@ -35,6 +35,8 @@ public class EditDiscussionCommentActivity extends OptionMenuSaveBaseActivity im
         this.editDiscussionCommentPresenter = new EditDiscussionCommentPresenter(this);
 
         getBundle();
+
+        Helpers.overrideFonts(this, etEditComment);
         etEditComment.setText(comment);
         etEditComment.setSelection(etEditComment.getText().length());
     }

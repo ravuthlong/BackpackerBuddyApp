@@ -72,7 +72,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 .placeholder(R.drawable.default_photo)
                 .into(holder.profileImage);
 
-        if (currentItem.getCountryTag().isEmpty()) {
+        if (null != currentItem.getCountryTag() && currentItem.getCountryTag().isEmpty()) {
             holder.tvCountryTag.setVisibility(View.GONE);
         } else {
             holder.tvCountryTag.setVisibility(View.VISIBLE);
@@ -88,7 +88,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         holder.tvTime.setText(timeAgo);
         holder.tvUsername.setText(currentItem.getUsername());
         holder.tvCountry.setText(currentItem.getCountry());
-        holder.tvText.setText(currentItem.getPost().replace("\\", "")); // remove extra /
+        holder.tvText.setText(currentItem.getPost()); // remove extra /
         holder.tvCountryTag.setText(countryTag);
         holder.tvLoveNum.setText(Integer.toString(currentItem.getLoveNum()));
         holder.tvCommentNum.setText(Integer.toString(currentItem.getCommentNum()));
@@ -180,7 +180,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                     DiscussionModel clickedItem = discussionModels.get(position);
 
                     if (clickedItem.getUserID() == userLocalStore.getLoggedInUser().getUserID()) {
-                        showDialogOwner(clickedItem.getDiscussionID(), clickedItem.getPost());
+                        showDialogOwner(clickedItem.getDiscussionID(), clickedItem.getPost(), clickedItem.getCountryTag());
                     } else {
                         showDialogNormal();
                     }
@@ -264,7 +264,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     /**
      * Owner pop up dialog includes options to edit and delete their discussion post
      */
-    private void showDialogOwner(final int discussionID, final String post) {
+    private void showDialogOwner(final int discussionID, final String post, final String countryTag) {
         CharSequence options[] = new CharSequence[] {"Edit", "Delete"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getActivity());
@@ -277,6 +277,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                         Intent intent = new Intent(fragment.getContext(), EditDiscussionActivity.class);
                         intent.putExtra("discussionID", discussionID);
                         intent.putExtra("post", post);
+                        intent.putExtra("countryTag", countryTag);
                         fragment.startActivityForResult(intent, 1);
                         break;
                     case 1:

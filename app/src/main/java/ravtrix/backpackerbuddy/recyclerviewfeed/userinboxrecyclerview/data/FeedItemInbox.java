@@ -125,7 +125,7 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
         this.snapshot = snapshot;
     }
 
-    private long getTimeMilli() {
+    public long getTimeMilli() {
         return timeMilli;
     }
 
@@ -138,6 +138,6 @@ public class FeedItemInbox implements Comparable<FeedItemInbox> {
 
         long anotherTime = another.getTimeMilli();
         //descending order
-        return (int)(anotherTime - this.getTimeMilli());
+        return anotherTime < this.timeMilli ? -1 : anotherTime == this.timeMilli ? 0 : 1;
     }
 }

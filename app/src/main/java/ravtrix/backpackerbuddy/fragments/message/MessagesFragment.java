@@ -207,8 +207,16 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                                 // completion
                                 if (counter.getI() == feedItemInbox.size()) {
-                                    // Sort chat rooms in order based on time
+
                                     Collections.sort(feedItemInbox);
+
+                                    System.out.println("sorted List: ");
+                                    for(FeedItemInbox str: feedItemInbox){
+                                        System.out.println(str.getUsername() + " : " + str.getTimeMilli());
+                                    }
+
+
+                                    // Sort chat rooms in order based on time
                                     feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox);
                                     setRecyclerView(feedListAdapterInbox);
 

@@ -19,4 +19,5 @@ interface IDiscussionRoomFragView {
     void hideProgressBar();
     void showProgressBar();
     void stopSwipeRefreshing();
+    void displayNoResultSnack();
 }

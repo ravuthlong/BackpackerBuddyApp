@@ -45,7 +45,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_toRightOf="@+id/verticleLine"
                 android:layout_toEndOf="@+id/verticleLine"
-                android:layout_marginTop="-5dp"
                 android:background="#FFFFFFFF"
                 android:padding="@dimen/_4sdp" />
 
@@ -54,49 +53,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_12ssp"
                 android:textColor="#000000"
-                android:shadowColor = "#FFFFFF"
-                android:shadowDx="3"
-                android:shadowDy="3"
-                android:shadowRadius="2"
                 android:paddingRight="@dimen/_2sdp"
                 android:paddingLeft="@dimen/_2sdp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/_4sdp" />
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="Dec/2/2017" />
 
             <TextView
                 android:id="@+id/tvToDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textColor="#000000"
-                android:shadowColor = "#FFFFFF"
-                android:shadowDx="3"
-                android:shadowDy="3"
-                android:shadowRadius="2"
                 android:paddingLeft="@dimen/_2sdp"
                 android:paddingRight="@dimen/_2sdp"
                 android:layout_alignTop="@+id/tvFromDate"
                 android:layout_toRightOf="@+id/tvArrow"
-                android:layout_toEndOf="@+id/tvArrow" />
+                android:layout_toEndOf="@+id/tvArrow"
+                android:text="Dec/3/2017" />
 
             <TextView
                 android:id="@+id/tvArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dash"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_11ssp"
                 android:textColor="#000000"
-                android:shadowColor = "#FFFFFF"
-                android:shadowDx="3"
-                android:shadowDy="3"
-                android:shadowRadius="2"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:paddingLeft="@dimen/_2sdp"
                 android:paddingRight="@dimen/_2sdp"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tvFromDate"
+                android:gravity="center"
+                android:layout_alignParentTop="false"
                 android:layout_toEndOf="@+id/tvFromDate" />
 
             <ImageButton

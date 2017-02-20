@@ -41,12 +41,7 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
         Helpers.overrideFonts(this, linearNewDis);
         this.setTitle("New Discussion");
 
-        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(this,
-                R.array.countriesShort, R.layout.item_spinner);
-        // Drop down
-        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCountries.setAdapter(countryArrayAdapter);
-
+        setSpinner();
         this.discussionPostPresenter = new DiscussionPostPresenter(this);
         userLocalStore = new UserLocalStore(this);
     }
@@ -106,8 +101,21 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
         newDiscussion.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
         newDiscussion.put("post", etDiscussion.getText().toString());
         newDiscussion.put("time", Long.toString(System.currentTimeMillis()));
-        newDiscussion.put("country", spinnerCountries.getSelectedItem().toString());
+
+        if (spinnerCountries.getSelectedItem().toString().equals("None")) {
+            newDiscussion.put("country", ""); // User selects no tag, inserts as blank
+        } else {
+            newDiscussion.put("country", spinnerCountries.getSelectedItem().toString()); // insert the country tag
+        }
         return newDiscussion;
+    }
+
+    private void setSpinner() {
+        ArrayAdapter<CharSequence> countryArrayAdapter = ArrayAdapter.createFromResource(this,
+                R.array.countriesShort, R.layout.item_spinner);
+        // Drop down
+        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountries.setAdapter(countryArrayAdapter);
     }
 
     @Override

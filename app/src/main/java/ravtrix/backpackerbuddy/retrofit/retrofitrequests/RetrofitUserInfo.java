@@ -30,6 +30,10 @@ public class RetrofitUserInfo {
         return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpPart1.class);
     }
 
+    public RetrofitUserInfoInterfaces.SignUserUpFacebook signUserUpFacebook() {
+        return this.retrofit.create(RetrofitUserInfoInterfaces.SignUserUpFacebook.class);
+    }
+
     public RetrofitUserInfoInterfaces.GetUserDetails getUserDetails() {
         return retrofit.create(RetrofitUserInfoInterfaces.GetUserDetails.class);
     }

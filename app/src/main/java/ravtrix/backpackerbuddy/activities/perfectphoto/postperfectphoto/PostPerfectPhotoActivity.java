@@ -53,6 +53,7 @@ public class PostPerfectPhotoActivity extends OptionMenuPostBaseActivity impleme
         setContentView(R.layout.activity_post_perfect_photo);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, post);
         setTitle("Your Perfect Photo");
 
         userLocalStore = new UserLocalStore(this);

@@ -17,8 +17,8 @@ class EditDiscussionPresenter implements IEditDiscussionPresenter {
         this.editDiscussionInteractor = new EditDiscussionInteractor();
     }
     @Override
-    public void editDiscussion(int discussionID, String newDiscussion) {
-        editDiscussionInteractor.editDiscussionInteractor(discussionID, newDiscussion, new OnFinishedListenerRetrofit() {
+    public void editDiscussion(int discussionID, String newDiscussion, String countryTag) {
+        editDiscussionInteractor.editDiscussionInteractor(discussionID, newDiscussion, countryTag, new OnFinishedListenerRetrofit() {
             @Override
             public void onFinished(JsonObject jsonObject) {
                 if (jsonObject.get("status").getAsInt() == 1) {

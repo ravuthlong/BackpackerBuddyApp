@@ -27,13 +27,16 @@ public class RetrofitUserDiscussion {
         return retrofit.create(RetrofitUserDiscussionInterfaces.InsertAndUpdateLove.class);
     }
 
-
     public RetrofitUserDiscussionInterfaces.RemoveAndUpdateLove removeAndUpdateLove() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.RemoveAndUpdateLove.class);
     }
 
     public RetrofitUserDiscussionInterfaces.GetDiscussions getDiscussions() {
         return retrofit.create(RetrofitUserDiscussionInterfaces.GetDiscussions.class);
+    }
+
+    public RetrofitUserDiscussionInterfaces.GetDiscussionsWithFilter getDiscussionsWithFilter() {
+        return retrofit.create(RetrofitUserDiscussionInterfaces.GetDiscussionsWithFilter.class);
     }
 
     public RetrofitUserDiscussionInterfaces.GetOneDiscussion getADiscussion() {

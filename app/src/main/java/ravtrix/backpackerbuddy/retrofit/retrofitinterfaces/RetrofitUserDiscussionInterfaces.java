@@ -14,6 +14,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by Ravinder on 12/22/16.
@@ -50,13 +51,19 @@ public class RetrofitUserDiscussionInterfaces {
         Call<List<DiscussionModel>> getDiscussions(@Query("userID") int userID);
     }
 
+    public interface GetDiscussionsWithFilter {
+        @GET("/fetchDiscussionsWithFilter1.9.2.php")
+        Call<List<DiscussionModel>> getDiscussionsWithFilter(@QueryMap HashMap<String, String> infoMap); //userID, tag
+    }
+
     public interface GetOneDiscussion {
         @GET("/fetchADiscussion1.10.php?discussionID=[discussionID]&userID=[userID]")
-        Call<List<DiscussionModel>> getADiscussion(@Query("discussionID") int discussionID, @Query("userID") int userID);
+        Call<List<DiscussionModel>> getADiscussion(@Query("discussionID") int discussionID,
+                                                   @Query("userID") int userID);
     }
 
     public interface GetAUserDiscussions {
-        @GET("/fetchAUserDiscussion.php?userID=[userID]")
+        @GET("/fetchAUserDiscussion1.9.2.php?userID=[userID]")
         Call<List<DiscussionModel>> getAUserDiscussions(@Query("userID") int userID);
     }
 
@@ -94,8 +101,9 @@ public class RetrofitUserDiscussionInterfaces {
 
     public interface UpdateDiscussion {
         @FormUrlEncoded
-        @POST("/updateDiscussion.php")
-        Call<JsonObject> updateDiscussion(@Field("discussionID") int discussionID, @Field("post") String post);
+        @POST("/updateDiscussion1.9.2.php")
+        Call<JsonObject> updateDiscussion(@Field("discussionID") int discussionID, @Field("post") String post,
+                                          @Field("countryTag") String countryTag);
     }
 
     public interface SendNotification {

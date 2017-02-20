@@ -5,5 +5,5 @@ package ravtrix.backpackerbuddy.activities.discussion.editdiscussion;
  */
 
 interface IEditDiscussionPresenter {
-    void editDiscussion(int discussionID, String newDiscussion);
+    void editDiscussion(int discussionID, String newDiscussion, String countryTag);
 }

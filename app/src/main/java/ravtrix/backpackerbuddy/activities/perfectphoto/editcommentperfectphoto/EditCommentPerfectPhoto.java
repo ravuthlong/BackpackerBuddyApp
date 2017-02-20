@@ -32,6 +32,7 @@ public class EditCommentPerfectPhoto extends OptionMenuSaveBaseActivity implemen
 
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, etComment);
         setTitle("Edit Comment");
 
         getBundle();

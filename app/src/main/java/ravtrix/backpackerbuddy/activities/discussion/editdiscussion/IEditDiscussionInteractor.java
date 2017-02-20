@@ -14,5 +14,5 @@ interface IEditDiscussionInteractor {
      * @param newDiscussion                 - the new discussion post
      * @param onFinishedListenerRetrofit    - the callback after retrofit completed
      */
-    void editDiscussionInteractor(int discussionID, String newDiscussion, OnFinishedListenerRetrofit onFinishedListenerRetrofit);
+    void editDiscussionInteractor(int discussionID, String newDiscussion, String countryTag, OnFinishedListenerRetrofit onFinishedListenerRetrofit);
 }

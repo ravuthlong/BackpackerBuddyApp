@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-<LinearLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,7 +40,7 @@
                     android:ems="10"
                     android:hint="@string/email"
                     android:maxLines="1"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -55,7 +55,7 @@
                     android:ems="10"
                     android:maxLines="1"
                     android:hint="@string/username"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -70,7 +70,7 @@
                     android:inputType="textPassword"
                     android:ems="10"
                     android:maxLines="1"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:hint="@string/password"
                     android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
@@ -86,7 +86,7 @@
                     android:inputType="textPassword"
                     android:ems="10"
                     android:maxLines="1"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:hint="@string/confirmPassword"
                     android:paddingBottom="@dimen/_10sdp" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>

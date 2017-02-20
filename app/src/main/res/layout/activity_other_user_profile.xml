@@ -45,14 +45,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/frameLayout_otherProfile">
 
-                    <View
-                        android:id="@+id/line_otherProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30sdp"
-                        android:background="#7d9f84"
-                        android:layout_gravity="center" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/activity_other_profileImage"
                         android:layout_width="@dimen/_90sdp"
                         android:layout_height="@dimen/_90sdp"

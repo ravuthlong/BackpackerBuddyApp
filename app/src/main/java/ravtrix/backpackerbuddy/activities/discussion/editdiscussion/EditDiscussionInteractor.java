@@ -14,10 +14,10 @@ import retrofit2.Response;
 
 public class EditDiscussionInteractor implements IEditDiscussionInteractor {
     @Override
-    public void editDiscussionInteractor(int discussionID, String newDiscussion, final OnFinishedListenerRetrofit onFinishedListenerRetrofit) {
+    public void editDiscussionInteractor(int discussionID, String newDiscussion, String countryTag, final OnFinishedListenerRetrofit onFinishedListenerRetrofit) {
         Call<JsonObject> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
                 .updateDiscussion()
-                .updateDiscussion(discussionID, newDiscussion);
+                .updateDiscussion(discussionID, newDiscussion, countryTag);
 
         retrofit.enqueue(new Callback<JsonObject>() {
             @Override

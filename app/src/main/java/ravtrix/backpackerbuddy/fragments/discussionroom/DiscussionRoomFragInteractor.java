@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ravtrix.backpackerbuddy.helpers.RetrofitUserDiscussionSingleton;
@@ -28,6 +29,26 @@ class DiscussionRoomFragInteractor implements IDiscussionRoomFragInteractor {
             @Override
             public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
                onRetrofitDiscussionRoomFinished.onError();
+            }
+        });
+    }
+
+    @Override
+    public void fetchDiscussionFilterPostsRetrofit(HashMap<String, String> postHash, final OnRetrofitDiscussionRoomFinished onRetrofitDiscussionRoomFinished) {
+
+        Call<List<DiscussionModel>> retrofit = RetrofitUserDiscussionSingleton.getRetrofitUserDiscussion()
+                .getDiscussionsWithFilter()
+                .getDiscussionsWithFilter(postHash);
+
+        retrofit.enqueue(new Callback<List<DiscussionModel>>() {
+            @Override
+            public void onResponse(Call<List<DiscussionModel>> call, Response<List<DiscussionModel>> response) {
+                onRetrofitDiscussionRoomFinished.onFinished(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<DiscussionModel>> call, Throwable t) {
+                onRetrofitDiscussionRoomFinished.onError();
             }
         });
     }

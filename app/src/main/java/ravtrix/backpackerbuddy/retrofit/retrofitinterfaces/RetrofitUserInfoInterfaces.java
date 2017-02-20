@@ -44,6 +44,12 @@ public class RetrofitUserInfoInterfaces {
         Call<JsonObject> signedUpStatus(@FieldMap HashMap<String, String> userInfo);
     }
 
+    public interface SignUserUpFacebook {
+        @FormUrlEncoded
+        @POST("/registerFacebook1.9.2.php")
+        Call<JsonObject> signUserUpFacebook(@FieldMap HashMap<String, String> userInfo);
+    }
+
     public interface UpdateUserDetail {
         @FormUrlEncoded
         @POST("/updateUserDetails.php")

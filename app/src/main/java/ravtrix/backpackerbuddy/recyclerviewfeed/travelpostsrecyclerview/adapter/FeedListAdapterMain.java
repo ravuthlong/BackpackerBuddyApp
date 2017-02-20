@@ -157,6 +157,11 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             imgEditPost = (ImageButton) itemView.findViewById(imgbEditPost);
             profileImage = (CircleImageView) itemView.findViewById(R.id.item_countryFeed_profileImage);
 
+            Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Text.ttf");
+            tvFromDate.setTypeface(dateFont);
+            tvToDate.setTypeface(dateFont);
+            tvArrow.setTypeface(dateFont);
+
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -356,12 +361,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
     private void initTypeface(RecyclerView.ViewHolder holder) {
         // Initialize fonts
         Typeface countryFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Monu.otf");
-        Typeface dateFont = Typeface.createFromAsset(activity.getActivity().getAssets(), "Date.ttf");
-
         ((ViewHolder) holder).tvCountry.setTypeface(countryFont);
-        ((ViewHolder) holder).tvFromDate.setTypeface(dateFont);
-        ((ViewHolder) holder).tvToDate.setTypeface(dateFont);
-        ((ViewHolder) holder).tvArrow.setTypeface(dateFont);
     }
 
     private void initTextInfo(RecyclerView.ViewHolder holder, FeedItem currentPos) {
@@ -372,8 +372,6 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
             ((ViewHolder) holder).tvCountry.setTextSize(45);
         }
         ((ViewHolder) holder).tvCountry.setText(currentPos.getCountry());
-
-
         ((ViewHolder) holder).tvFromDate.setText(getDateFromInReadFormat(currentPos));
         ((ViewHolder) holder).tvToDate.setText(getDateToInReadFormat(currentPos));
     }
@@ -385,31 +383,31 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         String monthToDisplayFrom = "";
 
         switch (dateSplitsTo[0]) {
-            case "1":
+            case "01":
                 monthToDisplayFrom = "Jan";
                 break;
-            case "2":
+            case "02":
                 monthToDisplayFrom = "Feb";
                 break;
-            case "3":
+            case "03":
                 monthToDisplayFrom = "March";
                 break;
-            case "4":
+            case "04":
                 monthToDisplayFrom = "April";
                 break;
-            case "5":
+            case "05":
                 monthToDisplayFrom = "May";
                 break;
-            case "6":
+            case "06":
                 monthToDisplayFrom = "June";
                 break;
-            case "7":
+            case "07":
                 monthToDisplayFrom = "July";
                 break;
-            case "8":
+            case "08":
                 monthToDisplayFrom = "Aug";
                 break;
-            case "9":
+            case "09":
                 monthToDisplayFrom = "Sept";
                 break;
             case "10":
@@ -431,31 +429,31 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
         String monthToDisplayFrom = "";
 
         switch (dateSplitsFrom[0]) {
-            case "1":
+            case "01":
                 monthToDisplayFrom = "Jan";
                 break;
-            case "2":
+            case "02":
                 monthToDisplayFrom = "Feb";
                 break;
-            case "3":
+            case "03":
                 monthToDisplayFrom = "March";
                 break;
-            case "4":
+            case "04":
                 monthToDisplayFrom = "April";
                 break;
-            case "5":
+            case "05":
                 monthToDisplayFrom = "May";
                 break;
-            case "6":
+            case "06":
                 monthToDisplayFrom = "June";
                 break;
-            case "7":
+            case "07":
                 monthToDisplayFrom = "July";
                 break;
-            case "8":
+            case "08":
                 monthToDisplayFrom = "Aug";
                 break;
-            case "9":
+            case "09":
                 monthToDisplayFrom = "Sept";
                 break;
             case "10":

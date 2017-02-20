@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,7 +51,6 @@ public class AUserDisPostsFragment extends Fragment {
         recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-
         Helpers.overrideFonts(getContext(), noInfoTv);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
@@ -89,6 +89,7 @@ public class AUserDisPostsFragment extends Fragment {
                     noInfoTv.setVisibility(View.VISIBLE);
                 } else {
                     discussionModels = response.body();
+                    setModelColors(discussionModels);
                     discussionAdapter = new DiscussionAdapter(AUserDisPostsFragment.this, discussionModels,
                             userLocalStore);
                     setRecyclerView(discussionAdapter);
@@ -123,6 +124,7 @@ public class AUserDisPostsFragment extends Fragment {
                     noInfoTv.setVisibility(View.VISIBLE);
                 } else {
                     discussionModels = response.body();
+                    setModelColors(discussionModels);
                     discussionAdapter.swap(discussionModels);
                 }
             }
@@ -138,5 +140,12 @@ public class AUserDisPostsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(feedListAdapterUserFav);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    private void setModelColors(List<DiscussionModel> discussionModels) {
+        // Generate random text color for country tag
+        for (int i = 0; i < discussionModels.size(); i++) {
+            discussionModels.get(i).setTagColor(ContextCompat.getColor(getContext(), R.color.tagColor));
+        }
     }
 }

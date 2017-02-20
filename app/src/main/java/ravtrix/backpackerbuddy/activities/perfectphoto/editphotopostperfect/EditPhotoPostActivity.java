@@ -31,6 +31,7 @@ public class EditPhotoPostActivity extends OptionMenuSaveBaseActivity implements
 
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, etPost);
         setTitle("Edit Post");
 
         getBundle();

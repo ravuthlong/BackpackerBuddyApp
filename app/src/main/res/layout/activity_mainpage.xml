@@ -2,75 +2,32 @@
 
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_mainpage_relativeMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <ImageView
+        android:id="@+id/activity_mainpage_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#68a390">
+        android:scaleType="centerCrop"
+        android:src="@drawable/v4"
+        android:adjustViewBounds="true"/>
 
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:background="#79b19e"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <ImageButton
-                android:id="@+id/imgbLogIn"
-                android:contentDescription="@string/login"
-                android:layout_width="@dimen/_155sdp"
-                android:background="@drawable/login"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_height="@dimen/_35sdp" />
-
-            <ImageButton
-                android:id="@+id/imgbSignUp"
-                android:contentDescription="@string/signUp"
-                android:layout_width="@dimen/_155sdp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/signup"
-                android:layout_marginTop="@dimen/_1sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:layout_height="@dimen/_35sdp" />
-
-            <TextView
-                android:id="@+id/activity_main_tvGuest"
-                android:text="Or continue as Guest..."
-                android:textSize="@dimen/_12ssp"
-                android:textColor="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:visibility="gone" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/bFacebookLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp" />
-        </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
         <LinearLayout
             android:id="@+id/linear1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_centerInParent="false">
+            android:layout_weight="0.35"
+            android:gravity="center">
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/tvBackpacker"
@@ -80,7 +37,7 @@
                 android:text="@string/backpacker"
                 android:textSize="@dimen/_60ssp"
                 android:gravity="center"
-                />
+                android:textColor="@color/lowWhite" />
 
             <me.grantland.widget.AutofitTextView
                 android:id="@+id/tvBuddy"
@@ -90,33 +47,63 @@
                 android:text="@string/buddy"
                 android:textSize="@dimen/_60ssp"
                 android:gravity="center"
-                />
+                android:textColor="@color/lowWhite" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/relative1"
+        <LinearLayout
+            android:id="@+id/linear2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/linear2"
-            android:layout_below="@+id/linear1"
-            android:gravity="center">
-            <ImageView
-                android:id="@+id/imageView1"
-                android:contentDescription="@string/app_name"
-                android:background="@drawable/bp2"
-                android:layout_height="@dimen/_220sdp"
-                android:layout_toLeftOf="@+id/imageView2"
-                android:layout_alignParentLeft="false"
-                android:layout_width="@dimen/_130sdp" />
+            android:layout_height="0dp"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:layout_weight="0.65">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:contentDescription="@string/app_name"
-                android:layout_height="@dimen/_220sdp"
-                android:background="@drawable/bp1"
-                android:layout_width="@dimen/_120sdp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
-        </RelativeLayout>
-    </RelativeLayout>
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/bFacebookLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:paddingTop="@dimen/_11sdp"
+                android:paddingBottom="@dimen/_11sdp"
+                android:layout_marginStart="@dimen/_9sdp"
+                android:layout_marginEnd="@dimen/_9sdp"
+                android:gravity="center"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:text="Register with Email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_mainpage_tvRegister"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@color/whiteWithOpacity"
+                android:textSize="@dimen/_12ssp"
+                android:padding="@dimen/_11sdp"
+                android:layout_marginEnd="@dimen/_9sdp"
+                android:layout_marginStart="@dimen/_9sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:clickable="false" />
+
+            <TextView
+                android:text="Log In"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_mainpage_tvLogin"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textSize="@dimen/_12ssp"
+                android:background="@color/whiteWithOpacity"
+                android:padding="@dimen/_11sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginStart="@dimen/_9sdp"
+                android:layout_marginEnd="@dimen/_9sdp"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>
