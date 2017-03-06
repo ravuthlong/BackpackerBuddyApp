@@ -77,11 +77,14 @@ public class Helpers {
      * @return              the progress dialog object
      */
     public static ProgressDialog showProgressDialog(Context context, String message) {
-        ProgressDialog pDialog = new ProgressDialog(context);
-        pDialog.setMessage(message);
-        pDialog.setCancelable(false);
-        pDialog.show();
-        return pDialog;
+        if (context != null) {
+            ProgressDialog pDialog = new ProgressDialog(context);
+            pDialog.setMessage(message);
+            pDialog.setCancelable(false);
+            pDialog.show();
+            return pDialog;
+        }
+        return null;
     }
 
     /**
@@ -89,8 +92,10 @@ public class Helpers {
      * @param pDialog       the progress dialog to be hidden
      */
     public static void hideProgressDialog(ProgressDialog pDialog) {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        if (pDialog != null) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+        }
     }
 
     public static void hideKeyboard(Activity activity) {
@@ -129,10 +134,12 @@ public class Helpers {
      * @param message       the message to be displayed
      */
     public static void showAlertDialog(Context context, String message) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-        dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton("Ok", null);
-        dialogBuilder.show();
+        if (context != null) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+            dialogBuilder.setMessage(message);
+            dialogBuilder.setPositiveButton("Ok", null);
+            dialogBuilder.show();
+        }
     }
 
     /**
@@ -156,7 +163,9 @@ public class Helpers {
      * @param string        the message to be displayed
      */
     public static void displayToast(Context context, String string) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+        if (context != null) {
+            Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -172,7 +181,7 @@ public class Helpers {
         String city = "";
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -225,7 +234,7 @@ public class Helpers {
         JSONObject jsonObject;
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -375,7 +384,7 @@ public class Helpers {
      * @param timeBefore        the time before
      * @return                  the difference
      */
-    public static long timeDifInMinutes(long currentTime, long timeBefore) {
+    private static long timeDifInMinutes(long currentTime, long timeBefore) {
         return TimeUnit.MILLISECONDS.toMinutes(currentTime - timeBefore);
     }
 
@@ -683,7 +692,7 @@ public class Helpers {
             JSONObject jsonObject;
             String country = "";
             String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
+                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
             try {
                 url = new URL(urlAddress);
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -723,7 +732,6 @@ public class Helpers {
 
         @Override
         protected void onPostExecute(String s) {
-            //System.out.println("ON POST EXECUTION CALLED COUNTRY IS: " + s);
             onCountryRetrievedListener.onCountryRetrieved(s);
         }
     }

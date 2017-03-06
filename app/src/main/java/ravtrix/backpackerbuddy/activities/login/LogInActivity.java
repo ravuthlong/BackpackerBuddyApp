@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -17,7 +19,6 @@ import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
-import ravtrix.backpackerbuddy.baseActivitiesAndFragments.OptionMenuSendBaseActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.LoggedInUser;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -25,12 +26,13 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 /**
  * Created by Ravinder on 3/29/16.
  */
-public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInView {
+public class LogInActivity extends AppCompatActivity implements ILogInView, View.OnClickListener {
 
     @BindView(R.id.etLoggedInUsername) protected EditText etLoggedInUsername;
     @BindView(R.id.etLoggedInPassword) protected EditText etLoggedInPassword;
     @BindView(R.id.activity_login_linear) protected LinearLayout linearLayout;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
+    @BindView(R.id.activity_login_tvLogin) protected TextView tvLogin;
     private UserLocalStore userLocalStore;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
@@ -44,18 +46,19 @@ public class LogInActivity extends OptionMenuSendBaseActivity implements ILogInV
         Helpers.overrideFonts(this, linearLayout);
         setTitle("Log In");
 
+        tvLogin.setOnClickListener(this);
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.submitSend:
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.activity_login_tvLogin:
                 logUserIn();
-                return true;
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                break;
         }
     }
 

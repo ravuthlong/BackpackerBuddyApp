@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -206,6 +207,11 @@ public class BucketListFrag extends Fragment implements View.OnClickListener, IB
     }
 
     @Override
+    public void setBucketModelsEmpty() {
+        bucketListModels = new ArrayList<>();
+    }
+
+    @Override
     public void setRecyclerView() {
         bucketListAdapter = new BucketListAdapter(getContext(), BucketListFrag.this, bucketListModels);
         bucketRecyclerView.setAdapter(bucketListAdapter);
@@ -231,5 +237,10 @@ public class BucketListFrag extends Fragment implements View.OnClickListener, IB
     @Override
     public void showTvNoBucket() {
         tvNoBucket.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideTvNoBucket() {
+        tvNoBucket.setVisibility(View.INVISIBLE);
     }
 }

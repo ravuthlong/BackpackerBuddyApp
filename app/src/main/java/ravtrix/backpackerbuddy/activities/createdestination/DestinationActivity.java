@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -242,12 +243,16 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             datePickerListenerFrom = (DatePickerListenerFrom) getActivity();
 
-            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay - 1);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay - 1);
+
+            if (Build.VERSION.SDK_INT >= 18) {
+                datePickerDialog.getDatePicker().setLayoutMode(1);
+            }
+            return datePickerDialog;
         }
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
             datePickerListenerFrom.returnDateFrom(year, monthOfYear, dayOfMonth);
         }
     }
@@ -260,7 +265,12 @@ public class DestinationActivity extends OptionMenuSaveBaseActivity implements A
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             datePickerListenerTo = (DatePickerListenerTo) getActivity();
-            return new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, thisYear, thisMonth, thisDay);
+            if (Build.VERSION.SDK_INT >= 18) {
+                datePickerDialog.getDatePicker().setLayoutMode(1);
+            }
+            return datePickerDialog;
         }
 
         @Override

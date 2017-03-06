@@ -2,9 +2,12 @@ package ravtrix.backpackerbuddy.fragments.findbuddy.findbuddynear;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -83,7 +86,10 @@ public class FindBuddyNearFragment extends Fragment implements IFindBuddyNearVie
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                HelpersPermission.showLocationRequestTab(FindBuddyNearFragment.this);
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
                             }
                         });
             } else {

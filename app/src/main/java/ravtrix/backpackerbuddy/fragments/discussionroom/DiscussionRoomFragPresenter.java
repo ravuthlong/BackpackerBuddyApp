@@ -47,7 +47,6 @@ class DiscussionRoomFragPresenter implements IDiscussionRoomFragPresenter {
             @Override
             public void onFinished(List<DiscussionModel> discussionModels) {
                 if (discussionModels.get(0).getSuccess() == 1) {
-                    iDiscussionRoomFragView.setDiscussionModels(discussionModels);
                     iDiscussionRoomFragView.swapData(discussionModels);
                 } else {
                     iDiscussionRoomFragView.setDiscussionModelsEmpty();

@@ -15,10 +15,11 @@ interface IBucketListFragView {
     void setProgressbarVisible();
     void setProgressbarInvisible();
     void setBucketModels(List<BucketListModel> bucketModels);
+    void setBucketModelsEmpty();
     void setRecyclerView();
     void displayErrorToast();
     void swapBucketModels(List<BucketListModel> bucketModels);
     void changeBucketStatLocalstore(int status);
     void showTvNoBucket();
-
+    void hideTvNoBucket();
 }

@@ -34,12 +34,15 @@ class BucketListFragPresenter implements IBucketListFragPresenter {
 
                 if (bucketListModelList.get(0).getSuccess() == 0) {
                     // Empty no list
+                    iBucketListFragView.setBucketModelsEmpty();
+                    iBucketListFragView.setRecyclerView();
                     iBucketListFragView.setRecyclerViewInvisible();
                     iBucketListFragView.showTvNoBucket();
                 } else {
                     Collections.sort(bucketListModelList, new BucketComparator());
                     iBucketListFragView.setBucketModels(bucketListModelList);
                     iBucketListFragView.setRecyclerView();
+                    iBucketListFragView.setRecyclerViewVisible();
                 }
             }
 
@@ -63,6 +66,8 @@ class BucketListFragPresenter implements IBucketListFragPresenter {
                     iBucketListFragView.setRecyclerViewInvisible();
                     iBucketListFragView.showTvNoBucket();
                 } else {
+                    iBucketListFragView.setRecyclerViewVisible();
+                    iBucketListFragView.hideTvNoBucket();
                     Collections.sort(bucketListModelList, new BucketComparator());
                     bucketListAdapter.swap(bucketListModelList);
                 }

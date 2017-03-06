@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 
+import io.fabric.sdk.android.Fabric;
 import ravtrix.backpackerbuddy.Version;
 import ravtrix.backpackerbuddy.helpers.RetrofitAppInfoSingleton;
 import ravtrix.backpackerbuddy.models.LocationUpdateSharedPreference;
@@ -27,6 +29,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         LocationUpdateSharedPreference locationUpdateSharedPreference = new LocationUpdateSharedPreference(getApplicationContext());
         locationUpdateSharedPreference.setUpValue();
     }

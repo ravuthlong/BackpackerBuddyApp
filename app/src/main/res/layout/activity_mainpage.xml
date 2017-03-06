@@ -3,6 +3,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_mainpage_relativeMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -72,10 +73,10 @@
                 android:layout_gravity="center" />
 
             <TextView
+                android:id="@+id/activity_mainpage_tvRegister"
                 android:text="Register with Email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/activity_mainpage_tvRegister"
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:background="@color/whiteWithOpacity"
@@ -89,10 +90,10 @@
                 android:clickable="false" />
 
             <TextView
+                android:id="@+id/activity_mainpage_tvLogin"
                 android:text="Log In"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/activity_mainpage_tvLogin"
                 android:textColor="@android:color/white"
                 android:gravity="center"
                 android:textSize="@dimen/_12ssp"
@@ -102,6 +103,17 @@
                 android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginEnd="@dimen/_9sdp"
                 />
+
+            <TextView
+                android:id="@+id/activity_mainpage_privacy"
+                android:text="By singing up I agree to the Backpacker Buddy Terms of Use"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_7ssp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp" />
 
         </LinearLayout>
     </LinearLayout>

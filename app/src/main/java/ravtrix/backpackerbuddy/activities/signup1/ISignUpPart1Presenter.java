@@ -1,10 +1,13 @@
 package ravtrix.backpackerbuddy.activities.signup1;
 
+import java.util.HashMap;
+
 /**
  * Created by Ravinder on 9/27/16.
  */
 
-public interface ISignUpPart1Presenter {
-    void inputValidation(String username, String password, String email, String etConfirmPassword);
-
+ interface ISignUpPart1Presenter {
+    void inputValidation(boolean isPhotoUploaded, String username, String password, String email, String etConfirmPassword);
+    void retrofitStoreUser(HashMap<String, String> userInfo);
+    void updateCountry(String username, String country);
 }

@@ -41,6 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.UserLocation;
+import ravtrix.backpackerbuddy.activities.PrivacyPolicyActivity;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
@@ -65,6 +66,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.bFacebookLogin) protected LoginButton loginButton;
     @BindView(R.id.activity_mainpage_tvLogin) protected TextView tvLogin;
     @BindView(R.id.activity_mainpage_tvRegister) protected TextView tvRegister;
+    @BindView(R.id.activity_mainpage_privacy) protected TextView tvPrivacyPolicy;
 
     private UserLocalStore userLocalStore;
     private CallbackManager callbackManager;
@@ -88,6 +90,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         tvLogin.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
+        tvPrivacyPolicy.setOnClickListener(this);
 
         userLocalStore = new UserLocalStore(this);
         userLocation = new UserLocation(this);
@@ -95,7 +98,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         if (!HelpersPermission.hasLocationPermission(this)) {
             HelpersPermission.showLocationRequest(this);
         }
-
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -126,12 +128,13 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.activity_mainpage_tvRegister:
                 tvRegister.setBackgroundColor(ContextCompat.getColor(WelcomeActivity.this, R.color.whiteWithDarkerOpacity));
                 startActivity(new Intent(this, SignUpPart1Activity.class));
-                //finish();
                 break;
             case R.id.activity_mainpage_tvLogin:
                 tvLogin.setBackgroundColor(ContextCompat.getColor(WelcomeActivity.this, R.color.whiteWithDarkerOpacity));
                 startActivity(new Intent(this, LogInActivity.class));
-                //finish();
+                break;
+            case R.id.activity_mainpage_privacy:
+                startActivity(new Intent(this, PrivacyPolicyActivity.class));
                 break;
             default:
                 break;
@@ -154,9 +157,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                             PackageManager.PERMISSION_GRANTED) {
                 Helpers.showAlertDialog(this, "Give this app permission in the future in order to take full advantage of the functionality.");
                 // sign user up without location
-                System.out.println("USER DID NOT LET ACCESS LOCATION");
+                //System.out.println("USER DID NOT LET ACCESS LOCATION");
             } else {
-                System.out.println("USER LET ACCESS LOCATION");
+                //System.out.println("USER LET ACCESS LOCATION");
                 // sign user up
             }
         }
@@ -340,6 +343,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         tvBuddy.setTypeface(monuFont);
         Helpers.overrideFonts(this, this.tvLogin);
         Helpers.overrideFonts(this, this.tvRegister);
+        Helpers.overrideFonts(this, this.tvPrivacyPolicy);
     }
 
     private void displayToastCenter(String text) {

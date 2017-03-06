@@ -34,7 +34,6 @@ class SignUpPart3Presenter implements ISignUpPart3Presenter {
             public void onSuccess(JsonObject jsonObject) {
 
                 iSignUpPart3View.hideProgressBar();
-
                 if (userInfo.get("country").isEmpty()) { //empty because IOException thrown
                     // Update country info after the user signs up
                     iSignUpPart3View.updateCountry(userInfo.get("username"));

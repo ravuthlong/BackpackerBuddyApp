@@ -50,7 +50,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private ProgressDialog progressDialog;
     private long currentTime;
     private Bitmap bitmapImage;
-    private long mLastClickTime = 0;
+    private boolean isSubmitted = false;
     private String username = "";
     private String password = "";
     private String email = "";
@@ -59,6 +59,7 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
     private boolean isPhotoUploaed = false;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private AlertDialog mAlertDialog;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,23 +146,23 @@ public class SignUpPart3Activity extends OptionMenuSendBaseActivity implements V
         // Prevents double clicking
         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
             return false;
-        } else {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            switch (item.getItemId()) {
-                case R.id.submitSend:
-
-                    if (isPhotoUploaed) {
-                        signUserUp();
-                    } else {
-                        Helpers.displayToast(this, "You must upload a photo...");
-                    }
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
         }
-    }
+        mLastClickTime = SystemClock.elapsedRealtime();
 
+        switch (item.getItemId()) {
+            case R.id.submitSend:
+                if (isPhotoUploaed) {
+                    signUserUp();
+                } else {
+                    Helpers.displayToast(this, "You must upload a photo...");
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
 
     private void setBundle() {
         Bundle signUp1Info = getIntent().getExtras();

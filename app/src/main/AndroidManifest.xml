@@ -16,15 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_id"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".activities.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,13 +44,10 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.mainpage.UserMainPage"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -165,7 +169,18 @@
         <activity
             android:name=".activities.perfectphoto.editphotopostperfect.EditPhotoPostActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".notificationactivities.NotificationPostActivity" />
-        <activity android:name=".notificationactivities.NotificationPhotoActivity" />
+        <activity
+            android:name=".notificationactivities.NotificationPostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".notificationactivities.NotificationPhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PrivacyPolicyActivity"
+            android:screenOrientation="portrait" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0bd3961be22e9764bf268e947122efe9733ea27e" />
     </application>
+
 </manifest>

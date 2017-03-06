@@ -72,7 +72,7 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
 
         holder.tvUsername.setText(currentItem.getUsername());
         holder.tvCountry.setText(currentItem.getCountry());
-        holder.tvText.setText(currentItem.getComment().replace("\\", ""));
+        holder.tvText.setText(currentItem.getComment());
 
         // Converting timestamp into x ago format
         CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(

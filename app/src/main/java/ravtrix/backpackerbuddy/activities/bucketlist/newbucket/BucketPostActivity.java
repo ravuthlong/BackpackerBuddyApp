@@ -49,7 +49,7 @@ public class BucketPostActivity extends OptionMenuPostBaseActivity implements IB
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
 
-                if (etNewBucket.getText().toString().trim().length() < 10) {
+                if (etNewBucket.getText().toString().trim().length() < 5) {
                     displayErrorToast("Goal too short...");
                 } else if (etNewBucket.getText().toString().trim().length() >= 500) {
                     displayErrorToast("Exceeded max character count (500)");

@@ -4,5 +4,24 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:timePickerDialogTheme">@style/PickerDialogCustom</item>
+        <item name="android:datePickerDialogTheme">@style/PickerDialogCustom</item>
     </style>
+
+    <style name="PickerDialogCustom" parent="AlertDialogCustom">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/greenToolbar</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:datePickerMode">spinner</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:positiveButtonText">@color/colorPrimary</item>
+        <item name="android:negativeButtonText">@color/colorPrimary</item>
+        <item name="android:datePickerStyle">@style/PickerDialogCustom</item>
+    </style>
+
 </resources>

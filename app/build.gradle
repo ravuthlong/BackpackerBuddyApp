@@ -1,11 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply plugin: 'android-apt'
 
 android {
     signingConfigs {
     }
     compileSdkVersion 25
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
     dexOptions {
         preDexLibraries = false
     }
@@ -13,8 +28,8 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 27
-        versionName "1.9.2"
+        versionCode 28
+        versionName "1.9.3"
     }
     buildTypes {
         release {
@@ -64,6 +79,12 @@ dependencies {
 
     compile 'com.intuit.sdp:sdp-android:1.0.4'
     compile 'com.intuit.ssp:ssp-android:1.0.4'
+
+    //compile "io.reactivex.rxjava2:rxjava:2.x.y"
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
+
 
 
 }

@@ -12,4 +12,7 @@ interface ISignUpPart1View {
     void displayUsernameAndEmailTakenDialog();
     void displayErrorToast();
     void hideProgressDialog();
+    void startUserMainPage();
+    void updateCountry(String username);
+    void showAlertDialogError();
 }
