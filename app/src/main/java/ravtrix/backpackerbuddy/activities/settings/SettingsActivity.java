@@ -14,12 +14,12 @@ import com.facebook.login.LoginManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.aboutpage.AboutActivity;
 import ravtrix.backpackerbuddy.activities.notificationsettings.NotificationActivity;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.activities.userinfoedit.changeemail.ChangeEmail;
 import ravtrix.backpackerbuddy.activities.userinfoedit.changepassword.ChangePassword;
 import ravtrix.backpackerbuddy.activities.userinfoedit.changeusername.ChangeUsername;
+import ravtrix.backpackerbuddy.activities.usermap.UserMapActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
@@ -89,7 +89,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 break;
             case R.id.bAbout:
-                startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(this, UserMapActivity.class));
+
+                //startActivity(new Intent(this, AboutActivity.class));
                 break;
             default:
                 break;

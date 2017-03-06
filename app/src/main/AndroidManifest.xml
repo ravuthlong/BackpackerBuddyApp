@@ -24,7 +24,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
@@ -178,9 +177,11 @@
         <activity
             android:name=".activities.PrivacyPolicyActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.usermap.UserMapActivity"/>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="0bd3961be22e9764bf268e947122efe9733ea27e" />
+            android:value="@string/fabric_id" />
     </application>
 
 </manifest>
