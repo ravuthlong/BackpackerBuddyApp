@@ -21,33 +21,41 @@
 
         <ImageView
             android:id="@+id/sendMessageButton"
-            android:contentDescription="@string/txtFeedback"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            app:srcCompat="@android:drawable/ic_menu_send"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_alignBottom="@+id/textMessage"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="@dimen/_10sdp" />
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:contentDescription="@string/txtFeedback"
+            app:srcCompat="@android:drawable/ic_menu_send" />
 
         <EditText
             android:id="@+id/textMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hntMessage"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_20sdp"
-            android:paddingTop="@dimen/_20sdp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:textSize="@dimen/_11ssp"
-            android:maxLines="5"
-            android:scrollbars="vertical"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="0dp"
             android:layout_toLeftOf="@+id/sendMessageButton"
-            android:layout_toStartOf="@+id/sendMessageButton" />
+            android:ems="10"
+            android:hint="@string/hntMessage"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="5"
+            android:background="@android:color/transparent"
+            android:paddingBottom="@dimen/_20sdp"
+            android:paddingTop="@dimen/_20sdp"
+            android:scrollbars="vertical"
+            android:textSize="@dimen/_11ssp" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/textMessage"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/white" />
 
         <ProgressBar
             android:id="@+id/activity_conversation_spinner"
@@ -61,9 +69,9 @@
             android:id="@+id/chat_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_main"
-            android:layout_above="@+id/textMessage"
-            android:layout_alignParentStart="true">
+            android:layout_above="@+id/line"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar_main">
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>

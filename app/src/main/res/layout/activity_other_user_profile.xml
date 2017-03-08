@@ -265,19 +265,29 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/fab_margin"
                         android:src="@drawable/ic_chat_bubble_outline_white_24dp"
-                        app:fabSize="normal"
+                        android:visibility="visible"
                         app:backgroundTint="@color/green"
-                        android:visibility="gone" />
+                        app:fabSize="normal" />
 
                     <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/activity_other_user_bFloatingBucket"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/fab_margin"
-                    android:src="@drawable/ic_assignment_white_24dp"
-                    app:fabSize="normal"
-                    app:backgroundTint="@color/green"
-                        android:visibility="gone" />
+                        android:id="@+id/activity_other_user_bFloatingMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:src="@drawable/ic_map_float"
+                        android:visibility="visible"
+                        app:backgroundTint="@color/green"
+                        app:fabSize="normal" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/activity_other_user_bFloatingBucket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:src="@drawable/ic_assignment_white_24dp"
+                        android:visibility="visible"
+                        app:backgroundTint="@color/green"
+                        app:fabSize="normal" />
                 </LinearLayout>
 
         </RelativeLayout>

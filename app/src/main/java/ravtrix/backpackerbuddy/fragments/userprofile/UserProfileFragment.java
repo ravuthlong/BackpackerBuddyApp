@@ -11,6 +11,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -32,6 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.editinfo.EditInfoActivity;
 import ravtrix.backpackerbuddy.activities.editphoto.EditPhotoActivity;
+import ravtrix.backpackerbuddy.activities.usermap.UserMapActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.interfacescom.FragActivityUpdateProfilePic;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
@@ -70,6 +74,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.imgTravelStatusEdit) protected ImageView imgTravelStatusEdit;
     @BindView(R.id.relativeFragProfile) protected RelativeLayout relativeFragProfile;
     @BindView(R.id.frag_profile_progressBar) protected ProgressBar progressBar;
+
     private UserLocalStore userLocalStore;
     private View v;
     private FragActivityUpdateProfilePic fragActivityUpdateProfilePic;
@@ -79,7 +84,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isDetailFourAHint = true;
     private UserProfilePresenter presenter;
     private ProgressDialog progressDialog;
-    private int travelStatus;
     private boolean refreshPage = false;
 
     @Override
@@ -106,6 +110,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         presenter.getUserInfo(userLocalStore.getLoggedInUser().getUserID(),
                 userLocalStore.getLoggedInUser().getUserImageURL());
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -148,6 +153,24 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 alertDialog.show();
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        // blow up the world menu on toolbar
+        inflater.inflate(R.menu.toolbar_map, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.optionButtonMap:
+                startActivity(new Intent(getContext(), UserMapActivity.class));
+                return super.onOptionsItemSelected(item);
+            default:
+                return false;
         }
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,8 +23,6 @@ import android.widget.ProgressBar;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -196,10 +193,12 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
         if (fragments != null) {
             for (Fragment fragment : fragments) {
                 // Permission requests calls on this main activity. To communicate with the fragment's
@@ -209,7 +208,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-    }
+    }*/
 
     // Set up the fragments
     private void setUpFragments() {
@@ -348,21 +347,11 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
                     (userLocalStore.getLoggedInUser().getUserImageURL().equals("0"))) {
                 Picasso.with(this).load("http://i.imgur.com/268p4E0.jpg").noFade().into(profilePic);
             } else {
-                if (refreshProfilePic) {
-                    Picasso.with(this)
-                            .load(userLocalStore.getLoggedInUser().getUserImageURL())
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
-                            .networkPolicy(NetworkPolicy.NO_CACHE)
-                            .fit()
-                            .centerCrop()
-                            .into(profilePic);
-                } else {
-                    Picasso.with(this)
-                            .load(userLocalStore.getLoggedInUser().getUserImageURL())
-                            .fit()
-                            .centerCrop()
-                            .into(profilePic);
-                }
+                Picasso.with(this)
+                        .load(userLocalStore.getLoggedInUser().getUserImageURL())
+                        .fit()
+                        .centerCrop()
+                        .into(profilePic);
             }
         }
     }

@@ -54,4 +54,44 @@ class OtherUserProfilePresenter implements IOtherUserProfilePresenter {
             }
         });
     }
+
+    @Override
+    public void hasBucket(int userID) {
+
+        otherUserProfileInteractor.checkHasBucket(userID, new OnRFOtherUserProfileListener() {
+            @Override
+            public void onSuccess(JsonObject otherUserJSON) {
+
+                // User has at least one item on their bucket list
+                if (otherUserJSON.get("success").getAsInt() == 1) {
+                    view.startBucketActivity();
+                } else {
+                    view.showNoBucket();
+                }
+            }
+
+            @Override
+            public void onFailure() {}
+        });
+    }
+
+    @Override
+    public void hasMap(int userID) {
+
+        otherUserProfileInteractor.checkHasMap(userID, new OnRFOtherUserProfileListener() {
+            @Override
+            public void onSuccess(JsonObject otherUserJSON) {
+
+                // user has at least one point of their map
+                if (otherUserJSON.get("success").getAsInt() == 1) {
+                    view.startMapActivity();
+                } else {
+                    view.showNoMap();
+                }
+            }
+
+            @Override
+            public void onFailure() {}
+        });
+    }
 }

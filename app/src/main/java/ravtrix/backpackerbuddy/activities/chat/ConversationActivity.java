@@ -51,7 +51,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     @BindView(R.id.textMessage) protected EditText textMessage;
     @BindView(R.id.activity_conversation_spinner) protected ProgressBar progressBar;
     private LinearLayoutManager mLinearLayoutManager;
-    private String chatRoomName, chatRoomName2;
+    private String chatRoomName, chatRoomName2, chatRoomNameNoPlus, chatRoomName2NoPlus;
     private int chatPosition;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -68,6 +68,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         setContentView(R.layout.activity_conversation);
         ButterKnife.bind(this);
         Helpers.setToolbar(this, toolbar);
+        Helpers.overrideFonts(this, textMessage);
         setTitle("Conversation");
 
         toolbar.setTitleTextColor(Color.WHITE);
@@ -236,24 +237,13 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 Long time = System.currentTimeMillis();
 
                 if (dataSnapshot.child(chatRoomName).exists()) {
-                    Message message = new
-                            Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                            userLocalStore.getLoggedInUser().getUserImageURL(),
-                            time, 0);
-                    mFirebaseDatabaseReference.child(chatRoomName)
-                            .push().setValue(message);
-                    textMessage.setText("");
-                    passIntentResult(chatPosition, userMessage, time);
-
+                    sendMessageFirebase(chatRoomName, userMessage, time);
                 } else if (dataSnapshot.child(chatRoomName2).exists()) {
-                    Message message = new
-                            Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
-                            userLocalStore.getLoggedInUser().getUserImageURL(),
-                            time, 0);
-                    mFirebaseDatabaseReference.child(chatRoomName2)
-                            .push().setValue(message);
-                    textMessage.setText("");
-                    passIntentResult(chatPosition, userMessage, time);
+                    sendMessageFirebase(chatRoomName2, userMessage, time);
+                } else if (dataSnapshot.child(chatRoomNameNoPlus).exists()) {
+                    sendMessageFirebase(chatRoomNameNoPlus, userMessage, time);
+                } else if (dataSnapshot.child(chatRoomName2NoPlus).exists()) {
+                    sendMessageFirebase(chatRoomName2NoPlus, userMessage, time);
                 } else {
 
                     // New chat, so create new chat in FCM and also database
@@ -292,6 +282,16 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         });
     }
 
+    private void sendMessageFirebase(String chatName, String userMessage, Long time) {
+        Message message = new
+                Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
+                userLocalStore.getLoggedInUser().getUserImageURL(),
+                time, 0);
+        mFirebaseDatabaseReference.child(chatName)
+                .push().setValue(message);
+        textMessage.setText("");
+        passIntentResult(chatPosition, userMessage, time);
+    }
 
     /**
      * On back press, pass the new sent message to the MessagesFragment, so it can
@@ -328,8 +328,8 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         }
         myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
         // Create name combo. Only one of these two names exist for the convo between the two users.
-        chatRoomName = myUserID + otherUserID;
-        chatRoomName2 = otherUserID + myUserID;
+        chatRoomName = myUserID + "+" + otherUserID; chatRoomNameNoPlus = myUserID + otherUserID;
+        chatRoomName2 = otherUserID + "+" + myUserID; chatRoomName2NoPlus = otherUserID + myUserID;
 
         // Create userChat object
         userChat.setUserOne(Integer.parseInt(myUserID));
@@ -349,7 +349,11 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     setRecyclerView(chatRoomName);
                 } if (dataSnapshot.child(chatRoomName2).exists()) {
                     setRecyclerView(chatRoomName2);
-                } else  {
+                } else if (dataSnapshot.child(chatRoomNameNoPlus).exists()) {
+                    setRecyclerView(chatRoomNameNoPlus);
+                } else if (dataSnapshot.child(chatRoomName2NoPlus).exists()) {
+                    setRecyclerView(chatRoomName2NoPlus);
+                } else {
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             }
@@ -368,15 +372,12 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
                     // Prevents double clicking
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        System.out.println("PREVENTING DOUBLE CLICK");
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 3000) {
                         return;
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     sendMessage();
-
                 }
-
             }
         });
     }

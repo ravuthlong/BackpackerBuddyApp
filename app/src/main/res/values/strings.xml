@@ -91,6 +91,7 @@
     <string name="txtSignOut">Sign Out</string>
     <string name="until">Until</string>
     <string name="username">Username</string>
+    <string name="usernameOrEmail">Username or Email</string>
     <string name="writeBucket">Write your goal</string>
     <string name="writeComment">Write a comment...</string>
     <string name="writePost">Write your post</string>

@@ -17,8 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
-import ravtrix.backpackerbuddy.activities.otheruserbucket.OtherUserBucketListActivity;
 import ravtrix.backpackerbuddy.activities.chat.ConversationActivity;
+import ravtrix.backpackerbuddy.activities.otheruserbucket.OtherUserBucketListActivity;
+import ravtrix.backpackerbuddy.activities.usermap.UserMapActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
 import ravtrix.backpackerbuddy.models.UserLocalStore;
 
@@ -45,6 +46,7 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @BindView(R.id.txtTravel) protected TextView txtTravel;
     @BindView(R.id.txtNotTravel) protected TextView txtNotTravel;
     @BindView(R.id.linearOtherProfile) protected LinearLayout linearLayout;
+    @BindView(R.id.activity_other_user_bFloatingMap) protected FloatingActionButton mapButton;
     private OtherUserProfilePresenter otherUserProfilePresenter;
     private int otherUserID;
     private String otherUserImage = "";
@@ -65,6 +67,8 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
 
         userLocalStore = new UserLocalStore(this);
         otherUserProfilePresenter = new OtherUserProfilePresenter(this);
+
+        mapButton.setOnClickListener(this);
         messageButton.setOnClickListener(this);
         bucketButton.setOnClickListener(this);
 
@@ -91,14 +95,30 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
                     Helpers.displayToast(this, "Become a member to chat");
                 }
                 break;
+            case R.id.activity_other_user_bFloatingMap:
+                otherUserProfilePresenter.hasMap(otherUserID);
+                break;
             case R.id.activity_other_user_bFloatingBucket:
-                Intent bucketIntent = new Intent(this, OtherUserBucketListActivity.class);
-                bucketIntent.putExtra("otherUserID", Integer.toString(otherUserID));
-                startActivity(bucketIntent);
+                otherUserProfilePresenter.hasBucket(otherUserID);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void startMapActivity() {
+        Intent mapIntent = new Intent(OtherUserProfile.this, UserMapActivity.class);
+        mapIntent.putExtra("isOtherUser", true);
+        mapIntent.putExtra("otherUserID", otherUserID);
+        startActivity(mapIntent);
+    }
+
+    @Override
+    public void startBucketActivity() {
+        Intent bucketIntent = new Intent(this, OtherUserBucketListActivity.class);
+        bucketIntent.putExtra("otherUserID", Integer.toString(otherUserID));
+        startActivity(bucketIntent);
     }
 
     @Override
@@ -241,5 +261,15 @@ public class OtherUserProfile extends AppCompatActivity implements IOtherUserPro
     @Override
     public void showFloatingButtonMessage() {
         messageButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNoBucket() {
+        Helpers.displayToast(this, "User has no item on bucket list");
+    }
+
+    @Override
+    public void showNoMap() {
+        Helpers.displayToast(this, "User has no item on their map");
     }
 }

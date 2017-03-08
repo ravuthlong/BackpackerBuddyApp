@@ -32,16 +32,16 @@
                 android:id="@+id/etLoggedInUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:ems="10"
-                android:hint="@string/username"
-                android:textSize="@dimen/_13ssp"
-                android:background="@color/greenBackground"
-                android:textColorHint="@color/white"
                 android:layout_marginTop="@dimen/_30sdp"
+                android:background="@color/greenBackground"
+                android:ems="10"
+                android:hint="@string/usernameOrEmail"
+                android:inputType="text"
                 android:maxLines="1"
                 android:padding="@dimen/_10sdp"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/white"
+                android:textSize="@dimen/_13ssp" />
 
 
             <EditText

@@ -32,7 +32,6 @@
 
             <TextView
                 android:id="@+id/tvUsername_discussion"
-                android:text="Username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -41,7 +40,6 @@
                 android:layout_marginLeft="@dimen/_5sdp" />
 
             <TextView
-                android:text="Country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvCountry_discussion"
@@ -64,11 +62,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/relative1"
-        android:layout_marginTop="@dimen/_4sdp">
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp">
 
         <TextView
             android:id="@+id/tvText_discussion"
-            android:text="This is where the user comment goes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp" />
@@ -85,10 +83,10 @@
             android:id="@+id/item_discussion_tvCountryTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/_14ssp"
+            android:paddingBottom="@dimen/_5sdp"
             android:paddingLeft="@dimen/_5sdp"
             android:paddingRight="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
+            android:textSize="@dimen/_14ssp"
             android:textStyle="bold"
             android:visibility="gone" />
     </RelativeLayout>

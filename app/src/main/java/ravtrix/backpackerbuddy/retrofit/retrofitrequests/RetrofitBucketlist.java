@@ -38,4 +38,8 @@ public class RetrofitBucketList {
     public RetrofitBucketListInterfaces.FetchUserBucketStatus fetchUserBucketStatus() {
         return retrofit.create(RetrofitBucketListInterfaces.FetchUserBucketStatus.class);
     }
+
+    public RetrofitBucketListInterfaces.CheckHasBucket checkHasBucket() {
+        return retrofit.create(RetrofitBucketListInterfaces.CheckHasBucket.class);
+    }
 }

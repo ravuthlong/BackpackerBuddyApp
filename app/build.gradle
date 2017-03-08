@@ -28,14 +28,17 @@ android {
         applicationId "ravtrix.backpackerbuddy"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 28
-        versionName "1.9.3"
+        versionCode 29
+        versionName "1.9.4"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             shrinkResources false
+        }
+        debug {
+            ext.alwaysUpdateBuildId = false
         }
     }
     packagingOptions {

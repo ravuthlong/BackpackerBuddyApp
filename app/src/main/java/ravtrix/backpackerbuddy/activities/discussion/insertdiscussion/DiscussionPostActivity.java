@@ -99,7 +99,7 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
 
         HashMap<String, String> newDiscussion = new HashMap<>();
         newDiscussion.put("userID", Integer.toString(userLocalStore.getLoggedInUser().getUserID()));
-        newDiscussion.put("post", etDiscussion.getText().toString());
+        newDiscussion.put("post", etDiscussion.getText().toString().trim());
         newDiscussion.put("time", Long.toString(System.currentTimeMillis()));
 
         if (spinnerCountries.getSelectedItem().toString().equals("None")) {

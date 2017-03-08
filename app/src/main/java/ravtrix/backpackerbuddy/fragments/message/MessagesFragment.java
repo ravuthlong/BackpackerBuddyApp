@@ -119,12 +119,12 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                         // Status 0 means you made this chat, status 1 means you didn't make this chat
                         if (feedItemInbox.get(i).getStatus() == 0) {
                             // You made this chat room. your userID is the first of chat room name (Firebase chat name)
-                             chatName = userLocalStore.getLoggedInUser().getUserID() +
+                             chatName = userLocalStore.getLoggedInUser().getUserID() + "+" +
                                     Integer.toString(feedItemInbox.get(i).getUserID());
                             feedItemInbox.get(i).setChatRoom(chatName);
                         } else {
                             // you didn't make this room. your userID is the second of chat room name (Firebase chat name)
-                            chatName = Integer.toString(feedItemInbox.get(i).getUserID()) +
+                            chatName = Integer.toString(feedItemInbox.get(i).getUserID()) + "+" +
                                     Integer.toString(userLocalStore.getLoggedInUser().getUserID());
                             feedItemInbox.get(i).setChatRoom(chatName);
                         }
@@ -210,12 +210,6 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                                     Collections.sort(feedItemInbox);
 
-                                    System.out.println("sorted List: ");
-                                    for(FeedItemInbox str: feedItemInbox){
-                                        System.out.println(str.getUsername() + " : " + str.getTimeMilli());
-                                    }
-
-
                                     // Sort chat rooms in order based on time
                                     feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox);
                                     setRecyclerView(feedListAdapterInbox);
@@ -230,6 +224,82 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                             }
                         });
+                    } else {
+                        // split the "+" in chat room
+                        String[] splits = chatName.split("\\+");
+                        String chatAlternative = splits[0] + splits[1];
+
+                        System.out.println(chatAlternative);
+
+                        if (dataSnapshot.child(chatAlternative).exists()) {
+                            System.out.println("EXISTING");
+
+                            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().child(chatAlternative);
+                            mFirebaseDatabaseReference.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    counter.increment();
+
+                                    if (dataSnapshot.exists()) {
+                                        DataSnapshot snapshot;
+                                        // access last message
+                                        snapshot = dataSnapshot.getChildren().iterator().next();
+
+                                    /*
+                                     * Set the components of each inbox message by getting its child from the database through key vale pair
+                                     */
+                                        if (snapshot != null) {
+                                            String time = snapshot.child("time").getValue().toString();
+                                            String latestMessage = snapshot.child("text").getValue().toString();
+
+                                            if (countLines(latestMessage) > 4) {
+                                                latestMessage = getFirstFourLines(latestMessage);
+                                            }
+
+                                            feedItemInbox.get(passValue.getI()).setLatestMessage(latestMessage);
+
+                                            // Converting timestamp into x ago format
+                                            CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                                                    Long.parseLong(time),
+                                                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+                                            feedItemInbox.get(passValue.getI()).setLatestDate((String) timeAgo);
+                                            feedItemInbox.get(passValue.getI()).setTimeMilli(Long.parseLong(time));
+
+                                            if (snapshot.child("isOtherUserClicked").exists()) {
+                                                feedItemInbox.get(passValue.getI()).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
+                                            } else {
+                                                feedItemInbox.get(passValue.getI()).setIsOtherUserClicked(1);
+                                            }
+                                            if (snapshot.child("userID").exists()) {
+                                                feedItemInbox.get(passValue.getI()).setLastMessageUserID(Integer.parseInt(snapshot.child("userID").getValue().toString()));
+                                            }
+                                        }
+                                        feedItemInbox.get(passValue.getI()).setSnapshot(snapshot);
+                                    }
+
+                                    // completion
+                                    if (counter.getI() == feedItemInbox.size()) {
+
+                                        Collections.sort(feedItemInbox);
+
+                                        // Sort chat rooms in order based on time
+                                        feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox);
+                                        setRecyclerView(feedListAdapterInbox);
+
+                                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        }
+
                     }
 
                 }

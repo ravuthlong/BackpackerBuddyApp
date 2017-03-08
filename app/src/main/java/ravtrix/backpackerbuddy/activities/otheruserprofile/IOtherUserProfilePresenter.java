@@ -7,5 +7,7 @@ package ravtrix.backpackerbuddy.activities.otheruserprofile;
 interface IOtherUserProfilePresenter {
 
     void fetchOtherUser(int userID);
+    void hasBucket(int userID);
+    void hasMap(int userID);
 
 }

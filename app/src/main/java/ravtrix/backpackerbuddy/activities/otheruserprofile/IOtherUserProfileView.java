@@ -24,4 +24,8 @@ interface IOtherUserProfileView {
     void hideTxtNotTravel();
     void showFloatingButtonBucket();
     void showFloatingButtonMessage();
+    void startMapActivity();
+    void startBucketActivity();
+    void showNoBucket();
+    void showNoMap();
 }

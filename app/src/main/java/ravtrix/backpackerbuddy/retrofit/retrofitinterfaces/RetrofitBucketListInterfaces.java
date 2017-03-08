@@ -53,4 +53,9 @@ public class RetrofitBucketListInterfaces {
         @GET("/fetchBucketStatus.php?userID=[userID]")
         Call<JsonObject> fetchUserBucketStatus(@Query("userID") int userID);
     }
+
+    public interface CheckHasBucket {
+        @GET("/fetchBucketExist.php?userID=[userID]")
+        Call<JsonObject> checkHasBucket(@Query("userID") int userID);
+    }
 }

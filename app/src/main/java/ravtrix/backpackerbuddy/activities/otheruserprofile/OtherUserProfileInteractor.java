@@ -2,6 +2,8 @@ package ravtrix.backpackerbuddy.activities.otheruserprofile;
 
 import com.google.gson.JsonObject;
 
+import ravtrix.backpackerbuddy.helpers.RetrofitMapSingleton;
+import ravtrix.backpackerbuddy.helpers.RetrofitUserBucketListSingleton;
 import ravtrix.backpackerbuddy.helpers.RetrofitUserInfoSingleton;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +37,48 @@ class OtherUserProfileInteractor implements IOtherUserProfileInteractor {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 otherUserProfileListener.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void checkHasMap(int userID, final OnRFOtherUserProfileListener otherUserProfileRFListener) {
+
+        Call<JsonObject> retrofit = RetrofitMapSingleton.getRetrofitMap()
+                .checkHasMap()
+                .checkHasMap(userID);
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                otherUserProfileRFListener.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                otherUserProfileRFListener.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void checkHasBucket(int userID, final OnRFOtherUserProfileListener otherUserProfileRFListener) {
+
+
+        Call<JsonObject> retrofit = RetrofitUserBucketListSingleton.getRetrofitBucketList()
+                .checkHasBucket()
+                .checkHasBucket(userID);
+
+
+        retrofit.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                otherUserProfileRFListener.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                otherUserProfileRFListener.onFailure();
             }
         });
     }
