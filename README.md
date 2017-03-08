@@ -22,10 +22,10 @@ I came back from my trip with unforgettable memories that I still smile thinking
 
 
 ![Alt text](http://i.imgur.com/YdwOojE.png)
-![Alt text](http://i.imgur.com/23AlhoP.png)
+![Alt text](http://i.imgur.com/4nFlZ5t.png)
 ![Alt text](http://i.imgur.com/UuF8zdA.png)
 ![Alt text](http://i.imgur.com/Ftgyhup.png)
-![Alt text](http://i.imgur.com/0XGH2Xv.png)
+![Alt text](http://i.imgur.com/ZZ3Yfsx.png)
 ![Alt text](http://i.imgur.com/dSb7S4X.png)
 ![Alt text](http://i.imgur.com/FCVCmh3.png)
 ![Alt text](http://i.imgur.com/VjAQoBk.png)
