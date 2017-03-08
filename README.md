@@ -15,6 +15,7 @@ I came back from my trip with unforgettable memories that I still smile thinking
 * Firebase Cloud Messaging for chat </b>
 * Firebase Cloud Messaging for new message notification </b>
 * Google location service API </b>
+* Google map API </b>
 * Retrofit for REST client </b>
 * Picasso for image loading </b>
 * ButterKnife for view injection </b>
@@ -28,7 +29,7 @@ I came back from my trip with unforgettable memories that I still smile thinking
 ![Alt text](http://i.imgur.com/dSb7S4X.png)
 ![Alt text](http://i.imgur.com/FCVCmh3.png)
 ![Alt text](http://i.imgur.com/VjAQoBk.png)
-![Alt text](http://i.imgur.com/bGBJPb1.png)
+![Alt text](http://i.imgur.com/LJpE7Bi.png)
 ![Alt text](http://i.imgur.com/sKuqpP2.png)
 ![Alt text](http://i.imgur.com/3vMaxAg.png)
 ![Alt text](http://i.imgur.com/p0L5oUv.png)
