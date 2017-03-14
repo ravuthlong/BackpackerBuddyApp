@@ -184,8 +184,10 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     private void setModelColors(List<DiscussionModel> discussionModels) {
         // Generate random text color for country tag
-        for (int i = 0; i < discussionModels.size(); i++) {
-            discussionModels.get(i).setTagColor(ContextCompat.getColor(getContext(), R.color.tagColor));
+        if (getActivity() != null) {
+            for (int i = 0; i < discussionModels.size(); i++) {
+                discussionModels.get(i).setTagColor(ContextCompat.getColor(getActivity(), R.color.tagColor));
+            }
         }
     }
 

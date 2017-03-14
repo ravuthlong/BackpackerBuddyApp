@@ -10,6 +10,6 @@ interface IEditPresenter {
     boolean isHint();
     void setTextFields();
     String getDetailType();
-    void onDestroy();
+    //void onDestroy();
 
 }

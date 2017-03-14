@@ -181,7 +181,7 @@ public class Helpers {
         String city = "";
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -234,7 +234,7 @@ public class Helpers {
         JSONObject jsonObject;
         String country = "";
         String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
+                latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
         try {
             url = new URL(urlAddress);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -692,7 +692,7 @@ public class Helpers {
             JSONObject jsonObject;
             String country = "";
             String urlAddress = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en";
+                    latitude + "," + longitude + "&key=AIzaSyAmTO0JZ99D42Ja0XXahi-dKLLsV-2mLRI&language=en-US";
             try {
                 url = new URL(urlAddress);
                 urlConnection = (HttpURLConnection) url.openConnection();

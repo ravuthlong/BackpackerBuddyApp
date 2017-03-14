@@ -30,6 +30,7 @@ public class UserLocation {
     boolean network_enabled = false;
     private static final int LOCATION_REQUEST_CODE = 1;
     private boolean isFacebookSignUpCalling = false;
+    private static int ONE_SECOND = 1000;
 
     public UserLocation(Activity context) {
         this.context = context;
@@ -101,7 +102,6 @@ public class UserLocation {
 
             @Override
             public void onProviderDisabled(String provider) {
-                // When GPS setting is turned off hmmmmmm?
                // Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 //context.startActivity(intent);
             }
@@ -134,10 +134,11 @@ public class UserLocation {
 
             } else {
                 if (network_enabled){
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                    // One_Second passed because on location changed can be called multiple times in a few users
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UserLocation.ONE_SECOND, 0, locationListener);
                 }
                 if (gps_enabled) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UserLocation.ONE_SECOND, 0, locationListener);
                 }
             }
 

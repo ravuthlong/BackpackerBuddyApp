@@ -181,7 +181,7 @@
             android:name=".activities.usermap.UserMapActivity"/>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="@string/fabric_id" />
+            android:value="0bd3961be22e9764bf268e947122efe9733ea27e" />
     </application>
 
 </manifest>

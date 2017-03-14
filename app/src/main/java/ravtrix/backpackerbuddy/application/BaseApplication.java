@@ -43,17 +43,19 @@ public class BaseApplication extends Application {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                int success = response.body().get("success").getAsInt();
+                if (response != null) {
+                    int success = response.body().get("success").getAsInt();
 
-                // If current version of this app is less than or equal to the set minimum version
-                // on the server side, prompt an update dialog
-                Version currentPhone = new Version(getVersionInfo());
-                Version requiredMoreThan = new Version(response.body().get("versionMin").getAsString());
+                    // If current version of this app is less than or equal to the set minimum version
+                    // on the server side, prompt an update dialog
+                    Version currentPhone = new Version(getVersionInfo());
+                    Version requiredMoreThan = new Version(response.body().get("versionMin").getAsString());
 
-                // check that current phone version is not less than required or equal to required
-                if ((success == 1) &&
-                        ((currentPhone.compareTo(requiredMoreThan) == -1) || (currentPhone.compareTo(requiredMoreThan) == 0))) {
-                    showUpdateDialog(activity);
+                    // check that current phone version is not less than required or equal to required
+                    if ((success == 1) &&
+                            ((currentPhone.compareTo(requiredMoreThan) == -1) || (currentPhone.compareTo(requiredMoreThan) == 0))) {
+                        showUpdateDialog(activity);
+                    }
                 }
             }
 

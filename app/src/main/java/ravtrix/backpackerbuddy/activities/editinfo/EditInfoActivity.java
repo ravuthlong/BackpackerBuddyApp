@@ -138,6 +138,6 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
+        //presenter.onDestroy();
     }
 }

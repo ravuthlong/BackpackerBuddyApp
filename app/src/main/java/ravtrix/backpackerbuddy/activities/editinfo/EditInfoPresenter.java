@@ -65,8 +65,9 @@ class EditInfoPresenter implements IEditPresenter {
         return intent.getBooleanExtra("isHint", true);
     }
 
+    /*
     @Override
     public void onDestroy() {
         view = null;
-    }
+    } */
 }
