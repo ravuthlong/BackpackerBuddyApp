@@ -1,14 +1,19 @@
 package ravtrix.backpackerbuddy.activities.editphoto;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -53,6 +58,7 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
     private String newImageURL;
     private long mLastClickTime = 0;
     private static final String HOST_URL = "";
+    protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +85,36 @@ public class EditPhotoActivity extends OptionMenuSaveBaseActivity implements Vie
 
         switch(v.getId()) {
             case R.id.bEditImage:
-                // Get the image from gallery
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+
+                } else {
+                    // Get the image from gallery
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                }
                 break;
             case R.id.imgRotate:
                 bitmapImage = Helpers.rotateBitmap(bitmapImage);
                 circleImageView.setImageBitmap(bitmapImage);
                 break;
             default:
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_STORAGE_READ_ACCESS_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted.
+            } else {
+                Helpers.displayToast(this, "Permission Denied");
+            }
         }
     }
 

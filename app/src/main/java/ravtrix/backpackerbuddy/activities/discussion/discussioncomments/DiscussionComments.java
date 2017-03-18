@@ -86,6 +86,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
                         // Submit comment
                         discussionCommentsPresenter.insertComment(getDiscussionHash(),
                                 userLocalStore.getLoggedInUser().getUserID(), discussionID, ownerID);
+                        etComment.getText().clear();
                     }
                 } else {
                     Helpers.displayToast(this, "Become a member to comment");

@@ -153,7 +153,7 @@ public class SignUpPart1Activity extends AppCompatActivity implements ISignUpPar
                 .getBitmap()
                 .compress(Bitmap
                         .CompressFormat
-                        .JPEG, 50, byteArrayOutputStream);
+                        .JPEG, 60, byteArrayOutputStream);
         final String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
 
         final HashMap<String, String> userInfo = new HashMap<>();
@@ -176,7 +176,8 @@ public class SignUpPart1Activity extends AppCompatActivity implements ISignUpPar
                         this.userLongitude, new OnCountryReceived() {
                     @Override
                     public void onCountryReceived(String country) {
-                        if (country.isEmpty()) {
+
+                        if (null == country || country.isEmpty()) {
                             userInfo.put("country", "Somewhere");
                         } else {
                             userInfo.put("country", country);

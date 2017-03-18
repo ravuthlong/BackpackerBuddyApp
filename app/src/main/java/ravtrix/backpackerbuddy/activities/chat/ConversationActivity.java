@@ -368,14 +368,15 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Prevents double clicking
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 3000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
                 if (textMessage.getText().toString().trim().equals("")) {
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
-                    // Prevents double clicking
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 3000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
                     sendMessage();
                 }
             }
