@@ -17,6 +17,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.forgotpassword.ForgotPasswordActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.activities.startingpage.WelcomeActivity;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -33,6 +34,7 @@ public class LogInActivity extends AppCompatActivity implements ILogInView, View
     @BindView(R.id.activity_login_linear) protected LinearLayout linearLayout;
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.activity_login_tvLogin) protected TextView tvLogin;
+    @BindView(R.id.activity_login_tvForgotPassword) protected TextView tvForgotPassword;
     private UserLocalStore userLocalStore;
     private LogInPresenter logInPresenter;
     private ProgressDialog progressDialog;
@@ -47,8 +49,12 @@ public class LogInActivity extends AppCompatActivity implements ILogInView, View
         setTitle("Log In");
 
         tvLogin.setOnClickListener(this);
+        tvForgotPassword.setOnClickListener(this);
+
         logInPresenter = new LogInPresenter(this);
         userLocalStore = new UserLocalStore(this);
+
+        setUsernameIfAvailable();
     }
 
     @Override
@@ -56,6 +62,9 @@ public class LogInActivity extends AppCompatActivity implements ILogInView, View
         switch (view.getId()) {
             case R.id.activity_login_tvLogin:
                 logUserIn();
+                break;
+            case R.id.activity_login_tvForgotPassword:
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
             default:
                 break;
@@ -132,5 +141,13 @@ public class LogInActivity extends AppCompatActivity implements ILogInView, View
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(this, WelcomeActivity.class));
+    }
+
+    // Set username as email if email is not empty is past local store.
+    // This is the case if user logged out before and user is not facebook user.
+    private void setUsernameIfAvailable() {
+        if ((!userLocalStore.getEmail().isEmpty()) && (userLocalStore.isFacebook() == 0)) {
+            etLoggedInUsername.setText(userLocalStore.getEmail());
+        }
     }
 }

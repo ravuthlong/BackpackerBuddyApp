@@ -60,7 +60,7 @@ public class PerfectPhotoAdapter extends RecyclerView.Adapter<PerfectPhotoAdapte
         this.recyclerView = recyclerView;
         this.userLocalStore = userLocalStore;
         this.fragment = fragment;
-        inflater = LayoutInflater.from(context);
+        if (context != null) inflater = LayoutInflater.from(context);
     }
 
     @Override

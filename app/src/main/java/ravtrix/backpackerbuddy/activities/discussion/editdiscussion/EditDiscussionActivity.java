@@ -52,8 +52,15 @@ public class EditDiscussionActivity extends OptionMenuSaveBaseActivity implement
                 if (etEditDiscussion.getText().toString().trim().length() < 10) {
                     Helpers.displayToast(this, "Post is too short...");
                 } else {
+
+                    String country = "";
+
+                    if (!spinnerCountry.getSelectedItem().toString().equals("None")) {
+                        country = spinnerCountry.getSelectedItem().toString();
+                    }
+
                     editDiscussionPresenter.editDiscussion(discussionID, etEditDiscussion.getText().toString().trim(),
-                            spinnerCountry.getSelectedItem().toString());
+                            country);
                     Helpers.hideKeyboard(this);
                 }
                 return true;

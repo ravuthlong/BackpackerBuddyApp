@@ -85,10 +85,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private UserProfilePresenter presenter;
     private ProgressDialog progressDialog;
     private boolean refreshPage = false;
+    private Context context;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.context = context;
         this.fragActivityUpdateProfilePic = (FragActivityUpdateProfilePic) context;
     }
 
@@ -176,7 +178,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     // Pass title and hint to edit info activity based on edit selection type
     private void setIntentEditInto(String title, String detail, String detailType) {
-        Intent intent = new Intent(getActivity(), EditInfoActivity.class);
+        Intent intent = new Intent(context, EditInfoActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("detail", detail);
         intent.putExtra("detailType", detailType); // Type of detail to know which column in the database to insert
@@ -306,19 +308,19 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     }
     @Override
     public void setDetailOneColor() {
-        detailOne.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+        if (context != null) detailOne.setTextColor(ContextCompat.getColor(context, R.color.grayHint));
     }
     @Override
     public void setDetailTwoColor() {
-        detailTwo.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+        if (context != null) detailTwo.setTextColor(ContextCompat.getColor(context, R.color.grayHint));
     }
     @Override
     public void setDetailThreeColor() {
-        detailThree.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+        if (context != null) detailThree.setTextColor(ContextCompat.getColor(context, R.color.grayHint));
     }
     @Override
     public void setDetailFourColor() {
-        detailFour.setTextColor(ContextCompat.getColor(getContext(), R.color.grayHint));
+        if (context != null) detailFour.setTextColor(ContextCompat.getColor(context, R.color.grayHint));
     }
     @Override
     public void isDetailOneAHint(boolean hint) {
@@ -343,7 +345,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void displayError() {
-        Helpers.displayErrorToast(getContext());
+        if (context != null) Helpers.displayErrorToast(context);
     }
 
     @Override

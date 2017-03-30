@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -103,6 +104,13 @@ public class SignUpPart1Activity extends AppCompatActivity implements ISignUpPar
 
                 break;
             case R.id.activity_signup1_tvSignUp:
+
+                // Prevents double clicking
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
                 progressDialog = Helpers.showProgressDialog(this, "Setting up your account...");
                 // Regular sign up
                 inputValidationAndNextStep();

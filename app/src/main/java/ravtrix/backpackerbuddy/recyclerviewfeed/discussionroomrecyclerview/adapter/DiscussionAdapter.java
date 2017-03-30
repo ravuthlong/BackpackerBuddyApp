@@ -53,7 +53,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         this.discussionModels = discussionModels;
         this.fragment = fragment;
         this.userLocalStore = userLocalStore;
-        inflater = LayoutInflater.from(fragment.getContext());
+        inflater = LayoutInflater.from(fragment.getActivity());
     }
 
     @Override

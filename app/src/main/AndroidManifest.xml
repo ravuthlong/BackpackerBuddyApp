@@ -179,6 +179,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.usermap.UserMapActivity"/>
+        <activity
+            android:name=".activities.forgotpassword.ForgotPasswordActivity"
+            android:screenOrientation="portrait"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0bd3961be22e9764bf268e947122efe9733ea27e" />

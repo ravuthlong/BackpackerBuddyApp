@@ -25,7 +25,7 @@ class DiscussionRoomFragPresenter implements IDiscussionRoomFragPresenter {
         discussionRoomFragInteractor.fetchDiscussionPostsRetrofit(userID, new OnRetrofitDiscussionRoomFinished() {
             @Override
             public void onFinished(List<DiscussionModel> discussionModels) {
-                if (discussionModels.get(0).getSuccess() == 1) {
+                if (discussionModels != null && discussionModels.get(0).getSuccess() == 1) {
                     iDiscussionRoomFragView.setDiscussionModels(discussionModels);
                 } else {
                     iDiscussionRoomFragView.setDiscussionModelsEmpty();
@@ -46,7 +46,7 @@ class DiscussionRoomFragPresenter implements IDiscussionRoomFragPresenter {
         discussionRoomFragInteractor.fetchDiscussionPostsRetrofit(userID, new OnRetrofitDiscussionRoomFinished() {
             @Override
             public void onFinished(List<DiscussionModel> discussionModels) {
-                if (discussionModels.get(0).getSuccess() == 1) {
+                if (discussionModels != null && discussionModels.get(0).getSuccess() == 1) {
                     iDiscussionRoomFragView.swapData(discussionModels);
                 } else {
                     iDiscussionRoomFragView.setDiscussionModelsEmpty();
@@ -68,7 +68,7 @@ class DiscussionRoomFragPresenter implements IDiscussionRoomFragPresenter {
         discussionRoomFragInteractor.fetchDiscussionFilterPostsRetrofit(postHash, new OnRetrofitDiscussionRoomFinished() {
             @Override
             public void onFinished(List<DiscussionModel> discussionModels) {
-                if (discussionModels.get(0).getSuccess() == 1) {
+                if (discussionModels != null && discussionModels.get(0).getSuccess() == 1) {
                     iDiscussionRoomFragView.setDiscussionModels(discussionModels);
                     iDiscussionRoomFragView.swapData(discussionModels);
                 } else {

@@ -1,6 +1,7 @@
 package ravtrix.backpackerbuddy.fragments.perfectphoto;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +46,6 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getCacheDir;
-import static com.facebook.GraphRequest.TAG;
 
 /**
  * Created by Ravinder on 1/11/17.
@@ -68,6 +67,7 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
     private UserLocalStore userLocalStore;
     private List<PerfectPhotoModel> perfectPhotoModels;
     private PerfectPhotoAdapter perfectPhotoAdapter;
+    private Context context;
 
     @Nullable
     @Override
@@ -81,7 +81,8 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
         bSubmitPhoto.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        userLocalStore = new UserLocalStore(getContext());
+        context = getContext();
+        userLocalStore = new UserLocalStore(context);
         Helpers.checkLocationUpdate(getActivity(), userLocalStore);
 
         RecyclerView.ItemDecoration dividerDecorator = new DividerDecoration(getActivity(), R.drawable.line_divider_inbox);
@@ -131,14 +132,14 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
 
                     // Empty recycler view
                 }
-                perfectPhotoAdapter = new PerfectPhotoAdapter(getContext(), PerfectPhotoFragment.this,
+                perfectPhotoAdapter = new PerfectPhotoAdapter(context, PerfectPhotoFragment.this,
                         perfectPhotoModels, progressBar, recyclerView, userLocalStore);
                 recyclerView.setAdapter(perfectPhotoAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
             @Override
             public void onFailure(Call<List<PerfectPhotoModel>> call, Throwable t) {
-                Helpers.displayErrorToast(getContext());
+                Helpers.displayErrorToast(context);
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -162,7 +163,7 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
             }
             @Override
             public void onFailure(Call<List<PerfectPhotoModel>> call, Throwable t) {
-                Helpers.displayErrorToast(getContext());
+                Helpers.displayErrorToast(context);
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -208,19 +209,18 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
     public void handleCropResult(@NonNull Intent result) {
         final Uri resultUri = UCrop.getOutput(result);
         if (resultUri != null) {
-            PostPerfectPhotoActivity.startWithUri(getContext(), this, resultUri);
+            PostPerfectPhotoActivity.startWithUri(context, this, resultUri);
         } else {
-            Toast.makeText(getActivity(), R.string.toast_cannot_retrieve_cropped_image, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.toast_cannot_retrieve_cropped_image, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void handleCropError(@NonNull Intent result) {
         final Throwable cropError = UCrop.getError(result);
         if (cropError != null) {
-            Log.e(TAG, "handleCropError: ", cropError);
-            Toast.makeText(getActivity(), cropError.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, cropError.getMessage(), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getActivity(), R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.toast_unexpected_error, Toast.LENGTH_SHORT).show();
         }
     }
     private void startCropActivity(Uri uri) {
@@ -273,7 +273,7 @@ public class PerfectPhotoFragment extends Fragment implements View.OnClickListen
                                    String positiveText,
                                    DialogInterface.OnClickListener onNegativeButtonClickListener,
                                    String negativeText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(positiveText, onPositiveButtonClickListener);

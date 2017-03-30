@@ -14,6 +14,7 @@ public class UserLocalStore {
     public UserLocalStore(Context context) {
         userLocalDataStore = context.getSharedPreferences(SP_NAME, 0);
     }
+
     public void storeUserData(LoggedInUser loggedInUser) {
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
         spEditor.putInt("userID", loggedInUser.getUserID());
@@ -92,9 +93,25 @@ public class UserLocalStore {
         spEditor.putBoolean("loggedIn", loggedIn);
         spEditor.apply();
     }
+
+    public String getEmail() {
+        return userLocalDataStore.getString("email", "");
+    }
+
+    public int isFacebook() {
+        return userLocalDataStore.getInt("isFacebook", 0);
+    }
+
     public void clearUserData() {
+        // Save email before log out. This would make it easier for next log in. No need to retype email.
+        String email = userLocalDataStore.getString("email", "");
+        int isFacebook = userLocalDataStore.getInt("isFacebook", 0);
+
         SharedPreferences.Editor spEditor = userLocalDataStore.edit();
         spEditor.clear();
+        spEditor.putString("email", email); // save email back
+        spEditor.putInt("isFacebook", isFacebook); // save back
+
         spEditor.apply();
     }
 }

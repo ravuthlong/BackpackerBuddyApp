@@ -30,13 +30,12 @@ class LogInInteractor implements ILogInInteractor {
             public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
                 LoggedInUser user = response.body();
 
-                if (user.getStatus() == 0) {
-                    // User not found. 0 returned from PHP
-                    onRetrofitLogInListener.onError();
-
-                } else {
+                if (null != user && user.getStatus() == 1) {
                     // User authenticated. Log user in
                     onRetrofitLogInListener.onSuccess(user);
+                } else {
+                    // User not found. 0 returned from PHP
+                    onRetrofitLogInListener.onError();
                 }
             }
             @Override

@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.fragments.discussionroom;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
+import ravtrix.backpackerbuddy.token.TokenGenerator;
 
 /**
  * Created by Ravinder on 12/21/16.
@@ -54,12 +56,18 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     private DiscussionAdapter discussionAdapter;
     private List<DiscussionModel> discussionModels;
     private UserLocalStore userLocalStore;
+    private DiscussionRoomFragment fragmentContext;
+    private Context context;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_discussion_room, container, false);
         ButterKnife.bind(this, view);
+        fragmentContext = this;
+        context = getContext();
+
+        System.out.println("TOKEN GENERATED: " + new TokenGenerator().getSecureToken());
 
         swipeRefreshLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -124,9 +132,9 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         switch (view.getId()) {
             case R.id.bFloatingActionButtonDiscussion:
                 if (userLocalStore.getLoggedInUser().getUserID() != 0) {
-                    startActivity(new Intent(getContext(), DiscussionPostActivity.class));
+                    startActivity(new Intent(context, DiscussionPostActivity.class));
                 } else {
-                    Helpers.displayToast(getContext(), "Become a member to start a discussion");
+                    Helpers.displayToast(context, "Become a member to start a discussion");
                 }
                 break;
             default:
@@ -198,8 +206,10 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     @Override
     public void swapData(List<DiscussionModel> discussionModels) {
-        setModelColors(discussionModels);
-        discussionAdapter.swap(discussionModels);
+        if (discussionAdapter != null && discussionModels != null) {
+            setModelColors(discussionModels);
+            discussionAdapter.swap(discussionModels);
+        }
     }
 
     @Override
@@ -215,9 +225,9 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     @Override
     public void setRecyclerView() {
-        discussionAdapter = new DiscussionAdapter(DiscussionRoomFragment.this, discussionModels, userLocalStore);
+        discussionAdapter = new DiscussionAdapter(fragmentContext, discussionModels, userLocalStore);
         recyclerViewDiscussion.setAdapter(discussionAdapter);
-        recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(context));
     }
 
     @Override

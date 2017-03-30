@@ -36,7 +36,6 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
             @Override
             public void onSuccess(JsonObject jsonObject) {
 
-                iSignUpPart1View.hideProgressDialog();
                 if (userInfo.get("country").isEmpty()) { //empty because IOException thrown
                     // Update country info after the user signs up
                     iSignUpPart1View.updateCountry(userInfo.get("username"));
@@ -54,6 +53,7 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
                 user.setIsFacebook(0); // Not facebook user
                 userLocalStore.storeUserData(user);
                 iSignUpPart1View.startUserMainPage();
+                iSignUpPart1View.hideProgressDialog();
             }
 
             @Override

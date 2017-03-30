@@ -135,10 +135,11 @@ public class UserLocation {
             } else {
                 if (network_enabled){
                     // One_Second passed because on location changed can be called multiple times in a few users
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UserLocation.ONE_SECOND, 0, locationListener);
-                }
-                if (gps_enabled) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UserLocation.ONE_SECOND, 0, locationListener);
+                    locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+                    //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UserLocation.ONE_SECOND, 1, locationListener);
+                } else if (gps_enabled) {
+                    locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UserLocation.ONE_SECOND, 1, locationListener);
                 }
             }
 
