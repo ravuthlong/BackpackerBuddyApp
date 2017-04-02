@@ -21,6 +21,7 @@ I came back from my trip with unforgettable memories that I still smile thinking
 * ButterKnife for view injection </b>
 
 # Current total downloads - 1,500+
+# over 50% retention rate
 
 ![Alt text](http://i.imgur.com/YdwOojE.png)
 ![Alt text](http://i.imgur.com/4nFlZ5t.png)
