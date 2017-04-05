@@ -19,43 +19,54 @@
             android:layout_width="match_parent" >
         </include>
 
-        <ImageView
-            android:id="@+id/sendMessageButton"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_alignBottom="@+id/textMessage"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:contentDescription="@string/txtFeedback"
-            app:srcCompat="@android:drawable/ic_menu_send" />
-
-        <EditText
-            android:id="@+id/textMessage"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/activity_conversation_messageLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="0dp"
-            android:layout_toLeftOf="@+id/sendMessageButton"
-            android:ems="10"
-            android:hint="@string/hntMessage"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="5"
-            android:background="@android:color/transparent"
-            android:paddingBottom="@dimen/_20sdp"
-            android:paddingTop="@dimen/_20sdp"
-            android:scrollbars="vertical"
-            android:textSize="@dimen/_11ssp" />
+            android:background="@drawable/edit_text_border">
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_above="@+id/textMessage"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@color/white" />
+
+            <EditText
+                android:id="@+id/textMessage"
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:hint="@string/hntMessage"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="5"
+                android:layout_height="@dimen/_60sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="0dp"
+                android:scrollbars="vertical"
+                android:textSize="@dimen/_11ssp" />
+
+
+            <ProgressBar
+                android:id="@+id/activity_conversation_loading_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyle"
+                android:indeterminate="true"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+
+            <Button
+                android:id="@+id/sendMessageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/edit_text_border"
+                android:text="Send"
+                android:textSize="@dimen/_10ssp" />
+        </RelativeLayout>
+
 
         <ProgressBar
             android:id="@+id/activity_conversation_spinner"
@@ -69,8 +80,9 @@
             android:id="@+id/chat_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/line"
             android:layout_alignParentStart="true"
+            android:layout_above="@id/activity_conversation_messageLayout"
+            android:paddingBottom="@dimen/_10sdp"
             android:layout_below="@+id/toolbar_main">
 
         </android.support.v7.widget.RecyclerView>

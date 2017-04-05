@@ -90,7 +90,7 @@ public class AUserDisPostsFragment extends Fragment {
                 } else {
                     discussionModels = response.body();
                     setModelColors(discussionModels);
-                    discussionAdapter = new DiscussionAdapter(AUserDisPostsFragment.this, discussionModels,
+                    discussionAdapter = new DiscussionAdapter(getActivity(), AUserDisPostsFragment.this, discussionModels,
                             userLocalStore);
                     setRecyclerView(discussionAdapter);
                 }

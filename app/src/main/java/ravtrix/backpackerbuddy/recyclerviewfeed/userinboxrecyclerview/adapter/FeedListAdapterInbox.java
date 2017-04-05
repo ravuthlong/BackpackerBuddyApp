@@ -129,6 +129,7 @@ public class FeedListAdapterInbox extends RecyclerView.Adapter<FeedListAdapterIn
 
                     Intent intent = new Intent(context, ConversationActivity.class);
                     intent.putExtra("otherUserID", Integer.toString(clickedItem.getUserID()));
+                    intent.putExtra("chatRoom", clickedItem.getChatRoom());
                     intent.putExtra("otherUserImage", clickedItem.getUserpic());
                     intent.putExtra("position", position);
                     messagesFragment.startActivityForResult(intent, 2);

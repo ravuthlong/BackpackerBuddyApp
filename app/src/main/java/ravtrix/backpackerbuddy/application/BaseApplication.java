@@ -49,7 +49,7 @@ public class BaseApplication extends Application {
                     // If current version of this app is less than or equal to the set minimum version
                     // on the server side, prompt an update dialog
                     Version currentPhone = new Version(getVersionInfo());
-                    Version requiredMoreThan = new Version(response.body().get("versionMin").getAsString());
+                    Version requiredMoreThan = new Version(response.body().get("versionMin").toString());
 
                     // check that current phone version is not less than required or equal to required
                     if ((success == 1) &&

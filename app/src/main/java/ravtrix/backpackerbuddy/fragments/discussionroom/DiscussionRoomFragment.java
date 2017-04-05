@@ -37,7 +37,6 @@ import ravtrix.backpackerbuddy.models.UserLocalStore;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter.DiscussionAdapter;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.travelpostsrecyclerview.decorator.DividerDecoration;
-import ravtrix.backpackerbuddy.token.TokenGenerator;
 
 /**
  * Created by Ravinder on 12/21/16.
@@ -59,6 +58,11 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
     private DiscussionRoomFragment fragmentContext;
     private Context context;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,9 +70,6 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
         ButterKnife.bind(this, view);
         fragmentContext = this;
         context = getContext();
-
-        System.out.println("TOKEN GENERATED: " + new TokenGenerator().getSecureToken());
-
         swipeRefreshLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -225,7 +226,7 @@ public class DiscussionRoomFragment extends Fragment implements View.OnClickList
 
     @Override
     public void setRecyclerView() {
-        discussionAdapter = new DiscussionAdapter(fragmentContext, discussionModels, userLocalStore);
+        discussionAdapter = new DiscussionAdapter(getActivity(), fragmentContext, discussionModels, userLocalStore);
         recyclerViewDiscussion.setAdapter(discussionAdapter);
         recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(context));
     }

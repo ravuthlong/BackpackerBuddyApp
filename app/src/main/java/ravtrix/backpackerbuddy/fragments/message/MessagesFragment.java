@@ -102,9 +102,7 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
                                                     // and whether or not you are the creator of that chat
 
                 if (feedItemInbox.get(0).getSuccess() == 0) {
-                    swipeRefreshLayout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
-
                     noInbox.setVisibility(View.VISIBLE);
                     swipeRefreshLayout.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
@@ -148,19 +146,14 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
         final PassValue counter = new PassValue(0);
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                 for (int i = 0; i < feedItemInbox.size(); i++) {
 
                     final PassValue passValue = new PassValue(i);
                     String chatName = feedItemInbox.get(i).getChatRoom();
-                    //Iterator<DataSnapshot> iterator = dataSnapshot.child(chatName).getChildren().iterator();
 
                     // Iterate to the last child of the chatroom to get latest snapshot for latest message
-                    if (dataSnapshot.child(chatName).exists()) {
-
                         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().child(chatName);
                         mFirebaseDatabaseReference.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -224,91 +217,9 @@ public class MessagesFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                             }
                         });
-                    } else {
-                        // split the "+" in chat room
-                        String[] splits = chatName.split("\\+");
-                        String chatAlternative = splits[0] + splits[1];
-
-                        System.out.println(chatAlternative);
-
-                        if (dataSnapshot.child(chatAlternative).exists()) {
-                            System.out.println("EXISTING");
-
-                            mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference().child(chatAlternative);
-                            mFirebaseDatabaseReference.limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    counter.increment();
-
-                                    if (dataSnapshot.exists()) {
-                                        DataSnapshot snapshot;
-                                        // access last message
-                                        snapshot = dataSnapshot.getChildren().iterator().next();
-
-                                    /*
-                                     * Set the components of each inbox message by getting its child from the database through key vale pair
-                                     */
-                                        if (snapshot != null) {
-                                            String time = snapshot.child("time").getValue().toString();
-                                            String latestMessage = snapshot.child("text").getValue().toString();
-
-                                            if (countLines(latestMessage) > 4) {
-                                                latestMessage = getFirstFourLines(latestMessage);
-                                            }
-
-                                            feedItemInbox.get(passValue.getI()).setLatestMessage(latestMessage);
-
-                                            // Converting timestamp into x ago format
-                                            CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
-                                                    Long.parseLong(time),
-                                                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
-                                            feedItemInbox.get(passValue.getI()).setLatestDate((String) timeAgo);
-                                            feedItemInbox.get(passValue.getI()).setTimeMilli(Long.parseLong(time));
-
-                                            if (snapshot.child("isOtherUserClicked").exists()) {
-                                                feedItemInbox.get(passValue.getI()).setIsOtherUserClicked((Integer.parseInt(snapshot.child("isOtherUserClicked").getValue().toString())));
-                                            } else {
-                                                feedItemInbox.get(passValue.getI()).setIsOtherUserClicked(1);
-                                            }
-                                            if (snapshot.child("userID").exists()) {
-                                                feedItemInbox.get(passValue.getI()).setLastMessageUserID(Integer.parseInt(snapshot.child("userID").getValue().toString()));
-                                            }
-                                        }
-                                        feedItemInbox.get(passValue.getI()).setSnapshot(snapshot);
-                                    }
-
-                                    // completion
-                                    if (counter.getI() == feedItemInbox.size()) {
-
-                                        Collections.sort(feedItemInbox);
-
-                                        // Sort chat rooms in order based on time
-                                        feedListAdapterInbox = new FeedListAdapterInbox(MessagesFragment.this, getContext(), feedItemInbox);
-                                        setRecyclerView(feedListAdapterInbox);
-
-                                        swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        }
-
-                    }
 
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.getMessage());
-            }
-        });
+
     }
 
     @Override

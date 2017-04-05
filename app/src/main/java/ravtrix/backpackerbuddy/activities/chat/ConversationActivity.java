@@ -11,8 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,11 +47,13 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.chat_recyclerView) protected RecyclerView mMessageRecyclerView;
-    @BindView(R.id.sendMessageButton) protected ImageView mSendButton;
+    @BindView(R.id.sendMessageButton) protected Button mSendButton;
     @BindView(R.id.textMessage) protected EditText textMessage;
     @BindView(R.id.activity_conversation_spinner) protected ProgressBar progressBar;
+    @BindView(R.id.activity_conversation_loading_spinner) protected ProgressBar progressBarSendLoad;
+
     private LinearLayoutManager mLinearLayoutManager;
-    private String chatRoomName, chatRoomName2, chatRoomNameNoPlus, chatRoomName2NoPlus;
+    private String chatRoomName, chatRoomName2, chatRoomNameNoPlus, chatRoomName2NoPlus, realChatName;
     private int chatPosition;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -224,12 +226,28 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
+
     /**
+     * We know the room exists because user clicks through their inbox fragment
+     */
+    private void sendMessageThoughInbox() {
+
+        String userMessage =  textMessage.getText().toString().trim();
+        Long time = System.currentTimeMillis();
+        sendMessageFirebase(realChatName, userMessage, time);
+
+        // Notify the other user the message has been sent to them
+        conversationPresentor.notifyOtherUser(userMessage, otherUserID, userLocalStore.getLoggedInUser().getUsername(),
+                userLocalStore.getLoggedInUser().getUserID());
+    }
+
+    /**
+     * This is the case where the user is trying to chat through another user's profile page
      * Send/Save new message to Firebase cloud. Save in the chat room name if room exists.
      * Otherwise, if room doesn't exist between the two users yet, make a new room
      */
     private void sendMessage() {
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        //mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -255,7 +273,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
                         @Override
-                        public void onFailure(Call<JsonObject> call, Throwable t) {}
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            progressBarSendLoad.setVisibility(View.GONE);
+                        }
                     });
 
                     Map<String, Object> userData = new HashMap<>();
@@ -265,12 +285,15 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                     userData.put("time", time);
                     userData.put("userID", userLocalStore.getLoggedInUser().getUserID());
                     userData.put("isOtherUserClicked", 0); // If the other user viewed your message // 0 = false
+
+                    // store message in the fire-base database
                     mFirebaseDatabaseReference.child(chatRoomName).push().setValue(userData);
                     textMessage.setText("");
-                    setRecyclerView(chatRoomName);
+                    setRecyclerView(chatRoomName); // since this is first message, recycler view hasn't been set before
 
                     passIntentResult(chatPosition, userMessage, time);
                 }
+                progressBarSendLoad.setVisibility(View.GONE);
 
                 // Notify the other user the message has been sent to them
                 conversationPresentor.notifyOtherUser(userMessage, otherUserID, userLocalStore.getLoggedInUser().getUsername(),
@@ -287,8 +310,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 Message(userLocalStore.getLoggedInUser().getUserID(), userMessage,
                 userLocalStore.getLoggedInUser().getUserImageURL(),
                 time, 0);
-        mFirebaseDatabaseReference.child(chatName)
-                .push().setValue(message);
+        mFirebaseDatabaseReference.child(chatName).push().setValue(message);
+        progressBarSendLoad.setVisibility(View.GONE);
+
         textMessage.setText("");
         passIntentResult(chatPosition, userMessage, time);
     }
@@ -325,6 +349,9 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
             if (bundle.containsKey("backpressExit")) {
                 backPressExit = bundle.getInt("backpressExit");
             }
+            if (bundle.containsKey("chatRoom")) {
+                realChatName = bundle.getString("chatRoom");
+            }
         }
         myUserID = Integer.toString(userLocalStore.getLoggedInUser().getUserID());
         // Create name combo. Only one of these two names exist for the convo between the two users.
@@ -347,13 +374,21 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 // Find which room exists
                 if (dataSnapshot.child(chatRoomName).exists()) {
                     setRecyclerView(chatRoomName);
-                } if (dataSnapshot.child(chatRoomName2).exists()) {
+                    realChatName = chatRoomName;
+
+                } else if (dataSnapshot.child(chatRoomName2).exists()) {
                     setRecyclerView(chatRoomName2);
+                    realChatName = chatRoomName2;
+
                 } else if (dataSnapshot.child(chatRoomNameNoPlus).exists()) {
                     setRecyclerView(chatRoomNameNoPlus);
+                    realChatName = chatRoomNameNoPlus;
+
                 } else if (dataSnapshot.child(chatRoomName2NoPlus).exists()) {
                     setRecyclerView(chatRoomName2NoPlus);
+                    realChatName = chatRoomName2NoPlus;
                 } else {
+                    realChatName = "";
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             }
@@ -377,7 +412,13 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 if (textMessage.getText().toString().trim().equals("")) {
                     Helpers.displayToast(ConversationActivity.this, "Empty message");
                 } else {
-                    sendMessage();
+
+                    progressBarSendLoad.setVisibility(View.VISIBLE);
+                    if (!realChatName.isEmpty()) {
+                        sendMessageThoughInbox(); // quick messaging
+                    } else {
+                        sendMessage(); // accessed through visiting profile. need to do more checking to see if room exists or
+                    }
                 }
             }
         });

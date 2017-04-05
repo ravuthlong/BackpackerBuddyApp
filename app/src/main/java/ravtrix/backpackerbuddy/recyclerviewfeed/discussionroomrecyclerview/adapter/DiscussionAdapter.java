@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.adapter;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -46,19 +47,21 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     private LayoutInflater inflater;
     private Fragment fragment;
     private UserLocalStore userLocalStore;
+    private Context context;
 
-    public DiscussionAdapter(Fragment fragment, List<DiscussionModel> discussionModels,
+    public DiscussionAdapter(Context context, Fragment fragment, List<DiscussionModel> discussionModels,
                              UserLocalStore userLocalStore) {
 
         this.discussionModels = discussionModels;
         this.fragment = fragment;
         this.userLocalStore = userLocalStore;
-        inflater = LayoutInflater.from(fragment.getActivity());
+        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_discussion_room, parent, false);
         return new DiscussionAdapter.ViewHolder(view);
     }

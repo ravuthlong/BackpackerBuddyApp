@@ -36,7 +36,6 @@ import ravtrix.backpackerbuddy.R;
 import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.settings.SettingsActivity;
 import ravtrix.backpackerbuddy.activities.signup1.SignUpPart1Activity;
-import ravtrix.backpackerbuddy.application.BaseApplication;
 import ravtrix.backpackerbuddy.drawercustomfont.CustomTypefaceSpan;
 import ravtrix.backpackerbuddy.drawercustomfont.FontTypeface;
 import ravtrix.backpackerbuddy.fragments.bucketlist.BucketListFrag;
@@ -86,7 +85,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
-        ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
+        //((BaseApplication) getApplication()).checkForRequiredUpdate(this);
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -108,7 +107,7 @@ public class UserMainPage extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onRestart() {
         super.onRestart();
-        ((BaseApplication) getApplication()).checkForRequiredUpdate(this);
+        //((BaseApplication) getApplication()).checkForRequiredUpdate(this);
     }
 
     @Override
