@@ -82,7 +82,6 @@ class SignUpPart1Presenter implements ISignUpPart1Presenter {
             toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
         } else {
-
             signUpPart1Interactor.isUsernameTaken(username, email, new OnRetrofitSignUp1() {
 
                 @Override

@@ -167,4 +167,14 @@
                 app:srcCompat="@drawable/ic_more_horiz_black_24dp" />
         </LinearLayout>
     </RelativeLayout>
+    <TextView
+        android:id="@+id/item_discussion_tvViewLoves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative3"
+        android:textSize="@dimen/_11ssp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:includeFontPadding="false"
+        android:textStyle="bold"
+        android:text="Who liked?"/>
 </RelativeLayout>

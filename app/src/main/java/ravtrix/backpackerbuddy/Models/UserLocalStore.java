@@ -22,8 +22,12 @@ public class UserLocalStore {
         spEditor.putString("username", loggedInUser.getUsername());
         spEditor.putInt("bucketStatus", loggedInUser.getBucketStatus());
         spEditor.putString("userImageURL", loggedInUser.getUserImageURL());
-        spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
-        spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
+
+        if (loggedInUser.getLatitude() > 0) { // Double parsing on 0 might crash
+            spEditor.putLong("latitude", Double.doubleToRawLongBits(loggedInUser.getLatitude()));
+            spEditor.putLong("longitude", Double.doubleToRawLongBits(loggedInUser.getLongitude()));
+        }
+
         spEditor.putLong("time", loggedInUser.getTime());
         spEditor.putInt("isFacebook", loggedInUser.getIsFacebook());
         spEditor.apply();

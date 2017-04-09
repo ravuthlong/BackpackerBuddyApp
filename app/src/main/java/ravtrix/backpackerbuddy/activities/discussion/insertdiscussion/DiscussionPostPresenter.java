@@ -21,6 +21,9 @@ class DiscussionPostPresenter implements IDiscussionPostPresenter {
 
     @Override
     public void insertDiscussion(HashMap<String, String> newDiscussion) {
+
+        iDiscussionPostView.showProgressDialog();
+
         discussionPostInteractor.insertDiscussionRetrofit(newDiscussion, new OnFinishedListenerRetrofit() {
             @Override
             public void onFinished(JsonObject jsonObject) {
@@ -29,11 +32,13 @@ class DiscussionPostPresenter implements IDiscussionPostPresenter {
                 } else { //error
                     iDiscussionPostView.displayErrorToast();
                 }
+                iDiscussionPostView.hideProgressDialog();
             }
 
             @Override
             public void onError() {
                 iDiscussionPostView.displayErrorToast();
+                iDiscussionPostView.hideProgressDialog();
             }
         });
     }

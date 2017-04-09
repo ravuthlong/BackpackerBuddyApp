@@ -52,14 +52,16 @@ class SignUpPart1Interactor implements ISignUpPart1Interactor {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 JsonObject statusJSON = response.body();
 
-                int userStatus = statusJSON.get("status").getAsInt();
+                if (statusJSON != null) {
+                    int userStatus = statusJSON.get("status").getAsInt();
 
-                // Sign up success
-                if (userStatus == 1) {
-                    onRetrofitSignUp1.onSuccess(statusJSON);
+                    // Sign up success
+                    if (userStatus == 1) {
+                        onRetrofitSignUp1.onSuccess(statusJSON);
 
-                } else {
-                    onRetrofitSignUp1.onFailure();
+                    } else {
+                        onRetrofitSignUp1.onFailure();
+                    }
                 }
             }
 

@@ -8,5 +8,7 @@ interface IDiscussionPostView {
 
     void startDiscussionPostActivity();
     void displayErrorToast();
+    void showProgressDialog();
+    void hideProgressDialog();
 
 }

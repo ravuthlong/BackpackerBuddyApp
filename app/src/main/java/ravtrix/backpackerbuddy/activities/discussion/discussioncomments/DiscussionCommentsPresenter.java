@@ -23,6 +23,9 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
 
     @Override
     public void insertComment(final HashMap<String, String> discussionHash, final int userID, final int discussionID, final int ownerID) {
+
+        iDiscussionCommentsView.showProgressDialog();
+
         discussionCommentsInteractor.insertCommentRetrofit(discussionHash, new OnFinishedListenerRetrofit() {
             @Override
             public void onFinished(JsonObject jsonObject) {
@@ -43,10 +46,12 @@ class DiscussionCommentsPresenter implements IDiscussionCommentsPresenter {
                     notifyOtherUsers(userID, ownerID, discussionHash.get("comment"), discussionID);
                     fetchDiscussionComments(userID, discussionID);
                 }
+                iDiscussionCommentsView.hideProgressDialog();
             }
             @Override
             public void onError() {
                 iDiscussionCommentsView.displayErrorToast();
+                iDiscussionCommentsView.hideProgressDialog();
             }
         });
     }

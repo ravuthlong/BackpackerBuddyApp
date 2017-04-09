@@ -21,4 +21,6 @@ interface IDiscussionCommentsView {
     void clearEditText();
     void clearData();
     void swapModels(List<CommentModel> commentModels);
+    void showProgressDialog();
+    void hideProgressDialog();
 }

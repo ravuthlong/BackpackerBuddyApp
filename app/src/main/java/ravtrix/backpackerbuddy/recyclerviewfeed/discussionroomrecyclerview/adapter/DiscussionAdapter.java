@@ -24,6 +24,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.discussion.discussionlove.DiscussionLoveActivity;
 import ravtrix.backpackerbuddy.activities.discussion.discussioncomments.DiscussionComments;
 import ravtrix.backpackerbuddy.activities.discussion.editdiscussion.EditDiscussionActivity;
 import ravtrix.backpackerbuddy.activities.otheruserprofile.OtherUserProfile;
@@ -44,7 +45,6 @@ import retrofit2.Response;
 public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.ViewHolder> {
 
     private List<DiscussionModel> discussionModels;
-    private LayoutInflater inflater;
     private Fragment fragment;
     private UserLocalStore userLocalStore;
     private Context context;
@@ -61,7 +61,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_discussion_room, parent, false);
         return new DiscussionAdapter.ViewHolder(view);
     }
@@ -74,6 +74,12 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                 .centerCrop()
                 .placeholder(R.drawable.default_photo)
                 .into(holder.profileImage);
+
+        if (currentItem.getLoveNum() <= 0) {
+            holder.tvViewLoves.setVisibility(View.GONE);
+        } else {
+            holder.tvViewLoves.setVisibility(View.VISIBLE);
+        }
 
         if (null != currentItem.getCountryTag() && currentItem.getCountryTag().isEmpty()) {
             holder.tvCountryTag.setVisibility(View.GONE);
@@ -136,7 +142,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     // Holder knows and references where the fields are
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvCommentNum, tvCountryTag;
+        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvCommentNum, tvCountryTag, tvViewLoves;
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
         private LinearLayout layoutLove, layoutComment, relativeMore;
@@ -157,6 +163,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
             imageButtonLove = (ImageView) itemView.findViewById(R.id.imageButtonLove);
             layoutLove = (LinearLayout) itemView.findViewById(R.id.layoutLove);
             layoutComment = (LinearLayout) itemView.findViewById(R.id.layoutComment);
+            tvViewLoves = (TextView) itemView.findViewById(R.id.item_discussion_tvViewLoves);
 
 
             // Change font for all text view fields
@@ -199,6 +206,19 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
                     Intent intent = new Intent(fragment.getActivity(), DiscussionComments.class);
                     intent.putExtra("discussionID", clickedItem.getDiscussionID());
                     intent.putExtra("ownerID", clickedItem.getUserID());
+                    fragment.getActivity().startActivity(intent);
+                }
+            });
+
+            tvViewLoves.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    DiscussionModel clickedItem = discussionModels.get(position);
+
+                    // view people who loved this post
+                    Intent intent = new Intent(fragment.getActivity(), DiscussionLoveActivity.class);
+                    intent.putExtra("discussionID", clickedItem.getDiscussionID());
                     fragment.getActivity().startActivity(intent);
                 }
             });

@@ -87,7 +87,7 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum;
+        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvViewLoves;
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
         private LinearLayout layoutLove, layoutComment;
@@ -104,10 +104,13 @@ public class CommentDiscussionAdapter extends RecyclerView.Adapter<CommentDiscus
             tvLoveNum = (TextView) itemView.findViewById(R.id.tvLoveNum);
             imageButtonLove = (ImageView) itemView.findViewById(R.id.imageButtonLove);
             imageButtonMore = (ImageView) itemView.findViewById(R.id.item_discussion_imageButtonMore);
+            tvViewLoves = (TextView) itemView.findViewById(R.id.item_discussion_tvViewLoves);
             layoutLove = (LinearLayout) itemView.findViewById(R.id.layoutLove);
             layoutComment = (LinearLayout) itemView.findViewById(R.id.layoutComment);
             layoutComment.setVisibility(View.GONE);
             layoutLove.setVisibility(View.GONE);
+            tvViewLoves.setVisibility(View.GONE);
+
             // Change font for all text view fields
             Helpers.overrideFonts(context, relativeDiscussion);
 

@@ -125,37 +125,46 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".activities.discussion.discussioncomments.DiscussionComments"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.createdestination.DestinationActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.discussion.editdiscussioncomment.EditDiscussionCommentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.discussion.editdiscussion.EditDiscussionActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.bucketlist.newbucket.BucketPostActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.bucketlist.editbucket.EditBucketActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.otheruserbucket.OtherUserBucketListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.facebooksignup.FacebookSignUpActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.aboutpage.AboutActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.notificationsettings.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.userinfoedit.changeusername.ChangeUsername"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.perfectphoto.postperfectphoto.PostPerfectPhotoActivity"
             android:screenOrientation="portrait"
@@ -165,24 +174,32 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.perfectphoto.editcommentperfectphoto.EditCommentPerfectPhoto"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.perfectphoto.editphotopostperfect.EditPhotoPostActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".notificationactivities.NotificationPostActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".notificationactivities.NotificationPhotoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.PrivacyPolicyActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
         <activity
             android:name=".activities.usermap.UserMapActivity"/>
         <activity
             android:name=".activities.forgotpassword.ForgotPasswordActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.discussion.discussionlove.DiscussionLoveActivity"
+            android:screenOrientation="portrait" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0bd3961be22e9764bf268e947122efe9733ea27e" />

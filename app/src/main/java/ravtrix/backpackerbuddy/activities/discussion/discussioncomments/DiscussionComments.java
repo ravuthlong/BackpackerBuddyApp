@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.activities.discussion.discussioncomments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
     private List<CommentModel> commentModels;
     private long mLastClickTime = 0;
     private int backPressExit = 1;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,17 @@ public class DiscussionComments extends AppCompatActivity implements View.OnClic
             discussionID = discussionBundle.getInt("discussionID");
             ownerID = discussionBundle.getInt("ownerID");
         }
+    }
+
+
+    @Override
+    public void showProgressDialog() {
+        progressDialog = Helpers.showProgressDialog(this, "Posting...");
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) Helpers.hideProgressDialog(progressDialog);
     }
 
     @Override

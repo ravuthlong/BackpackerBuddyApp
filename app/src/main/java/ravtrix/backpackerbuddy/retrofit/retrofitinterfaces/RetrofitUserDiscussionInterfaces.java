@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.List;
 
+import ravtrix.backpackerbuddy.activities.discussion.discussionlove.recyclerview.model.DiscussionLove;
 import ravtrix.backpackerbuddy.recyclerviewfeed.commentdiscussionrecyclerview.CommentModel;
 import ravtrix.backpackerbuddy.recyclerviewfeed.discussionroomrecyclerview.data.DiscussionModel;
 import retrofit2.Call;
@@ -65,6 +66,11 @@ public class RetrofitUserDiscussionInterfaces {
     public interface GetAUserDiscussions {
         @GET("/fetchAUserDiscussion1.9.2.php?userID=[userID]")
         Call<List<DiscussionModel>> getAUserDiscussions(@Query("userID") int userID);
+    }
+
+    public interface GetADiscussionLoves {
+        @GET("/fetchDiscussionLoves.php?discussionID=[discussionID]")
+        Call<List<DiscussionLove>> getADiscussionLoves(@Query("discussionID") int discussionID);
     }
 
     public interface IncrementCommentCount {

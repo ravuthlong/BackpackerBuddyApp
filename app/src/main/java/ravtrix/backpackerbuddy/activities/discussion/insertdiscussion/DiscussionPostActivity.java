@@ -1,5 +1,6 @@
 package ravtrix.backpackerbuddy.activities.discussion.insertdiscussion;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
     private DiscussionPostPresenter discussionPostPresenter;
     private UserLocalStore userLocalStore;
     private long mLastClickTime = 0;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,16 @@ public class DiscussionPostActivity extends OptionMenuPostBaseActivity implement
         // Drop down
         countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountries.setAdapter(countryArrayAdapter);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        progressDialog = Helpers.showProgressDialog(this, "Posting...");
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) Helpers.hideProgressDialog(progressDialog);
     }
 
     @Override

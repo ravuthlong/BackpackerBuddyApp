@@ -102,7 +102,7 @@ public class UserLocation {
 
             @Override
             public void onProviderDisabled(String provider) {
-               // Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                // Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 //context.startActivity(intent);
             }
         };
@@ -133,12 +133,12 @@ public class UserLocation {
                 builder.show();
 
             } else {
-                if (network_enabled){
+                if (gps_enabled){
                     // One_Second passed because on location changed can be called multiple times in a few users
-                    locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
-                    //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UserLocation.ONE_SECOND, 1, locationListener);
-                } else if (gps_enabled) {
                     locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+                    //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, UserLocation.ONE_SECOND, 1, locationListener);
+                } else if (network_enabled) {
+                    locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
                     //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UserLocation.ONE_SECOND, 1, locationListener);
                 }
             }

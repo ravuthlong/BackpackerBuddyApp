@@ -74,6 +74,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     private static final int LOCATION_REQUEST_CODE = 10;
     private UserLocation userLocation;
     private long currentTime;
+    public static boolean isSigningUp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,8 +214,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
                                         if (latitude == 0) {
                                             // location turned off
-                                            System.out.println("LOCATION OFF");
-                                            userInfo.put("country", "");
+                                            userInfo.put("country", "Somewhere");
                                             signUpFacebook(userInfo);
                                         } else {
                                             try {
@@ -222,13 +222,15 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                                                     @Override
                                                     public void onCountryReceived(String country) {
                                                         userInfo.put("country", country);
-                                                        signUpFacebook(userInfo);
+                                                         if (!isSigningUp) signUpFacebook(userInfo);
+                                                        isSigningUp = true;
                                                     }
                                                 });
                                             } catch (IOException e) {
                                                 // will need to update country after sign up
-                                                userInfo.put("country", "");
-                                                signUpFacebook(userInfo);
+                                                userInfo.put("country", "Somewhere");
+                                                if (!isSigningUp) signUpFacebook(userInfo);
+                                                isSigningUp = true;
                                             }
                                         }
                                     }

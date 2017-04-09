@@ -366,7 +366,7 @@ public class FeedListAdapterMain extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void initTextInfo(RecyclerView.ViewHolder holder, FeedItem currentPos) {
         // Prevent long country names from getting cut from the screen. Adjust text size.
-        if (currentPos.getCountry().length() >= 15) {
+        if (currentPos.getCountry() != null && currentPos.getCountry().length() >= 15) {
             ((ViewHolder) holder).tvCountry.setTextSize(30);
         } else {
             ((ViewHolder) holder).tvCountry.setTextSize(45);

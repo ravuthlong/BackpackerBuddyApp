@@ -132,6 +132,7 @@ public class SignUpPart1Activity extends AppCompatActivity implements ISignUpPar
 
     // Go to part 2 sign up after location is received
     private void startPart2SignUp() {
+
         userLocation.startLocationService(new UserLocationInterface() {
             @Override
             public void onReceivedLocation(double latitude, double longitude) {

@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ravtrix.backpackerbuddy.R;
+import ravtrix.backpackerbuddy.activities.login.LogInActivity;
 import ravtrix.backpackerbuddy.activities.mainpage.UserMainPage;
 import ravtrix.backpackerbuddy.fcm.model.Message;
 import ravtrix.backpackerbuddy.helpers.Helpers;
@@ -53,7 +54,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
     @BindView(R.id.activity_conversation_loading_spinner) protected ProgressBar progressBarSendLoad;
 
     private LinearLayoutManager mLinearLayoutManager;
-    private String chatRoomName, chatRoomName2, chatRoomNameNoPlus, chatRoomName2NoPlus, realChatName;
+    private String chatRoomName, chatRoomName2, chatRoomNameNoPlus, chatRoomName2NoPlus, realChatName = "";
     private int chatPosition;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -74,16 +75,22 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         setTitle("Conversation");
 
         toolbar.setTitleTextColor(Color.WHITE);
-        progressBar.setVisibility(View.VISIBLE);
 
-        conversationPresentor = new ConversationPresentor(this);
         userLocalStore = new UserLocalStore(this);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
 
-        getChatRoomInformation();
-        setChatRoom();
-        setListeners();
+        if (userLocalStore.getLoggedInUser().getUserID() != 0) {
+
+            progressBar.setVisibility(View.VISIBLE);
+            conversationPresentor = new ConversationPresentor(this);
+            mLinearLayoutManager = new LinearLayoutManager(this);
+            mLinearLayoutManager.setStackFromEnd(true);
+
+            getChatRoomInformation();
+            setChatRoom();
+        } else {
+            Helpers.displayToast(this, "Please log in to chat");
+            startActivity(new Intent(this, LogInActivity.class));
+        }
     }
 
 
@@ -196,11 +203,13 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                         viewHolder.messengerImageView1.setImageDrawable(ContextCompat.getDrawable(ConversationActivity.this,
                                 R.drawable.ic_chat_bubble_black_24dp));
                     } else {
-                        Picasso.with(ConversationActivity.this)
-                                .load(otherUserImage)
-                                .fit()
-                                .centerCrop()
-                                .into(viewHolder.messengerImageView1);
+                        if (!otherUserImage.isEmpty()) {
+                            Picasso.with(ConversationActivity.this)
+                                    .load(otherUserImage)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(viewHolder.messengerImageView1);
+                        }
                     }
                 }
             }
@@ -387,14 +396,16 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
                 } else if (dataSnapshot.child(chatRoomName2NoPlus).exists()) {
                     setRecyclerView(chatRoomName2NoPlus);
                     realChatName = chatRoomName2NoPlus;
+
                 } else {
                     realChatName = "";
                     progressBar.setVisibility(View.INVISIBLE);
                 }
+                setListeners();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                realChatName = "";
             }
         });
     }
