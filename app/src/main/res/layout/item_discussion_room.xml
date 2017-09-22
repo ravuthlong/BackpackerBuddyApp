@@ -34,6 +34,8 @@
                 android:id="@+id/tvUsername_discussion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textStyle="bold"
                 android:textColor="@color/greenToolbar"
                 android:textSize="@dimen/_15ssp"

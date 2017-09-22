@@ -34,6 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textColor="@color/greenToolbar"
                 android:textSize="@dimen/_15ssp"
                 android:layout_marginLeft="@dimen/_5sdp" />

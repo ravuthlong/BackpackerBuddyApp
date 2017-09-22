@@ -100,6 +100,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
         CircleImageView messengerImageView1, messengerImageView2;
         RelativeLayout layoutMessage1, layoutMessage2;
 
+
         public MessageViewHolder(View v) {
             super(v);
             messageTextView1 = (TextView) itemView.findViewById(R.id.item_message_message);
@@ -256,7 +257,7 @@ public class ConversationActivity extends AppCompatActivity implements IConversa
      * Otherwise, if room doesn't exist between the two users yet, make a new room
      */
     private void sendMessage() {
-        //mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

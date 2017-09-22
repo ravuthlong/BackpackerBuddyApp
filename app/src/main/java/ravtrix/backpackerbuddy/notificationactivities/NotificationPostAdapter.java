@@ -204,7 +204,7 @@ public class NotificationPostAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private class ViewHolder2 extends RecyclerView.ViewHolder {
-        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum;
+        private TextView tvUsername, tvCountry, tvTime, tvText, tvLoveNum, tvViewLoves;
         private CircleImageView profileImage;
         private RelativeLayout relativeDiscussion;
         private LinearLayout layoutLove, layoutComment;
@@ -223,8 +223,11 @@ public class NotificationPostAdapter extends RecyclerView.Adapter<RecyclerView.V
             imageButtonMore = (ImageView) itemView.findViewById(R.id.item_discussion_imageButtonMore);
             layoutLove = (LinearLayout) itemView.findViewById(R.id.layoutLove);
             layoutComment = (LinearLayout) itemView.findViewById(R.id.layoutComment);
+            tvViewLoves = (TextView) itemView.findViewById(R.id.item_discussion_tvViewLoves);
+
             layoutComment.setVisibility(View.GONE);
             layoutLove.setVisibility(View.GONE);
+            tvViewLoves.setVisibility(View.GONE);
             // Change font for all text view fields
             Helpers.overrideFonts(context, relativeDiscussion);
 
