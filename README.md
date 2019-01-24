@@ -20,7 +20,7 @@ I came back from my trip with unforgettable memories that I still smile thinking
 * Picasso for image loading </b>
 * ButterKnife for view injection </b>
 
-# Current total downloads - 6000+
+# Current total downloads - 10,000+
 
 ![Alt text](http://i.imgur.com/YdwOojE.png)
 ![Alt text](http://i.imgur.com/4nFlZ5t.png)
